@@ -235,18 +235,29 @@ module.exports = {
 
     // Create forum thread
     /**
-     * Creates a message in the specified channel.
+     * Creates a thread in the specified forum channel.
      * 
-     * Example:
+     * example:
      * ```js
-     * await messageCreate({
-     *   channel_id: '00000000000000000',
-     *   content: `string based input`,
-     * })
+     * await api.Discord.Channels.forumThreadCreate({
+     *   channel_id: `0110100001101001`, 
+     *   name: `thread name`, 
+     *   auto_archive_duration: 10080,
+     *   rate_limit_per_user: 5,
+     *   message: { 
+     *       content: '',
+     *   },
+     *   applied_tags: null,
+     * });
      * ```
      * 
      * @param {object} params Object of inputs.
-     * @returns {Promise<object>}
+     * @param {string} name string	1-100 character channel name
+     * @param {integer} auto_archive_duration ?*	integer	duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080
+     * @param {object} rate_limit_per_user ?	?integer	amount of seconds a user has to wait before sending another message (0-21600)
+     * @param {object} message a forum thread message params object	contents of the first message in the forum thread
+     * @param {array} applied_tags ? array of snowflakes	the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel
+     * @returns {Promise} Promise Object
      */
     async forumThreadCreate(params) {
         try {
@@ -266,9 +277,7 @@ module.exports = {
                         applied_tags: params.applied_tags,//?	array of snowflakes	the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel
                     }),
                 }))
-            ) { console.log('forums out',attempt);
-                return JSON.parse(attempt.body);
-            }
+            ) return JSON.parse(attempt.body);
             else return false;
         } catch (e) {
             console.log(e);
