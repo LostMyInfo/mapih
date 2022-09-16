@@ -1,0 +1,14 @@
+{
+  "name": "mapih",
+  "version": "1.0.7",
+  "description": "My Api Handler: Handles Discords api endpoints.",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "goodsie",
+  "license": "MIT"
+}
