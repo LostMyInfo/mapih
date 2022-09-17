@@ -5,6 +5,7 @@
  * 
  * RFC 6749: https://www.rfc-editor.org/rfc/rfc6749
  */
+const https = require(`../utils/https`);
 module.exports = {
   /**
    * Returns the user object of the requested account.
@@ -22,7 +23,7 @@ module.exports = {
   async getCredentials(token) {
     try {
       if (
-        (res = await get({
+        (res = await https.get({
           url: encodeURI(`discord.com`),
           path: encodeURI(`/api/users/@me`),
           headers: {
@@ -62,7 +63,7 @@ module.exports = {
   async getClientCredentials(client_id, client_secret, scope) {
     try {
       if (
-        (res = await get({
+        (res = await https.get({
           url: encodeURI(`discord.com`),
           path: encodeURI(`/api/users/@me`),
           headers: {
@@ -105,7 +106,7 @@ module.exports = {
     try {
       redirect = encodeURIComponent(oauth2_redirect);
       if (
-        (oauth_ = await post({
+        (oauth_ = await https.post({
           url: encodeURI(`discord.com`),
           path: encodeURI(`/api/oauth2/token`),
           statusCode: 200,
@@ -148,7 +149,7 @@ module.exports = {
   async refreshToken(client_id, client_secret, refresh_token) {
     try {
       if (
-        (oauth_ = await post({
+        (oauth_ = await https.post({
           url: encodeURI(`discord.com`),
           path: encodeURI(`/api/oauth2/token`),
           statusCode: 200,
@@ -185,7 +186,7 @@ module.exports = {
   async revokeToken(client_id, client_secret, token) {
     try {
       if (
-        (oauth_ = await post({
+        (oauth_ = await https.post({
           url: encodeURI(`discord.com`),
           path: encodeURI(`/api/oauth2/token/revoke`),
           statusCode: 200,
