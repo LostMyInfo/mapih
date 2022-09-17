@@ -1,8 +1,9 @@
-/***************************************************/
-/**           INTERACTION CALLBACKS               **/
-/***************************************************/
 const https = require(`../utils/https`);
-
+// https://discord.com/developers/docs/interactions/receiving-and-responding#interactions             
+/**
+ * INTERACTION CALLBACKS  
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+ */
 module.exports.callback = {
   /**
    * The `reply()` method is used to immediately respond and reply to an interaction.
@@ -11,7 +12,7 @@ module.exports.callback = {
    * 
    * @param {object} interaction 
    * @param {object} input 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -63,7 +64,7 @@ module.exports.callback = {
    * ```js 
    * callback.defer(interaction,{ ephemeral: true }); 
    * ```
-   * @returns Promise
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -107,7 +108,7 @@ module.exports.callback = {
    * ```js 
    * callback.component_defer(interaction,{ ephemeral: true }); 
    * ```
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -144,7 +145,7 @@ module.exports.callback = {
    * 
    * @param {object} interaction 
    * @param {object} input 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -189,7 +190,7 @@ module.exports.callback = {
    * 
    * @param {object} interaction 
    * @param {object} input 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -228,7 +229,7 @@ module.exports.callback = {
    * 
    * @param {object} interaction 
    * @param {object} input 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -261,7 +262,7 @@ module.exports.callback = {
    * The `get_original()` method is used to return the initial Interaction response.
    * 
    * @param {object} interaction 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
    */
@@ -288,7 +289,7 @@ module.exports.callback = {
    * 
    * @param {object} interaction 
    * @param {object} input 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
    */
@@ -321,7 +322,7 @@ module.exports.callback = {
    * The `delete_original()` method is used to delete the initial Interaction response.
    * 
    * @param {object} interaction 
-   * @returns Promise Object
+   * @returns {Promise<object>} {...}
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
    */
@@ -344,9 +345,10 @@ module.exports.callback = {
   },
 };
 
-/***************************************************/
-/**           INTERACTION FOLLOWUPS               **/
-/***************************************************/
+/**
+ * INTERACTION FOLLOWUPS
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages
+ */
 module.exports.followup = {
   /**
    * The `create()` method is used to edit an initially deferred interaction, following up with a new response.

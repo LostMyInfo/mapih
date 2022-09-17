@@ -14,7 +14,7 @@ module.exports = {
      * ```
      * 
      * @param {object} params Object of inputs.
-     * @returns {Promise<object>}
+     * @returns {Promise<object>} {...}
      */
     async messageCreate(params) {
         try {
@@ -48,6 +48,11 @@ module.exports = {
     }, // End Create Channel Message
 
     // Get All Channel Messages
+    /**
+     * 
+     * @param {object} params dictionary object
+     * @returns {Promise<object>} {...}
+     */
     async getAllMessages(params) {
         try {
             if (
@@ -67,6 +72,11 @@ module.exports = {
     }, // End Get All Channel Messages
 
     // Delete Channel Message
+    /**
+     * 
+     * @param {object} params dictionary object
+     * @returns 
+     */
     async messageDelete(params) {
         try {
             if (
@@ -88,6 +98,11 @@ module.exports = {
     }, // End Delete Channel Message
 
     // Bulk Delete Channel Message
+    /**
+     * 
+     * @param {object} params 
+     * @returns {boolean} returns true on success and false on error.
+     */
     async messageBulkDelete(params) {
         try {
             if (
@@ -134,6 +149,14 @@ module.exports = {
     }, // End Create Message Reaction
 
     // On Message Reaction
+    /**
+     * This function is pretty much a note at this point.
+     * For use with the above "messageReact" function, it is meant to perform a user
+     * defined action on the specified reaction.
+     * 
+     * -non-functional
+     * @param {*} params 
+     */
     async onReactionAdd(params) {
         try {
 

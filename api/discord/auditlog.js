@@ -1,13 +1,18 @@
 const https = require(`../utils/https`);
-
+/**
+ * AUDIT LOGS
+ * 
+ */
 module.exports = {
     // Get Audit Logs
+    /**
+     * 
+     * @param {object} params 
+     * @returns {Promise<object>} {...}
+     */
     async getAuditLogs(params) {
         try {
-            if (!params.guild_id) {
-                return 'Error: parameter `guild_id` is Required.';
-            }
-            else if (
+            if (
                 (attempt = await https.get({
                     url: encodeURI(`discord.com`),
                     path: encodeURI(`/api/guilds/${params.guild_id}/audit-logs`),

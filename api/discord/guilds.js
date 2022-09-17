@@ -1,9 +1,7 @@
-/////////////////////////////////////////////////////////////////////
-// Guilds
-/////////////////////////////////////////////////////////////////////
-// https://discord.com/developers/docs/resources/guild#guild-resource
 const https = require(`../utils/https`);
-
+/**
+ * https://discord.com/developers/docs/resources/guild#guild-resource
+ */
 module.exports = {
 
   // Create Guild
