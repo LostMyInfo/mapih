@@ -1,3 +1,4 @@
+const https = require(`../utils/https`);
 /**
  * Discord Oauth2 implement. Created for the Autocode community
  * 
@@ -5,7 +6,6 @@
  * 
  * RFC 6749: https://www.rfc-editor.org/rfc/rfc6749
  */
-const https = require(`../utils/https`);
 module.exports = {
   /**
    * Returns the user object of the requested account.
