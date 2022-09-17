@@ -10,8 +10,8 @@ module.exports.callback = {
    * Callback Type: `4`, -- `CHANNEL_MESSAGE_WITH_SOURCE`
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input 
-   * @returns Promise
+   * @param {object} input 
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -56,7 +56,7 @@ module.exports.callback = {
    * Callback Type: `5`, -- `DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE`
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input 
+   * @param {object} input 
    * defer method only accepts an ephemeral boolean.
    * 
    * example:
@@ -101,13 +101,13 @@ module.exports.callback = {
    * Callback Type: `6`, -- `DEFERRED_UPDATE_MESSAGE` *for components
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input only accepts a boolean ephemeral.
+   * @param {object} input only accepts a boolean ephemeral.
    * 
    * example:
    * ```js 
    * callback.component_defer(interaction,{ ephemeral: true }); 
    * ```
-   * @returns Promise
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -143,8 +143,8 @@ module.exports.callback = {
    * Callback Type: `7`, -- `UPDATE_MESSAGE` *for components
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input 
-   * @returns Promise
+   * @param {object} input 
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -188,8 +188,8 @@ module.exports.callback = {
    * Callback Type: `8`, -- `APPLICATION_COMMAND_AUTOCOMPLETE_RESULT`
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input 
-   * @returns Promise
+   * @param {object} input 
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -227,8 +227,8 @@ module.exports.callback = {
    * Callback Type: `9`, -- `MODAL`
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input 
-   * @returns Promise
+   * @param {object} input 
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
@@ -261,7 +261,7 @@ module.exports.callback = {
    * The `get_original()` method is used to return the initial Interaction response.
    * 
    * @param {object} interaction 
-   * @returns Promise
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
    */
@@ -287,8 +287,8 @@ module.exports.callback = {
    * The `edit_original()` method is used to edit the initial Interaction response.
    * 
    * @param {object} interaction 
-   * @param {{object<any>}} input
-   * @returns Promise
+   * @param {object} input 
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
    */
@@ -321,7 +321,7 @@ module.exports.callback = {
    * The `delete_original()` method is used to delete the initial Interaction response.
    * 
    * @param {object} interaction 
-   * @returns Promise
+   * @returns Promise Object
    * 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
    */
@@ -351,7 +351,7 @@ module.exports.followup = {
   /**
    * The `create()` method is used to edit an initially deferred interaction, following up with a new response.
    * @param {object} interaction 
-   * @param {{object<any>}} input 
+   * @param {object} input 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
    */
   async create(interaction, input = {}) {
@@ -393,7 +393,7 @@ module.exports.followup = {
   /**
    * The `edit()` method is used to edit a followup message for an Interaction.
    * @param {object} interaction 
-   * @param {{object<any>}} input 
+   * @param {object} input 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
    */
   async edit(interaction, input = {}) {
@@ -425,7 +425,7 @@ module.exports.followup = {
   /**
    * The `get()` method is used to retrieve a followup message for an Interaction.
    * @param {object} interaction 
-   * @param {{object<any>}} input 
+   * @param {object} input 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
    */
   async get(interaction, input = {}) {
@@ -449,7 +449,7 @@ module.exports.followup = {
   /**
    * The `del()` method is used to delete the followup message for an Interaction.
    * @param {object} interaction 
-   * @param {{object<any>}} input 
+   * @param {object} input 
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
    */
   async del(interaction, input = {}) {
