@@ -50,22 +50,22 @@ module.exports = {
     // Get All Channel Messages
     /**
      * 
-     * @param {object} params dictionary object
+     * @param {snowflake} channel_id channel_id to retrieve messages from.
+     * @param {number} limit the number of messages to retrieve.
      * @returns {Promise<object>} {...}
      */
     async getAllMessages(params) {
         try {
-            if (
+            return (
                 (attempt = await https.get({
                     url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}/messages?limit=${params.limit ?? 20}`),
+                    path: encodeURI(`/api/channels/${params.channel_id}/messages?limit=${params.limit}`),
                     headers: {
                         'Authorization': `Bot ${process.env.token}`,
                     },
                     body: '',
                 }))
-            ) return JSON.parse(attempt.body);
-            else return false;
+            ) ? JSON.parse(attempt.body) : false;
         } catch (e) {
             console.log(e);
         }
@@ -79,7 +79,7 @@ module.exports = {
      */
     async messageDelete(params) {
         try {
-            if (
+            return (
                 (attempt = await https.del({
                     url: encodeURI('discord.com'),
                     path: encodeURI(`/api/channels/${params.channel_id}/messages/${params.message_id}`),
@@ -90,8 +90,7 @@ module.exports = {
                     },
                     body: '',
                 }))
-            ) return true;
-            else return false;
+            ) ? attempt : false;
         } catch (e) {
             console.log(e);
         }
@@ -99,13 +98,26 @@ module.exports = {
 
     // Bulk Delete Channel Message
     /**
+     * Removes 2 or more messages from a channel.  
+     * @params { channel_id, messages }  
      * 
-     * @param {object} params 
-     * @returns {boolean} returns true on success and false on error.
+     * example:  
+     * ```js
+     * await messageBulkDelete({  
+     *	 channel_id: `00000000000000`,  
+     *	 messages: messages.map(msg => msg.id),  
+     * });  
+     ```
+     * 
+     * @param {snowflake} channel_id Id of the channel to remove messages from.
+     * @param {array} messages Array of message ids to remove.
+     * @returns {Promise<any>} {...} 
+     * 
+     * https://discord.com/developers/docs/resources/channel#bulk-delete-messages
      */
     async messageBulkDelete(params) {
         try {
-            if (
+            return (
                 (attempt = await https.post({
                     url: encodeURI('discord.com'),
                     path: encodeURI(`/api/channels/${params.channel_id}/messages/bulk-delete`),
@@ -115,10 +127,10 @@ module.exports = {
                     },
                     body: JSON.stringify({ messages: params.messages }),
                 }))
-            ) if (attempt.statusCode == 204) return true;
-                else return false;
+            ) ? attempt : false;
         } catch (e) {
             console.log(e);
+            return e;
         }
     }, // End Bulk Delete Channel Message
 
@@ -166,7 +178,7 @@ module.exports = {
             let write = `onReact{"${params.message_id}": "${params.emoji}"}`;
             let filename;
             try {
-                await fs.writeFile(filename = process.cwd() + `/data/${process.env.uuid}/.evented`, write, { flag: 'a+' });
+                //await fs.writeFile(filename = process.cwd() + `/data/${process.env.uuid}/.evented`, write, { flag: 'a+' });
             } catch (err) {
                 console.log(err);
             }
