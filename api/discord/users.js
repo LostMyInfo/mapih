@@ -67,7 +67,7 @@ module.exports = {
     Get Current User Guilds
     GET /users/@me/guilds
     Returns a list of partial guild objects the current user is a member of. Requires the guilds OAuth2 scope. */
-    async geCurrentUserGuilds(params) {
+    async getCurrentUserGuilds(params) {
         if (attempt = await https.get({
             url: encodeURI(`discord.com`),
             path: encodeURI(`/api/users/@me/guilds`),
@@ -75,11 +75,7 @@ module.exports = {
                 'Content-Type': 'application/json',
                 Authorization: `Bot ${process.env.token}`,
             },
-            body: JSON.stringify({
-                "before" : params.before,
-                "after" : params.after,
-                "limit" : params.limit
-            }),
+            body: '',
         })) return JSON.parse(attempt.body);
         else return false;
     }, //End getCurrentUserGuilds
@@ -142,6 +138,7 @@ module.exports = {
                 }))
             ) {
                 let parsed = JSON.parse(attempt.body);
+                console.log("Parsed Create DM Channel", parsed);
                 if (
                     (dm = await https.post({
                         url: encodeURI(`discord.com`),
