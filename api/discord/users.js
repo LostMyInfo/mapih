@@ -54,7 +54,7 @@ module.exports = {
                         Authorization: `Bot ${process.env.token}`,
                     },
                     body: JSON.stringify({
-                        "username" : params.usernamem,
+                        "username" : params.username,
                         "avatar" : params.avatar
                     }),
                 }))
@@ -107,7 +107,7 @@ module.exports = {
                 url: encodeURI(`discord.com`),
                 path: encodeURI(`/api/users/@me/guilds/${params.guild_id}`),
                 headers: {
-                    'Content-Type': 'application/json',
+                    //'Content-Type': 'application/json',
                     Authorization: `Bot ${process.env.token}`,
                 },
                 body: '',
