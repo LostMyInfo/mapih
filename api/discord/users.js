@@ -103,7 +103,7 @@ module.exports = {
     Leave a guild. Returns a 204 empty response on success. */
     async leaveGuild(params){
         try{
-            if (attempt = await https.de({
+            if (attempt = await https.del({
                 url: encodeURI(`discord.com`),
                 path: encodeURI(`/api/users/@me/guilds/${params.guild_id}`),
                 headers: {
