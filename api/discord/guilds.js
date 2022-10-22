@@ -1,5 +1,5 @@
 const https = require(`../utils/https`);
-const { userFlags, permissionNames } = require('../../enum');
+const { USER_FLAGS, PERMISSION_NAMES } = require('../../enums/enum');
 /**
  * https://discord.com/developers/docs/resources/guild#guild-resource
  */
@@ -239,7 +239,7 @@ module.exports = {
         }))
       ) {
         let roles = JSON.parse(attempt.body);
-        let flags = Object.entries(permissionNames);
+        let flags = Object.entries(PERMISSION_NAMES);
         roles.forEach((role) => {
           if (role.permissions > 0) {
             role.permission_names = [];
@@ -403,7 +403,7 @@ module.exports.members = {
       ) {
         const payload = JSON.parse(attempt.body);
 
-        let flags = Object.entries(userFlags);
+        let flags = Object.entries(USER_FLAGS);
 
         payload.forEach(member => {
           let badges = [];
@@ -456,7 +456,7 @@ module.exports.members = {
       ) {
         const payload = JSON.parse(attempt.body);
         let badges = [];
-        let flags = Object.entries(userFlags);
+        let flags = Object.entries(USER_FLAGS);
         if (payload.user.public_flags) {
           for (let a = 0; a < flags.length; a++) {
             if (payload.user.public_flags & flags[a][1]) {

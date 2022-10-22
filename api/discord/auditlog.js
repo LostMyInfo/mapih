@@ -1,8 +1,4 @@
 const https = require(`../utils/https`);
-/**
- * AUDIT LOGS
- * 
- */
 module.exports = {
     // Get Audit Logs
     /**

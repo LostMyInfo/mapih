@@ -1,7 +1,7 @@
 const https = require(`../utils/https`);
-
+const structures = require('../resources/structures');
+const { doRequest } = require('../resources/functions');
 module.exports = {
-    // Create Channel Message
     /**
      * Creates a message in the specified channel.
      * 
@@ -18,36 +18,24 @@ module.exports = {
      */
     async messageCreate(params) {
         try {
-            if (
-                (attempt = await https.post({
-                    url: encodeURI(`discord.com`),
-                    path: encodeURI(`/api/channels/${params.channel_id}/messages`),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bot ${process.env.token}`,
-                    },
-                    body: JSON.stringify({
-                        content: params.content,
-                        tts: params.tts,
-                        embeds: params.embeds ?? params.embed,
-                        allowed_mentions: params.allowed_mentions,
-                        message_reference: params.message_reference,
-                        components: params.components,
-                        sticker_ids: params.sticker_ids,
-                        files: params.files,
-                        payload_json: params.payload_json,
-                        attachments: params.attachments,
-                        flags: params.flags,
-                    }),
-                }))
-            ) return JSON.parse(attempt.body);
-            else return false;
+            const cfg = {
+                method: "POST",
+                body: structures.newStructure('message'),
+                endpoint: 'messages',
+                properties: {
+                    channel_id: params.channel_id,
+                    content: params.content
+                },
+                params: params
+            };
+            cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
+            cfg.attempt = await doRequest(cfg);
+            return cfg.attempt ?? false;
         } catch (e) {
             console.log(e);
         }
     }, // End Create Channel Message
 
-    // Get All Channel Messages
     /**
      * 
      * @param {snowflake} channel_id channel_id to retrieve messages from.
@@ -56,22 +44,31 @@ module.exports = {
      */
     async getAllMessages(params) {
         try {
-            return (
-                (attempt = await https.get({
-                    url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}/messages?limit=${params.limit}`),
-                    headers: {
-                        'Authorization': `Bot ${process.env.token}`,
-                    },
-                    body: '',
-                }))
-            ) ? JSON.parse(attempt.body) : false;
+            const cfg = {
+                method: "GET",
+                body: null,
+                endpoint: `messages`,
+                query: {
+                    'limit': params.limit ?? null,
+                    'around': params.around ?? null,
+                    'before': params.before ?? null,
+                    'after': params.after ?? null
+                },
+                properties: {
+                    channel_id: params.channel_id,
+                },
+                params: params
+            };
+
+            cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
+            cfg.attempt = await doRequest(cfg);
+
+            return JSON.parse(cfg.attempt.body) ?? 'no messages';
         } catch (e) {
             console.log(e);
         }
     }, // End Get All Channel Messages
 
-    // Delete Channel Message
     /**
      * 
      * @param {object} params dictionary object
@@ -79,24 +76,27 @@ module.exports = {
      */
     async messageDelete(params) {
         try {
-            return (
-                (attempt = await https.del({
-                    url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}/messages/${params.message_id}`),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Audit-Log-Reason': `${params.reason}`,
-                        'Authorization': `Bot ${process.env.token}`,
-                    },
-                    body: '',
-                }))
-            ) ? attempt : false;
+            const cfg = {
+                method: "DEL",
+                body: null,
+                endpoint: `messages/${params.message_id}`,
+                properties: {
+                    channel_id: params.channel_id
+                },
+                params: params,
+                audt: true,
+                reason: "Deleting Message"
+            };
+            cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
+            cfg.attempt = await doRequest(cfg);
+
+            return cfg.attempt.statusCode == 204 ? attempt : false;
+
         } catch (e) {
             console.log(e);
         }
     }, // End Delete Channel Message
 
-    // Bulk Delete Channel Message
     /**
      * Removes 2 or more messages from a channel.  
      * @params { channel_id, messages }  
@@ -137,139 +137,85 @@ module.exports = {
     // Create Message Reaction
     async messageReact(params) {
         try {
-            if (
-                (attempt = await https.put({
-                    url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/@me`),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bot ${process.env.token}`,
-                    },
-                    body: '',
-                }))
-            ) if (attempt.statusCode == 204) {
-                console.log('messageReact', attempt);
-                return true;
-            }
-                else {
-                    console.log('messageReact', attempt);
-                    return false;
-                }
+            const cfg = {
+                method: "PUT",
+                body: null,
+                endpoint: `messages/${params.message_id}/reactions/${params.emoji}/@me`,
+                properties: null,
+                params: params
+            };
+            cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
+            cfg.attempt = await doRequest(cfg);
+
+            return cfg.attempt.statusCode == 204 ? cfg.attempt : false;
         } catch (e) {
             console.log(e);
         }
     }, // End Create Message Reaction
 
-    // On Message Reaction
-    /**
-     * This function is pretty much a note at this point.
-     * For use with the above "messageReact" function, it is meant to perform a user
-     * defined action on the specified reaction.
-     * 
-     * -non-functional
-     * @param {*} params 
-     */
-    async onReactionAdd(params) {
-        try {
-
-            // channel_id: suggestionChannel.id,
-            // message_id: `${suggestmessage.id}`,
-            // emoji: `⬇️`,
-            let write = `onReact{"${params.message_id}": "${params.emoji}"}`;
-            let filename;
-            try {
-                //await fs.writeFile(filename = process.cwd() + `/data/${process.env.uuid}/.evented`, write, { flag: 'a+' });
-            } catch (err) {
-                console.log(err);
-            }
-
-
-        } catch (e) {
-            console.log(e);
-        }
-    }, // End On Message Reaction
-
     // Modify Channel
     async modifyChannel(params) {
         try {
-            if (
-                (attempt = await https.patch({
-                    url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}`),
-                    headers: {
-                        'Authorization': `Bot ${process.env.token}`,
-                    },
-                    body: JSON.stringify({
-                        name: params.channel_name ?? null,//string
-                        type: params.type ?? null,//integer	the type of channel;
-                        position: params.position ?? null,//?integer
-                        topic: params.topic ?? null,//?string
-                        nsfw: params.nsfw ?? null,//?boolean
-                        rate_limit_per_user: params.rate_limit_per_user ?? null,//?integer
-                        bitrate: params.bitrate ?? null,//?integer
-                        user_limit: params.user_limit ?? null,//?integer
-                        permission_overwrites: params.permission_overwrites ?? null,//
-                        parent_id: params.parent_id ?? null,//?snowflake
-                        rtc_region: params.rtc_region ?? null,//?string
-                        video_quality_mode: params.video_quality_mode ?? null,//?integer
-                        default_auto_archive_duration: params.default_auto_archive_duration ?? null,//?integer
-                    }),
-                }))
-            ) { console.log('permsUpdate', attempt); return JSON.parse(attempt.body); }
-            else return false;
+            const cfg = {
+                method: "PATCH",
+                body: structures.newStructure('channel'),
+                endpoint: null,
+                properties: {
+                    name: params.name,
+                    type: params.type
+                },
+                params: params
+            };
+            cfg.path = `channels/${params.channel_id}`;
+            cfg.attempt = await doRequest(cfg);
+
+            return JSON.parse(cfg.attempt.body) ?? false;
         } catch (e) {
             console.log(e);
         }
     }, // End Modify Channel
 
     // Channel Permission Update
-    async permissionsUpdate(params) {
+    async editChannelPermissions(params) {
         try {
-            if (
-                (attempt = await https.patch({
-                    url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}`),
-                    headers: {
-                        'Authorization': `Bot ${process.env.token}`,
-                    },
-                    body: JSON.stringify({
-                        overwrite_id: params.overwrite_id ?? null,
-                        type: params.type ?? null,
-                        allow: params.allow ?? null,
-                        deny: params.deny ?? null,
-                    }),
-                }))
-            ) { console.log('permsUpdate', attempt); return JSON.parse(attempt.body); }
-            else return false;
+            const cfg = {
+                method: "PATCH",
+                body: structures.newStructure('overwrite'),
+                endpoint: `permissions/${params.overwrite_id}`,
+                properties: null,
+                params: params
+            };
+            cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
+            cfg.attempt = await doRequest(cfg);
+
+            return cfg.attempt.statusCode == 204 ? cfg.attempt : false;
         } catch (e) {
             console.log(e);
         }
     }, // End Channel Permission Update
 
     // Channel typingCreate
-    async typingCreate(params) {
+    async triggerTyping(params) {
         try {
-            if (
-                (attempt = await https.post({
-                    url: encodeURI('discord.com'),
-                    path: encodeURI(`/api/channels/${params.channel_id}/typing`),
-                    headers: {
-                        'Authorization': `Bot ${process.env.token}`,
-                    },
-                    body: '',
-                }))
-            ) {
-                console.log('typingCreate', attempt);
-                //return JSON.parse(attempt.body);
-            }
-            else return false;
+            /* initialize config */
+            const cfg = {
+                method: "POST",
+                body: null,
+                endpoint: `typing`,
+                properties: null,
+                params: params
+            };
+            cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
+            cfg.attempt = await doRequest(cfg);
+
+            return cfg.attempt.statusCode == 204 ? cfg.attempt : false;
         } catch (e) {
             console.log(e);
         }
     }, // End Channel typingCreate
 
-    // Create forum thread
     /**
+     * (method) forumThreadCreate:  
      * Creates a thread in the specified forum channel.
      * 
      * example:
@@ -319,4 +265,4 @@ module.exports = {
         }
     }, // End Create forum thread
 
-}; // End Module Exports
+};

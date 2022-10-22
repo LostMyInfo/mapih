@@ -1,6 +1,6 @@
 {
   "name": "mapih",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "My Api Handler: Handles Discords api endpoints.",
   "main": "api.js",
   "scripts": {
@@ -14,5 +14,9 @@
     "api"
   ],
   "author": "goodsie",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gidsola/mapih/issues"
+  },
+  "homepage": "https://github.com/gidsola/mapih#readme"
 }
