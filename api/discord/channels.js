@@ -195,7 +195,7 @@ module.exports = {
     }, // End Channel Permission Update
 
     // Channel typingCreate
-    async triggerTyping(params) {
+    async typingCreate(params) {
         try {
             /* initialize config */
             const cfg = {
