@@ -5,7 +5,7 @@ module.exports = {
    * @param {*} params 
    * @returns any
    */
-  get: async (params) => {
+  async get(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -37,7 +37,7 @@ module.exports = {
     });
   },
   //method GET80
-  get80: async (params) => {
+  async get80(params) {
     return new Promise(async function (resolve, reject) {
       const http = require('node:http');
       const options = {
@@ -69,7 +69,7 @@ module.exports = {
     });
   },
   //method POST
-  post: async (params) => {
+  async post(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -124,7 +124,7 @@ module.exports = {
     });
   },
   //method PUT
-  put: async (params) => {
+  async put(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -186,7 +186,7 @@ module.exports = {
     });
   },
   //method PATCH
-  patch: async (params) => {
+  async patch(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {
@@ -248,7 +248,7 @@ module.exports = {
     });
   },
   //method DELETE
-  del: async (params) => {
+  async del(params) {
     return new Promise(async function (resolve, reject) {
       const https = require('node:https');
       const options = {

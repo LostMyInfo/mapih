@@ -1,58 +1,59 @@
+/**
+ * Language: javascript
+ * Path: timestamp.js
+ * Returns a timestamp in the format: YYYY-MM-DD HH:MM:SS
+ * Example: 2019-01-01 00:00:00
+ * Author: Goodsie
+ */
 module.exports = {
-    // Language: javascript
-    // Path: timestamp.js
-    // Returns a timestamp in the format: YYYY-MM-DD HH:MM:SS
-    // Example: 2019-01-01 00:00:00
-    // Author: Goodsie
-
-    //Local timezone
-    default: function () {
+    
+    default() {
         return new Date().getFullYear() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2) + "-" + ("0" + new Date().getDate()).slice(-2) + " " + new Date().getHours() + ":" + ("0" + (new Date().getMinutes() + 1)).slice(-2) + ":" + ("0" + (new Date().getSeconds() + 1)).slice(-2)
     },
-    year: function () {
+    year() {
         return new Date().getFullYear();
     },
-    month: function () {
+    month() {
         return ("0" + (new Date().getMonth() + 1)).slice(-2);
     },
-    day: function () {
+    day() {
         return ("0" + new Date().getDate()).slice(-2);
     },
-    hours: function () {
+    hours() {
         return new Date().getHours();
     },
-    minutes: function () {
+    minutes() {
         return ("0" + (new Date().getMinutes() + 1)).slice(-2);
     },
-    seconds: function () {
+    seconds() {
         return ("0" + (new Date().getSeconds() + 1)).slice(-2);
     },
-    mseconds: function () {
+    mseconds() {
         return ("0" + (new Date().getMilliseconds() + 1)).slice(-2);
     },
     //UTC timezone
-    UTCdefault: function () {
+    UTCdefault() {
         return new Date().getUTCFullYear() + "-" + ("0" + (new Date().getUTCMonth() + 1)).slice(-2) + "-" + ("0" + new Date().getUTCDate()).slice(-2) + " " + new Date().getUTCHours() + ":" + ("0" + (new Date().getUTCMinutes() + 1)).slice(-2) + ":" + ("0" + (new Date().getUTCSeconds() + 1)).slice(-2)
     },
-    UTCyear: function () {
+    UTCyear() {
         return new Date().getUTCFullYear();
     },
-    UTCmonth: function () {
+    UTCmonth() {
         return ("0" + (new Date().getUTCMonth() + 1)).slice(-2);
     },
-    UTCday: function () {
+    UTCday() {
         return ("0" + new Date().getUTCDate()).slice(-2);
     },
-    UTChours: function () {
+    UTChours() {
         return new Date().getUTCHours();
     },
-    UTCminutes: function () {
+    UTCminutes() {
         return ("0" + (new Date().getUTCMinutes() + 1)).slice(-2);
     },
-    UTCseconds: function () {
+    UTCseconds() {
         return ("0" + (new Date().getUTCSeconds() + 1)).slice(-2);
     },
-    UTCmseconds: function () {
+    UTCmseconds() {
         return ("0" + (new Date().getUTCMilliseconds() + 1)).slice(-2);
     },
 

@@ -1,8 +1,9 @@
 {
   "name": "mapih",
-  "version": "1.1.3s",
-  "description": "My Api Handler: Handles Discords api endpoints.",
+  "version": "1.1.4",
+  "description": "My Api Handler: Handles Discord API endpoints.",
   "main": "api.js",
+  "types": "./decls/api.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/gidsola/mapih/issues"
   },
-  "homepage": "https://github.com/gidsola/mapih#readme"
+  "homepage": "https://github.com/gidsola/mapih#readme",
+  "dependencies": {
+    "typescript": "^4.8.4"
+  }
 }

@@ -1,11 +1,6 @@
-class Api {
-    constructor() {
+module.exports = {
 
-        exports.Discord = this.Discord;
-        exports.Utils = this.Utils;
-    }
-
-    Discord = {
+    Discord: {
 
         Auditlog: require('./api/discord/auditlog'),
         Applications: require('./api/discord/applications'),
@@ -14,14 +9,14 @@ class Api {
         Interactions: require('./api/discord/interactions'),
         Oauth2: require('./api/discord/oauth2'),
         Users: require('./api/discord/users'),
-    }
+    },
 
-    Utils = {
+    Utils: {
 
         Https: require('./api/utils/https'),
         Aray: require('./api/utils/aray'),
         Timestamp: require('./api/utils/timestamp'),
 
-    }
+    },
+
 }
-module.exports = new Api();
