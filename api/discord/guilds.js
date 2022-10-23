@@ -1,5 +1,5 @@
 const https = require(`../utils/https`);
-const { USER_FLAGS, PERMISSION_NAMES } = require('../../enums/enum');
+const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 /**
  * https://discord.com/developers/docs/resources/guild#guild-resource
  */
