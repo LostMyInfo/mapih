@@ -26,10 +26,10 @@ I will try and get this updated sooner than later.
 
 ### Utils  
 
-* #### Https
+* #### Https - Request utilities
 
-* #### Aray - currently specific to [Z] project
+* #### Aray - Key store (Requires OnSocket)
 
-* #### Timestamp
+* #### Timestamp - Pre-defined timestamp formats
 
 
