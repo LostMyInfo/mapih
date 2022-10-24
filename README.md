@@ -5,6 +5,8 @@ Mapih is a collection of Discord Api handlers as well as other useful(I think an
 This package uses your bot token. You must pass it via the process environment.  
 ie: process.env.token  
 
+I will try and get this updated sooner than later.  
+
 
 ## <u>Table of Contents:</u>  
 
