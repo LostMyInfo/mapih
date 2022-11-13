@@ -4,9 +4,9 @@ export namespace callback {
      *
      * Callback Type: `4`, -- `CHANNEL_MESSAGE_WITH_SOURCE`
      *
-     * @param {object} interaction payload
-     * @param {object} input parameters
-     * @returns {Promise<object>} {...}
+     * @param {object} interaction
+     * @param {object} input object of parameters
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -16,9 +16,9 @@ export namespace callback {
      *
      * Callback Type: `4`, -- `CHANNEL_MESSAGE_WITH_SOURCE`
      *
-     * @param {object} interaction payload
-     * @param {object} input parameters
-     * @returns {Promise<object>} {...}
+     * @param {object} interaction
+     * @param {object} input object of parameters
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -36,7 +36,7 @@ export namespace callback {
      * ```js
      * callback.defer(interaction,{ ephemeral: true });
      * ```
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -54,7 +54,7 @@ export namespace callback {
      * ```js
      * callback.defer(interaction,{ ephemeral: true });
      * ```
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -71,7 +71,7 @@ export namespace callback {
      * ```js
      * callback.component_defer(interaction,{ ephemeral: true });
      * ```
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -88,7 +88,7 @@ export namespace callback {
      * ```js
      * callback.component_defer(interaction,{ ephemeral: true });
      * ```
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -100,7 +100,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -112,7 +112,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -124,7 +124,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -136,7 +136,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -148,7 +148,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -160,7 +160,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
      */
@@ -169,7 +169,7 @@ export namespace callback {
      * The `get_original()` method is used to return the initial Interaction response.
      *
      * @param {object} interaction
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
      */
@@ -178,7 +178,7 @@ export namespace callback {
      * The `get_original()` method is used to return the initial Interaction response.
      *
      * @param {object} interaction
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
      */
@@ -188,7 +188,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
      */
@@ -198,7 +198,7 @@ export namespace callback {
      *
      * @param {object} interaction
      * @param {object} input
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
      */
@@ -207,7 +207,7 @@ export namespace callback {
      * The `delete_original()` method is used to delete the initial Interaction response.
      *
      * @param {object} interaction
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
      */
@@ -216,7 +216,7 @@ export namespace callback {
      * The `delete_original()` method is used to delete the initial Interaction response.
      *
      * @param {object} interaction
-     * @returns {Promise<object>} {...}
+     * @returns Promise
      *
      * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
      */

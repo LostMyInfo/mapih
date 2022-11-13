@@ -45,25 +45,7 @@ export namespace Discord {
             modifyGuildMember(params: any): Promise<any>;
         };
     };
-    const Interactions: {
-        callback: {
-            reply(interaction: any, input?: any): Promise<any>;
-            defer(interaction: any, input?: any): Promise<any>;
-            component_defer(interaction: any, input?: any): Promise<any>;
-            component_update(interaction: any, input?: any): Promise<any>;
-            autocomplete_reply(interaction: any, input?: any): Promise<any>;
-            modal_reply(interaction: any, input?: any): Promise<any>;
-            get_original(interaction: any): Promise<any>;
-            edit_original(interaction: any, input?: any): Promise<any>;
-            delete_original(interaction: any): Promise<any>;
-        };
-        followup: {
-            create(interaction: any, input?: any): Promise<any>;
-            edit(interaction: any, input?: any): Promise<any>;
-            get(interaction: any, input?: any): Promise<any>;
-            del(interaction: any, input?: any): Promise<any>;
-        };
-    };
+    const Interactions: typeof import("./api/discord/interactions");
     const Oauth2: {
         getCredentials(token: any): Promise<any>;
         getClientCredentials(client_id: string, client_secret: string, scope: string): Promise<any>;
