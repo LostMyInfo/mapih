@@ -132,7 +132,7 @@ module.exports.callback = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 8, data: { input } }),
       }); return r;
-    } catch (e) { return e; }
+    } catch (e) { return e }
   },
 
   /**
@@ -172,8 +172,8 @@ module.exports.callback = {
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
         headers: { 'Content-Type': 'application/json' },
         body: '',
-      }); return JSON.parse(r.body.toString());
-    } catch (e) { return e; }
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -197,7 +197,7 @@ module.exports.callback = {
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return r ? JSON.parse(r.body.toString()) : a;
+        }); return r ? r : a;
     } catch (e) { return e }
   },
 
@@ -244,7 +244,7 @@ module.exports.followup = {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
         }); return r ? r : a;
-    } catch (e) { return e; }
+    } catch (e) { return e }
   },
 
   /**
