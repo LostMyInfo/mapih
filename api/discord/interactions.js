@@ -303,3 +303,30 @@ module.exports.followup = {
     } catch (e) { return e }
   },
 };
+
+/**
+ * Attachment handler for Interactions. 
+ * 
+ * Thanks LostMyInfo :)
+ */
+ async function sendAttachment(sender, params, url, method, type, flags) {
+  const FormData = require('form-data');
+  const axios = require('axios');
+  const form = new FormData();
+  for (let i = 0; i < params.attachments.length; i++) {
+    form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
+  }
+  params.flags = flags;
+  params.attachments = params.attachments.map((a, index) => ({
+    id: index, filename: a.filename, description: a.description ?? ''
+  }));
+  (sender === 'data')
+    ? form.append('payload_json', JSON.stringify({ type: type, data: params }))
+    : form.append('payload_json', JSON.stringify({ type: type, body: { params } }));
+  return await axios({
+    method: `${method}`,
+    url: `https://discord.com${url}`,
+    data: form,
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
