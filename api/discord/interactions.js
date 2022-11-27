@@ -19,19 +19,16 @@ module.exports.callback = {
     try {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var cb_reply;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', 4, input.flags)
-        : cb_reply = await https.post({
+        ? a = await sendAttachment('data', input, url, 'post', 4, input.flags)
+        : r = await https.post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 4, data: input }),
-        });
-      return cb_reply;
-    } catch (e) {
-      console.log('Callback Reply Error:', e);
-    }
+        }); return r ? r : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -52,25 +49,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async defer(interaction, input = {}) {
-    let cb_defer;
     try {
-      cb_defer = await https.post({
+      let r = await https.post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 5,
-          data: {
-            flags: (input.ephemeral) ? (1 << 6) : 0,
-          },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_defer;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 5, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -90,23 +76,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async component_defer(interaction, input = {}) {
-    let cb_comp_defer;
     try {
-      cb_comp_defer = await https.post({
+      let r = await https.post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 6,
-          data: { flags: (input.ephemeral) ? (1 << 6) : 0 },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_comp_defer;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 6, data: { flags: (input.ephemeral) ? (1 << 6) : 0 } }),
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -124,19 +101,16 @@ module.exports.callback = {
     try {
       const url = `/api/interactions/${interaction.id}/${interaction.token}/callback`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var cb_comp_update;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', 7, input.flags)
-        : cb_comp_update = await https.post({
+        ? a = await sendAttachment('data', input, url, 'post', 7, input.flags)
+        : r = await https.post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 7, data: input }),
-        }); return cb_comp_update;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? r : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -151,25 +125,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async autocomplete_reply(interaction, input = {}) {
-    let cb_auto_reply;
     try {
-      cb_auto_reply = await https.post({
+      let r = await https.post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 8,
-          data: {
-            choices: input,
-          },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_auto_reply;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 8, data: { input } }),
+      }); return r;
+    } catch (e) { return e; }
   },
 
   /**
@@ -184,27 +147,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
    */
   async modal_reply(interaction, input = {}) {
-    let cb_modal_reply;
     try {
-      cb_modal_reply = await https.post({
+      let r = await https.post({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/interactions/${interaction.id}/${interaction.token}/callback`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 9,
-          data: {
-            custom_id: input.custom_id,
-            title: input.title,
-            components: input.components,
-          },
-        }),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return cb_modal_reply;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 9, data: { input } }),
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -216,20 +166,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
    */
   async get_original(interaction) {
-    let get_origin;
     try {
-      get_origin = await https.get({
+      let r = await https.get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return JSON.parse(get_origin.body.toString());
+      }); return JSON.parse(r.body.toString());
+    } catch (e) { return e; }
   },
 
   /**
@@ -245,19 +189,16 @@ module.exports.callback = {
     try {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var edit_origin;
+      let r, a
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'patch', null, input.flags)
-        : edit_origin = await https.patch({
+        ? a = await sendAttachment('body', input, url, 'patch', null, input.flags)
+        : r = await https.patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        }); return JSON.parse(edit_origin.body.toString());
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? JSON.parse(r.body.toString()) : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -269,20 +210,14 @@ module.exports.callback = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
    */
   async delete_original(interaction) {
-    let delete_origin;
     try {
-      delete_origin = await https.del({
+      let r = await https.del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return delete_origin;
+      }); return r;
+    } catch (e) { return e }
   },
 };
 
@@ -300,20 +235,16 @@ module.exports.followup = {
     try {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var f_create;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'post', null, input.flags)
-        : f_create = await https.post({
+        ? a = await sendAttachment('body', input, url, 'post', null, input.flags)
+        : r = await https.post({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        });
-      return f_create;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? r : a;
+    } catch (e) { return e; }
   },
 
   /**
@@ -326,20 +257,16 @@ module.exports.followup = {
     try {
       const url = `/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`;
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
-      var f_edit;
+      let r, a;
       (input?.attachments && input?.attachments?.length)
-        ? await sendAttachment(input, url, 'patch', null, input.flags)
-        : f_edit = await https.patch({
+        ? a = await sendAttachment('body', input, url, 'patch', null, input.flags)
+        : r = await https.patch({
           url: encodeURI(`discord.com`),
           path: encodeURI(url),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
-        });
-      return f_edit;
-    } catch (e) {
-      console.log(e);
-    }
-
+        }); return r ? r : a;
+    } catch (e) { return e }
   },
 
   /**
@@ -349,20 +276,14 @@ module.exports.followup = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
    */
   async get(interaction, input = {}) {
-    let f_get;
     try {
-      f_get = await https.get({
+      let r = await https.get({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return f_get;
+      }); return r;
+    } catch (e) { return e }
   },
 
   /**
@@ -372,44 +293,13 @@ module.exports.followup = {
    * @url https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
    */
   async del(interaction, input = {}) {
-    let f_delete_followup;
     try {
-      f_delete_followup = await https.del({
+      let r = await https.del({
         url: encodeURI(`discord.com`),
         path: encodeURI(`/api/webhooks/${interaction.application_id}/${interaction.token}/messages/${input.message_id}`),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: '',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return f_delete_followup;
+      }); return r;
+    } catch (e) { return e }
   },
-};
-
-/**
- * Attachment handler for Interactions. 
- * 
- * Thanks LostMyInfo :)
- */
-async function sendAttachment(params, url, method, type, flags) {
-  const FormData = require('form-data');
-  const axios = require('axios');
-  const form = new FormData();
-  for (let i = 0; i < params.attachments.length; i++) {
-    form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
-  }
-  params.flags = flags;
-  params.attachments = params.attachments.map((a, index) => ({
-    id: index, filename: a.filename, description: a.description ?? ''
-  }));
-  form.append('payload_json', JSON.stringify({ type: type, data: params }));
-  await axios({
-    method: `${method}`,
-    url: `https://discord.com${url}`,
-    data: form,
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
 };
