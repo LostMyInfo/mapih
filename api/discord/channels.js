@@ -90,7 +90,7 @@ module.exports = {
             cfg.path = `channels/${params.channel_id}/${cfg.endpoint}`;
             cfg.attempt = await doRequest(cfg);
 
-            return cfg.attempt.statusCode == 204 ? attempt : false;
+            return cfg.attempt.statusCode == 204 ? cfg.attempt : false;
 
         } catch (e) {
             console.log(e);
