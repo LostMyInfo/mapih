@@ -84,7 +84,7 @@ module.exports = {
             const cfg = {
                 method: "POST",
                 body: structures.newStructure('application_command'),
-                endpoint: `guilds/${guild_id}/commands`,
+                endpoint: `guilds/${params.guild_id}/commands`,
                 properties: {
                     name: params.name,
                     description: params.description,
