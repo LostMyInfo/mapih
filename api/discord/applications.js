@@ -120,4 +120,24 @@ module.exports = {
             console.log(e);
         }
     },
+    async deleteGlobalApplicationCommand(params) {
+    try {
+      const cfg = {
+        method: 'DEL',
+        body: null,
+        endpoint: `commands/${params.command_id}`,
+        properties: {},
+        params: params,
+        audit: true,
+        reason: 'Deleting Global Application Command'
+      };
+      cfg.path = `applications/${params.application_id}/${cfg.endpoint}`;
+      cfg.attempt = await doRequest(cfg);
+
+      return cfg.attempt.statusCode == 204 ? cfg.attempt : false;
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
