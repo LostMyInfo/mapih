@@ -10,4 +10,6 @@ export function createGuildApplicationCommand(params: any): Promise<any>;
 export function createGuildApplicationCommand(params: any): Promise<any>;
 export function bulkOverwriteGuildApplicationCommands(params: any): Promise<void>;
 export function bulkOverwriteGuildApplicationCommands(params: any): Promise<void>;
+export function deleteGlobalApplicationCommand(params: any): Promise<any>;
+export function deleteGlobalApplicationCommand(params: any): Promise<any>;
 //# sourceMappingURL=applications.d.ts.map

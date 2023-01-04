@@ -9,6 +9,7 @@ export namespace Discord {
         getGuildApplicationCommands(params: any): Promise<any>;
         createGuildApplicationCommand(params: any): Promise<any>;
         bulkOverwriteGuildApplicationCommands(params: any): Promise<void>;
+        deleteGlobalApplicationCommand(params: any): Promise<any>;
     };
     const Channels: {
         messageCreate(params: any): Promise<any>;
