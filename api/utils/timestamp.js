@@ -1,12 +1,11 @@
-/**
- * Language: javascript
- * Path: timestamp.js
- * Returns a timestamp in the format: YYYY-MM-DD HH:MM:SS
- * Example: 2019-01-01 00:00:00
- * Author: Goodsie
- */
 module.exports = {
-    
+    // Language: javascript
+    // Path: timestamp.js
+    // Returns a timestamp in the format: YYYY-MM-DD HH:MM:SS
+    // Example: 2019-01-01 00:00:00
+    // Author: Goodsie
+
+    //Local timezone
     default() {
         return new Date().getFullYear() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2) + "-" + ("0" + new Date().getDate()).slice(-2) + " " + new Date().getHours() + ":" + ("0" + (new Date().getMinutes() + 1)).slice(-2) + ":" + ("0" + (new Date().getSeconds() + 1)).slice(-2)
     },

@@ -1,32 +1,49 @@
 module.exports = {
   /**
    * the `get` method. Https only, uses port: 443.
-   * 
-   * @param {*} params 
+   * @example
+   * ```js
+   * await https.get({
+   *   url: encodeURI('discord.com'),
+   *   path: encodeURI(`/api/channels/${params.channel_id}`),
+   *   headers: {
+   *     'Content-Type': 'application/json',
+   *      Authorization: `Bot ${process.env.token}`
+   *   },
+   *   body: ''
+   * })
+   * ```
+   * @param {Object} params
+   * @param {string} params.url
+   * @param {string} [params.path]
+   * @param {number} [params.port] 
+   * @param {*} [params.headers]
+   * @param {boolean} [params.rejectUnauthorized]
    * @returns any
    */
   async get(params) {
-    return new Promise(async function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const https = require('node:https');
       const options = {
-        host: params.url,
-        port: 443,
-        path: params.path,
+        hostname: params.url,
+        port: params.port ?? 443,
+        path: params.path ?? '/',
         method: 'GET',
-        headers: params.headers,
+        headers: params.headers
       };
       options.agent = new https.Agent(options);
 
-      let req = https.request(options, async (res) => {
+      const req = https.request(options, async (res) => {
         let data = '';
         res.on('data', async (readable) => {
           data += readable;
         });
         res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
+          const result = {
+            statusCode: res.statusCode,
+            headers: res.headers,
+            body: data
+          };
           resolve(result);
         });
       });
@@ -36,29 +53,30 @@ module.exports = {
       req.end();
     });
   },
-  //method GET80
+  // method GET80
   async get80(params) {
-    return new Promise(async function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const http = require('node:http');
       const options = {
         host: params.url,
-        port: 80,
+        port: params.port ?? 80,
         path: params.path,
         method: 'GET',
-        headers: params.headers,
+        headers: params.headers
       };
       options.agent = new http.Agent(options);
 
-      let req = http.request(options, async (res) => {
+      const req = http.request(options, async (res) => {
         let data = '';
         res.on('data', async (readable) => {
           data += readable;
         });
         res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
+          const result = {
+            statusCode: res.statusCode,
+            headers: res.headers,
+            body: data
+          };
           resolve(result);
         });
       });
@@ -68,9 +86,9 @@ module.exports = {
       req.end();
     });
   },
-  //method POST
+  // method POST
   async post(params) {
-    return new Promise(async function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const https = require('node:https');
       const options = {
         host: params.url,
@@ -98,21 +116,22 @@ module.exports = {
             params.headers['Content-Location'] ??
             params.headers['content-location'] ??
             '',
-          Authorization: params.headers['Authorization'] ?? '',
-        },
+          Authorization: params.headers['Authorization'] ?? ''
+        }
       };
       options.agent = new https.Agent(options);
 
-      let req = https.request(options, async (res) => {
+      const req = https.request(options, async (res) => {
         let data = '';
         res.on('data', async (readable) => {
           data += readable;
         });
         res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
+          const result = {
+            statusCode: res.statusCode,
+            headers: res.headers,
+            body: data
+          };
           resolve(result);
         });
       });
@@ -123,9 +142,9 @@ module.exports = {
       req.end();
     });
   },
-  //method PUT
+  // method PUT
   async put(params) {
-    return new Promise(async function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const https = require('node:https');
       const options = {
         host: params.url,
@@ -160,21 +179,22 @@ module.exports = {
           'X-Audit-Log-Reason':
             params.headers['X-Audit-Log-Reason'] ??
             params.headers['x-audit-log-reason'] ??
-            '',
-        },
+            ''
+        }
       };
       options.agent = new https.Agent(options);
 
-      let req = https.request(options, async (res) => {
+      const req = https.request(options, async (res) => {
         let data = '';
         res.on('data', async (readable) => {
           data += readable;
         });
         res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
+          const result = {
+            statusCode: res.statusCode,
+            headers: res.headers,
+            body: data
+          };
           resolve(result);
         });
       });
@@ -185,9 +205,9 @@ module.exports = {
       req.end();
     });
   },
-  //method PATCH
+  // method PATCH
   async patch(params) {
-    return new Promise(async function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const https = require('node:https');
       const options = {
         host: params.url,
@@ -222,21 +242,25 @@ module.exports = {
           'X-Audit-Log-Reason':
             params.headers['X-Audit-Log-Reason'] ??
             params.headers['x-audit-log-reason'] ??
-            '',
-        },
+            ''
+        }
       };
       options.agent = new https.Agent(options);
 
-      let req = https.request(options, async (res) => {
+      const req = https.request(options, async (res) => {
         let data = '';
         res.on('data', async (readable) => {
           data += readable;
         });
         res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
+          const result = {
+            statusCode: res.statusCode,
+            headers: res.headers,
+            body: data
+          };
+          // result.statusCode = res.statusCode;
+          // result.headers = res.headers;
+          // result.body = data;
           resolve(result);
         });
       });
@@ -247,9 +271,9 @@ module.exports = {
       req.end();
     });
   },
-  //method DELETE
+  // method DELETE
   async del(params) {
-    return new Promise(async function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const https = require('node:https');
       const options = {
         host: params.url,
@@ -284,21 +308,25 @@ module.exports = {
           'X-Audit-Log-Reason':
             params.headers['X-Audit-Log-Reason'] ??
             params.headers['x-audit-log-reason'] ??
-            '',
-        },
+            ''
+        }
       };
       options.agent = new https.Agent(options);
 
-      let req = https.request(options, async (res) => {
+      const req = https.request(options, async (res) => {
         let data = '';
         res.on('data', async (readable) => {
           data += readable;
         });
         res.on('end', async () => {
-          result = {};
-          result.statusCode = res.statusCode;
-          result.headers = res.headers;
-          result.body = data;
+          const result = {
+            statusCode: res.statusCode,
+            headers: res.headers,
+            body: data
+          };
+          // result.statusCode = res.statusCode;
+          // result.headers = res.headers;
+          // result.body = data;
           resolve(result);
         });
       });
@@ -308,5 +336,5 @@ module.exports = {
       req.write(params.body);
       req.end();
     });
-  },
+  }
 };

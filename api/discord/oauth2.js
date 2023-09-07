@@ -47,7 +47,7 @@ module.exports = {
    *   let clientCredentials = await getClientCredentials(client_id, client_secret, scope);
    * ```
    * 
-   * @param {string} client_id client id from developers portal.
+   * @param {snowflake} client_id client id from developers portal.
    * @param {string} client_secret client secret from developers portal.
    * @param {string} scope scope of permissions to request.
    * @returns {Promise<object>}
@@ -87,7 +87,7 @@ module.exports = {
    *   let bearerToken = await oauth2.getToken(client_id, client_secret, oauth2_redirect, code);
    * ```
    * 
-   * @param {string} client_id client id from developers portal.
+   * @param {Snowflake} client_id client id from developers portal.
    * @param {string} client_secret client secret from developers portal.
    * @param {string} oauth2_redirect URI encoded url for redirection.
    * @param {string} code string passed to endpoint during authorization attempts.
@@ -132,7 +132,7 @@ module.exports = {
   *   let refreshToken = await oauth2.refreshToken(client_id, client_secret, refresh_token);
   * ```
   * 
-  * @param {string} client_id client id from developers portal.
+  * @param {Snowflake} client_id client id from developers portal.
   * @param {string} client_secret client secret from developers portal.
   * @param {string} refresh_token URI encoded url for redirection.
   * @returns {Promise<object>}
@@ -177,7 +177,7 @@ module.exports = {
    *   let revoked = await oauth2.revokeToken(client_id, client_secret, token);
    * ```
    * 
-   * @param {string} client_id client id from developers portal.
+   * @param {Snowflake} client_id client id from developers portal.
    * @param {string} client_secret client secret from developers portal.
    * @param {string} token client access token.
    * 
