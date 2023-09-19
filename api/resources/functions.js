@@ -8,12 +8,10 @@ const { default: axios, AxiosError, isAxiosError } = require('axios');
 const FormData = require('form-data');
 
 const https = require('../utils/https');
-const { USER_FLAGS, PERMISSION_NAMES } = require('../../enums/enum');
+const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
 const sizeOf = require('image-size');
-
-// const { log } = require('../../../processes/data/LostMyInfo/LostMySocket/functions/tools');
 
 /**
  * @global
