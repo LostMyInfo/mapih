@@ -3,7 +3,7 @@
 
 const { attemptHandler, imageData, isValidJSON, returnErr, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload } = require('../resources/functions');
 const https = require('../utils/https');
-const { USER_FLAGS, PERMISSION_NAMES, ScheduledEventStatus, ScheduledEventEntityType } = require('../../enums/enum');
+const { USER_FLAGS, PERMISSION_NAMES, ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
 
 const filetype = require('file-type-cjs-fix');
 const { default: axios } = require('axios');

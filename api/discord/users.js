@@ -2,6 +2,7 @@
 'use strict';
 
 const { attemptHandler, sendAttachment, imageData, getBadges, retrieveDate, avatarFromObject, generateCDN } = require('../resources/functions');
+const https = require('../utils/https');
 
 // Users
 // https://discord.com/developers/docs/resources/user#users-resource

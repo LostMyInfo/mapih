@@ -14,6 +14,50 @@
  */
 
 /**
+ * @summary [OAuth2 Scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
+ * @typedef {'activities.read'|'activites.write'|'applications.builds.read'|'applications.builds.upload'|'applications.commands'|'applications.commands.update'|'applications.commands.permissions.update'|'applications.entitlements'|'applications.store.update'|'bot'|'connections'|'dm_channels.read'|'email'|'gdm.join'|'guilds'|'guilds.join'|'guilds.members.read'|'identify'|'messages.read'|'relationships.read'|'role_connections.write'|'rpc'|'rpc.activities.write'|'rpc.notifications.read'|'rpc.voice.read'|'rpc.voice.write'|'voice'|'webhook.incoming'} OAuth2Scopes
+ * | Name | Description |
+ * |------|-------------|
+ * | activities.read | allows your app to fetch data from a user's "Now Playing/Recently Played" list — not currently available for apps |
+ * | activites.write | allows your app to update a user's activity - requires Discord approval (NOT REQUIRED FOR GAMESDK ACTIVITY MANAGER) |
+ * | applications.builds.read | allows your app to read build data for a user's applications |
+ * | applications.builds.upload | allows your app to upload/update builds for a user's applications - requires Discord approval |
+ * | applications.commands | allows your app to use commands in a guild |
+ * | applications.commands.update | allows your app to update its commands using a Bearer token - client credentials grant only |
+ * | applications.commands.permissions.update | allows your app to update permissions for its commands in a guild a user has permissions to |
+ * | applications.entitlements | allows your app to read entitlements for a user's applications |
+ * | applications.store.update | allows your app to read and update store data (SKUs, store listings, achievements, etc.) for a user's applications |
+ * | bot | for oauth2 bots, this puts the bot in the user's selected guild by default |
+ * | connections | allows `/users/@me/connections` to return linked third-party accounts |
+ * | dm_channels.read | allows your app to see information about the user's DMs and group DMs - requires Discord approval |
+ * | email | enables `/users/@me` to return an email |
+ * | gdm.join | allows your app to join users to a group dm |
+ * | guilds | allows `/users/@me/guilds` to return basic information about all of a user's guilds |
+ * | guilds.join | 	allows `/guilds/{guild.id}/members/{user.id}` to be used for joining users to a guild
+ * | guilds.members.read | allows `/users/@me/guilds/{guild.id}/member` to return a user's member information in a guild |
+ * | identify | allows `/users/@me` without `email`
+ * | messages.read | for local rpc server api access, this allows you to read messages from all client channels (otherwise restricted to channels/guilds your app creates)
+ * | relationships.read | allows your app to know a user's friends and implicit relationships - requires Discord approval
+ * | role_connections.write | allows your app to update a user's connection and metadata for the app
+ * | rpc | for local rpc server access, this allows you to control a user's local Discord client - requires Discord approval
+ * | rpc.activities.write | for local rpc server access, this allows you to update a user's activity - requires Discord approval
+ * | rpc.notifications.read | for local rpc server access, this allows you to receive notifications pushed out to the user - requires Discord approval
+ * | rpc.voice.read | for local rpc server access, this allows you to read a user's voice settings and listen for voice events - requires Discord approval
+ * | rpc.voice.write | for local rpc server access, this allows you to update a user's voice settings - requires Discord approval
+ * | voice | allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval
+ * | webhook.incoming | this generates a webhook that is returned in the oauth token response for authorization code grants
+ */
+/**
+ * @summary [OAuth2 Access Token Response]{@link https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-access-token-response}
+ * @typedef {Object} AccessTokenResponse
+ * @property {string} token_type - Type of token
+ * @property {string} access_token
+ * @property {string} refresh_token
+ * @property {OAuth2Scopes[]} scope
+ * @property {number} expires_in
+ */
+
+/**
  * @summary [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure}
  * @description
  * There are 3 types of commands accessible in different interfaces: the chat input, a message's context menu (top-right menu or right-clicking in a message), and a user's context menu (right-clicking on a user)
@@ -68,16 +112,17 @@
 
 /**
  * @summary Application Command Types
+ * @typedef {number} ApplicationCommandType
  * | name  | type | description |
  * |-------|------|-------------|
  * | Chat Input | 1 | Slash commands; a text-based command that shows up when a user types
  * | User       | 2 | A UI-based command that shows up when you right click or tap on a user
  * | Message    | 3 | A UI-based command that shows up when you right click or tap on a message
- * @typedef {number} ApplicationCommandType
  */
 
 /**
  * @summary Application Command [Option Types]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type}
+ * @typedef {number} ApplicationCommandOptionType
  * | name  | type | description |
  * |-------|------|-------------|
  * | Sub Command       | 1 |
@@ -91,7 +136,6 @@
  * | Mentionable       | 9 | Includes users and roles
  * | Number            | 10 | Any double between -2^53 and 2^53
  * | Attachment        | 11 | {@link Attachment}
- * @typedef {number} ApplicationCommandOptionType
  */
 
 /**
@@ -99,8 +143,8 @@
  * @summary Presence Object in Presence Update Event
  * @typedef {Object} Presence
  * @property {Snowflake} userid
- * @property {'online'|'offline'|'idle'|'dnd'|''} newStatus
- * @property {'online'|'offline'|'idle'|'dnd'|''} oldStatus
+ * @property {'online'|'offline'|'idle'|'dnd'} newStatus
+ * @property {'online'|'offline'|'idle'|'dnd'} [oldStatus]
  */
 
 /**
@@ -133,11 +177,11 @@
 
 /**
  * @summary ## [Sticker Types]{@link https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types}
+ * @typedef {number} StickerType
  * | Name | Value | Description |
  * |------|-------|-------------|
  * | Standard | 1 | Official sticker in a pack, part of Nitro or in a removed purchasable pack |
  * | Guild    | 2 | A Sticker uploaded to a guild for the guild's members |
- * @typedef {number} StickerType
  */
 
 /**
@@ -154,13 +198,22 @@
 
 /**
  * @summary ## [Sticker Format Types]{@link https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types}
+ * @typedef {number} StickerFormatType
  * | Name | Value |
  * |------|-------|
  * | PNG    | 1 |
  * | APNG   | 2 |
  * | LOTTIE | 3 |
  * | GIF    | 4 |
- * @typedef {number} StickerFormatType
+ */
+
+/**
+ * Bot Partial Activity Object
+ * @typedef {Object} BotActivity
+ * @property {ActivityType} type - [Activity Type]{@link https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types}
+ * @property {string} name
+ * @property {?string} [state] - User's current party status, or text used for custom status
+ * @property {?string} [url] - Stream URL, is validated when type is 1
  */
 
 /**
@@ -168,7 +221,7 @@
  * @typedef {Object} Activity
  * @property {string} name - Activity's name
  * @property {ActivityType} type - [Type of Activity]{@link https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types}
- * @property {?string=} url - Stream URL, is validated when type is 1
+ * @property {?string} [url] - Stream URL, is validated when type is 1
  * @property {number} created_at - Unix timestamp (in milliseconds) of when the activity was added to the user's session
  * @property {{start: ?number, end: ?number}} [timestamps] - Unix timestamps for start and/or end of the game
  * @property {Snowflake} [application_id] - Application ID for the game
@@ -185,6 +238,7 @@
 
 /**
  * @summary [Activity Type]{@link https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types}
+ * @typedef {number} ActivityType
  * | ID | Name | Format | Example |
  * |----|------|--------|---------|
  * | 0  | Game | Playing {name} | "Playing Rocket League" |
@@ -193,16 +247,15 @@
  * | 3  | Watching  | Watching {name}     | "Watching YouTube Together" |
  * | 4  | Custom    | {emoji} {name}      | ":smiley: I am cool" |
  * | 5  | Competing | Competing in {name} | "Competing in Arena World Champions" |
- * @typedef {number} ActivityType
  */
 /**
  * @ignore
  * @summary Invite Target Type
+ * @typedef {number} InviteTargetType
  * | Name | Value |
  * |------|-------|
  * | Stream  | 1  |
  * | Embedded Application | 2  |
- * @typedef {number} InviteTargetType
  */
 
 /**
@@ -370,6 +423,7 @@
  * @property {string} [banner_url]
  * @property {string} [splash_url]
  * @property {string} [discovery_splash_url]
+ * @property {?*} inventory_settings
  */
 
 /**
@@ -491,11 +545,11 @@
 
 /**
  * @summary [Sort Order Types]{@link https://discord.com/developers/docs/resources/channel#channel-object-sort-order-types}
+ * @typedef {number} SortOrderType
  * | Flag | Value | Description |
  * |------|-------|-------------|
  * | Latest Activity | 0 | Sort forum posts by activity
  * | Creation Date   | 1 | Sort forum posts by creation time (from most recent to oldest)
- * @typedef {number} SortOrderType
  */
 
 /**
@@ -507,12 +561,12 @@
 
 /**
  * @summary [Forum Layout Types]{@link https://discord.com/developers/docs/resources/channel#channel-object-forum-layout-types}
+ * @typedef {number} ForumLayoutType
  * | Flag | Value | Description |
  * |------|-------|-------------|
  * | Not Set      | 0 | No default has been set for forum channel
  * | List View    | 1 | Display posts as a list
  * | Gallery View | 2 | Display posts as a collection of tiles
- * @typedef {number} ForumLayoutType
  */
 
 /**
@@ -558,11 +612,11 @@
 
 /**
  * @summary [Team Membership State]{@link https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum}
+ * @typedef {number} MembershipState
  * | Name | Value |
  * |------|-------|
  * | Invited | 1 |
  * | Accepted | 2 |
- * @typedef {number} MembershipState
  */
 
 /**
@@ -600,12 +654,12 @@
 
 /**
  * @summary [Message Activity Types]{@link https://discord.com/developers/docs/resources/channel#message-object-message-activity-types}
+ * @typedef {number} MessageActivityType
  * | Type | Value |
  * | Join | 1 |
  * | Spectate | 2 |
  * | Listen | 3 |
  * | Join Request | 5 |
- * @typedef {number} MessageActivityType
  */
 
 /**
@@ -686,6 +740,7 @@
 
 /**
  * @summary Application Role Connection Metadata Type
+ * @typedef {number} ApplicationRoleConnectionMetadataType
  * | Type | Value | Description |
  * |------|-------|-------------|
  * INTEGER_LESS_THAN_OR_EQUAL | 1 | The metadata value (`integer`) is less than or equal to the guild's configured value (`integer`) |
@@ -696,7 +751,6 @@
  * DATETIME_GREATER_THAN_OR_EQUAL | 6 | The metadata value (ISO8601 string) is greater than or equal to the guild's configured value (`integer`; days before current date) |
  * BOOLEAN_EQUAL | 7 | The metadata value (`integer`) is equal to the guild's configured value (`integer`; 1) |
  * BOOLEAN_NOT_EQUAL | 8 | The metadata value (`integer`) is not equal to the guild's configured value (``integer``; 1) |
- * @typedef {number} ApplicationRoleConnectionMetadataType
  */
 
 /**
@@ -720,12 +774,12 @@
 
 /**
  * @summary [Application Command Permission Type]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permission-type}
+ * @typedef {number} ApplicationCommandPermissionType
  * | Name | Value |
  * |------|-------|
  * | Role    | 1 |
  * | User    | 2 |
  * | Channel | 3 |
- * @typedef {number} ApplicationCommandPermissionType
  */
 
 /**
@@ -748,31 +802,31 @@
 
 /**
  * @summary [Auto Moderation Event Type]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types}
+ * @typedef {number} AutoModEventType
  * | Event Type | Value | Description |
  * |------------|-------|-------------|
  * | Message Send | 1 | When a member sends or edits a message in the guild |
- * @typedef {number} AutoModEventType
  */
 
 /**
  * @summary [Auto Moderation Trigger Types]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-types}
+ * @typedef {number} AutoModTriggerType
  * | Trigger Type | Value | Description |
  * |--------------|-------|-------------|
  * | Keyword        | 1 | Check if content contains words from a user defined list of keywords |
  * | Spam           | 3 | Check if content represents generic spam |
  * | Keyword Preset | 4 | Check if content contains words from internal pre-defined wordsets |
  * | Mention Spam   | 5 | Check if content contains more unique mentions than allowed |
- * @typedef {number} AutoModTriggerType
  */
 
 /**
  * @summary [Auto Moderation Keyword Preset Types]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-keyword-preset-types}
+ * @typedef {number} AutoModKeywordPresetTypes
  * | Preset Type | Value | Description |
  * |--------------|-------|-------------|
  * | Profanity      | 1 | Words that may be considered forms of swearing or cursing |
  * | Sexual Content | 2 | Words that refer to sexually explicit behavior or activity |
  * | Slurs          | 3 | Personal insults or words that may be considered hate speech |
- * @typedef {number} AutoModKeywordPresetTypes
  */
 
 /**
@@ -789,12 +843,12 @@
 
 /**
  * @summary [Auto Moderation Action Types]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-types}
+ * @typedef {number} AutoModActionType
  * | Action Type | Value | Description |
  * |--------------|-------|-------------|
  * | Block Message      | 1 | Blocks a members message and prevents it from being posted. A custom explanation can be specified and shown to members whenever their message is blocked |
  * | Send Alert Message | 2 | Logs user content to a specified channel |
  * | Timeout            | 3 | Timeout user for a specified duration |
- * @typedef {number} AutoModActionType
  */
 
 /**
@@ -927,6 +981,7 @@
 
 /**
  * @summary [Audit Log Events]{@link https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events}
+ * @typedef {number} AuditLogEventType
  * | Event | Value | Description |
  * |-------|-------|-------------|
  * | Guild Update | 1 | Server settings were updated |
@@ -983,16 +1038,16 @@
  * | Auto Moderation Block Message | 143 | Message was blocked by Auto Moderation
  * | Auto Moderation Flag To Channel | 144 | Message was flagged by Auto Moderation
  * | Auto Moderation User Communication Disabled | 145 | Member was timed out by Auto Moderation
- * @typedef {number} AuditLogEventType
  */
 
 /**
  * @summary [Webhook Types]{@link https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types}
+ * @typedef {number} WebhookType
  * | Name | Value | Description |
  * |-------|------|-------------|
  * | Incoming | 1 | Incoming Webhooks can post messages to channels with a generated token |
  * | Channel Follower | 2 | Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels
- * ! Application | 3 | Application webhooks are webhooks used with Interactions
+ * | Application | 3 | Application webhooks are webhooks used with Interactions
  * @example
  * // Incoming Webhook
  * {
@@ -1022,7 +1077,6 @@
  *   guild_id: null,
  *   application_id: '658822586720976555'
  * }
- * @typedef {number} WebhookType
  */
 /**
  * @summary [Webhook]{@link https://discord.com/developers/docs/resources/webhook#webhook-object}
@@ -1052,11 +1106,11 @@
 /**
  * @ignore
  * @summary [Channel Flags]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-flags}
+ * @typedef {number} ChannelFlags
  * | Flag | Value | Description |
  * |------|-------|-------------|
  * | Pinned | 1 << 1 | This thread is pinned to the top of its parent `GUILD_FORUM` channel
  * | Required Tag | 1 << 4 | Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field.
- * @typedef {number} ChannelFlags
  */
 
 /**
@@ -1158,12 +1212,12 @@
 
 /**
  * @summary [Allowed Mention Types]{@link https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types}
+ * @typedef {'roles'|'users'|'everyone'} AllowedMentionsType
  * | Type | Value | Description |
  * |------|-------|-------------|
  * | Role Mentions     | 'roles'    | Controls role mentions |
  * | User Mentions     | 'users'    | Controls user mentions |
  * | Everyone Mentions | 'everyone' | Controls `@everyone` and `@here` mentions |
- * @typedef {'roles'|'users'|'everyone'} AllowedMentionsType
  */
 
 /**
@@ -1207,6 +1261,7 @@
 
 /**
  * @summary [Message Flags]{@link https://discord.com/developers/docs/resources/channel#message-object-message-flags}
+ * @typedef {number} MessageFlags
  * | Type | Value | Description |
  * |------|-------|-------------|
  * | Crossposted | 1 << 0 | This message has been published to subscribed channels (via Channel Following) |
@@ -1218,11 +1273,11 @@
  * | Ephemeral | 1 << 6 | This message is only visible to the user who invoked the Interaction |
  * | Loading | 1 << 7 | This message is an Interaction Response and the bot is "thinking" |
  * | FailedToMentionSomeRolesInThread | 1 << 8 | This message failed to mention some roles and add their members to the thread |
- * @typedef {number} MessageFlags
  */
 
 /**
  * @summary [Channel Types]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-types}
+ * @typedef {number} ChannelType
  * | Type | Value | Description |
  * |------|-------|-------------|
  * | Guild Text          | 0 | A text channel within a guild |
@@ -1238,11 +1293,11 @@
  * | Guild Directory     | 14 | The channel in a hub containing the listed servers |
  * | Guild Forum         | 15 | Channel that can only contain threads |
  * | Guild Media         | 16 | Channel that can only contain media threads |
- * @typedef {number} ChannelType
  */
 
 /**
  * @summary [Message Types]{@link https://discord.com/developers/docs/resources/channel#message-object-message-types}
+ * @typedef {number} MessageType
  * | Type | Value |
  * |------|-------|
  * | Default | 0 |
@@ -1276,10 +1331,10 @@
  * | Stage Speaker | 29 |
  * | Stage Topic | 31 |
  * | Guild Application Premium Subscription | 32 |
- * @typedef {number} MessageType
  */
 /**
  * @summary [Component Types]{@link https://discord.com/developers/docs/interactions/message-components#component-object-component-types}
+ * @typedef {number} ComponentType
  * | Type | Name | Description |
  * |------|------|-------------|
  * | 1 | Action Row     | Container for other components |
@@ -1290,12 +1345,12 @@
  * | 6 | Role Select    | Select menu for roles |
  * | 7 | Mentionable Select | Select menu for mentionables (users and roles) |
  * | 8 | Channel Select | Select menu for channels |
- * @typedef {number} ComponentType
  */
 
 
 /**
  * @summary [Button Styles]{@link https://discord.com/developers/docs/interactions/message-components#button-object-button-styles}
+ * @typedef {number} ButtonStyle
  * | Name | Value | Color |
  * |------|-------|-------|
  * | Primary   | 1 | blurple |
@@ -1303,16 +1358,15 @@
  * | Success   | 3 | green |
  * | Danger    | 4 | red |
  * | Link      | 5 | grey, navigates to a URL |
- * @typedef {number} ButtonStyle
  */
 
 /**
  * @summary [Text Input Styles]{@link https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-styles}
+ * @typedef {number} TextInputStyle
  * | Name | Value | Description |
  * |------|-------|-------------|
  * | Short | 1 | Single-line input |
  * | Paragraph | 2 | Multi-line input |
- * @typedef {number} TextInputStyle
  */
 
 /**
@@ -1454,15 +1508,16 @@
 
 /**
  * @summary [Video Quality Modes]{@link https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes}
+ * @typedef {number} VideoQualityMode
  * | Mode | Value | Description |
  * |------|-------|-------------|
  * | Auto | 1 | Discord chooses the quality for optimal performance |
  * | Full | 2 | 720p |
- * @typedef {number} VideoQualityMode
  */
 
 /**
  * @summary [Guild Verification Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-verification-level}
+ * @typedef {number} GuildVerificationLevel
  * | Level | Integer | Description |
  * |-------|---------|-------------|
  * | None      | 0 | Unrestricted |
@@ -1470,50 +1525,50 @@
  * | Medium    | 2 | Must be registered on Discord for longer than 5 minutes |
  * | High      | 3 | Must be a member of the server for longer than 10 minutes |
  * | Very High | 4 | Must have a verified phone number |
- * @typedef {number} GuildVerificationLevel
  */
 
 /**
  * @summary [Default Message Notification Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level}
+ * @typedef {number} DefaultMessageNotificationLevel
  * | Key | Value | Description |
  * |-----|-------|-------------|
  * | All Messages  | 0 | Members will receive notifications for all messages by default |
  * | Only Mentions | 1 | Members will receive notifications only for messages that `@mention` them by default |
- * @typedef {number} DefaultMessageNotificationLevel
  */
 
 /**
  * @summary [Explicit Content Filter Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level}
+ * @typedef {number} ExplicitContentFilterLevel
  * | Level | Integer | Description |
  * |-------|---------|-------------|
  * | Disabled              | 0 | Media content will not be scanned |
  * | Members without roles | 1 | Media content sent by members without roles will be scanned |
  * | All members           | 2 | Media content sent by all members will be scanned |
- * @typedef {number} ExplicitContentFilterLevel
  */
 
 /**
  * @summary [Guild MFA Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-mfa-level}
+ * @typedef {number} GuildMFALevel
  * | Level | Integer | Description |
  * |-------|---------|-------------|
  * | None     | 0 | Guild has no MFA/2FA requirement for moderation actions |
  * | Elevated | 1 | Guild has a 2FA requirement for moderation actions |
- * @typedef {number} GuildMFALevel
  */
 
 /**
  * @summary Guild NSFW Level
+ * @typedef {number} GuildNSFWLevel
  * | Level | Value |
  * |-------|-------|
  * | Default        | 0 |
  * | Explicit       | 1 |
  * | Safe           | 2 |
  * | Age-Restricted | 3 |
- * @typedef {number} GuildNSFWLevel
  */
 
 /**
  * @summary System Channel Flags
+ * @typedef {number} SystemChannelFlags
  * | Flag | Value | Description |
  * |------|-------|-------------|
  * SUPPRESS_JOIN_NOTIFICATIONS | 1 << 0 | Supress member join notifications |
@@ -1522,11 +1577,11 @@
  * SUPPRESS_JOIN_NOTIFICATION_REPLIES | 1 << 3 | Hide member join sticker reply buttons |
  * SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS | 1 << 4 | Suppress role subscription purchase and renewal notifications |
  * SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES | 1 << 5 | Hide role subscription sticker reply buttons |
- * @typedef {number} SystemChannelFlags
  */
 
 /**
  * @summary Guild Features
+ * @typedef {'ANIMATED_BANNER'|'ANIMATED_ICON'|'APPLICATION_COMMAND_PERMISSIONS_V2'|'AUTO_MODERATION'|'BANNER'|'COMMUNITY'|'CREATOR_MONETIZABLE_PROVISIONAL'|'CREATOR_STORE_PAGE'|'DEVELOPER_SUPPORT_SERVER'|'DISCOVERABLE'|'FEATURABLE'|'INVITES_DISABLED'|'INVITE_SPLASH'|'MEMBER_VERIFICATION_GATE_ENABLED'|'MORE_STICKERS'|'NEWS'|'PARTNERED'|'PREVIEW_ENABLED'|'ROLE_ICONS'|'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE'|'ROLE_SUBSCRIPTIONS_ENABLED'|'TICKETED_EVENTS_ENABLED'|'VANITY_URL'|'VERIFIED'|'VIP_REGIONS'|'WELCOME_SCREEN_ENABLED'} GuildFeatures
  * | Feature | Description |
  * |---------|-------------|
  * | Animated Banner | guild has access to set an animated guild banner image |
@@ -1555,18 +1610,17 @@
  * | Verified | guild is verified |
  * | VIP Regions | guild has access to set 384kbps bitrate in voice (previously VIP voice servers) |
  * | Welcome Screen Enabled | guild has enabled the welcome screen |
- * @typedef {'ANIMATED_BANNER'|'ANIMATED_ICON'|'APPLICATION_COMMAND_PERMISSIONS_V2'|'AUTO_MODERATION'|'BANNER'|'COMMUNITY'|'CREATOR_MONETIZABLE_PROVISIONAL'|'CREATOR_STORE_PAGE'|'DEVELOPER_SUPPORT_SERVER'|'DISCOVERABLE'|'FEATURABLE'|'INVITES_DISABLED'|'INVITE_SPLASH'|'MEMBER_VERIFICATION_GATE_ENABLED'|'MORE_STICKERS'|'NEWS'|'PARTNERED'|'PREVIEW_ENABLED'|'ROLE_ICONS'|'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE'|'ROLE_SUBSCRIPTIONS_ENABLED'|'TICKETED_EVENTS_ENABLED'|'VANITY_URL'|'VERIFIED'|'VIP_REGIONS'|'WELCOME_SCREEN_ENABLED'} GuildFeatures
  */
 
 /**
  * @summary Mutable Guild Features
+ * @typedef {'COMMUNITY'|'DISCOVERABLE'|'INVITES_DISABLED'|'RAID_ALERTS_DISABLED'} MutableGuildFeatures
  * | Feature | Required Permissions | Effects |
  * |---------|----------------------|---------|
  * | Community | Administrator | Enables Community Features in the guild |
  * | Discoverable | Administrator | Enables discovery in the guild, making it publicly listed |
  * | Invites Disabled | Manage Guild | Pauses all invites/access to the server |
  * | Raid Alerts Disabled | Manage Guild | Disables alerts for join raids |
- * @typedef {'COMMUNITY'|'DISCOVERABLE'|'INVITES_DISABLED'|'RAID_ALERTS_DISABLED'} MutableGuildFeatures
  */
 
 /**
@@ -1587,25 +1641,26 @@
 
 /**
  * @summary [Stage Instance Privacy Level]{@link https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level}
+ * @typedef {number} StagePrivacyLevel
  * | Name | Value |
  * |------|-------|
  * | Public  | 1  |
  * | Private | 2  |
- * @typedef {number} StagePrivacyLevel
  */
 
 
 /**
  * @summary [Guild Scheduled Event Privacy Level]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level}
- * | Name | Value |
- * |------|-------|
- * | Guild Only | 2 |
  * @typedef {number} EventPrivacyLevel
+ * Name | Value
+ * -----|------
+ * Guild Only | 2 
  */
 
 
 /** 
  * @summary [Guild Scheduled Event Status]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status}
+ * @typedef {number} EventStatus
  * | Name | Value |
  * |------|-------|
  * | Scheduled | 1 |
@@ -1623,7 +1678,6 @@
  * ACTIVE --------> COMPLETED
  *
  * SCHEDULED --> CANCELED
- * @typedef {number} EventStatus
  */
 
 /**
@@ -1645,12 +1699,12 @@
 
 /**
  * @summary [Guild Scheduled Event Entity Type]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types}
+ * @typedef {number} EventEntityType
  * | Name | Value |
  * |------|-------|
  * | Stage Instance | 1 |
  * | Voice    | 2 |
  * | External  | 3 |
- * @typedef {number} EventEntityType
  */
 
 /**
@@ -1699,11 +1753,11 @@
 
 /**
  * @summary Guild Integration Expire Behavior
+ * @typedef {number} GuildIntegrationExpireBehavior
  * | Name | Value |
  * |------|-------|
  * | Kick | 0 |
  * | Remove Role | 1 |
- * @typedef {number} GuildIntegrationExpireBehavior
  */
 
 /**
@@ -1839,20 +1893,20 @@
 
 /**
  * @summary [Onboarding Prompt Types]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types}
+ * @typedef {number} OnboardingPromptType
  * | Name | Value |
  * |------|-------|
  * | Multiple Choice | 0  |
  * | Dropdown        | 1  |
- * @typedef {number} OnboardingPromptType
  */
 
 /**
  * @summary [Onboarding Mode]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode}
+ * @typedef {number} OnboardingMode
  * | Name | Value |
  * |------|-------|
  * | Onboarding Default  | 0  |
  * | Onboarding Advanced | 1  |
- * @typedef {number} OnboardingMode
  */
 
 /**
@@ -1897,11 +1951,11 @@
 
 /**
  * @summary [New Member Action Type]{@link }
+ * @typedef {number} NewMemberActionType
  * | Name | Value |
  * |------|-------|
  * | View | 0  |
  * | Talk | 1  |
- * @typedef {number} NewMemberActionType
  */
 
 /**
@@ -1995,10 +2049,12 @@
  * @summary [Presence Update Event]{@link https://discord.com/developers/docs/topics/gateway-events#presence-update}
  * @typedef {object} PresenceUpdate
  * @property {User} user
+ * @property {MemberParams} member
  * @property {Snowflake} guild_id
- * @property {string} status
+ * @property {'online'|'offline'|'idle'|'dnd'} status
  * @property {Activity[]} activities
  * @property {ClientStatus} client_status
+ * @property {number} timestamp
  */
 
 /**

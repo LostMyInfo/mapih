@@ -2,7 +2,7 @@
 const { default: axios } = require('axios');
 const https = require('../utils/https');
 const { isValidJSON, returnErr, attemptHandler, extendPayload, isValidMedia, getAxiosError } = require('../resources/functions');
-const { messageType } = require('../../enum');
+const { messageType } = require('../../enums/enum');
 
 /**
  * @fileoverview

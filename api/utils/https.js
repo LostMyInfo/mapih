@@ -16,7 +16,8 @@ module.exports = {
    * @param {Object} params
    * @param {string} params.url
    * @param {string} [params.path]
-   * @param {number} [params.port] 
+   * @param {number} [params.port]
+   * @param {*} [params.body]
    * @param {*} [params.headers]
    * @param {boolean} [params.rejectUnauthorized]
    * @returns any
@@ -25,7 +26,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const https = require('node:https');
       const options = {
-        hostname: params.url,
+        host: params.url,
         port: params.port ?? 443,
         path: params.path ?? '/',
         method: 'GET',
