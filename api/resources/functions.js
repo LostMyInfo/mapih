@@ -8,7 +8,7 @@ const { default: axios, AxiosError, isAxiosError } = require('axios');
 const FormData = require('form-data');
 
 const https = require('../utils/https');
-const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
+const { USER_FLAGS, PERMISSION_NAMES } = require('../../enums/enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
 const sizeOf = require('image-size');
@@ -24,7 +24,6 @@ module.exports = {
   avatarFromObject,
   getBadges,
   parsePermissions,
-  userColor,
   generateCDN,
   isValidMediaURL,
   imageData,
@@ -33,8 +32,6 @@ module.exports = {
   resizeImage,
   retrieveDate,
   isValidJSON,
-  isBinaryData,
-  isUTF8Encoded,
   extendPayload,
   returnErr,
   getAxiosError,
@@ -154,20 +151,6 @@ module.exports = {
     }
   }
 };
-
-/**
- * Retrieve user's role color
- * @param {Snowflake[]} userRoles
- * @param {Role[]} guildRoles
- * @return {number}
- */
-function userColor(userRoles, guildRoles) {
-  return guildRoles
-    .sort((a, b) => b.position - a.position)
-    .filter((x) => {
-      return userRoles.includes(x.id);
-    })?.[0]?.color;
-}
 
 /**
  * @ignore
@@ -372,21 +355,6 @@ async function imageData(media, encoding, datastringbuffer) {
   }
 }
 
-function isBinaryData(buffer) {
-  for (let i = 0; i < buffer.length; i++) {
-    if (buffer[i] === 0) return true;
-  } return false;
-}
-
-function isUTF8Encoded(buffer) {
-  try {
-    const str = buffer.toString('utf-8');
-    for (let i = 0; i < str.length; i++) {
-      if (str.charCodeAt(i) > 127) return true;
-    }
-  } catch (e) { return false; } return true;
-}
-
 /**
  * @function resizePNG resizes a PNG to 320px x 320px as required by Discord to use as a sticker.
  * @param {Buffer} buffer
@@ -521,14 +489,6 @@ function retrieveDate(value, snowflake, style) {
         : `Invalid argument: ${style}`;
   
 }
-
-
-/*
-function retrieveDate(snowflake) {
-  const DISCORD_EPOCH = 1420070400000;
-  return new Date(snowflake / 4194304 + DISCORD_EPOCH);
-}
-*/
 
 /**
  * @example
