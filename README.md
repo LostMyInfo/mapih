@@ -13,9 +13,11 @@ require('dotenv').config();
 const api = new (require('mapih'))();
 
 (async() => {
+
   await api.discord.channels.messages.create({
     channel_id: '774133713733812275',
     content: 'hello'
   });
+
 })();
 ```
