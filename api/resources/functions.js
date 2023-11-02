@@ -61,9 +61,13 @@ module.exports = {
         headers: headers,
         body: params.body ? JSON.stringify(params.body) : ''
       });
+      // console.log('attempt in functions', attempt);
+      if (attempt.statusCode === 204) return {
+        statusCode: 204,
+        message: 'Success'
+      };
 
-      if (attempt.statusCode === 204) return 'Successful';
-      if (attempt.statusCode >= 200 && attempt.statusCode < 300) {
+      else if (attempt.statusCode >= 200 && attempt.statusCode < 300) {
         
         try {
           return JSON.parse(attempt.body);
@@ -72,16 +76,16 @@ module.exports = {
         }
 
       } else {
+        // console.log('error in else\n', attempt.body);
         throw new Error(
           attempt.body.length
             ? isValidJSON(attempt.body)
-              ? returnErr(attempt)
+              ? JSON.stringify(returnErr(attempt), null, 2)
               : attempt.body
             : attempt
         );
       }
     } catch (e) {
-      // console.error(e);
       throw e;
     }
   },
@@ -144,7 +148,6 @@ module.exports = {
       return response.data;
     
     } catch (e) {
-      console.error('object.keys(error) in sendAttachment', Object.keys(e));
       throw getAxiosError(e);
     }
   }
@@ -461,18 +464,18 @@ async function reduceSize(buffer, type, size, MAX_SIZE = 524288) {
 
 function retrieveDate(value, snowflake, style) {
   if (!value) return `Invalid or missing argument: ${value ?? 'undefined'}`;
-  const DISCORD_EPOCH = 1420070400000;
-  
+  const EPOCH = 1420070400000;
+  if (typeof value === 'number') value = value * 1000;
   const date = /^\d+$/.test(String(value)) && snowflake
     // @ts-ignore
-    ? new Date(parseInt(value) / 4194304 + DISCORD_EPOCH)
+    ? new Date(parseInt(value) / 4194304 + EPOCH)
     : new Date(value);
   
   // console.log('DATE IN RETRIEVEdATE:', date);
   const year = date.getFullYear();
-  let month = (date.getMonth()).toString();
+  let month = (date.getMonth() + 1).toString();
   month = month.length === 1 ? `0${month}` : month;
-  let day = (date.getDay()).toString();
+  let day = (date.getDate()).toString();
   day = day.length === 1 ? `0${day}` : day;
   const time = (date.toTimeString()).split(' ')[0];
   
@@ -539,11 +542,11 @@ function returnErr(r) {
   let parsed;
   try {
     parsed = JSON.parse(r.body);
-    console.error('PARSED ERROR' + '\n' + JSON.stringify(parsed, null, 2));
+    console.log('PARSED ERROR' + '\n' + JSON.stringify(parsed, null, 2));
   } catch (e) {
     if (!r.body) {
-      parsed = r;
-      console.error('\nERROR IN returnErr\n', parsed);
+      parsed = r?.data ?? r;
+      console.log('\nERROR IN returnErr (!r.body)\n', parsed);
     }
   }
   
@@ -665,9 +668,35 @@ function returnErr(r) {
   parseErrors(parsed);
   // console.log('PARSED.MESSAGE:', parsed.message.replace(/^\d+:\s/, ''));
   
+  const resp = {
+    statusCode: r.statusCode ?? r.status ?? r.code,
+    message: parsed.message.replace(/^\d+:\s/, '')
+  };
+
+  if (parsed.code !== 0) 
+    resp.code = parsed.code;
+  
+  if (parsed.retry_after)
+    resp.retry_after = parsed.retry_after;
+
+  if (parsed.global || parsed.global === false)
+    resp.global = parsed.global;
+  
+  if (parsed.errors) {
+    // console.log('errinfo.toString()');
+    // console.log(errinfo.toString());
+    // console.log('errinfo', errinfo);
+    
+    // resp.details = JSON.stringify(errinfo, null, 2);
+    resp.details = errinfo;
+  }
+  // console.log('resp\n', resp);
+  // return JSON.parse(JSON.stringify(resp, null, 2));
+  return resp;
+  /*
   const resp = [
-    '', '------',
-    `statusCode: ${r.statusCode}`,
+    '',
+    `statusCode: ${r.statusCode ?? r.code}`,
     `Message: ${parsed.message.replace(/^\d+:\s/, '')}`
   ];
   if (parsed.code !== 0) {
@@ -677,6 +706,7 @@ function returnErr(r) {
     resp.push(`Details: ${JSON.stringify(errinfo, null, 2)}`);
   }
   return `${resp.join('\n')}\n`;
+  */
 }
 
 /**
@@ -909,7 +939,7 @@ function getAxiosError(error) {
   // response.status = ###
   // response.statusText = ''
 
-  console.log('\n-----\nERROR IN GETAXIOSERROR\n-----\n', error);
+  console.log(`\n${'-'.repeat(13)}\nGETAXIOSERROR\n${'-'.repeat(13)}\n`);
   // if (error.code) console.log('error.code:', error.code);
   // if (error.message) console.log('error.message:', error.message);
   // if (error.response?.status) console.log('error.response.status:', error.response?.status);
@@ -927,22 +957,33 @@ function getAxiosError(error) {
 
   if (error.response && error.response.data) {
     // console.log(JSON.stringify(error.response.data, null, 2))
-    if ((Object.keys(error.response.data).length) > 1) {
+    if (error.response.data.message && error.response.data.code) {
+      // console.log('keys', Object.keys(error));
+      console.log(returnErr(error.response));
+      // @ts-ignore
+      return returnErr(error.response);
+    } else if ((Object.keys(error.response.data).length) > 1) {
       console.log('\nObject.keys(error.response.data)\n\n', error.response.data);
-      errObj.error = JSON.stringify(error.response.data, null, 2);
+      errObj.error = error.response.data;
+      console.log('\nerrObj1\n\n', errObj);
     } else if (error.response.data?.detail) {
+      console.log('\nerror.response.data?.detail\n\n', error.response.data);
       errObj.error = error.response.data?.detail.toString().includes('[object Object]')
         ? JSON.parse(JSON.stringify(error.response.data.detail, null, 2))
         : JSON.stringify(error.response.data?.detail, null, 2);
+      console.log('\nerrObj2\n\n', errObj);
     } else if (error.response.data?.error) {
+      console.log('\nerror.response.data?.error\n\n', error.response.data);
       typeof error.response.data.error === 'string'
         ? errObj.error = error.response.data?.error
         : errObj.error = JSON.stringify(error.response.data.error, null, 2);
+      console.log('\nerrObj3\n\n', errObj);
     }
   } else if (error.cause) {
     errObj.cause = error.cause;
+    console.log('\nerrObj4\n\n', errObj);
   }
   errObj.success = false;
-  console.error('\n\nFINAL ERROBJ IN GETAXIOSERROR\n\n', errObj);
+  // console.log('\n\nFINAL ERROBJ IN GETAXIOSERROR\n\n', errObj);
   return errObj;
 }

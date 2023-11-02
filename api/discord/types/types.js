@@ -14,6 +14,14 @@
  */
 
 /**
+ * @typedef {"ADD_REACTIONS"|"ADMINISTRATOR"|"ATTACH_FILES"|"BAN_MEMBERS"|"CHANGE NICKNAME"|"CONNECT"|"CREATE_INSTANT_INVITE"|"CREATE_PRIVATE_THREADS"|"CREATE_PUBLIC_THREADS"|"DEAFEN_MEMBERS"|"EMBED_LINKS"|"KICK_MEMBERS"|"MANAGE_CHANNELS"|"MANAGE_EMOJIS_AND_STICKERS"|"MANAGE_EVENTS"|"MANAGE_SERVER"|"MANAGE_MESSAGES"|"MANAGE_NICKNAMES"|"MANAGE_ROLES"|"MANAGE_THREADS"|"MANAGE_WEBHOOKS"|"MENTION_EVERYONE"|"MODERATE_MEMBERS"|"MOVE_MEMBERS"|"MUTE_MEMBERS"|"PRIORITY_SPEAKER"|"READ_MESSAGE_HISTORY"|"REQUEST_TO_SPEAK"|"SEND_MESSAGES"|"SEND_MESSAGES_IN_THREADS"|"SEND_TTS_MESSAGES"|"SPEAK"|"VIDEO"|"USE_APPLICATION_COMMANDS"|"USE_EMBEDDED_ACTIVITIES"|"USE_EXTERNAL_EMOJIS"|"USE_EXTERNAL_STICKERS"|"USE_VOICE_ACTIVITY"|"VIEW_AUDIT_LOG"|"VIEW_CHANNEL"|"VIEW_SERVER_INSIGHTS"} PermNames
+ */
+
+/**
+ * @typedef {'Discord Employee'|'Partnered Server Owner'|'HypeSquad Events Member'|'Bug Hunter Level 1'|'House Bravery Member'|'House Brilliance Member'|'House Balance Member'|'Early Nitro Supporter'|'User is a team'|'Bug Hunter Level 2'|'Verified Bot'|'Early Verified Bot Developer'|'Discord Certified Moderator'|'Interactions Handler'|'Active Developer'} UserFlags
+ */
+
+/**
  * @summary [OAuth2 Scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
  * @typedef {'activities.read'|'activites.write'|'applications.builds.read'|'applications.builds.upload'|'applications.commands'|'applications.commands.update'|'applications.commands.permissions.update'|'applications.entitlements'|'applications.store.update'|'bot'|'connections'|'dm_channels.read'|'email'|'gdm.join'|'guilds'|'guilds.join'|'guilds.members.read'|'identify'|'messages.read'|'relationships.read'|'role_connections.write'|'rpc'|'rpc.activities.write'|'rpc.notifications.read'|'rpc.voice.read'|'rpc.voice.write'|'voice'|'webhook.incoming'} OAuth2Scopes
  * | Name | Description |
@@ -335,29 +343,60 @@
 
 /**
  * @summary [User]{@link https://discord.com/developers/docs/resources/user#user-object} Object
- * @typedef {Object} User
- * @property {string[]} badges
+ * @typedef {Object} ExtendedUser
+ * @property {UserFlags[]} badges
  * @property {Date} created_at
  * @property {Snowflake} id The user's id
  * @property {string} username - The user's username
  * @property {string} discriminator - The user's 4-digit discord-tag
  * @property {string} global_name
- * @property {string} display_name
- * @property {string | null} avatar - The user's avatar hash
- * @property {string | null} avatar_decoration_data
+ * @property {string} [display_name]
+ * @property {?string} avatar - The user's avatar hash
+ * @property {?string} [avatarURL] - The user's avatar URL (only when retrieving user with API)
+ * @property {?{sku_id: Snowflake, asset: string}} avatar_decoration_data
  * @property {boolean} [bot] - Whether the user belongs to an OAuth2 application
  * @property {boolean} [system] - Whether the user is an Official Discord System user
  * @property {boolean} [mfa_enabled] - Whether the user has two factor enabled
- * @property {string | null} [banner] - The user's banner hash
+ * @property {?string} [banner] - The user's banner hash
+ * @property {?string} [bannerURL] - The user's banner URL (only when retrieving user with API)
  * @property {number | null} [accent_color] - The user's banner color encoded as an integer representation of a hex code
  * @property {string} [locale] - The user's chosen language option
  * @property {boolean} [verified] - Whether the email on this account has been verified
  * @property {string | null} [email] - The user's email
- * @property {?number} flags - The flags on a user's account
- * @property {number} [premium_type] - The type of Nitro subscription on a user's account
- * @property {?number} public_flags - The public flags on a user's account
+ * @property {number} [flags] - The flags on a user's account
+ * @property {NitroPremiumType} [premium_type] - The [type of Nitro subscription]{@link https://discord.com/developers/docs/resources/user#user-object-premium-types} on a user's account
+ * @property {number} public_flags - The public flags on a user's account
  */
 
+/**
+ * @summary [User]{@link https://discord.com/developers/docs/resources/user#user-object} Object
+ * @typedef {Object} User
+ * @property {UserFlags[]} badges
+ * @property {Date} created_at
+ * @property {Snowflake} id The user's id
+ * @property {string} username - The user's username
+ * @property {string} discriminator - The user's 4-digit discord-tag
+ * @property {string} global_name
+ * @property {string} [display_name]
+ * @property {?string} avatar - The user's avatar hash
+ * @property {?string} [avatarURL] - The user's avatar URL (only when retrieving user with API)
+ * @property {?{sku_id: Snowflake, asset: string}} avatar_decoration_data
+ * @property {boolean} [bot] - Whether the user belongs to an OAuth2 application
+ * @property {boolean} [system] - Whether the user is an Official Discord System user
+ * @property {number} public_flags - The public flags on a user's account
+ * @property {NitroPremiumType} [premium_type] - The [type of Nitro subscription]{@link https://discord.com/developers/docs/resources/user#user-object-premium-types} on a user's account
+ */
+
+/**
+ * @summary [Premium Type]{@link https://discord.com/developers/docs/resources/user#user-object-premium-types}
+ * @typedef {number} NitroPremiumType
+ * | Type | Value |
+ * |------|-------|
+ * | None          | 0 |
+ * | Nitro Classic | 1 |
+ * | Nitro         | 2 |
+ * | Nitro Basic   | 3 |
+ */
 /**
  * @summary [Emoji]{@link https://discord.com/developers/docs/resources/emoji#emoji-object} Object
  * @typedef {Object} Emoji
@@ -1156,7 +1195,7 @@
  * @property {string | string[]} [description] - 4096 character limit
  * @property {?number} [color] - 0xhex or integer
  * @property {string} [url] - URL for the title of the embed
- * @property {Date | ISO8601Timestamp} [timestamp] - Timestamp of embed content
+ * @property {number | Date | ISO8601Timestamp} [timestamp] - Timestamp of embed content
  * @property {Object} [footer] - Footer information for the bottom of the embed
  * @property {string} [footer.text] - Text for the footer (2048 character limit)
  * @property {?string} [footer.icon_url] - URL of the footer icon (only supports `https(s)` and `attachments`)
@@ -1207,7 +1246,63 @@
  */
 
 /**
- * 
+ * @summary [Recurrence Rule]
+ * @description
+ * ???
+ * @typedef {Object} RecurrenceRule
+ * @property {ISO8601Timestamp} start
+ * @property {?ISO8601Timestamp} end
+ * @property {RecurrenceRuleFrequency} frequency
+ * @property {number} interval
+ * @property {?RecurrenceRuleWeekdays[]} by_weekday
+ * @property {?RecurrenceRuleMonths[]} by_month
+ * @property {?ByMonthDay[]} by_month_day 
+ * @property {?ByYearDay[]} by_year_day
+ * @property {?number} count
+ */
+
+/**
+ * @summary [Recurrence Rule Frequencies]{@link }
+ * @typedef {number} RecurrenceRuleFrequency
+ * | Type | Value |
+ * |------|-------|
+ * | Yearly  | 0 |
+ * | Monthly | 1 |
+ * | Weekly  | 2 |
+ * | Daily   | 3 |
+ */
+
+/**
+ * @summary [Recurrence Rule Months]{@link }
+ * @typedef {number} RecurrenceRuleMonths
+ * | Type | Value |
+ * |------|-------|
+ * | January   | 1 |
+ * | February  | 2 |
+ * | March     | 3 |
+ * | April     | 4 |
+ * | May       | 5 |
+ * | June      | 6 |
+ * | July      | 7 |
+ * | August    | 8 |
+ * | September | 9 |
+ * | October   | 10 |
+ * | November  | 11 |
+ * | December  | 12 |
+ */
+
+/**
+ * @summary [Recurrence Rule Weekdays]{@link }
+ * @typedef {number} RecurrenceRuleWeekdays
+ * | Type | Value |
+ * |------|-------|
+ * | Monday    | 0 |
+ * | Tuesday   | 1 |
+ * | Wednesday | 2 |
+ * | Thursday  | 3 |
+ * | Friday    | 4 |
+ * | Saturday  | 5 |
+ * | Sunday    | 6 |
  */
 
 /**
@@ -1383,7 +1478,7 @@
  * @property {boolean} deaf
  * @property {?Date} communication_disabled_until
  * @property {?string} avatar
- * @property {string[]} permission_names
+ * @property {PermNames[]} permission_names
  * @property {string} displayName
  * @property {string} displayAvatar
  */
@@ -1454,7 +1549,7 @@
  * @property {boolean} pending - Whether the user has not yet passed the guilds Membership Screening requirements
  * @property {string} permissions - Total permissions of the member in the channel
  * @property {ISO8601Timestamp} communication_disabled_until - When the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out
- * @property {string[]} permission_names
+ * @property {PermNames[]} permission_names
  */
 
 /**
@@ -1474,7 +1569,7 @@
  * @property {RoleTags} [tags] - The [tags]{@link RoleTags} this role has
  * @property {boolean} managed - Whether this role is managed by an integration
  * @property {number} flags
- * @property {string[]} permission_names
+ * @property {PermNames[]} permission_names
  */
 
 /**
@@ -2008,10 +2103,11 @@
  * @property {?Channel[]} threads
  * @property {Channel[]} channels
  * @property {GuildFeatures[]} features
- * @property {PresenceUpdate[]} presences - Presences of the members in the guild, will only include non-offline members if the size is greater than `large` threshold
+ * @property {GuildPresenceParams[]} presences - Presences of the members in the guild, will only include non-offline members if the size is greater than `large` threshold
  * @property {VoiceState[]} voice_states
  * @property {GuildScheduledEvent[]} guild_scheduled_events
  * @property {StageInstance[]} stage_instances
+ * @property {SoundboardSound[]} soundboard_sounds
  * @property {Object<string, number>} application_command_counts
  * @property {number} [emojiCount]
  * @property {number} [stickerCount]
@@ -2058,23 +2154,65 @@
  */
 
 /**
- * @summary [SKU]{@link https://discord.com/developers/docs/game-sdk/store#data-models-sku-struct}
- * @typedef {Object} SKU
- * @property {BigInt64Array} id
- * @property {SkuType} Type
+ * [Soundboard Sound]{@link }
+ * - undocumented soundboard object
+ * @typedef {Object} SoundboardSound
+ * @property {number} volume
+ * @property {Snowflake} user_id
+ * @property {Snowflake} sound_id
  * @property {string} name
- * @property {SkuPrice} Price
+ * @property {Snowflake} guild_id
+ * @property {?string} emoji_name
+ * @property {?Snowflake} emoji_id
+ * @property {boolean} available
+ */
+/**
+ * @summary [SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object}
+ * @typedef {Object} SKU
+ * @property {Snowflake} id - ID of SKU
+ * @property {Snowflake} application_id - ID of the parent application
+ * @property {SkuType} type - The [type of SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object-sku-types}
+ * @property {string} name - Customer-facing name of your premium offering
+ * @property {string} slug - System-generated URL slug based on the SKU's name
+ * @property {?Snowflake} dependent_sku_id - ???
+ * @property {?string} manifest_labels - ???
+ * @property {?ISO8601Timestamp} release_date - ???
+ * @property {SKUAccessType} access_type - ???
+ * @property {string[]} features - ???
+ * @property {SKUFlags} flags - ???
+ * @property {boolean} premium - ???
+ * @property {boolean} show_age_gate - ???
  */
 
 /**
- * @summary [SkuType Enum]{@link https://discord.com/developers/docs/game-sdk/store#data-models-skutype-enum}
- * @typedef {number} SkuType
- * | Name | Value | Description |
- * |------|-------|-------------|
- * | Application | 1 | SKU is a game |
- * | DLC         | 2 | SKU is a DLC |
- * | Consumable  | 3 | SKU is a consumable (in-app purchase) |
- * | Bundle      | 4 | SKU is a bundle (comprising the other 3 types) |
+ * @summary SKU Flags
+ * @typedef {number} SKUFlags
+ * | Flag | Value |
+ * |--------------------|--------|
+ * | Guild Subscription | 1 << 7 |
+ * | User Subscription  | 1 << 8 |
+ * - The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
+ */
+
+/**
+ * @summary SKU Access Types
+ * @typedef {number} SKUAccessType
+ * ### For subscriptions, there are two types of access levels you can offer to users:
+ * - Guild Subscriptions: A subscription purchased by a user and applied to a single server. Everyone in that server gets your premium benefits.
+ * - User Subscriptions: A subscription purchased by a user for themselves. They get access to your premium benefits in every server.
+ */
+
+/**
+ * @summary [Sku Type]{@link https://discord.com/developers/docs/game-sdk/store#data-models-skutype-enum}
+ * @typedef {number} SKUType
+ * - For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type: 6`.
+ * - For any current implementations, you will want to use the SKU defined by `type: 5`.
+ * - A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.
+ * 
+ * | Type | ID | Description |
+ * |-----------------|---|-------------|
+ * | Subscription    | 5 | Represents a recurring subscription |
+ * | Scription_Group | 6 | System-generated group for each SUBSCRIPTION SKU created |
  */
 
 /**
@@ -2085,25 +2223,43 @@
  */
 
 /**
- * @summary [EntitlementType Enum]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlementtype-enum}
+ * @summary [Entitlement Type]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlementtype-enum}
  * @typedef {number} EntitlementType
- * | Name | Value | Description |
+ * | Type | ID    | Description |
  * |------|-------|-------------|
- * | Purchase            | 1 | entitlement was purchased |
- * | PremiumSubscription | 2 | entitlement for a Discord Nitro subscription |
- * | DeveloperGift       | 3 | entitlement was gifted by a developer |
- * | TestModePurchase    | 4 | entitlement was purchased by a dev in application test mode |
- * | FreePurchase        | 5 | entitlement was granted when the SKU was free |
- * | UserGift            | 6 | entitlement was gifted by another user |
- * | PremiumPurchase     | 7 | entitlement was claimed by user for free as a Nitro Subscriber |
+ * | Application Subscription| 8 | Entitlement was purchased as an app subscription |
  */
 
 /**
+ * @ignore
+ * @typedef {Object} PartialEntitlement
+ * @property {Snowflake} id - ID of the entitlement
+ * @property {Snowflake} sku_id - ID of the SKU
+ * @property {Snowflake} application_id
+ * @property {number} gift_code_flags - ???
+ * @property {boolean} deleted - ???
+ * @property {Snowflake} promotion_id - ???
+ * @property {Snowflake} [user_id]
+ * @property {Snowflake} [guild_id]
+ * @property {EntitlementType} type - The [type of entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types}
+ * @property {boolean} consumed - Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false`.
+ */
+/**
  * @summary [Entitlement]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlement-struct}
  * @typedef {Object} Entitlement
- * @property {BigInt64Array} id
- * @property {EntitlementType} Type
- * @property {BigInt64Array} SkuId
+ * @property {Snowflake} id - ID of the entitlement
+ * @property {Snowflake} sku_id - ID of the SKU
+ * @property {Snowflake} application_id
+ * @property {Snowflake} subscription_id - ???
+ * @property {number} gift_code_flags - ???
+ * @property {boolean} deleted - ???
+ * @property {Snowflake} promotion_id - ???
+ * @property {Snowflake} [user_id]
+ * @property {Snowflake} [guild_id]
+ * @property {EntitlementType} type - The [type of entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types}
+ * @property {boolean} consumed - Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false`.
+ * @property {ISO8601Timestamp} [starts_at] - Start date at which the entitlement is valid. Not present when using test entitlements
+ * @property {ISO8601Timestamp} [ends_at] - Date at which the entitlement is no longer valid. Not present when using test entitlements
  */
 
 /**

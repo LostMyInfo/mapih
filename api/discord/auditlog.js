@@ -36,31 +36,43 @@ module.exports = {
    */
   retrieve: async (params) => {
     let path = `guilds/${params.guild_id}/audit-logs?`;
+    const queryParams = [];
+
+    if (params.limit) queryParams.push(`limit=${params.limit}`);
+    if (params.action_type) queryParams.push(`action_type=${params.action_type}`);
+    if (params.user_id) queryParams.push(`user_id=${params.user_id}`);
+    if (params.before) queryParams.push(`before=${params.before}`);
+    if (params.after) queryParams.push(`after=${params.after}`);
+
+    path += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
+
+    /*
+    let path = `guilds/${params.guild_id}/audit-logs?`;
     path += `${params.limit ? `&limit=${params.limit}` : ''}`;
     path += `${params.action_type ? `&action_type=${params.action_type}` : ''}`;
     path += `${params.user_id ? `&user_id=${params.user_id}` : ''}`;
     path += `${params.before ? `&before=${params.before}` : ''}`;
     path += `${params.after ? `&after=${params.after}` : ''}`;
-      
+    */
     const attempt = await attemptHandler({
       method: 'get',
       path
     });
     if (attempt.audit_log_entries.length) {
-      for (const log of attempt.audit_log_entries) {
-        log.action_name = (AuditLogEvents[log.action_type])?.name;
-      }
+      attempt.audit_log_entries.forEach((log) => {
+        log.action_name = AuditLogEvents[log.action_type]?.name;
+      });
     }
     if (attempt.threads.length) {
-      for (const thread of attempt.threads) {
+      attempt.threads.forEach((thread) => {
         thread.trueType = channelType[thread.type];
-      }
+      });
     }
     if (attempt.users.length) {
-      for (const user of attempt.users) {
+      attempt.users.forEach((user) => {
         user.created_at = retrieveDate(user.id, true);
         user.badges = getBadges(user.public_flags);
-      }
+      });
     }
     return attempt;
   } // End of Get Guild Audit Log

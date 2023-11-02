@@ -1,3 +1,6 @@
+// @ts-check
+'use-strict';
+
 const { attemptHandler, extendPayload } = require('../resources/functions');
 
 // Invites

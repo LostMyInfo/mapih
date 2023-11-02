@@ -1,3 +1,6 @@
+// @ts-check
+'use strict';
+
 // Auto Moderation
 // https://discord.com/developers/docs/resources/auto-moderation#auto-moderation
 

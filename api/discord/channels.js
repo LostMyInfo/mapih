@@ -1,16 +1,17 @@
+// @ts-check
+'use strict';
+
 // //////////////////////////////////////////////////////////////////////
 // ////////////////////////////// CHANNELS //////////////////////////////
 // //////////////////////////////////////////////////////////////////////
 // https://discord.com/developers/docs/resources/channel#channels-resource
-
 const { messageType, channelType } = require('../../enum');
 const { attemptHandler, sendAttachment, extendPayload } = require('../resources/functions');
-const { members: { getAll } } = require('./guilds');
 
 /*
 let members;
-(async () => {
-  members = await getAll({ guild_id: 'tempGuildID' });
+(async (params) => {
+  members = await getAll({ guild_id: params.guild_id, limit: 1000 });
 })();
 */
 
@@ -146,7 +147,7 @@ module.exports = {
    * @param {0|1} params.type - 0 for a role or 1 for a member
    * @param {?string} [params.allow='0'] - The bitwise value of all allowed permissions (default '0')
    * @param {?string} [params.deny='0'] - The bitwise value of all disallowed permissions (default '0')
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   editPermissions: async (params) =>
     attemptHandler({
@@ -177,7 +178,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.overwrite_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   deletePermission: async (params) =>
     attemptHandler({
@@ -290,7 +291,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.message_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   pinMessage: async (params) =>
     attemptHandler({
@@ -313,7 +314,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.message_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   unpinMessage: async (params) =>
     attemptHandler({
@@ -356,7 +357,7 @@ module.exports = {
    * @function typingCreate
    * @param {Object} params
    * @param {Snowflake} params.channel_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   typingCreate: async (params) =>
     attemptHandler({
@@ -516,6 +517,16 @@ module.exports = {
       if (params.attachments && params.attachments?.length) {
         return sendAttachment(params, `channels/${params.channel_id}/messages`, 'post');
       } else {
+        
+        if (params.embeds?.length) {
+          for (const embed of params.embeds) {
+            if (embed.footer?.icon_url && !embed.footer?.text)
+              embed.footer.text = '\u200b';
+            if (embed.author?.icon_url && !embed.author?.name)
+              embed.author.name = '\u200b';
+          }
+        }
+        
         const attempt = await attemptHandler({
           method: 'post',
           path: `channels/${params.channel_id}/messages`,
@@ -560,7 +571,7 @@ module.exports = {
      * @param {string} [params.content] - Up to 2000 characters
      * @param {Embed[]} [params.embeds] - Up to 10 embeds (up to 6000 characters)
      * @param {Component} [params.components]
-     * @param {Attachment[]} [params.attachments]
+     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [params.attachments]
      * @param {AllowedMentions} [params.allowed_mentions]
      * @param {MessageFlags} [params.flags] - Only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATION` can be set
      * @returns {Promise<Message>} The updated [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
@@ -624,7 +635,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
@@ -650,7 +661,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake[]} params.messages
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     bulkDelete: async (params) =>
       attemptHandler({
@@ -879,7 +890,7 @@ module.exports = {
      * @function join
      * @param {Object} params
      * @param {Snowflake} params.channel_id
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     join: async (params) =>
       attemptHandler({
@@ -901,7 +912,7 @@ module.exports = {
      * @function leave
      * @param {Object} params
      * @param {Snowflake} params.channel_id
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     leave: async (params) =>
       attemptHandler({
@@ -925,7 +936,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.user_id
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     addMember: async (params) =>
       attemptHandler({
@@ -949,7 +960,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.user_id
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     removeMember: async (params) =>
       attemptHandler({
@@ -1138,7 +1149,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} params.emoji
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     create: async (params) =>
       attemptHandler({
@@ -1161,7 +1172,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} params.emoji
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     deleteOwn: async (params) =>
       attemptHandler({
@@ -1186,7 +1197,7 @@ module.exports = {
      * @param {Snowflake} params.message_id
      * @param {Snowflake} params.user_id
      * @param {string} params.emoji
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     deleteUser: async (params) =>
       attemptHandler({
@@ -1207,7 +1218,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     deleteAll: async (params) =>
       attemptHandler({
@@ -1230,7 +1241,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} params.emoji
-     * @returns {Promise<{}>} `204 No Content`
+     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
     deleteAllEmoji: (params) =>
       attemptHandler({

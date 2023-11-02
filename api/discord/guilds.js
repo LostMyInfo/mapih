@@ -3,7 +3,7 @@
 
 const { attemptHandler, imageData, isValidJSON, returnErr, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload } = require('../resources/functions');
 const https = require('../utils/https');
-const { USER_FLAGS, PERMISSION_NAMES, ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
+const { PERMISSION_NAMES, ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
 
 const filetype = require('file-type-cjs-fix');
 const { default: axios } = require('axios');
@@ -148,7 +148,7 @@ module.exports = {
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -298,7 +298,7 @@ module.exports = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
    * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   createBan: async (params) => attemptHandler({
     method: 'put',
@@ -323,7 +323,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   removeBan: async (params) =>
     attemptHandler({
@@ -497,7 +497,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.integration_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroyIntegration: async (params) =>
     attemptHandler({
@@ -837,7 +837,7 @@ module.exports.channels = {
    * @param {?number} [params.position] - Sorting position of the channel
    * @param {?boolean} [params.lock_permissions] - Syncs the permission overwrites with the new parent, if moving to a new category
    * @param {?Snowflake} [params.parent_id] - The new parent ID for the channel that is moved
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   modifyPositions: async (params) =>
     attemptHandler({
@@ -943,7 +943,7 @@ module.exports.members = {
         const payload = JSON.parse(attempt.body);
         payload.forEach((member) => {
           member.user.badges = getBadges(member.user.public_flags);
-          member.displayAvatar = avatarFromObject(member.user.id, params.guild_id, member.user.avatar, member.avatar);
+          member.displayAvatar = avatarFromObject(member.user.id, member.user.avatar, params.guild_id, member.avatar);
           member.displayName = member.nick ?? member.user.display_name ?? member.user.global_name ?? member.user.username;
           member.user.created_at = retrieveDate(member.user.id, true);
         });
@@ -996,13 +996,13 @@ module.exports.members = {
         const [payload = null] = JSON.parse(attempt.body);
         if (payload.length === 1) {
           payload.user.badges = getBadges(payload.user.public_flags);
-          payload.displayAvatar = avatarFromObject(payload.user.id, params.guild_id, payload.user.avatar, payload.avatar);
+          payload.displayAvatar = avatarFromObject(payload.user.id, payload.user.avatar, params.guild_id, payload.avatar);
           payload.displayName = payload.nick ?? payload.user.display_name ?? payload.user.global_name ?? payload.user.username;
           payload.user.created_at = retrieveDate(payload.user.id, true);
         } else {
           payload.forEach((member) => {
             member.user.badges = getBadges(member.user.public_flags);
-            member.displayAvatar = avatarFromObject(member.user.id, params.guild_id, member.user.avatar, member.avatar);
+            member.displayAvatar = avatarFromObject(member.user.id, member.user.avatar, params.guild_id, member.avatar);
             member.displayName = member.nick ?? member.user.display_name ?? member.user.global_name ?? member.user.username;
             member.user.created_at = retrieveDate(member.user.id, true);
           });
@@ -1073,7 +1073,7 @@ module.exports.members = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
    * @param {string} [params.reason] - Reason for the kick
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   remove: async (params) =>
     attemptHandler({
@@ -1158,7 +1158,7 @@ module.exports.members = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
    * @param {Snowflake} params.role_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   addRole: async (params) =>
     attemptHandler({
@@ -1182,7 +1182,7 @@ module.exports.members = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
    * @param {Snowflake} params.role_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   removeRole: async (params) =>
     attemptHandler({
@@ -1443,7 +1443,7 @@ module.exports.roles = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.role_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -1473,18 +1473,23 @@ module.exports.roles = {
    * @fires guilds#role_update
    * @param {Object} params
    * @param {Snowflake} params.guild_id
-   * @param {Object} params.roles
+   * @param {object[]} params.roles
    * @param {Snowflake} params.roles.id - Role ID
    * @param {number} [params.roles.position] - Sorting position of the role
    * @returns {Promise<Role[]>} List of all of the guild's [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} objects
    */
-  modifyPositions: async (params) =>
-    attemptHandler({
+  modifyPositions: async (params) => {
+    if (!params.roles) throw new Error('Please provide an array of role objects');
+    const roles = [];
+    for (const role of params.roles) {
+      roles.push({ id: role.id, position: role.position });
+    }
+    return attemptHandler({
       method: 'patch',
       path: `guilds/${params.guild_id}/roles`,
-      body: params
-    }) // End of Modify Guild Role Positions
-
+      body: roles
+    }); // End of Modify Guild Role Positions
+  }
 };
 
 // ///////////////////////////////////////////////////////////////////
@@ -1610,7 +1615,7 @@ module.exports.emojis = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.emoji_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -1750,7 +1755,7 @@ module.exports.stickers = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.sticker_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -2054,7 +2059,7 @@ module.exports.events = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.guild_scheduled_event_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({

@@ -1,11 +1,13 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
+// @ts-check
+'use-strict';
+
 const { default: axios } = require('axios');
 const https = require('../utils/https');
 const { isValidJSON, returnErr, attemptHandler, extendPayload, isValidMedia, getAxiosError } = require('../resources/functions');
-const { messageType } = require('../../enum');
 
 /**
- * @fileoverview
+ * @file
  * An Interaction is the message that your application receives when a user uses an application command or a message component.  
  *
  * For Slash Commands, it includes the values that the user submitted.
@@ -63,31 +65,36 @@ module.exports = {
     reply: async (params, input = {}) => {
       input.flags = (input.ephemeral) ? (1 << 6) : 0;
       let message;
-      if (input.attachments && input.attachments?.length) {
-        message = await sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
-      } else {
-        message = await https.post({
-          url: encodeURI('discord.com'),
-          path: encodeURI(`/api/v10/interactions/${params.id}/${params.token}/callback`),
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 4, data: input })
-        });
+      try {
+        if (input.attachments && input.attachments?.length) {
+          message = await sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
+        } else {
+          message = await https.post({
+            url: encodeURI('discord.com'),
+            path: encodeURI(`/api/v10/interactions/${params.id}/${params.token}/callback`),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 4, data: input })
+          });
         
-        if (message.statusCode !== 204) {
-          throw new Error(
-            message.body.length
-              ? isValidJSON(message.body)
-                ? returnErr(message)
-                : message.body
-              : message
-          );
+          if (message.statusCode !== 204) {
+            throw new Error(
+              message.body.length
+                ? isValidJSON(message.body)
+                  ? JSON.stringify(returnErr(message), null, 2)
+                  : message.body
+                : message
+            );
+          }
         }
+        // console.log('\nmessage\n\n', message);
+        if (message.headers && input.return_date) {
+          console.log('\nmessage.headers && input.return_date:', message.headers.date);
+          return message.headers.date;
+        } else return true;
+      } catch (e) {
+        console.log('ERROR IN INTERACTIONS.CALLBACK.REPLY, thrown below');
+        throw e;
       }
-      // console.log('\nmessage\n\n', message);
-      if (message.headers && input.return_date) {
-        console.log('\nmessage.headers && input.return_date:', message.headers.date);
-        return message.headers.date;
-      } else return true;
     },
 
     /*
@@ -213,7 +220,7 @@ module.exports = {
       let flags;
       input.ephemeral ? flags = (1 << 6) : flags = 0;
       if (input.attachments && input.attachments.length) {
-        console.log('attachments in component_update\n', input.attachments);
+        // console.log('attachments in component_update\n', input.attachments);
         return sendAttachment('data', input, url, 'post', 7, flags);
       } else {
         return handleCallbacks({
@@ -356,6 +363,27 @@ module.exports = {
         method: 'del',
         path: `webhooks/${params.application_id}/${params.token}/messages/@original`
       });
+    },
+
+    /**
+     * @summary
+     * ### [Premium Required]{@link https://discord.com/developers/docs/interactions/application-commands#autocomplete}
+     * - Respond to an interaction with an upgrade button, only available for apps with monetization enabled.
+     * 
+     * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `10` (`PREMIUM_REQUIRED`)
+     * @memberof module:interactions.callback#
+     * @method upgrade
+     * @param {object} params 
+     * @param {object} [input]
+     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     */
+    async upgrade(params, input) {
+      return handleCallbacks({
+        method: 'post',
+        path: `interactions/${params.id}/${params.token}/callback`,
+        type: 10,
+        data: input
+      });
     }
   },
 
@@ -405,6 +433,16 @@ module.exports = {
       if (input.attachments && input.attachments.length) {
         return sendAttachment('body', input, url, 'post', null, flags);
       } else {
+
+        if (input.embeds?.length) {
+          for (const embed of input.embeds) {
+            if (embed.footer?.icon_url && !embed.footer?.text)
+              embed.footer.text = '\u200b';
+            if (embed.author?.icon_url && !embed.author?.name)
+              embed.author.name = '\u200b';
+          }
+        }
+
         const attempt = await attemptHandler({
           method: 'post',
           path: url,
@@ -578,7 +616,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
     params.flags = flags;
     // if (params.method !== 'patch') {
     // console.log('\n\nPARAMS.METHOD !== \'PATCH\'\n\n');
-    console.log('params from interactions sendAttachment() pre map\n', params);
+    // console.log('params from interactions sendAttachment() pre map\n', params);
 
     params.attachments = params.attachments.map((a, index) => ({
       id: index, filename: a.filename, description: a.description ?? ''
@@ -586,7 +624,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
     
     // }
     
-    console.log('params from interactions sendAttachment() post map\n', params);
+    // console.log('params from interactions sendAttachment() post map\n', params);
 
     if (sender === 'data') {
       /*
@@ -594,12 +632,12 @@ async function sendAttachment(sender, params, url, method, type, flags) {
         id: index, filename: a.filename, description: a.description ?? ''
       }));
       */
-      console.log('\nSENDER = \'DATA\'\n');
+      // console.log('\nSENDER = \'DATA\'\n');
       form.append('payload_json', JSON.stringify({ type: type, data: params }));
     } else {
-      console.log('\nSENDER donot= \'DATA\'\n');
+      // console.log('\nSENDER donot= \'DATA\'\n');
       const { attachments, ...newparams } = params;
-      console.log('newparams\n', params);      
+      // console.log('newparams\n', params);      
       form.append('payload_json', JSON.stringify({ data: newparams }));
     }
     const response = await axios({
@@ -621,7 +659,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
   } catch (e) {
 
     // console.error(error);
-    console.error('Object.keys(error) in sendAttachment:\n', Object.keys(e));
+    console.log('Object.keys(error) in sendAttachment:\n', Object.keys(e));
     throw getAxiosError(e);
     
     /* const errinfo = {};
@@ -668,7 +706,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
  * @param {number} params.type
  * @param {Object} params.data
  * @param {boolean} [params.return_date]
- * @returns 
+ * @private
  */
 async function handleCallbacks(params) {
   try {

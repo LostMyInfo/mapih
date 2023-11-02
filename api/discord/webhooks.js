@@ -1,7 +1,9 @@
+// @ts-check
+'use-strict';
+
 // Webhooks
 // https://discord.com/developers/docs/resources/webhook#webhook-resource
 
-const { WebhookType } = require('../../enum');
 const { attemptHandler, imageData, sendAttachment, getBadges, retrieveDate, avatarFromObject, extendPayload } = require('../resources/functions');
 
 /**
@@ -130,7 +132,7 @@ module.exports = {
    * @summary
    * ### [Get Webhook Message]{@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
    * - Returns a previously-sent webhook message from the same token
-   * @examplejs
+   * @example
    * await params.api.discord.webhooks.retrieveMessage({
    *   webhook_id: '000000000000000',
    *   webhook_token: 'abcdefg1234567',
@@ -171,7 +173,7 @@ module.exports = {
    * @param {string} params.webhook_token
    * @param {Snowflake} params.message_id
    * @param {Snowflake} [params.thread_id]
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroyMessage: async (params) => {
     let path = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
@@ -279,7 +281,7 @@ module.exports = {
    * @function destroy
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -300,7 +302,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
    * @param {string} params.webhook_token
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroyWithToken: async (params) =>
     attemptHandler({
@@ -354,7 +356,7 @@ module.exports = {
    * Waits for server confirmation of message send before response, and returns the created message body.
    * 
    * When `false`, a message that is not saved does not return an error
-   * @returns {Promise<{}>} `204 No Content` response depending on the `wait` query parameter
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content` response depending on the `wait` query parameter
    */
   execute: async (params) => {
     let path = `webhooks/${params.webhook_id}/${params.webhook_token}?`;

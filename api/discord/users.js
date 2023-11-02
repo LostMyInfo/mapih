@@ -2,7 +2,6 @@
 'use strict';
 
 const { attemptHandler, sendAttachment, imageData, getBadges, retrieveDate, avatarFromObject, generateCDN } = require('../resources/functions');
-const https = require('../utils/https');
 
 // Users
 // https://discord.com/developers/docs/resources/user#users-resource
@@ -226,7 +225,7 @@ module.exports = {
    * @param {string} [params.content] - Up to 2000 characters
    * @param {Embed[]} [params.embeds] - Up to 10 embeds (up to 6000 characters)
    * @param {Component} [params.components]
-   * @param {Attachment[]} [params.attachments]
+   * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [params.attachments]
    * @param {AllowedMentions} [params.allowed_mentions]
    * @param {MessageReference} [params.message_reference] - Include to make your message a reply
    * @param {Snowflake[]} [params.sticker_ids] - Up to 3 stickers in the server to send in the message
@@ -337,7 +336,7 @@ module.exports = {
    * @memberof module:users#
    * @param {object} params
    * @param {string} params.guild_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   leaveGuild: async (params) =>
     attemptHandler({

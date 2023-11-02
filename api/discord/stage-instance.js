@@ -1,3 +1,6 @@
+// @ts-check
+'use-strict';
+
 // Stage Instance
 // https://discord.com/developers/docs/resources/stage-instance#stage-instance-resource
 
@@ -122,7 +125,7 @@ module.exports = {
    * @function destroy
    * @param {object} params
    * @param {Snowflake} params.channel_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
