@@ -1,6 +1,6 @@
 # Mapih
 
-Mapih is a collection of Discord Api handlers as well as other useful (I think anyways 😁) Utilities.
+Mapih is a collection of Discord Api handlers as well as other useful utilities.
 
 This package uses your bot token. You must pass it via the process environment.  
 ie: process.env.token  
@@ -10,7 +10,7 @@ Docs coming soon
 ```js
 // npm i mapih dotenv
 require('dotenv').config();
-const api = new (require('mapih'))();
+const api = require('mapih');
 
 (async() => {
 
