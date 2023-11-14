@@ -236,7 +236,7 @@
  * @property {?string} [details] - What the player is currently doing
  * @property {?string} [state] - User's current party status
  * @property {?PartialEmoji} [emoji] - Emoji used for custom status
- * @property {{id: string, size: Array<number, number>}} [party] - Information for the current party of the player
+ * @property {{id: string, size: Array<number>}} [party] - Information for the current party of the player
  * @property {{large_image: string, large_text: string, small_image: string, small_text: string}} [assets] - Images for the presence and their hover texts
  * @property {{join: string, spectate: string, match: string}} [secrets] - Secrets for Rich Presence joining and spectating
  * @property {boolean} [instance] - Whether or not the activity is an instanced game session
@@ -1196,25 +1196,10 @@
  * @property {?number} [color] - 0xhex or integer
  * @property {string} [url] - URL for the title of the embed
  * @property {number | Date | ISO8601Timestamp} [timestamp] - Timestamp of embed content
- * @property {Object} [footer] - Footer information for the bottom of the embed
- * @property {string} [footer.text] - Text for the footer (2048 character limit)
- * @property {?string} [footer.icon_url] - URL of the footer icon (only supports `https(s)` and `attachments`)
- * @property {string} [footer.proxy_icon_url] - Proxied URL of the footer icon
- * @property {Object} [author] - Author information for the top of the embed
- * @property {string} [author.name] - Name of author (256 character limit)
- * @property {string} [author.url] - URL of author (only supports `http(s)`)
- * @property {?string} [author.icon_url] - URL of author icon (only supports `https(s)` and `attachments`)
- * @property {?string} [author.proxy_icon_url] - Proxied URL of the author icon
- * @property {Object | null} [image] - Image information
- * @property {?string} [image.url] - Source url of image (only supports http(s) and attachments)
- * @property {string} [image.proxy_url] - Proxied URL of the image
- * @property {string} [image.height] - Height of image
- * @property {?string} [image.width] - Width of image
- * @property {Object} [thumbnail] - Thumbnail image for top right of the embed
- * @property {?string} thumbnail.url - Source url of thumbnail (only supports http(s) and attachments)
- * @property {string} [thumbnail.proxy_url] - Proxied URL of the thumbnail
- * @property {string} [thumbnail.height] - Height of thumbnail
- * @property {string} [thumbnail.width] - Width of thumbnail
+ * @property {{text: string, icon_url: ?string}} [footer] - Footer information for the bottom of the embed
+ * @property {{name: string, url: string, icon_url: ?string}} [author] - Author information for the top of the embed
+ * @property {{url: string}} [image] - Image information
+ * @property {{url: string}} [thumbnail] - Thumbnail image for top right of the embed
  * @property {EmbedField[]} [fields] - Up to 25 field objects
  */
 
@@ -1231,7 +1216,7 @@
  * For the `attachments` array in Message Create/Edit requests, only the `id` is required.
  * @typedef {Object} Attachment
  * @property {Snowflake} id - Attachment ID
- * @property {Buffer | string | null} file - File to send
+ * @property {Buffer | string | undefined} file - File to send
  * @property {string} filename - Name of file attached
  * @property {string} [description] - Description for the file (max 1024 characters)
  * @property {string} [content_type] - The attachment's media type
@@ -2013,7 +1998,7 @@
  * @property {boolean} enabled
  * @property {WelomeMessage} [welcome_message]
  * @property {NewMemberAction} [new_member_actions]
- * @property {ResourceChannels[]} [resource_channels]
+ * @property {ResourceChannel[]} [resource_channels]
  */
 
 /**
@@ -2058,6 +2043,7 @@
  * @typedef {Object} GuildParams
  * @property {Snowflake} id
  * @property {string} name
+ * @property {string} created_at
  * @property {?string} description
  * @property {GuildMFALevel} mfa_level
  * @property {boolean} premium_progress_bar_enabled
@@ -2121,6 +2107,16 @@
  */
 
 /**
+ * @summary [Presence Update Event]{@link https://discord.com/developers/docs/topics/gateway-events#presence-update}
+ * @typedef {object} GuildPresenceParams
+ * @property {Pick<User, 'id'>} user
+ * @property {Snowflake} guild_id
+ * @property {'online'|'offline'|'idle'|'dnd'} status
+ * @property {Activity[]} activities
+ * @property {ClientStatus} client_status
+ */
+
+/**
  * @summary [Mention Object in MESSAGE_CREATE Event]{@link https://discord.com/developers/docs/topics/gateway-events#message-create-message-create-extra-fields}
  * @typedef {object} MessageCreateMentions
  * @property {string} username
@@ -2171,7 +2167,7 @@
  * @typedef {Object} SKU
  * @property {Snowflake} id - ID of SKU
  * @property {Snowflake} application_id - ID of the parent application
- * @property {SkuType} type - The [type of SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object-sku-types}
+ * @property {SKUType} type - The [type of SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object-sku-types}
  * @property {string} name - Customer-facing name of your premium offering
  * @property {string} slug - System-generated URL slug based on the SKU's name
  * @property {?Snowflake} dependent_sku_id - ???
@@ -2346,3 +2342,199 @@ const Locale = {
  * @typedef {Object<LocaleString, string | null>} LocalizationMap
  */
 
+/**
+ * @global
+ */
+
+/**
+ * @summary [Button Component]{@link https://discord.com/developers/docs/interactions/message-components#buttons}
+ * - An Action Row can contain up to 5 buttons
+ * - An Action Row containing buttons cannot also contain any select menu components
+ * @typedef {Object} Button
+ * @property {ComponentType} type - The type of the component (2 for button).
+ * @property {ButtonStyle} style - The button's [style]{@link ButtonStyle}
+ * @property {string} [label] - Text that appears on the button; max 80 characters
+ * @property {PartialEmoji} [emoji] - The emoji to be displayed on the button.
+ * @property {string} [custom_id] - Developer-defined identifier for the button; max 100 characters
+ * @property {string} [url] - URL for link-style buttons
+ * @property {boolean} [disabled=false] - Whether the button is disabled.
+ */
+
+/**
+ * @summary [Select Menu Component]{@link https://discord.com/developers/docs/interactions/message-components#select-menus}
+ * @typedef {Object} SelectMenu
+ * @property {ComponentType} type - The [type]{@link ComponentType} of the component (3-8 for select menus).
+ * @property {string} custom_id - A unique identifier for the select menu.
+ * @property {SelectOption[]} [options] - Specified choices in a select menu (only required and available for string selects (type `3`); max 25
+ * @property {ChannelType} [channel_types] - List of channel types to include in the channel select component (type `8`)
+ * @property {string} [placeholder] - The text to be displayed when no option is selected.
+ * @property {number} [min_values=1] - Minimum number of items that must be chosen; min 0, max 25
+ * @property {number} [max_values=1] - Maximum number of items that can be chosen; max 25
+ * @property {boolean} [disabled=false] - Whether the button is disabled.
+ */
+
+/** 
+ * @summary [Select Menu Option]{@link https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure}
+ * @typedef {Object} SelectOption
+ * @property {string} label - User-facing name of the option; max 100 characters
+ * @property {string} value - Dev-defined value of the option; max 100 characters
+ * @property {string} [description] - Additional description of the option; max 100 characters
+ * @property {PartialEmoji} [emoji] - The emoji to be displayed for the option.
+ * @property {boolean} [default=false] - Will show this option as selected by default
+ */
+
+/**
+ * @summary Text Input Component ([Modal]{@link https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure})
+ * @typedef {Object} Modal
+ * @property {ComponentType} type - The type of the component (`4` for text input)
+ * @property {string} custom_id - Developer-defined identifier for the input; max 100 characters
+ * @property {TextInputStyle} style - The [text input style]{@link TextInputStyle}
+ * @property {string} label - Label for this component; max 45 characters
+ * @property {number} [min_length] - Minimum input length for a text input; min 0, max 4000
+ * @property {number} [max_length] - Maximum input length for a text input; min 1, max 4000
+ * @property {boolean} [required=true] - Whether this component is required to be filled
+ * @property {string} [value] - Pre-filled value for this component; max 4000 characters
+ * @property {string} [placeholder] - Custom placeholder text if the input is empty; max 100 characters
+ */
+
+/**
+ * @summary [Action Rows]{@link https://discord.com/developers/docs/interactions/message-components#action-rows}
+ * An Action Row is a non-interactive container component for other types of components.
+ * 
+ * It has a `type: 1` and a sub-array of [Message Components]{@link MessageComponent}
+ * - You can have up to 5 Action Rows per message
+ * - An Action Row cannot contain another Action Row
+ * @example
+ * {
+ *   content: 'This is a Components array with an Action Row,
+ *   components: [
+ *     {
+ *       type: 1,
+ *       components: []
+ *     }
+ *   ]
+ * }
+ * // @property {MessageComponent[] | InteractionData[]} components
+ * 
+ * @template {MessageActionRow | Modal} C
+ * @typedef {Object} ActionRow
+ * @property {C[]} components - Placeholder for components
+ * @property {number} type - Must be 1 for 'ACTION_ROW'
+ */
+// @template {MessageActionRow | Modal} C
+// @template {ActionRowComponentTypes} C
+
+/*
+ * @template C
+ * @typedef {Object} ActionRow
+ * @property {C[]} components - Placeholder for components
+ * @property {1} type - Must be 1 for 'ACTION_ROW'
+ */
+
+/**
+ * @typedef {Button | SelectMenu} MessageActionRow
+ * A variety of message component types
+ * - [Button]{@link Button}
+ * - [Select Menu]{@link SelectMenu}
+ */
+
+/**
+ * @summary [Message Components]{@link https://discord.com/developers/docs/interactions/message-components#message-components}
+ * A framework for adding interactive elements to the messages your app or bot sends.
+ * - The top-level `components` field is an array of [Action Row]{@link ActionRow} components.
+ * @example
+ * {
+ *   content: 'This is a components field with a button component',
+ *   components: [
+ *     {
+ *       type: 1,
+ *       components: [
+ *         {
+ *           type: 2,
+ *           label: 'Click me!',
+ *           style: 1,
+ *           custom_id: 'click_one'
+ *         }
+ *       ]
+ *     }
+ *   ]
+ * }
+ * @typedef {Array<ActionRow<Button | SelectMenu | Modal>>} Component
+ */
+
+/**
+ * @summary [Interaction Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type}
+ * | Type | Value |
+ * |------|-------|
+ * | Ping | 1 |
+ * | Application Command | 2 |
+ * | Message Component | 3 |
+ * | Application Command Autocomplete | 4 |
+ * | Modal Submit | 5 |
+ * @typedef {number} InteractionType
+ */
+
+
+/**
+ * @summary [Application Command Interaction Data Option]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-interaction-data-option-structure}
+ * - All options have names, and an option can either be a parameter and input value--in which case `value` will be set--or it can denote a subcommand or group--in which case it will contain a top-level key and another array of `options`.
+ * - `value` and `options` are mutually exclusive
+ * @typedef {Object} ApplicationCommandInteractionDataOption
+ * @property {string} name
+ * @property {ApplicationCommandOptionType} type
+ * @property {string | number | boolean} [value]
+ * @property {ApplicationCommandInteractionDataOption[]} [options]
+ * @property {boolean} [focused]
+ */
+
+/**
+ * @summary [Application Command Data]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-data-structure}
+ * - Sent in `APPLICATION_COMMAND` AND `APPLICATION_COMMAND_AUTOCOMPLETE` interactions.
+ * @typedef {Object} ApplicationCommandInteractionData
+ * @property {Snowflake} id
+ * @property {string} name
+ * @property {ApplicationCommandType} type
+ * @property {ResolvedData} [resolved]
+ * @property {ApplicationCommandInteractionDataOption[]} [options]
+ * @property {Snowflake} guild_id
+ * @property {Snowflake} [target_id]
+ */
+
+/**
+ * @summary [Resolved Data]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-resolved-data-structure}
+ * - Partial Member objects are missing `user`, `deaf` and `mute` fields.
+ * - Partial Channel objects only have `id`, `name`, `type` and `permissions` fields.
+ * - Threads will also have `thread_metadata` and `parent_id` fields.
+ * @typedef {Object} ResolvedData
+ * @property {Object<Snowflake, User>} [users] - The ids and [User]{@link https://discord.com/developers/docs/resources/user#user-object} objects
+ * @property {Object<Snowflake, MemberParams>} [members] - The ids and partial [Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} objects
+ * @property {Object<Snowflake, Role>} [roles] - The ids and [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} objects
+ * @property {Object<Snowflake, Channel>} [channels] - The ids and partial [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} objects
+ * @property {Object<Snowflake, Message>} [messages] - The ids and partial [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} objects
+ * @property {Object<Snowflake, Attachment>} [attachments] - The ids and [Attachment]{@link https://discord.com/developers/docs/resources/channel#attachment-object} objects
+ */
+
+/**
+ * @typedef {Object} MessageComponentInteractionData
+ * @property {string} custom_id
+ * @property {ComponentType} component_type
+ * @property {string[]} [values]
+ */
+
+/**
+ * @typedef {Object} ModalSubmitComponentData
+ * @property {string} value - Input value for text input
+ * @property {ComponentType} type - The type of the component (4 for Modal).
+ * @property {string} custom_id - Custom ID of the text input field
+ */
+
+/**
+ * @typedef {Object} ModalSubmitInteractionData
+ * @property {string} custom_id
+ * @property {Array<ActionRow<ModalSubmitComponentData>>} [components]
+ */
+
+/**
+ * @summary [Interaction Data]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data}
+ * @typedef {ModalSubmitInteractionData | ApplicationCommandInteractionData | MessageComponentInteractionData} InteractionData
+ */

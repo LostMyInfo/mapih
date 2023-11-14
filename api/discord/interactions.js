@@ -49,14 +49,14 @@ module.exports = {
      * })
      * @memberof module:interactions.callback#
      * @method reply
-     * @param {object} params
+     * @param {InteractionParams} params
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {number} [input.flags]
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
      * @param {Component} [input.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [input.attachments]
+     * @param {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [input.attachments]
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.return_date]
@@ -132,7 +132,7 @@ module.exports = {
      * await params.api.discord.interactions.callback.defer(params)
      * @memberof module:interactions.callback#
      * @method defer
-     * @param {object} params event parameters
+     * @param {InteractionParams} params event parameters
      * @param {object} [input] user input
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<string>}
@@ -165,7 +165,7 @@ module.exports = {
      * await params.api.discord.interactions.callback.component_defer(params)
      * @memberof module:interactions.callback#
      * @method component_defer
-     * @param {object} params event parameters
+     * @param {InteractionParams} params event parameters
      * @param {object} [input] user input
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -204,16 +204,16 @@ module.exports = {
      * });
      * @memberof module:interactions.callback#
      * @method component_update
-     * @param {object} params
+     * @param {InteractionParams} params
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
      * @param {Component} [input.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [input.attachments]
+     * @param {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [input.attachments]
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
-     * @returns {Promise<{statusCode: 204, body: undefined}>} 
+     * @returns {Promise<?{statusCode: 204, body: undefined}>} 
      */
     async component_update(params, input = {}) {
       const url = `interactions/${params.id}/${params.token}/callback`;
@@ -240,7 +240,7 @@ module.exports = {
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `8` (`APPLICATION_COMMAND_AUTOCOMPLETE_RESULT`)
      * @memberof module:interactions.callback#
      * @method autocomplete_reply
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @param {object} input
      * @param {Array<Pick<ApplicationCommandOptionChoice, 'name' | 'value'>>} input.choices
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -264,7 +264,7 @@ module.exports = {
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `9` (`MODAL`)
      * @memberof module:interactions.callback#
      * @method modal_reply
-     * @param {Object} params 
+     * @param {InteractionParams} params 
      * @param {Object} input
      * @param {string} input.custom_id
      * @param {string} input.title
@@ -291,12 +291,12 @@ module.exports = {
      * });
      * @memberof module:interactions.callback#
      * @method edit_original
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @param {object} input
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
      * @param {Component} [input.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [input.attachments]
+     * @param {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [input.attachments]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<?Message>}
@@ -355,7 +355,7 @@ module.exports = {
      * await params.api.discord.interactions.callback.delete_original(params);
      * @memberof module:interactions.callback#
      * @method delete_original
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
     async delete_original(params) {
@@ -373,7 +373,7 @@ module.exports = {
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `10` (`PREMIUM_REQUIRED`)
      * @memberof module:interactions.callback#
      * @method upgrade
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @param {object} [input]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
@@ -414,17 +414,17 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method create
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
      * @param {Component} [input.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [input.attachments]
+     * @param {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [input.attachments]
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {string} [input.thread_name]
-     * @returns {Promise<Message>}
+     * @returns {Promise<?Message>}
      */
     async create(params, input = {}) {
       let flags;
@@ -480,17 +480,17 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method edit
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @param {boolean} [input.ephemeral]
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
      * @param {Component} [input.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [input.attachments]
+     * @param {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [input.attachments]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {Snowflake} [input.thread_id]
-     * @returns {Promise<Message>}
+     * @returns {Promise<?Message>}
      */
     async edit(params, input) {
       let flags, endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
@@ -544,7 +544,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method del
-     * @param {object} params 
+     * @param {InteractionParams} params 
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -558,36 +558,21 @@ module.exports = {
   }
 };
 
-
-function returnErrr(r) {
-  if (r.body.length) {
-    console.log(JSON.stringify(JSON.parse(r.body), null, 2));
-    let parsed;
-    if (parsed = JSON.parse(r.body)) {
-      if (parsed.errors) {
-        const errinfo = {};
-        Object.keys(parsed.errors).forEach((x) => {
-          errinfo[x] = parsed.errors[x]._errors[0];
-        });
-        
-        return {
-          'statusCode': r.statusCode,
-          'Code': parsed.code,
-          'Message': parsed.message,
-          'Details': errinfo
-        };
-      } else return parsed;
-    } else return r;
-  } else return {
-    'statusCode': r.statusCode,
-    'body': r.body
-  };
-};// end module
-
+/**
+ * 
+ * @param {string} sender 
+ * @param {Payload} params 
+ * @param {string} url 
+ * @param {string} method 
+ * @param {?number} type 
+ * @param {number} flags 
+ * @returns {Promise<?Message>}
+ */
 async function sendAttachment(sender, params, url, method, type, flags) {
   const FormData = require('form-data');
   const form = new FormData();
 
+  if (!params.attachments) return null;
   try {
   
     for (const attachment of params.attachments) {
@@ -704,7 +689,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
  * @param {string} params.method
  * @param {string} params.path
  * @param {number} params.type
- * @param {Object} params.data
+ * @param {Object|undefined} params.data
  * @param {boolean} [params.return_date]
  * @private
  */
@@ -795,7 +780,7 @@ async function handleCallbacks(params) {
  * await params.api.discord.interactions.callback.get_original(params);
  * @memberof module:interactions.callback#
  * @method get_original
- * @param {object} params 
+ * @param {InteractionParams} params 
  * @returns {Promise<?Message>}
  */
 async function get_original(params) {
@@ -822,7 +807,7 @@ async function get_original(params) {
  * });
  * @memberof module:interactions.followup#
  * @method get
- * @param {object} params 
+ * @param {InteractionParams} params 
  * @param {object} input
  * @param {Snowflake} input.message_id
  * @param {Snowflake} [input.thread_id]
@@ -838,3 +823,39 @@ async function get(params, input) {
   });
   return extendPayload(attempt);
 }
+
+/**
+ * @typedef {Object} InteractionParams
+ * @property {number} timestamp
+ * @property {Snowflake} id
+ * @property {Snowflake} application_id
+ * @property {InteractionType} type - [Type of interaction]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type}
+ * @property {ModalSubmitComponentData | ApplicationCommandInteractionData | MessageComponentInteractionData} data - Interaction data payload
+ * @property {Snowflake} guild_id
+ * @property {Snowflake} [channel_id]
+ * @property {Member} member - Guild member data for the invoking user, including permissions
+ * @property {User} [user] - User object for the invoking user, if invoked in a DM
+ * @property {string} token - Continuation token for responding to the interaction
+ * @property {number} version - Read-only property, always 1
+ * @property {Message} message - For components, the message they were attached to
+ * @property {string} [app_permissions] - Bitwise set of permissions the app or bot has within the channel the interaction was sent from
+ * @property {string} [locale] - Selected language of the invoking user
+ * @property {string} [guild_locale] - Guild's preferred locale, if invoked in a guild
+ * @property {Entitlement[]} entitlements
+ * @property {Snowflake[]} entitlement_sku_ids
+ * @property {Channel} channel
+ * @property {GuildParams} guild
+ * @property {import('../../Api')} api
+ */
+
+/**
+ * @typedef {Object} Payload
+ * @property {boolean} [ephemeral]
+ * @property {number} [flags]
+ * @property {string} [content]
+ * @property {Embed[]} [embeds]
+ * @property {Component} [components]
+ * @property {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [attachments]
+ * @property {boolean} [tts]
+ * @property {AllowedMentions} [allowed_mentions]
+ */

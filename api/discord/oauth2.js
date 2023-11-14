@@ -36,7 +36,7 @@ module.exports = {
      * @param {string} params.client_secret
      * @param {string} params.oauth2_redirect
      * @param {string} params.code
-     * @returns {Promise<AccessTokenResponse>}
+     * @returns {Promise<?AccessTokenResponse>}
      */
     get: async (params) => {
       const { client_id, client_secret, oauth2_redirect, code } = params;
@@ -58,7 +58,7 @@ module.exports = {
      * @param {Snowflake} params.client_id
      * @param {string} params.client_secret
      * @param {string} params.refresh_token
-     * @returns {Promise<AccessTokenResponse>}
+     * @returns {Promise<?AccessTokenResponse>}
      */
     refresh: async (params) => {
       const { client_id, client_secret, refresh_token } = params;
@@ -80,7 +80,7 @@ module.exports = {
      * @param {Snowflake} params.client_id
      * @param {string} params.client_secret
      * @param {AccessTokenResponse} params.token
-     * @returns {Promise<AccessTokenResponse>}
+     * @returns {Promise<?AccessTokenResponse>}
      */
     revoke: async (params) => {
       const { client_id, client_secret, token } = params;
@@ -106,7 +106,7 @@ module.exports = {
      * @memberof module:oauth2.credentials#
      * @param {Object} params
      * @param {AccessTokenResponse} params.token
-     * @returns {Promise<User>}
+     * @returns {Promise<?User>}
      */
     user: (params) => {
       const { token } = params;
@@ -128,7 +128,7 @@ module.exports = {
      * @param {Snowflake} params.client_id
      * @param {string} params.client_secret
      * @param {string} params.scope
-     * @returns {Promise<Omit<AccessTokenResponse, 'refresh_token'>>}
+     * @returns {Promise<?Omit<AccessTokenResponse, 'refresh_token'>>}
      */
     client: (params) => {
       const { client_id, client_secret, scope } = params;
@@ -148,12 +148,12 @@ module.exports = {
  * @param {string} [options.scope] - The OAuth2 scope.
  * @param {string} [options.code] - The authorization code.
  * @param {AccessTokenResponse} [options.token] - The token.
- * @returns {Promise<Object | false>} - The OAuth2 token or false if there was an error.
+ * @returns {Promise<?AccessTokenResponse & User & Omit<AccessTokenResponse, 'refresh_token'>>} - The OAuth2 token or false if there was an error.
  */
 async function oauth(grant_type, client_id, client_secret, options = {}) {
   try {
     const { oauth2_redirect, refresh_token, scope, code, token } = options;
-    if (!client_id || !client_secret || (!oauth2_redirect && !refresh_token && !scope && !code && !token)) return;
+    if (!client_id || !client_secret || (!oauth2_redirect && !refresh_token && !scope && !code && !token)) return null;
     
     let path = grant_type.includes('Token')
       ? '/api/oauth2/token' : '/api/users/@me';
@@ -186,6 +186,18 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
       ? { Authorization: `${token?.token_type} ${token?.access_token}` }
       : { 'Content-Type': 'application/x-www-form-urlencoded' };
 
+    /**
+     * @typedef {Object} ResponseBody
+     * @property {string} url
+     * @property {string} path
+     * @property {Object} headers
+     * @property {Object} [body]
+     * @property {number} [statusCode]
+     */
+
+    /**
+     * @type {ResponseBody}
+     */
     const responseBody = {
       url: encodeURI('discord.com'),
       path: encodeURI(path),

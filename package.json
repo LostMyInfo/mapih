@@ -3,6 +3,7 @@
   "version": "2.1.0",
   "description": "Api Handlers: Handles Discord API endpoints.",
   "main": "Api.js",
+  "types": "./types/Mapih.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

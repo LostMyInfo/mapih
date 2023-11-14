@@ -507,7 +507,7 @@ module.exports = {
      * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [params.attachments]
      * @param {AllowedMentions} [params.allowed_mentions]
      * @param {MessageReference} [params.message_reference] - Include to make your message a reply
-     * @param {Array<Snowflake> | Array<Snowflake, Snowflake> | Array<Snowflake, Snowflake, Snowflake>} [params.sticker_ids] - Up to 3 stickers in the server to send in the message
+     * @param {Array<Snowflake>} [params.sticker_ids] - Up to 3 stickers in the server to send in the message
      * @param {MessageFlags} [params.flags] - [Message flags]{@link()} (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATION` can be set)
      * @param {boolean} [params.tts]
      * @param {number | string} [params.nonce]
@@ -1049,7 +1049,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {number} [params.limit] - Optional maximum number of threads to return
      * @param {ISO8601Timestamp} [params.before] - Returns threads before this id or timestamp
-     * @returns {Promise<Channel[], ThreadMember[], boolean>} Archived threads in the channel that are public.
+     * @returns {Promise<Channel[] & ThreadMember[] & boolean>} Archived threads in the channel that are public.
      * [Response Body]{@linkhttps://discord.com/developers/docs/resources/channel#list-public-archived-threads-response-body}.
      */
     getAllPublicArchived: async (params) => {
@@ -1078,7 +1078,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {number} [params.limit] - Optional maximum number of threads to return
      * @param {ISO8601Timestamp} [params.before] - Returns threads before this timestamp
-     * @returns {Promise<Channel[], ThreadMember[], boolean>} Archived threads in the channel that are public.
+     * @returns {Promise<Channel[] & ThreadMember[] & boolean>} Archived threads in the channel that are public.
      * [Response Body]{@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads-response-body}.
      */
     getAllPrivateArchived: async (params) => {
@@ -1107,7 +1107,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {number} [params.limit] - Optional maximum number of threads to return
      * @param {ISO8601Timestamp} [params.before] - Returns threads before this timestamp
-     * @returns {Promise<Channel[], ThreadMember[], boolean>} Archived threads in the channel that are public.
+     * @returns {Promise<Channel[] & ThreadMember[] & boolean>} Archived threads in the channel that are public.
      *  [Response Body]{@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads-response-body}.
      */
     getAllJoinedPrivateArchived: async (params) => {

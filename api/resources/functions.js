@@ -262,9 +262,9 @@ function isValidMediaBuffer(buffer, media_type = 'audio') {
 
 /**
  * Validates an image as URL or buffer
- * @param {string | ArrayBuffer | undefined} media
+ * @param {string | Buffer | undefined} media
  * @param {'audio' | 'image'} [media_type]
- * @returns {Promise<boolean | void>}
+ * @returns {Promise<?boolean>}
  */
 async function isValidMedia(media, media_type = 'image') {
   
