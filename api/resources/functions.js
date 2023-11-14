@@ -542,7 +542,7 @@ function returnErr(r) {
   let parsed;
   try {
     parsed = JSON.parse(r.body);
-    console.log('PARSED ERROR' + '\n' + JSON.stringify(parsed, null, 2));
+    // console.log('PARSED ERROR' + '\n' + JSON.stringify(parsed, null, 2));
   } catch (e) {
     if (!r.body) {
       parsed = r?.data ?? r;
@@ -668,45 +668,23 @@ function returnErr(r) {
   parseErrors(parsed);
   // console.log('PARSED.MESSAGE:', parsed.message.replace(/^\d+:\s/, ''));
   
-  const resp = {
-    statusCode: r.statusCode ?? r.status ?? r.code,
-    message: parsed.message.replace(/^\d+:\s/, '')
-  };
-
+  // Error.prototype.statusCode
+  const error = new Error(parsed.message.replace(/^\d+:\s/, ''));
+  error.statusCode = r.statusCode ?? r.status ?? r.code;
+  
   if (parsed.code !== 0) 
-    resp.code = parsed.code;
+    error.code = parsed.code;
   
   if (parsed.retry_after)
-    resp.retry_after = parsed.retry_after;
+    error.retry_after = parsed.retry_after;
 
   if (parsed.global || parsed.global === false)
-    resp.global = parsed.global;
+    error.global = parsed.global;
+
+  if (parsed.errors)
+    error.details = errinfo;
   
-  if (parsed.errors) {
-    // console.log('errinfo.toString()');
-    // console.log(errinfo.toString());
-    // console.log('errinfo', errinfo);
-    
-    // resp.details = JSON.stringify(errinfo, null, 2);
-    resp.details = errinfo;
-  }
-  // console.log('resp\n', resp);
-  // return JSON.parse(JSON.stringify(resp, null, 2));
-  return resp;
-  /*
-  const resp = [
-    '',
-    `statusCode: ${r.statusCode ?? r.code}`,
-    `Message: ${parsed.message.replace(/^\d+:\s/, '')}`
-  ];
-  if (parsed.code !== 0) {
-    resp.splice(3, 0, `Code: ${parsed.code}`);
-  }
-  if (parsed.errors) {
-    resp.push(`Details: ${JSON.stringify(errinfo, null, 2)}`);
-  }
-  return `${resp.join('\n')}\n`;
-  */
+  throw error;
 }
 
 /**
