@@ -11,7 +11,7 @@ const https = require('../utils/https');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
-const sizeOf = require('image-size');
+const sizeOf = require('../utils/imageInfo');
 
 /**
  * @global
@@ -309,7 +309,7 @@ function isValidJSON(payload) {
    * @param {string|Buffer|undefined} media
    * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
    * @param {boolean} [datastringbuffer]
-   * @returns {Promise<{data: string | Buffer | undefined, type: string | undefined}>}
+   * @returns {Promise<{data: Buffer | undefined, type: string | undefined}>}
    */
 async function imageData(media, encoding, datastringbuffer) {
 
@@ -357,9 +357,9 @@ async function imageData(media, encoding, datastringbuffer) {
 }
 
 /**
- * @function resizePNG resizes a PNG to 320px x 320px as required by Discord to use as a sticker.
+ * @function resizeImage resizes a PNG to 320px x 320px as required by Discord to use as a sticker.
  * @param {Buffer} buffer
- * @param {'image/png' | 'image/gif'} type
+ * @param {string} type
  * @param {number} [width=320]
  * @param {number} [height=320]
  * @param {number} [MAX_SIZE = 524288]
@@ -370,7 +370,6 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
   try {
 
     let image;
-    // @ts-ignore
     const { width: startWidth, height: startHeight } = sizeOf(buffer);
     const startSize = buffer.length;
 
@@ -689,7 +688,7 @@ function returnErr(r) {
 
 /**
  * 
- * @param {Object} payload
+ * @param {ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember} payload
  * @returns 
  */
 /* async */function extendPayload(payload/* , params*/) {
@@ -965,3 +964,4 @@ function getAxiosError(error) {
   // console.log('\n\nFINAL ERROBJ IN GETAXIOSERROR\n\n', errObj);
   return errObj;
 }
+

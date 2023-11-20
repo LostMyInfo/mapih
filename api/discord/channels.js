@@ -40,9 +40,10 @@ module.exports = {
       method: 'get',
       path: `channels/${params.channel_id}`
     });
-    res.trueType = channelType[res.type];
+    res.typeName = channelType[res.type];
     return res;
   }, // End of Get Channel
+  
   
   /**
    * @summary
@@ -272,6 +273,7 @@ module.exports = {
     }
     return attempt;
     */
+    
     return extendPayload(attempt/* , params*/);
   }, // End of Create Channel Invite
 
@@ -772,6 +774,27 @@ module.exports = {
      * @returns {Promise<Channel>} A channel with a nested message object
      */
     forumThreadCreate: async (params) => {
+      const tag_ids = [];
+      if (params.applied_tags) {
+        /**
+         * @type {ForumTag[]}
+         */
+        const availableTags = (await attemptHandler({
+          method: 'get',
+          path: `channels/${params.channel_id}`
+        }))?.available_tags;
+        const tagsMap = new Map();
+        if (availableTags?.length)
+          availableTags.forEach((tag) => {
+            tagsMap.set(tag.id, tag);
+            tagsMap.set(tag.name, tag);
+          });
+        
+        for (const appliedTag of params.applied_tags)
+          if (tagsMap.get(appliedTag))
+            tag_ids.push((tagsMap.get(appliedTag)).id);
+      }
+      
       if (params.message?.attachments && params.message?.attachments?.length) {
         return sendAttachment(params, `channels/${params.channel_id}/threads`, 'post');
       } else {
@@ -790,7 +813,7 @@ module.exports = {
             },
             auto_archive_duration: params.auto_archive_duration ?? null,
             rate_limit_per_user: params.rate_limit_per_user ?? null,
-            applied_tags: params.applied_tags ?? null
+            applied_tags: tag_ids
           }
         });
       }
@@ -1307,6 +1330,6 @@ async function retrieve(params) {
     method: 'get',
     path: `channels/${params.channel_id}/messages/${params.message_id}`
   });
-  attempt.trueType = messageType[attempt?.type];
+  attempt.typeName = messageType[attempt?.type];
   return extendPayload(attempt/* , params*/);
 } // End of Get Channel Message

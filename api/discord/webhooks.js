@@ -1,6 +1,7 @@
 // @ts-check
 'use-strict';
 
+const { WebhookType } = require('../../enum');
 // Webhooks
 // https://discord.com/developers/docs/resources/webhook#webhook-resource
 
@@ -33,7 +34,7 @@ module.exports = {
       method: 'get',
       path: `webhooks/${params.webhook_id}`
     });
-    // attempt.trueType = WebhookType[attempt.type];
+    attempt.typeName = WebhookType[attempt.type];
     if (attempt.user) {
       attempt.user.badges = getBadges(attempt.user.public_flags);
       attempt.user.created_at = retrieveDate(attempt.user.id, true);
@@ -85,7 +86,7 @@ module.exports = {
       path: `channels/${params.channel_id}/webhooks`
     });
     for (const webhook of attempt) {
-      // object.trueType = WebhookType[object.type];
+      webhook.typeName = WebhookType[webhook.type];
       if (webhook.user) {
         webhook.user.badges = getBadges(webhook.user.public_flags);
         webhook.user.created_at = retrieveDate(webhook.user.id, true);
@@ -116,7 +117,7 @@ module.exports = {
       path: `guilds/${params.guild_id}/webhooks`
     });
     for (const webhook of attempt) {
-      // object.trueType = WebhookType[object.type];
+      webhook.typeName = WebhookType[webhook.type];
       if (webhook.user) {
         webhook.user.badges = getBadges(webhook.user.public_flags);
         webhook.user.created_at = retrieveDate(webhook.user.id, true);

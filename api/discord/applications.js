@@ -1,3 +1,4 @@
+// @ts-check
 const { ApplicationCommandType } = require('../../enum');
 const { attemptHandler } = require('../resources/functions');
 
@@ -182,7 +183,8 @@ module.exports = {
         options: params.options ?? [],
         default_member_permissions: params.default_member_permissions ?? null,
         type: params.type ?? 1,
-        nsfw: params.nsfw || null
+        nsfw: params.nsfw || null,
+        dm_permission: true
       };
 
       if (!params.guild_id) {

@@ -1,12 +1,12 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
+// @ts-check
 'use strict';
 
 const { attemptHandler, imageData, isValidJSON, returnErr, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload } = require('../resources/functions');
 const https = require('../utils/https');
 const { PERMISSION_NAMES, ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
-
-const filetype = require('file-type-cjs-fix');
 const { default: axios } = require('axios');
+const { imageInfo } = require('../utils/imageInfo');
 
 /**
  * @global
@@ -1201,12 +1201,15 @@ module.exports = {
    * const permNames = getPermissionNames(x, y);
    * @function getPermissionNames
    * @memberof module:guilds.members#
-   * @param {object[]} userRoles - Guild role set
-   * @param {object[]} guildRoles - User role set
-   * @returns {PermNames[]} List of Guild Member's' [Permission Names]{@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
+   * @param {Snowflake[]} userRoles - Guild role set
+   * @param {Role[]} guildRoles - User role set
+   * @returns {string[]} List of Guild Member's' [Permission Names]{@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
    */
     getPermissionNames: (userRoles, guildRoles) => {
     
+      /**
+       * @type {string[]}
+       */
       const names = [];
       try {
         for (const userRole of userRoles) {
@@ -1295,6 +1298,9 @@ module.exports = {
    * @returns {Promise<Role>} [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} object
    */
     retrieve: async (params) => {
+      /**
+       * @type {Role[]}
+       */
       const roles = await attemptHandler({
         method: 'get',
         path: `guilds/${params.guild_id}/roles`
@@ -1318,13 +1324,14 @@ module.exports = {
    * @function getAll
    * @memberof module:guilds.roles#
    * @param {Object} params
+   * @param {Snowflake} params.guild_id
    * @returns {Promise<Role[]>} List of [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} objects for the guild.
    */
-    getAll: async ({ guild_id }) => {
+    getAll: async (params) => {
   
       const attempt = await attemptHandler({
         method: 'get',
-        path: `guilds/${guild_id}/roles`
+        path: `guilds/${params.guild_id}/roles`
       });
       const flags = Object.entries(PERMISSION_NAMES);
       for (const role of attempt) {
@@ -1787,7 +1794,7 @@ module.exports = {
  * The sticker file to upload.
  * 
  * Must be a PNG, APNG, or GIF, max 512 KB
- * @returns {Promise<Sticker>} [Sticker]{@link https://discord.com/developers/docs/resources/sticker#sticker-object} object
+ * @returns {Promise<Sticker|undefined>} [Sticker]{@link https://discord.com/developers/docs/resources/sticker#sticker-object} object
  */
     create: async (params) => {
       const { Blob } = require('node:buffer');
@@ -1796,9 +1803,10 @@ module.exports = {
     
         const file = await imageData(params.file);
         const { data, type } = file;
-        const trueType = (await filetype.fromBuffer(data)).mime;
+        if (!data) return;
+        const trueType = (imageInfo(data).mimeType);
+        // const trueType = (await filetype.fromBuffer(data)).mime;
     
-        // @ts-ignore
         const newFile = await resizeImage(data, trueType);
         console.log('\nFILE FROM STICKER CREATE\n', newFile);
         if (!newFile) {
@@ -1875,8 +1883,8 @@ module.exports = {
           attempt.creator.avatarURL = avatarFromObject(attempt.creator.id, attempt.creator.avatar);
         }
       }
-      attempt.trueStatus = ScheduledEventStatus[attempt.status];
-      attempt.trueEntityType = ScheduledEventEntityType[attempt.entity_type];
+      attempt.statusName = ScheduledEventStatus[attempt.status];
+      attempt.entityTypeName = ScheduledEventEntityType[attempt.entity_type];
       return attempt;
     }, // End of Get Guild Scheduled Event
 
@@ -1908,8 +1916,8 @@ module.exports = {
             event.creator.avatarURL = avatarFromObject(event.creator.id, event.creator.avatar);
           }
         }
-        event.trueStatus = ScheduledEventStatus[event.status];
-        event.trueEntityType = ScheduledEventEntityType[event.entity_type];
+        event.statusName = ScheduledEventStatus[event.status];
+        event.entityTypeName = ScheduledEventEntityType[event.entity_type];
       }
       return attempt;
     }, // End of List Scheduled Events for Guild

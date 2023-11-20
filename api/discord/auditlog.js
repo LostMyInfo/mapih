@@ -59,13 +59,13 @@ module.exports = {
       path
     });
     if (attempt.audit_log_entries.length) {
-      attempt.audit_log_entries.forEach((log) => {
+      attempt.audit_log_entries.forEach((/** @type {AuditLogEntry} */ log) => {
         log.action_name = AuditLogEvents[log.action_type]?.name;
       });
     }
     if (attempt.threads.length) {
-      attempt.threads.forEach((thread) => {
-        thread.trueType = channelType[thread.type];
+      attempt.threads.forEach((/** @type {Channel} */ thread) => {
+        thread.typeName = channelType[thread.type];
       });
     }
     if (attempt.users.length) {

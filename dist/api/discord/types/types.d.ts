@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * A Discord locale string, possible values are:
  * * en-US (English, US)

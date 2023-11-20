@@ -248,8 +248,7 @@ const messageType = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const channelType = {
   0: 'Guild Text',
@@ -280,8 +279,7 @@ const InteractionType = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const ApplicationCommandType = {
   1: 'Chat Input',
@@ -290,8 +288,7 @@ const ApplicationCommandType = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const WebhookType = {
   1: 'Incoming',
@@ -300,8 +297,7 @@ const WebhookType = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const ExplicitContentFilter = {
   0: 'Disabled',
@@ -310,8 +306,7 @@ const ExplicitContentFilter = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const NSFWLevel = {
   0: 'Default',
@@ -320,7 +315,9 @@ const NSFWLevel = {
   3: 'Age-Restricted'
 };
 
-
+/**
+ * @type {{[x: string]: number}}
+ */
 const SystemChanFlags = {
   'Suppress Join Notifications': 1 << 0,
   'Suppress Premium Subscriptions': 1 << 1,
@@ -330,6 +327,9 @@ const SystemChanFlags = {
   'Suppress Role Subscription Purchase Notification Replies': 1 << 5
 };
 
+/**
+ * @type {{[x: string]: number}}
+ */
 const MessageFlags = {
   'Crossposted': 1 << 0,
   'Is Crosspost': 1 << 1,
@@ -344,12 +344,18 @@ const MessageFlags = {
   'Is Voice Message': 1 << 13
 };
 
+/**
+ * @type {{[x: string]: string}}
+ */
 const ScheduledEventEntityType = {
   1: 'Stage Instance',
   2: 'Voice',
   3: 'External'
 };
 
+/**
+ * @type {{[x: string]: string}}
+ */
 const ScheduledEventStatus = {
   1: 'Scheduled',
   2: 'Active',
@@ -357,6 +363,16 @@ const ScheduledEventStatus = {
   4: 'Canceled'
 };
 
+/**
+ * @typedef {Object} Event
+ * @property {string} name
+ * @property {string} description
+ * @property {string} [event]
+ */
+
+/**
+ * @type {Object<number, Event>}
+ */
 const AuditLogEvents = {
   1: { name: 'guild_update',   description: 'Server settings were updated' },
   10: { name: 'channel_create', description: 'A channel was created' },

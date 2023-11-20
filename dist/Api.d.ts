@@ -1,3 +1,4 @@
+// @ts-check
 export namespace discord {
     const auditlog: {
         retrieve: (params: {
@@ -55,7 +56,7 @@ export namespace discord {
             invite_code: string;
         }) => Promise<ExtendedInvite>;
     };
-    const commands: {
+    const applications: {
         appRoleConnectionMeta: (params: {
             application_id: string;
         }) => Promise<ApplicationRoleConnectionMetadata[]>;
@@ -1211,24 +1212,6 @@ export namespace utils {
             index: string | number;
         }): Promise<any>;
         remove(params: any): Promise<unknown>;
-    };
-    const timestamp: {
-        default(): string;
-        year(): number;
-        month(): string;
-        day(): string;
-        hours(): number;
-        minutes(): string;
-        seconds(): string;
-        mseconds(): string;
-        UTCdefault(): string;
-        UTCyear(): number;
-        UTCmonth(): string;
-        UTCday(): string;
-        UTChours(): number;
-        UTCminutes(): string;
-        UTCseconds(): string;
-        UTCmseconds(): string;
     };
 }
 //# sourceMappingURL=Api.d.ts.map
