@@ -8,8 +8,6 @@ ie: process.env.token
 Docs coming soon
 
 ```js
-// npm i mapih dotenv
-require('dotenv').config();
 const api = require('mapih');
 
 (async() => {
