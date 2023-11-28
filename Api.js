@@ -1,4 +1,20 @@
+let token = undefined;
+
 module.exports = {
+
+  /**
+   * @param {string} bot_token 
+   */
+  initialize: function(bot_token) {
+    token = bot_token;
+  },
+
+  /**
+   * @returns {string}
+   */
+  get_token: function() {
+    return token;
+  },
 
   discord: {
 

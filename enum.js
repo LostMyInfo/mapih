@@ -1,10 +1,9 @@
+// @ts-check
 /* eslint-disable no-multi-spaces */
-const BATCHSIZE = parseInt(process.env.batch_size);
 
-const GEO_REGIONS = [
-  'montreal', 'newark', 'us-east', 'us-central', 'atlanta'
-];
-
+/**
+ * @type {{[x: string]: number}}
+ */
 const APP_FLAGS = {
   GATEWAY_PRESENCE: 1 << 12, // = 4096	Intent required for bots in 100 or more servers to receive presence_update events
   GATEWAY_PRESENCE_LIMITED: 1 << 13, // = 8192	Intent required for bots in under 100 servers to receive presence_update events, found in Bot Settings
@@ -17,6 +16,9 @@ const APP_FLAGS = {
   APPLICATION_COMMAND_BADGE: 1 << 23 // = 8388608	Indicates if an app has registered global application commands
 };
 
+/**
+ * @type {{[x: string]: number}}
+ */
 const BASE_INTENTS = {
   GUILDS: 1 << 0, // 1 << 0 = 1
   GUILD_BANS: 1 << 2, // 1 << 2 = 4
@@ -35,12 +37,19 @@ const BASE_INTENTS = {
   AUTO_MODERATION_CONFIGURATION: 1 << 20, // 1 << 20 = 1048576
   AUTO_MODERATION_EXECUTION: 1 << 21 // 1 << 21 = 2097152
 };
+
+/**
+ * @type {{[x: string]: number}}
+ */
 const PRIVILEGED = {
   GUILD_MEMBERS: 1 << 1, // 1 << 1 = 2
   GUILD_PRESENCES: 1 << 8, // 1 << 8 = 256
   MESSAGE_CONTENT: 1 << 15 // 1 << 15 = 32768
 };
 
+/**
+ * @type {{[x: string]: number}}
+ */
 const PERMISSION_NAMES = {
   CREATE_INSTANT_INVITE: (1 << 0), //	Allows creation of instant invites	T, V, S
   KICK_MEMBERS: (1 << 1), //	Allows kicking members	
@@ -85,42 +94,9 @@ const PERMISSION_NAMES = {
   MODERATE_MEMBERS: (1 << 40)//	Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels	
 };
 
-// Resumeable close event codes.
-const RESUMEABLE = {
-  1012: true,
-  1006: true,
-  1002: true,
-  1001: true,
-  5000: true
-};
-
-// Socket close messages
-const SOCKET_CLOSE = {
-  // RFC6455 - https://datatracker.ietf.org/doc/html/rfc6455#section-7.4.1
-  1000: 'Socket fulfilled - Normal Closure',
-  1001: 'Going away - Gateway closing',
-  1002: 'Heartbeat Not Acknowledged',
-  1005: 'Status Failure - Reconnecting',
-  1006: 'Zombie Socket - Reconnecting',
-  1011: 'Invalid Session - Internal Error',
-  1012: 'Recieved Re-Connect Signal',
-  // Discord - https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-close-event-codes
-  4000: 'Unknown error: We\'re not sure what went wrong. Try reconnecting?',
-  4001: 'Unknown opcode: You sent an invalid Gateway opcode or an invalid payload for an opcode. Don\'t do that!',
-  4002: 'You sent an invalid payload or the payload exceeded 4096 bytes.',
-  4003: 'Not authenticated: You sent us a payload prior to identifying.',
-  4004: 'Authentication failed: The account token sent with your identify payload is incorrect.',
-  4005: 'Already authenticated: You sent more than one identify payload. Don\'t do that!',
-  4007: 'Invalid seq: The sequence sent when resuming the session was invalid. \nReconnect and start a new session.',
-  4008: 'Rate limited: Woah nelly! You\'re sending payloads to us too quickly. Slow it down! \nYou will be disconnected on receiving this.',
-  4009: 'Session timed out: Your session timed out. \nReconnect and start a new one.',
-  4010: 'Invalid shard: You sent us an invalid shard when identifying.',
-  4011: 'Sharding required: The session would have handled too many guilds \n- you are required to shard your connection in order to connect.',
-  4012: 'Invalid API version: You sent an invalid version for the gateway.',
-  4013: 'Invalid intent(s): You sent an invalid intent for a Gateway Intent. \nYou may have incorrectly calculated the bitwise value.',
-  4014: 'Disallowed intent(s): You sent a disallowed intent for a Gateway Intent. \nYou may have tried to specify an intent that you have not enabled or are not approved for.'
-};
-
+/**
+ * @type {{[x: string]: number}}
+ */
 const USER_FLAGS = {
   'Discord Employee': 1 << 0, //	STAFF	
   'Partnered Server Owner': 1 << 1, //	PARTNER	
@@ -151,25 +127,8 @@ const USER_FLAGS = {
   '26': 1 << 26 //	
 };
 
-const rejectKeys = [
-
-  'cmd',
-  'uuid',
-  'auid'
-
-];
-
-const TEXTFIELDS = {
-
-  API: '10',
-  ENCODING: 'json',
-  GATEWAY: 'gateway.discord.gg'
-
-};
-
 /**
- * @global
- * @enum {number}
+ * @type {{[x: string]: number}}
  */
 const componentType = {
   ActionRow: 1,
@@ -183,8 +142,7 @@ const componentType = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const ComponentType = {
   1: 'Action Row',
@@ -198,8 +156,7 @@ const ComponentType = {
 };
 
 /**
- * @global
- * @enum {number}
+ * @type {{[x: string]: number}}
  */
 const buttonStyle = {
   Primary: 1,
@@ -210,8 +167,7 @@ const buttonStyle = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const messageType = {
   0: 'Default',
@@ -267,8 +223,7 @@ const channelType = {
 };
 
 /**
- * @global
- * @enum {string}
+ * @type {{[x: string]: string}}
  */
 const InteractionType = {
   1: 'Ping',
@@ -371,7 +326,7 @@ const ScheduledEventStatus = {
  */
 
 /**
- * @type {Object<number, Event>}
+ * @type {{[x: number]: Event}}
  */
 const AuditLogEvents = {
   1: { name: 'guild_update',   description: 'Server settings were updated' },
@@ -448,25 +403,4 @@ const AuditLogEvents = {
   193: { name: 'Voice Channel Status Delete', description: '' }
 };
 
-const PremiumTierLimits = {
-  0: {
-    emojis: {
-      static: 50, animated: 50
-    },
-    stickers: 5
-  },
-  1: {
-    emojis: {
-      static: 150, animated: 150
-    },
-    stickers: 15
-  },
-  2: {
-    emojis: {
-      static: 150, animated: 150
-    },
-    stickers: 30
-  }
-};
-
-module.exports = { BATCHSIZE, rejectKeys, TEXTFIELDS, GEO_REGIONS, APP_FLAGS, BASE_INTENTS, PRIVILEGED, PERMISSION_NAMES, RESUMEABLE, SOCKET_CLOSE, USER_FLAGS, InteractionType, channelType, messageType, ComponentType, componentType, ApplicationCommandType, WebhookType, AuditLogEvents, buttonStyle, ExplicitContentFilter, NSFWLevel, SystemChanFlags, MessageFlags, ScheduledEventEntityType, ScheduledEventStatus, PremiumTierLimits };
+module.exports = { APP_FLAGS, BASE_INTENTS, PRIVILEGED, PERMISSION_NAMES, USER_FLAGS, InteractionType, channelType, messageType, ComponentType, componentType, ApplicationCommandType, WebhookType, AuditLogEvents, buttonStyle, ExplicitContentFilter, NSFWLevel, SystemChanFlags, MessageFlags, ScheduledEventEntityType, ScheduledEventStatus };

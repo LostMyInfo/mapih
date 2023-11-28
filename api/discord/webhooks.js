@@ -20,7 +20,7 @@ module.exports = {
    * @summary
    * ### [Get Webhook]{@link https://discord.com/developers/docs/resources/webhook#get-webhook}
    * @example
-   * await params.api.discord.webhooks.retrieve({
+   * await api.discord.webhooks.retrieve({
    *   webhook_id: '0000000000'
    * });
    * @memberof module:webhooks#
@@ -39,9 +39,8 @@ module.exports = {
       attempt.user.badges = getBadges(attempt.user.public_flags);
       attempt.user.created_at = retrieveDate(attempt.user.id, true);
     }
-    if (attempt.avatar) {
+    if (attempt.avatar)
       attempt.avatar_url = avatarFromObject(attempt.id, attempt.avatar);
-    }
     return attempt;
   }, // End of Get Webhook
   
@@ -50,7 +49,7 @@ module.exports = {
    * ### [Get Webhook with Token]{@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
    * - Same as `webhooks.retrieve()`, except does not require authentication and returns no user in the {@link Webhook} object.
    * @example
-   * await params.api.discord.webhooks.retrieveWithToken({
+   * await api.discord.webhooks.retrieveWithToken({
    *   webhook_id: '0000000000',
    *   webhook_token: 'abcdef123456'
    * });
@@ -71,7 +70,7 @@ module.exports = {
    * @summary
    * ### [Get Channel Webhooks]{@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
    * @example
-   * await params.api.discord.webhooks.retrieveChannel({
+   * await api.discord.webhooks.retrieveChannel({
    *   channel_id: '0000000000'
    * });
    * @memberof module:webhooks#
@@ -91,9 +90,8 @@ module.exports = {
         webhook.user.badges = getBadges(webhook.user.public_flags);
         webhook.user.created_at = retrieveDate(webhook.user.id, true);
       }
-      if (webhook.avatar) {
+      if (webhook.avatar)
         webhook.avatar_url = avatarFromObject(webhook.id, webhook.avatar);
-      }
     }
     return attempt;
   }, // End of Get Channel Webhooks
@@ -102,7 +100,7 @@ module.exports = {
    * @summary
    * ### [Get Guild Webhooks]{@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
    * @example
-   * await params.api.discord.webhooks.retrieveGuild({
+   * await api.discord.webhooks.retrieveGuild({
    *   guild_id: '0000000000'
    * });
    * @memberof module:webhooks#
@@ -122,9 +120,8 @@ module.exports = {
         webhook.user.badges = getBadges(webhook.user.public_flags);
         webhook.user.created_at = retrieveDate(webhook.user.id, true);
       }
-      if (webhook.avatar) {
+      if (webhook.avatar)
         webhook.avatar_url = avatarFromObject(webhook.id, webhook.avatar);
-      }
     }
     return attempt;
   }, // End of Get Guild Webhooks
@@ -134,7 +131,7 @@ module.exports = {
    * ### [Get Webhook Message]{@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
    * - Returns a previously-sent webhook message from the same token
    * @example
-   * await params.api.discord.webhooks.retrieveMessage({
+   * await api.discord.webhooks.retrieveMessage({
    *   webhook_id: '000000000000000',
    *   webhook_token: 'abcdefg1234567',
    *   message_id: '000000000000000'
@@ -162,7 +159,7 @@ module.exports = {
    * @summary
    * ### [Delete Webhook Message]{@link https://discord.com/developers/docs/resources/webhook#delete-webhook-message}
    * @example
-   * await params.api.discord.webhooks.destroyMessage({
+   * await api.discord.webhooks.destroyMessage({
    *   webhook_id: '0000000000',
    *   webhook_token: 'abcdefg1234567',
    *   message_id: '0000000000'
@@ -190,7 +187,7 @@ module.exports = {
    * ### [Create Webhook]{@link https://discord.com/developers/docs/resources/webhook#create-webhook}
    * - Webhook names follow the nickname guidelines in the [Usernames and Nicknames]{@link https://discord.com/developers/docs/resources/user#usernames-and-nicknames} documentation, with the exception that webhook names can be up to 80 characters.
    * @example
-   * await params.api.discord.webhooks.create({
+   * await api.discord.webhooks.create({
    *   channel_id: '0000000000',
    *   name: 'MyNewWebhook',
    *   avatar: 'https://www.imgurl.com'
@@ -218,7 +215,7 @@ module.exports = {
    * ### [Modify Webhook]{@link https://discord.com/developers/docs/resources/webhook#modify-webhook}
    * - Webhook names follow the nickname guidelines in the [Usernames and Nicknames]{@link https://discord.com/developers/docs/resources/user#usernames-and-nicknames} documentation, with the exception that webhook names can be up to 80 characters.
    * @example
-   * await params.api.discord.webhooks.modify({
+   * await api.discord.webhooks.modify({
    *   webhook_id: '0000000000',
    *   channel_id: '0000000000',
    *   name: 'MyNewWebhook',
@@ -247,7 +244,7 @@ module.exports = {
    * ### [Modify Webhook with Token]{@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
    * - Webhook names follow the nickname guidelines in the [Usernames and Nicknames]{@link https://discord.com/developers/docs/resources/user#usernames-and-nicknames} documentation, with the exception that webhook names can be up to 80 characters.
    * @example
-   * await params.api.discord.webhooks.modifyWithToken({
+   * await api.discord.webhooks.modifyWithToken({
    *   webhook_id: '0000000000',
    *   webhook_token: 'abcdefg1234567',
    *   name: 'MyNewWebhook',
@@ -275,7 +272,7 @@ module.exports = {
    * @summary
    * ### [Delete Webhook]{@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
    * @example
-   * await params.api.discord.webhooks.destroy({
+   * await api.discord.webhooks.destroy({
    *   webhook_id: '0000000000'
    * });
    * @memberof module:webhooks#
@@ -294,7 +291,7 @@ module.exports = {
    * @summary
    * ### [Delete Webhook with Token]{@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
    * @example
-   * await params.api.discord.webhooks.destroyWithToken({
+   * await api.discord.webhooks.destroyWithToken({
    *   webhook_id: '0000000000',
    *   webhook_token: 'abcdefg1234567'
    * });
@@ -320,7 +317,7 @@ module.exports = {
    *   - If `thread_id` is provided, the message will send in that thread
    *   - if `thread_name` is provided, a thread with that name will be created in the forum channel
    * @example
-   * await params.api.discord.webhooks.execute({
+   * await api.discord.webhooks.execute({
    *   webook_id: '0000000000',
    *   webhook_token: 'abcdefg',
    *   content: 'message contents here',
@@ -363,9 +360,9 @@ module.exports = {
     let path = `webhooks/${params.webhook_id}/${params.webhook_token}?`;
     path += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     path += `${params.wait ? `&wait=${params.wait}` : false}`;
-    if (params.attachments && params.attachments?.length) {
+    if (params.attachments && params.attachments?.length)
       return sendAttachment(params, path, 'post');
-    } else {
+    else {
       return attemptHandler({
         method: 'post',
         path,
@@ -395,7 +392,7 @@ module.exports = {
    *     - (without regard to whether or not an `allowed_mentions` was present in the request that originally created the message)
    * - The `attachments` array must contain all attachments that should be present after the edit, including retained and new attachments
    * @example
-   * await params.api.discord.webhooks.updateMessage({
+   * await api.discord.webhooks.updateMessage({
    *   webhook_id: '0000000000',
    *   webhook_token: 'abcdefg',
    *   message_id: '0000000000',
@@ -421,9 +418,9 @@ module.exports = {
   updateMessage: async (params) => {
     let path = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
     path += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
-    if (params.attachments && params.attachments?.length) {
+    if (params.attachments && params.attachments?.length)
       return sendAttachment(params, path, 'patch');
-    } else {
+    else {
       return attemptHandler({
         method: 'patch',
         path,

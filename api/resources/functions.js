@@ -33,6 +33,8 @@ module.exports = {
   extendPayload,
   returnErr,
   getAxiosError,
+  slackHandler,
+  buildQueryString,
   
   /**
    * API Handler Creator
@@ -46,7 +48,7 @@ module.exports = {
    */
   attemptHandler: async (params) => {
     const headers = {
-      'Authorization': `Bot ${process.env.token}`
+      'Authorization': `Bot ${token()}`
     };
     try {
       if (!params.path.includes('prune')) {
@@ -314,13 +316,10 @@ function isValidJSON(payload) {
 async function imageData(media, encoding, datastringbuffer) {
 
   try {
-    if (!(await isValidMedia(media))) {
+    if (!(await isValidMedia(media)))
       throw new Error('Invalid input. Expected an image URL or buffer.\n');
-    }
-    if (typeof media !== 'string' && !(media instanceof Buffer)) {
+    if (typeof media !== 'string' && !(media instanceof Buffer))
       throw new Error('Invalid input. Expected an image URL or buffer.\n');
-    }
-
     
     let imageBuffer, mimetype;
     if (typeof media === 'string') {
@@ -328,9 +327,8 @@ async function imageData(media, encoding, datastringbuffer) {
         responseType: 'arraybuffer'
       });
 
-      if (response.status !== 200) {
+      if (response.status !== 200)
         throw new Error(`Failed to fetch image: ${response.statusText}`);
-      }
       imageBuffer = response.data;
       mimetype = response.headers['content-type'];
     } else imageBuffer = media;
@@ -339,16 +337,15 @@ async function imageData(media, encoding, datastringbuffer) {
     if (encoding === 'base64string') {
       option = Buffer.from(imageBuffer);
       data = `data:${mimetype};base64,${option.toString('base64')}`;
-      if (datastringbuffer) {
+      if (datastringbuffer)
         data = Buffer.from(option.toString('base64'), 'base64');
-      }
-    } else if (encoding === 'binarystring') {
+    } else if (encoding === 'binarystring')
       data = imageBuffer.toString('binary');
-    } else if (encoding) {
+    else if (encoding)
       data = Buffer.from(imageBuffer, encoding);
-    } else {
+    else
       data = Buffer.from(imageBuffer);
-    }
+    
     return { data: data, type: mimetype };
 
   } catch (error) {
@@ -374,34 +371,31 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
     const startSize = buffer.length;
 
     if (type === 'image/png') {
-      
+
       image = sharp(buffer);
 
-      if (startHeight !== height || startWidth !== width) {
+      if (startHeight !== height || startWidth !== width)
         image = await image.resize({ width, height }).png().toBuffer();
-      } else {
+      else
         image = await image.png().toBuffer();
-      }
 
     } else if (type === 'image/gif') {
 
       image = sharp(buffer, { animated: true });
       
-      if (startHeight !== height || startWidth !== width) {
+      if (startHeight !== height || startWidth !== width)
         image = (await apng.sharpToApng(image, 'buffer', { height, width }))?.[0].buffer;
-      } else {
+      else
         image = (await apng.sharpToApng(image, 'buffer'))?.[0].buffer;
-      }
-      
+            
     } else if (type === 'image/apng') {
       
-      if (startHeight === height && startWidth === width) {
+      if (startHeight === height && startWidth === width) 
         image = buffer;
-      } else {
+      else
         image = sharp(buffer).resize({
           width, height
         });
-      }
     }
     
     if (image.length <= MAX_SIZE) return { image };
@@ -458,7 +452,7 @@ async function reduceSize(buffer, type, size, MAX_SIZE = 524288) {
  * @param {string|number} value
  * @param {boolean} snowflake
  * @param {'relative'|'date'|'full'|'all'|undefined} [style] 
- * @returns {string|Date|{timestamp: number, date: string, relative: string, full: string}}
+ * @returns {string}
  */
 
 function retrieveDate(value, snowflake, style) {
@@ -965,3 +959,110 @@ function getAxiosError(error) {
   return errObj;
 }
 
+async function slackHandler(options = {}) {
+  try {
+
+    const attempt = await https({
+      url: `https://slack.com/api/${options.endpoint}`,
+      method: options.method || 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': `Bearer xoxb-${slackToken}`
+      },
+      ...(options.body && { body: options.body })
+    });
+
+    if (!attempt.ok)
+      return parseSlackError(attempt);
+
+    return attempt;
+
+  } catch (error) {
+    console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
+    // throw error
+  }
+}
+
+
+function parseSlackError(err) {
+  console.log('err in parseSlackError:\n', err);
+  const errs = {};
+  if (!err.errors && !err.response_metadata) {
+    return { message: err.error };
+  }
+  for (const e of err.errors ?? err.response_metadata?.messages) {
+    // const match = e.match(/^.*(?=\s\[)|(?<=:\/).*(?=\])/gmi);
+    const match = e.match(/^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
+    const specificProp = e.match(/(?<=:\s)(\w+)(?!\[)/gi)?.[0];
+    // const specificProp = e.match(/:\s(\w+)(?!\[)/i)?.[1];
+    const [message] = match;
+    let [, path] = match,
+      newPath = '';
+    path = path.split('/');
+    const prop = path[0];
+    errs[prop] = errs[prop] || [];
+
+    for (const p of path) {
+      newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
+    }
+
+    path = path.slice(2).join('.');
+    newPath = newPath.slice(1);
+
+    for (const block of blocks) {
+      // const propname = ``
+      if (specificProp) {
+        errs[prop][`${message} (${newPath})`] = { [specificProp]: get(block, specificProp) };
+      } else {
+        console.log(get(block, path));
+        errs[prop][`${message} (${newPath})`] = get(block, path);
+      }
+      console.log(errs);
+    }
+  }
+  console.log('final errs', errs);
+  return errs;
+}
+
+function get(obj, path, defaultValue = undefined) {
+  const travel = (regexp) =>
+    String.prototype.split
+      .call(path, regexp)
+      .filter(Boolean)
+      .reduce((res, key) => (
+        res !== null && res !== undefined
+          ? res[key]
+          : res
+      ), obj);
+  const result
+    = travel(/[,[\]]+?/) ||
+    travel(/[,[\].]+?/);
+
+  return result === undefined || result === obj
+    ? defaultValue
+    : result;
+}
+
+
+function buildQueryString(url, params, encode = true) {
+  const queryParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) {
+      const encodedValue = encode ? encodeURIComponent(value) : value;
+      queryParams.append(key, encodedValue);
+    }
+  });
+
+  const queryString = queryParams.toString();
+  return queryString ? `${url}?${queryString}` : url;
+}
+
+/**
+ * @returns {string}
+ */
+function token() {
+  const token = require('../../Api').get_token() ?? process.env.token;
+  if (!token) throw new Error('Bot token not set. Please initialize the library first.');
+  return token;
+}

@@ -1,29 +1,106 @@
-// @ts-check
-
-'use strict';
-
 /**
- * @ignore
  * @global
  * @typedef {string} Snowflake
  */
 
 /**
- * @ignore
  * @typedef {string} ISO8601Timestamp
  */
 
 /**
- * @typedef {"ADD_REACTIONS"|"ADMINISTRATOR"|"ATTACH_FILES"|"BAN_MEMBERS"|"CHANGE NICKNAME"|"CONNECT"|"CREATE_INSTANT_INVITE"|"CREATE_PRIVATE_THREADS"|"CREATE_PUBLIC_THREADS"|"DEAFEN_MEMBERS"|"EMBED_LINKS"|"KICK_MEMBERS"|"MANAGE_CHANNELS"|"MANAGE_EMOJIS_AND_STICKERS"|"MANAGE_EVENTS"|"MANAGE_SERVER"|"MANAGE_MESSAGES"|"MANAGE_NICKNAMES"|"MANAGE_ROLES"|"MANAGE_THREADS"|"MANAGE_WEBHOOKS"|"MENTION_EVERYONE"|"MODERATE_MEMBERS"|"MOVE_MEMBERS"|"MUTE_MEMBERS"|"PRIORITY_SPEAKER"|"READ_MESSAGE_HISTORY"|"REQUEST_TO_SPEAK"|"SEND_MESSAGES"|"SEND_MESSAGES_IN_THREADS"|"SEND_TTS_MESSAGES"|"SPEAK"|"VIDEO"|"USE_APPLICATION_COMMANDS"|"USE_EMBEDDED_ACTIVITIES"|"USE_EXTERNAL_EMOJIS"|"USE_EXTERNAL_STICKERS"|"USE_VOICE_ACTIVITY"|"VIEW_AUDIT_LOG"|"VIEW_CHANNEL"|"VIEW_SERVER_INSIGHTS"} PermNames
+ * @global
+ * @typedef {"ADD_REACTIONS"|"ADMINISTRATOR"|"ATTACH_FILES"|"BAN_MEMBERS"|"CHANGE NICKNAME"|"CONNECT"|"CREATE_INSTANT_INVITE"|"CREATE_PRIVATE_THREADS"|"CREATE_PUBLIC_THREADS"|"DEAFEN_MEMBERS"|"EMBED_LINKS"|"KICK_MEMBERS"|"MANAGE_CHANNELS"|"MANAGE_EMOJIS_AND_STICKERS"|"MANAGE_EVENTS"|"MANAGE_SERVER"|"MANAGE_MESSAGES"|"MANAGE_NICKNAMES"|"MANAGE_ROLES"|"MANAGE_THREADS"|"MANAGE_WEBHOOKS"|"MENTION_EVERYONE"|"MODERATE_MEMBERS"|"MOVE_MEMBERS"|"MUTE_MEMBERS"|"PRIORITY_SPEAKER"|"READ_MESSAGE_HISTORY"|"REQUEST_TO_SPEAK"|"SEND_MESSAGES"|"SEND_MESSAGES_IN_THREADS"|"SEND_TTS_MESSAGES"|"SPEAK"|"VIDEO"|"USE_APPLICATION_COMMANDS"|"USE_EMBEDDED_ACTIVITIES"|"USE_EXTERNAL_EMOJIS"|"USE_EXTERNAL_STICKERS"|"USE_VOICE_ACTIVITY"|"VIEW_AUDIT_LOG"|"VIEW_CHANNEL"|"VIEW_SERVER_INSIGHTS"|"MANAGE_GUILD_EXPRESSIONS"} PermissionNames
  */
 
 /**
- * @typedef {'Discord Employee'|'Partnered Server Owner'|'HypeSquad Events Member'|'Bug Hunter Level 1'|'House Bravery Member'|'House Brilliance Member'|'House Balance Member'|'Early Nitro Supporter'|'User is a team'|'Bug Hunter Level 2'|'Verified Bot'|'Early Verified Bot Developer'|'Discord Certified Moderator'|'Interactions Handler'|'Active Developer'} UserFlags
+ * @summary [Bitwise Permission Flags]{@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
+ * @typedef {number} PermissionFlags
+ * | Permission               | Value | Description | Channel Types |
+ * |--------------------------|-------|-------------|---------------|
+ * | Create Instant Invite    | 1 << 0 | Allows creation of instant invites | T, V, S |
+ * | Kick Members             | 1 << 1 | Allows kicking members |
+ * | Ban Members              | 1 << 2 | Allows banning members |
+ * | Administrator            | 1 << 3 | Allows all permissions and bypasses channel permission overwrites |
+ * | Manage Channels          | 1 << 4 | Allows management and editing of channels | T, V, S |
+ * | Manage Guild             | 1 << 5 | Allows management and editing of the guild |
+ * | Add Reactions            | 1 << 6 | Allows for the addition of reactions to messages | T, V, S |
+ * | View Audit Log           | 1 << 7 | Allows for viewing of audit logs |
+ * | Priority Speaker         | 1 << 8 | Allows for using priority speaker in a voice channel | V |
+ * | Stream                   | 1 << 9 | Allows the user to go live | V, S |
+ * | View Channel             | 1 << 10 | Allows guild members to view a channel, which includes reading messages in text channels and joining voice channels | T, V, S |
+ * | Send Messages            | 1 << 11 | Allows for sending messages in a channel and creating threads in a forum (does not allow sending messages in threads) | T, V, S |
+ * | Send TTS Messages        | 1 << 12 | Allows for sending of /tts messages | T, V, S |
+ * | Manage Messages          | 1 << 13 | Allows for deletion of other users messages | T, V, S |
+ * | Embed Links              | 1 << 14 | Links sent by users with this permission will be auto-embedded | T, V, S |
+ * | Attach Files             | 1 << 15 | Allows for uploading images and files | T, V, S |
+ * | Read Message History     | 1 << 16 | Allows for reading of message history | T, V, S |
+ * | Mention Everyone         | 1 << 17 | Allows for using the `@everyone` tag to notify all users in a channel, and the `@here` tag to notify all online users in a channel | T, V, S |
+ * | Use External Emojis      | 1 << 18 | Allows the usage of custom emojis from other servers | T, V, S |
+ * | View Guild Insights      | 1 << 19 | Allows for viewing guild insights |
+ * | Connect                  | 1 << 20 | Allows for joining of a voice channel | V, S |
+ * | Speak                    | 1 << 21 | Allows for speaking in a voice channel | V |
+ * | Mute Members             | 1 << 22 | Allows for muting members in a voice channel | V, S |
+ * | Deafen Members           | 1 << 23 | Allows for deafening of members in a voice channel | V |
+ * | Move Members             | 1 << 24 | Allows for moving of members between voice channels | V, S
+ * | Use VAD                  | 1 << 25 | Allows for using voice-activity-detection in a voice channel | V |
+ * | Change Nickname          | 1 << 26 | Allows for modification of own nickname |
+ * | Manage Nicknames         | 1 << 27 | Allows for modification of other users nicknames |
+ * | Manage Roles             | 1 << 28 | Allows management and editing of roles | T, V, S |
+ * | Manage Webhooks          | 1 << 29 | Allows management and editing of webhooks | T, V, S |
+ * | Manage Guild Expressions | 1 << 30 | Allows for editing and deleting emojis, stickers, and soundboard sounds created by all users |
+ * | Use Application Commands | 1 << 31 | Allows members to use application commands, including slash commands and context menu commands. | T, V, S |
+ * | Request To Speak         | 1 << 32 | Allows for requesting to speak in stage channels. (This permission is under active development and may be changed or removed.) | S |
+ * | Manage Events            | 1 << 33 | Allows for editing and deleting scheduled events created by all users | V, S |
+ * | Manage Threads           | 1 << 34 | Allows for deleting and archiving threads, and viewing all private threads | T |
+ * | Create Public Threads    | 1 << 35 | Allows for creating public and announcement threads | T |
+ * | Create Private Threads   | 1 << 36 | Allows for creating private threads | T |
+ * | Use External Stickers    | 1 << 37 | Allows the usage of custom stickers from other servers | T, V, S |
+ * | Send Messages In Threads | 1 << 38 | Allows for sending messages in threads | T |
+ * | Use Embedded Activities  | 1 << 39 | Allows for using Activities (applications with the `EMBEDDED` flag) in a voice channel | V |
+ * | Moderate Members         | 1 << 40 | Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels |
+ * | View Creator Monetization Analytics | 1 << 41 | Allows for viewing role subscription insights |
+ * | Use Soundboard           | 1 << 42 | Allows for using soundboard in a voice channel | V |
+ * | Create Guild Expressions | 1 << 43 | Allows for creating emojis, stickers, and soundboard sounds, and editing and deleting those created by the current user |
+ * | Create Events            | 1 << 44 | Allows for creating scheduled events, and editing and deleting those created by the current user | V, S |
+ * | Use External Sounds      | 1 << 45 | Allows the usage of custom soundboard sounds from other servers | V |
+ * | Send Voice Messages      | 1 << 46 | Allows sending voice messages | T, V, S |
+ */
+
+/**
+ * @typedef {string} UserFlags
+ * | Flag                         |
+ * |------------------------------|
+ * | Discord Employee             |
+ * | Partnered Server Owner       |
+ * | HypeSquad Events Member      |
+ * | Bug Hunter Level 1           |
+ * | House Bravery Member         |
+ * | House Brilliance Member      |
+ * | House Balance Member         |
+ * | Early Nitro Supporter        |
+ * | User is a team               |
+ * | Bug Hunter Level 2           |
+ * | Verified Bot                 |
+ * | Early Verified Bot Developer |
+ * | Discord Certified Moderator  |
+ * | Interactions Handler         |
+ * | Active Developer             |
+ */
+
+/**
+ * @summary [Guild Member Flags]{@link https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags}
+ * @typedef {number} GuildMemberFlags
+ * | Flag | Value | Description | Editable |
+ * |----------------------|--------|-------------------------------------------------------|-------|
+ * | Did rejoin           | 1 << 0 | Member has left and rejoined the guild                | false |
+ * | Completed Onboarding | 1 << 1 | Member has completed onboarding                       | false |
+ * | Bypass Verification  | 1 << 2 | Member is exempt from guild verification requirements | true  |
+ * | Started Onboarding   | 1 << 3 | Member has started onboarding                         | false |
  */
 
 /**
  * @summary [OAuth2 Scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes}
- * @typedef {'activities.read'|'activites.write'|'applications.builds.read'|'applications.builds.upload'|'applications.commands'|'applications.commands.update'|'applications.commands.permissions.update'|'applications.entitlements'|'applications.store.update'|'bot'|'connections'|'dm_channels.read'|'email'|'gdm.join'|'guilds'|'guilds.join'|'guilds.members.read'|'identify'|'messages.read'|'relationships.read'|'role_connections.write'|'rpc'|'rpc.activities.write'|'rpc.notifications.read'|'rpc.voice.read'|'rpc.voice.write'|'voice'|'webhook.incoming'} OAuth2Scopes
+ * @typedef {string} OAuth2Scopes
  * | Name | Description |
  * |------|-------------|
  * | activities.read | allows your app to fetch data from a user's "Now Playing/Recently Played" list — not currently available for apps |
@@ -81,7 +158,7 @@
  * @property {LocalizationMap} [description_localizations] - Localization dictionary for `description` field.
  * @property {ApplicationCommandOption[]} [options] - Parameters for the command, max of 25. 
  * @property {string} default_member_permissions - Set of permissions represented as a bit set.
- * @property {boolean} [dm_permission] - Indicates whether the command is available in DMs with the app, only for globally-scoped commands.
+ * @property {boolean} [dm_permission=true] - Indicates whether the command is available in DMs with the app, only for globally-scoped commands.
  * @property {boolean} [nsfw=false] - Indicates whether the command is age-restricted.
  * @property {Snowflake} version - Autoincrementing version identifier updated during substantial record changes
  *
@@ -236,7 +313,7 @@
  * @property {?string} [details] - What the player is currently doing
  * @property {?string} [state] - User's current party status
  * @property {?PartialEmoji} [emoji] - Emoji used for custom status
- * @property {{id: string, size: Array<number>}} [party] - Information for the current party of the player
+ * @property {{id: string, size: Array<number, number>}} [party] - Information for the current party of the player
  * @property {{large_image: string, large_text: string, small_image: string, small_text: string}} [assets] - Images for the presence and their hover texts
  * @property {{join: string, spectate: string, match: string}} [secrets] - Secrets for Rich Presence joining and spectating
  * @property {boolean} [instance] - Whether or not the activity is an instanced game session
@@ -345,7 +422,7 @@
  * @summary [User]{@link https://discord.com/developers/docs/resources/user#user-object} Object
  * @typedef {Object} ExtendedUser
  * @property {UserFlags[]} badges
- * @property {Date} created_at
+ * @property {string} created_at
  * @property {Snowflake} id The user's id
  * @property {string} username - The user's username
  * @property {string} discriminator - The user's 4-digit discord-tag
@@ -372,7 +449,7 @@
  * @summary [User]{@link https://discord.com/developers/docs/resources/user#user-object} Object
  * @typedef {Object} User
  * @property {UserFlags[]} badges
- * @property {Date} created_at
+ * @property {string} created_at
  * @property {Snowflake} id The user's id
  * @property {string} username - The user's username
  * @property {string} discriminator - The user's 4-digit discord-tag
@@ -745,6 +822,8 @@
 /**
  * @summary [Guild Scheduled Event]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object} Object
  * @typedef {Object} GuildScheduledEvent
+ * @property {string} statusName
+ * @property {string} entityTypeName
  * @property {Snowflake} id - The ID of the scheduled event
  * @property {Snowflake} guild_id - The guild id which the scheduled event belongs to
  * @property {?Snowflake} channel_id - The channel id in which the scheduled event will be hosted, or null if [scheduled entity type]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types} is `EXTERNAL`
@@ -995,12 +1074,12 @@
  * Each audit log entry represents a single administrative action (or event), indicated by action_type.
  * Most entries contain one to many changes in the changes array that affected an entity in Discord—whether that'sa user, channel, guild, emoji, or something else.
  * @typedef {Object} AuditLogEntry
- * @property {string} action_name
  * @property {Snowflake} [target_id] - ID of the affected entity (webhook, user, role, etc.)
  * @property {AuditLogChange[]} [changes] - Changes made to the target_id
  * @property {Snowflake} user_id - User or app that made the changes
  * @property {Snowflake} id - ID of the entry
  * @property {AuditLogEventType} action_type - [Type of action]{@link https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events} that occured
+ * @property {string} action_name
  * @property {OptionalAuditEntryInfo} [options] - Additional info for certain event types
  * @property {string} [reason] - Reason for the change (1-512 characters)
  */
@@ -1124,6 +1203,7 @@
  * @typedef {Object} Webhook
  * @property {Snowflake} id - The ID of the webhook
  * @property {WebhookType} type - The [type]{@link https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types} of the webhook
+ * @property {string} typeName
  * @property {?Snowflake} [guild_id] - The guild ID this webhook is for, if any
  * @property {?Snowflake} channel_id - The channel ID this webhook is for, if any
  * @property {User} [user] - The user this webhook was created by
@@ -1197,9 +1277,9 @@
  * @property {string | string[]} [description] - 4096 character limit
  * @property {?number} [color] - 0xhex or integer
  * @property {string} [url] - URL for the title of the embed
- * @property {number | Date | ISO8601Timestamp} [timestamp] - Timestamp of embed content
- * @property {{text: string, icon_url: ?string}} [footer] - Footer information for the bottom of the embed
- * @property {{name: string, url: string, icon_url: ?string}} [author] - Author information for the top of the embed
+ * @property {number | ISO8601Timestamp} [timestamp] - Timestamp of embed content
+ * @property {?{text: string, icon_url: string|undefined}} [footer] - Footer information for the bottom of the embed
+ * @property {?{name: string, url: ?string | undefined, icon_url: ?string | undefined}} [author] - Author information for the top of the embed
  * @property {{url: string}} [image] - Image information
  * @property {{url: string}} [thumbnail] - Thumbnail image for top right of the embed
  * @property {EmbedField[]} [fields] - Up to 25 field objects
@@ -1218,7 +1298,7 @@
  * For the `attachments` array in Message Create/Edit requests, only the `id` is required.
  * @typedef {Object} Attachment
  * @property {Snowflake} id - Attachment ID
- * @property {Buffer | string | undefined} file - File to send
+ * @property {Buffer | string} file - File to send
  * @property {string} filename - Name of file attached
  * @property {string} [description] - Description for the file (max 1024 characters)
  * @property {string} [content_type] - The attachment's media type
@@ -1240,11 +1320,11 @@
  * @property {ISO8601Timestamp} start
  * @property {?ISO8601Timestamp} end
  * @property {RecurrenceRuleFrequency} frequency
- * @property {number} interval
+ * @property {?number} interval
  * @property {?RecurrenceRuleWeekdays[]} by_weekday
  * @property {?RecurrenceRuleMonths[]} by_month
- * @property {?unknown[]} by_month_day 
- * @property {?unknown[]} by_year_day
+ * @property {?number[]} by_month_day 
+ * @property {?number[]} by_year_day
  * @property {?number} count
  */
 
@@ -1455,17 +1535,17 @@
  * @typedef {object} MemberParams
  * @property {Snowflake[]} roles
  * @property {number} hexColor
- * @property {?Date} unusual_dm_activity_until
- * @property {?Date} premium_since
+ * @property {?ISO8601Timestamp} unusual_dm_activity_until
+ * @property {?ISO8601Timestamp} premium_since
  * @property {boolean} pending
  * @property {?string} nick
  * @property {boolean} mute
- * @property {Date} joined_at
+ * @property {ISO8601Timestamp} joined_at
  * @property {number} flags
  * @property {boolean} deaf
- * @property {?Date} communication_disabled_until
+ * @property {?ISO8601Timestamp} communication_disabled_until
  * @property {?string} avatar
- * @property {PermNames[]} permission_names
+ * @property {PermissionNames[]} permission_names
  * @property {string} displayName
  * @property {string} displayAvatar
  */
@@ -1507,606 +1587,538 @@
 
 /**
  * @typedef {Pick<Guild,
- *   'id' | 'name' | 'description' | 'splash' | 'banner' | 'icon' | 'features' | 'nsfw_level' | 'vanity_url_code' | 'premium_subscription_count' | 'verification_level'
- * >} PartialInviteGuild
- */
+*   'id' | 'name' | 'description' | 'splash' | 'banner' | 'icon' | 'features' | 'nsfw_level' | 'vanity_url_code' | 'premium_subscription_count' | 'verification_level'
+* >} PartialInviteGuild
+*/
 
 /**
- * @summary [Partial Guild Object]{@link https://discord.com/developers/docs/resources/user#get-current-user-guilds-example-partial-guild}
- * @typedef {Pick<Guild,
- *   'id' | 'name' | 'icon' | 'owner' | 'permissions' | 'features'
- * >} PartialGuild
- */
+* @summary [Partial Guild Object]{@link https://discord.com/developers/docs/resources/user#get-current-user-guilds-example-partial-guild}
+* @typedef {Pick<Guild,
+*   'id' | 'name' | 'icon' | 'owner' | 'permissions' | 'features'
+* >} PartialGuild
+*/
 
 /**
- * @summary [Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object}
- * @typedef {Object} Member
- * @property {string} displayName
- * @property {string} displayAvatar
- * @property {number} [hexColor]
- * @property {User} user - The [user]{@link User} this guild member represents
- * @property {string | null} nick - This user's guild nickname
- * @property {string | null} avatar - The member's guild avatar hash
- * @property {Snowflake[]} roles - Array of role object ids
- * @property {ISO8601Timestamp} joined_at - When the user joined the server
- * @property {ISO8601Timestamp | null} premium_since - When the user started boosting the server
- * @property {boolean} deaf - Whether the user is deafened in voice channels
- * @property {boolean} mute - Whether the user is muted in voice channels
- * @property {number} flags - [Guild member flags]{@link https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags} represented as a bit set. Defaults to 0.
- * @property {boolean} pending - Whether the user has not yet passed the guilds Membership Screening requirements
- * @property {string} permissions - Total permissions of the member in the channel
- * @property {ISO8601Timestamp} communication_disabled_until - When the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out
- * @property {PermNames[]} permission_names
- */
+* @summary [Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object}
+* @typedef {Object} Member
+* @property {string} displayName
+* @property {string} displayAvatar
+* @property {number} [hexColor]
+* @property {User} user - The [user]{@link User} this guild member represents
+* @property {string | null} nick - This user's guild nickname
+* @property {string | null} avatar - The member's guild avatar hash
+* @property {Snowflake[]} roles - Array of role object ids
+* @property {ISO8601Timestamp} joined_at - When the user joined the server
+* @property {ISO8601Timestamp | null} premium_since - When the user started boosting the server
+* @property {boolean} deaf - Whether the user is deafened in voice channels
+* @property {boolean} mute - Whether the user is muted in voice channels
+* @property {number} flags - [Guild member flags]{@link https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags} represented as a bit set. Defaults to 0.
+* @property {boolean} pending - Whether the user has not yet passed the guilds Membership Screening requirements
+* @property {string} permissions - Total permissions of the member in the channel
+* @property {ISO8601Timestamp} communication_disabled_until - When the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out
+* @property {PermNames[]} permission_names
+*/
 
 /**
- * @summary [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object}
- * @typedef {Object} Role
- * @property {Snowflake} id - Role id
- * @property {string} name - Role name
- * @property {number} color - Integer representation of hexadecimal color code
- * @property {string} hexColor
- * @property {boolean} hoist - If this role is pinned in the user listing
- * @property {boolean} mentionable - Whether this role is mentionable
- * @property {string} permissions - Permission bit set
- * @property {string | null} [unicode_emoji] - Role unicode emoji
- * @property {number} position - Position of this role
- * @property {string | null} [icon] - Role icon hash
- * @property {string} [icon_url]
- * @property {RoleTags} [tags] - The [tags]{@link RoleTags} this role has
- * @property {boolean} managed - Whether this role is managed by an integration
- * @property {number} flags
- * @property {PermNames[]} permission_names
- */
+* @summary [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object}
+* @typedef {Object} Role
+* @property {Snowflake} id - Role id
+* @property {string} name - Role name
+* @property {number} color - Integer representation of hexadecimal color code
+* @property {string} hexColor
+* @property {boolean} hoist - If this role is pinned in the user listing
+* @property {boolean} mentionable - Whether this role is mentionable
+* @property {string} permissions - Permission bit set
+* @property {string | null} [unicode_emoji] - Role unicode emoji
+* @property {number} position - Position of this role
+* @property {string | null} [icon] - Role icon hash
+* @property {string} [icon_url]
+* @property {RoleTags} [tags] - The [tags]{@link RoleTags} this role has
+* @property {boolean} managed - Whether this role is managed by an integration
+* @property {number} flags
+* @property {PermNames[]} permission_names
+*/
 
 /**
- * @summary [Role Tags]{@link https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure}
- * @typedef {Object} RoleTags
- * @property {Snowflake} bot_id - The id of the bot this role belongs to
- * @property {Snowflake} integration_id - The id of the integration this role belongs to
- * @property {null} premium_subscriber - Whether this is the guild's Booster role
- * @property {Snowflake} subscription_listing_id - The id of this role's subscription sku and listing
- * @property {null} available_for_purchase - Whether this role is available for purchase
- * @property {null} guild_connection - Whether this role is a guild's linked role
- */
+* @summary [Role Tags]{@link https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure}
+* @typedef {Object} RoleTags
+* @property {Snowflake} bot_id - The id of the bot this role belongs to
+* @property {Snowflake} integration_id - The id of the integration this role belongs to
+* @property {null} premium_subscriber - Whether this is the guild's Booster role
+* @property {Snowflake} subscription_listing_id - The id of this role's subscription sku and listing
+* @property {null} available_for_purchase - Whether this role is available for purchase
+* @property {null} guild_connection - Whether this role is a guild's linked role
+*/
 
 /**
- * @summary [Role Subscription Data]{@link https://discord.com/developers/docs/resources/channel#role-subscription-data-object}
- * @typedef {Object} RoleSubscriptionData
- * @property {Snowflake} role_subscription_listing_id - The id of the SKU and listing that the user is subscribed to
- * @property {string} tier_name - The name of the tier that the user is subscribed to
- * @property {number} total_months_subscribed - The cumulative number of months that the user has been subscribed for
- * @property {boolean} is_renewal - Whether this notification is for a renewal rather than a new purchase
- */
+* @summary [Role Subscription Data]{@link https://discord.com/developers/docs/resources/channel#role-subscription-data-object}
+* @typedef {Object} RoleSubscriptionData
+* @property {Snowflake} role_subscription_listing_id - The id of the SKU and listing that the user is subscribed to
+* @property {string} tier_name - The name of the tier that the user is subscribed to
+* @property {number} total_months_subscribed - The cumulative number of months that the user has been subscribed for
+* @property {boolean} is_renewal - Whether this notification is for a renewal rather than a new purchase
+*/
 
 /**
- * @summary [Overwrite]{@link https://discord.com/developers/docs/resources/channel#overwrite-object}
- * @typedef {Object} Overwrite
- * @property {Snowflake} id
- * @property {string} allow
- * @property {string} deny
- * @property {number} type - 0 for role, 1 for member
- */
+* @summary [Overwrite]{@link https://discord.com/developers/docs/resources/channel#overwrite-object}
+* @typedef {Object} Overwrite
+* @property {Snowflake} id
+* @property {string} allow
+* @property {string} deny
+* @property {number} type - 0 for role, 1 for member
+*/
 
 /**
- * @summary [Video Quality Modes]{@link https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes}
- * @typedef {number} VideoQualityMode
- * | Mode | Value | Description |
- * |------|-------|-------------|
- * | Auto | 1 | Discord chooses the quality for optimal performance |
- * | Full | 2 | 720p |
- */
+* @summary [Video Quality Modes]{@link https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes}
+* @typedef {number} VideoQualityMode
+* | Mode | Value | Description |
+* |------|-------|-------------|
+* | Auto | 1 | Discord chooses the quality for optimal performance |
+* | Full | 2 | 720p |
+*/
 
 /**
- * @summary [Guild Verification Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-verification-level}
- * @typedef {number} GuildVerificationLevel
- * | Level | Integer | Description |
- * |-------|---------|-------------|
- * | None      | 0 | Unrestricted |
- * | Low       | 1 | Must have verified email on account |
- * | Medium    | 2 | Must be registered on Discord for longer than 5 minutes |
- * | High      | 3 | Must be a member of the server for longer than 10 minutes |
- * | Very High | 4 | Must have a verified phone number |
- */
+* @summary [Guild Verification Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-verification-level}
+* @typedef {number} GuildVerificationLevel
+* | Level | Integer | Description |
+* |-------|---------|-------------|
+* | None      | 0 | Unrestricted |
+* | Low       | 1 | Must have verified email on account |
+* | Medium    | 2 | Must be registered on Discord for longer than 5 minutes |
+* | High      | 3 | Must be a member of the server for longer than 10 minutes |
+* | Very High | 4 | Must have a verified phone number |
+*/
 
 /**
- * @summary [Default Message Notification Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level}
- * @typedef {number} DefaultMessageNotificationLevel
- * | Key | Value | Description |
- * |-----|-------|-------------|
- * | All Messages  | 0 | Members will receive notifications for all messages by default |
- * | Only Mentions | 1 | Members will receive notifications only for messages that `@mention` them by default |
- */
+* @summary [Default Message Notification Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level}
+* @typedef {number} DefaultMessageNotificationLevel
+* | Key | Value | Description |
+* |-----|-------|-------------|
+* | All Messages  | 0 | Members will receive notifications for all messages by default |
+* | Only Mentions | 1 | Members will receive notifications only for messages that `@mention` them by default |
+*/
 
 /**
- * @summary [Explicit Content Filter Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level}
- * @typedef {number} ExplicitContentFilterLevel
- * | Level | Integer | Description |
- * |-------|---------|-------------|
- * | Disabled              | 0 | Media content will not be scanned |
- * | Members without roles | 1 | Media content sent by members without roles will be scanned |
- * | All members           | 2 | Media content sent by all members will be scanned |
- */
+* @summary [Explicit Content Filter Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level}
+* @typedef {number} ExplicitContentFilterLevel
+* | Level | Integer | Description |
+* |-------|---------|-------------|
+* | Disabled              | 0 | Media content will not be scanned |
+* | Members without roles | 1 | Media content sent by members without roles will be scanned |
+* | All members           | 2 | Media content sent by all members will be scanned |
+*/
 
 /**
- * @summary [Guild MFA Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-mfa-level}
- * @typedef {number} GuildMFALevel
- * | Level | Integer | Description |
- * |-------|---------|-------------|
- * | None     | 0 | Guild has no MFA/2FA requirement for moderation actions |
- * | Elevated | 1 | Guild has a 2FA requirement for moderation actions |
- */
+* @summary [Guild MFA Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-mfa-level}
+* @typedef {number} GuildMFALevel
+* | Level | Integer | Description |
+* |-------|---------|-------------|
+* | None     | 0 | Guild has no MFA/2FA requirement for moderation actions |
+* | Elevated | 1 | Guild has a 2FA requirement for moderation actions |
+*/
 
 /**
- * @summary Guild NSFW Level
- * @typedef {number} GuildNSFWLevel
- * | Level | Value |
- * |-------|-------|
- * | Default        | 0 |
- * | Explicit       | 1 |
- * | Safe           | 2 |
- * | Age-Restricted | 3 |
- */
+* @summary Guild NSFW Level
+* @typedef {number} GuildNSFWLevel
+* | Level | Value |
+* |-------|-------|
+* | Default        | 0 |
+* | Explicit       | 1 |
+* | Safe           | 2 |
+* | Age-Restricted | 3 |
+*/
 
 /**
- * @summary System Channel Flags
- * @typedef {number} SystemChannelFlags
- * | Flag | Value | Description |
- * |------|-------|-------------|
- * SUPPRESS_JOIN_NOTIFICATIONS | 1 << 0 | Supress member join notifications |
- * SUPPRESS_PREMIUM_SUBSCRIPTIONS | 1 << 1 | Suppress server boost notifications |
- * SUPPRESS_GUILD_REMINDER_NOTIFICATIONS | 1 << 2 | Suppress server setup tips |
- * SUPPRESS_JOIN_NOTIFICATION_REPLIES | 1 << 3 | Hide member join sticker reply buttons |
- * SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS | 1 << 4 | Suppress role subscription purchase and renewal notifications |
- * SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES | 1 << 5 | Hide role subscription sticker reply buttons |
- */
+* @summary System Channel Flags
+* @typedef {number} SystemChannelFlags
+* | Flag | Value | Description |
+* |------|-------|-------------|
+* SUPPRESS_JOIN_NOTIFICATIONS | 1 << 0 | Supress member join notifications |
+* SUPPRESS_PREMIUM_SUBSCRIPTIONS | 1 << 1 | Suppress server boost notifications |
+* SUPPRESS_GUILD_REMINDER_NOTIFICATIONS | 1 << 2 | Suppress server setup tips |
+* SUPPRESS_JOIN_NOTIFICATION_REPLIES | 1 << 3 | Hide member join sticker reply buttons |
+* SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS | 1 << 4 | Suppress role subscription purchase and renewal notifications |
+* SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES | 1 << 5 | Hide role subscription sticker reply buttons |
+*/
 
 /**
- * @summary Guild Features
- * @typedef {'ANIMATED_BANNER'|'ANIMATED_ICON'|'APPLICATION_COMMAND_PERMISSIONS_V2'|'AUTO_MODERATION'|'BANNER'|'COMMUNITY'|'CREATOR_MONETIZABLE_PROVISIONAL'|'CREATOR_STORE_PAGE'|'DEVELOPER_SUPPORT_SERVER'|'DISCOVERABLE'|'FEATURABLE'|'INVITES_DISABLED'|'INVITE_SPLASH'|'MEMBER_VERIFICATION_GATE_ENABLED'|'MORE_STICKERS'|'NEWS'|'PARTNERED'|'PREVIEW_ENABLED'|'ROLE_ICONS'|'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE'|'ROLE_SUBSCRIPTIONS_ENABLED'|'TICKETED_EVENTS_ENABLED'|'VANITY_URL'|'VERIFIED'|'VIP_REGIONS'|'WELCOME_SCREEN_ENABLED'} GuildFeatures
- * | Feature | Description |
- * |---------|-------------|
- * | Animated Banner | guild has access to set an animated guild banner image |
- * | Animated Icon | guild has access to set an animated guild icon |
- * | Application Command Permissions V2 | guild is using the old permissions configuration behavior |
- * | Auto Moderation | guild has set up auto moderation rules |
- * | Banner | guild has access to set a guild banner image |
- * | Community | guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates |
- * | Creator Monetizable Provisional | guild has enabled monetization |
- * | Creator Store Page | guild has enabled the role subscription promo page |
- * | Developer Support Server | guild has been set as a support server on the App Directory |
- * | Discoverable | guild is able to be discovered in the directory |
- * | Featurable | guild is able to be featured in the directory |
- * | Invites Disabled | guild has paused invites, preventing new users from joining |
- * | Invite Splash | guild has access to set an invite splash background |
- * | Member Verification Gate Enabled | guild has enabled Membership Screening |
- * | More Stickers | guild has increased custom sticker slots |
- * | News | guild has access to create announcement channels |
- * | Partnered | guild is partnered |
- * | Preview Enabled | guild can be previewed before joining via Membership Screening or the directory |
- * | Role Icons | guild is able to set role icons |
- * | Role subscription available for purchase | guild has role subscriptions that can be purchased |
- * | Role Subscriptions Enabled | guild has enabled role subscriptions |
- * | Ticketed Events Enabled | guild has enabled ticketed events |
- * | Vanity URL | guild has access to set a vanity URL |
- * | Verified | guild is verified |
- * | VIP Regions | guild has access to set 384kbps bitrate in voice (previously VIP voice servers) |
- * | Welcome Screen Enabled | guild has enabled the welcome screen |
- */
+* @summary Guild Features
+* @typedef {'ANIMATED_BANNER'|'ANIMATED_ICON'|'APPLICATION_COMMAND_PERMISSIONS_V2'|'AUTO_MODERATION'|'BANNER'|'COMMUNITY'|'CREATOR_MONETIZABLE_PROVISIONAL'|'CREATOR_STORE_PAGE'|'DEVELOPER_SUPPORT_SERVER'|'DISCOVERABLE'|'FEATURABLE'|'INVITES_DISABLED'|'INVITE_SPLASH'|'MEMBER_VERIFICATION_GATE_ENABLED'|'MORE_STICKERS'|'NEWS'|'PARTNERED'|'PREVIEW_ENABLED'|'ROLE_ICONS'|'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE'|'ROLE_SUBSCRIPTIONS_ENABLED'|'TICKETED_EVENTS_ENABLED'|'VANITY_URL'|'VERIFIED'|'VIP_REGIONS'|'WELCOME_SCREEN_ENABLED'} GuildFeatures
+* | Feature | Description |
+* |---------|-------------|
+* | Animated Banner | guild has access to set an animated guild banner image |
+* | Animated Icon | guild has access to set an animated guild icon |
+* | Application Command Permissions V2 | guild is using the old permissions configuration behavior |
+* | Auto Moderation | guild has set up auto moderation rules |
+* | Banner | guild has access to set a guild banner image |
+* | Community | guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates |
+* | Creator Monetizable Provisional | guild has enabled monetization |
+* | Creator Store Page | guild has enabled the role subscription promo page |
+* | Developer Support Server | guild has been set as a support server on the App Directory |
+* | Discoverable | guild is able to be discovered in the directory |
+* | Featurable | guild is able to be featured in the directory |
+* | Invites Disabled | guild has paused invites, preventing new users from joining |
+* | Invite Splash | guild has access to set an invite splash background |
+* | Member Verification Gate Enabled | guild has enabled Membership Screening |
+* | More Stickers | guild has increased custom sticker slots |
+* | News | guild has access to create announcement channels |
+* | Partnered | guild is partnered |
+* | Preview Enabled | guild can be previewed before joining via Membership Screening or the directory |
+* | Role Icons | guild is able to set role icons |
+* | Role subscription available for purchase | guild has role subscriptions that can be purchased |
+* | Role Subscriptions Enabled | guild has enabled role subscriptions |
+* | Ticketed Events Enabled | guild has enabled ticketed events |
+* | Vanity URL | guild has access to set a vanity URL |
+* | Verified | guild is verified |
+* | VIP Regions | guild has access to set 384kbps bitrate in voice (previously VIP voice servers) |
+* | Welcome Screen Enabled | guild has enabled the welcome screen |
+*/
 
 /**
- * @summary Mutable Guild Features
- * @typedef {'COMMUNITY'|'DISCOVERABLE'|'INVITES_DISABLED'|'RAID_ALERTS_DISABLED'} MutableGuildFeatures
- * | Feature | Required Permissions | Effects |
- * |---------|----------------------|---------|
- * | Community | Administrator | Enables Community Features in the guild |
- * | Discoverable | Administrator | Enables discovery in the guild, making it publicly listed |
- * | Invites Disabled | Manage Guild | Pauses all invites/access to the server |
- * | Raid Alerts Disabled | Manage Guild | Disables alerts for join raids |
- */
+* @summary Mutable Guild Features
+* @typedef {'COMMUNITY'|'DISCOVERABLE'|'INVITES_DISABLED'|'RAID_ALERTS_DISABLED'} MutableGuildFeatures
+* | Feature | Required Permissions | Effects |
+* |---------|----------------------|---------|
+* | Community | Administrator | Enables Community Features in the guild |
+* | Discoverable | Administrator | Enables discovery in the guild, making it publicly listed |
+* | Invites Disabled | Manage Guild | Pauses all invites/access to the server |
+* | Raid Alerts Disabled | Manage Guild | Disables alerts for join raids |
+*/
 
 /**
- * @summary [Welcome Screen]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure}
- * @typedef {Object} GuildWelcomeScreen
- * @property {?string} description - The server description shown in the welcome screen
- * @property {GuildWelcomeScreenChannel[]} welcome_channels - The channels shown in the welcome screen, up to 5
- */
+* @summary [Welcome Screen]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure}
+* @typedef {Object} GuildWelcomeScreen
+* @property {?string} description - The server description shown in the welcome screen
+* @property {GuildWelcomeScreenChannel[]} welcome_channels - The channels shown in the welcome screen, up to 5
+*/
 
 /**
- * @summary [Welcome Screen Channel]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure}
- * @typedef {Object} GuildWelcomeScreenChannel
- * @property {Snowflake} channel_id - The channel's ID
- * @property {string} description - The description shown for the channel
- * @property {?Snowflake} emoji_id - The emoji ID, if the emoji is custom
- * @property {?string} emoji_name - The emoji name if custom, the unicode character if standard, or `null` if no emoji is set
- */
+* @summary [Welcome Screen Channel]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure}
+* @typedef {Object} GuildWelcomeScreenChannel
+* @property {Snowflake} channel_id - The channel's ID
+* @property {string} description - The description shown for the channel
+* @property {?Snowflake} emoji_id - The emoji ID, if the emoji is custom
+* @property {?string} emoji_name - The emoji name if custom, the unicode character if standard, or `null` if no emoji is set
+*/
 
 /**
- * @summary [Stage Instance Privacy Level]{@link https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level}
- * @typedef {number} StagePrivacyLevel
- * | Name | Value |
- * |------|-------|
- * | Public  | 1  |
- * | Private | 2  |
- */
+* @summary [Stage Instance Privacy Level]{@link https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level}
+* @typedef {number} StagePrivacyLevel
+* | Name | Value |
+* |------|-------|
+* | Public  | 1  |
+* | Private | 2  |
+*/
 
 
 /**
- * @summary [Guild Scheduled Event Privacy Level]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level}
- * @typedef {number} EventPrivacyLevel
- * Name | Value
- * -----|------
- * Guild Only | 2 
- */
+* @summary [Guild Scheduled Event Privacy Level]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level}
+* @typedef {number} EventPrivacyLevel
+* Name | Value
+* -----|------
+* Guild Only | 2 
+*/
 
 
 /** 
- * @summary [Guild Scheduled Event Status]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status}
- * @typedef {number} EventStatus
- * | Name | Value |
- * |------|-------|
- * | Scheduled | 1 |
- * | Active    | 2 |
- * | Completd  | 3 |
- * | Canceled  | 4 |
- * 
- * 
- * Once status is set to `COMPLETED` or `CANCELED`, the status can no longer be updated
- * 
- * Valid Guild Scheduled Event Status Transitions:
- * 
- * SCHEDULED --> ACTIVE
- * 
- * ACTIVE --------> COMPLETED
- *
- * SCHEDULED --> CANCELED
- */
+* @summary [Guild Scheduled Event Status]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status}
+* @typedef {number} EventStatus
+* | Name | Value |
+* |------|-------|
+* | Scheduled | 1 |
+* | Active    | 2 |
+* | Completd  | 3 |
+* | Canceled  | 4 |
+* 
+* 
+* Once status is set to `COMPLETED` or `CANCELED`, the status can no longer be updated
+* 
+* Valid Guild Scheduled Event Status Transitions:
+* 
+* SCHEDULED --> ACTIVE
+* 
+* ACTIVE --------> COMPLETED
+*
+* SCHEDULED --> CANCELED
+*/
 
 /**
- * @summary [Guild Scheduled Event Entity Metadata]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-metadata}
- * @description
- * Required for events with `'entity_type': EXTERNAL`
- * @typedef {Object} EventEntityMetadata
- * @property {string} [location] - Location of the event (1-100 characters)
- * @property {Snowflake[]} speaker_ids - Undocumented
- */
+* @summary [Guild Scheduled Event Entity Metadata]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-metadata}
+* @description
+* Required for events with `'entity_type': EXTERNAL`
+* @typedef {Object} EventEntityMetadata
+* @property {string} [location] - Location of the event (1-100 characters)
+* @property {Snowflake[]} speaker_ids - Undocumented
+*/
 
 /**
- * @summary [Guild Scheduled Event User]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object}
- * @typedef {Object} EventUser
- * @property {Snowflake} guild_scheduled_event_id - The scheduled event id which the user subscribed to
- * @property {User} user - User which subscribed to an event
- * @property {Member} [member] - Guild member data for this user for the guild which this event belongs to, if any
- */
+* @summary [Guild Scheduled Event User]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object}
+* @typedef {Object} EventUser
+* @property {Snowflake} guild_scheduled_event_id - The scheduled event id which the user subscribed to
+* @property {User} user - User which subscribed to an event
+* @property {Member} [member] - Guild member data for this user for the guild which this event belongs to, if any
+*/
 
 /**
- * @summary [Guild Scheduled Event Entity Type]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types}
- * @typedef {number} EventEntityType
- * | Name | Value |
- * |------|-------|
- * | Stage Instance | 1 |
- * | Voice    | 2 |
- * | External  | 3 |
- */
+* @summary [Guild Scheduled Event Entity Type]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types}
+* @typedef {number} EventEntityType
+* | Name | Value |
+* |------|-------|
+* | Stage Instance | 1 |
+* | Voice    | 2 |
+* | External  | 3 |
+*/
 
 /**
- * @summary [Guild Preview]{@link https://discord.com/developers/docs/resources/guild#guild-preview-object}
- * @typedef {Object} GuildPreview
- * @property {Snowflake} id - Guild ID
- * @property {string} name - Guild name (2-100 characters)
- * @property {string | null} icon - Icon hash
- * @property {string | null} splash - Splash hash
- * @property {string | null} discovery_splash - Discovery_splash hash
- * @property {Emoji[]} emojis - Custom guild emojis
- * @property {Sticker[]} stickers - Custom guild stickers
- * @property {GuildFeatures[]} features - Enabled guild features
- * @property {number} approximate_member_count - Approximate number of members in this guild
- * @property {number} approximate_presence_count - Approximate number of online members in this guild
- * @property {string} description - The description for the guild
- */
+* @summary [Guild Preview]{@link https://discord.com/developers/docs/resources/guild#guild-preview-object}
+* @typedef {Object} GuildPreview
+* @property {Snowflake} id - Guild ID
+* @property {string} name - Guild name (2-100 characters)
+* @property {string | null} icon - Icon hash
+* @property {string | null} splash - Splash hash
+* @property {string | null} discovery_splash - Discovery_splash hash
+* @property {Emoji[]} emojis - Custom guild emojis
+* @property {Sticker[]} stickers - Custom guild stickers
+* @property {GuildFeatures[]} features - Enabled guild features
+* @property {number} approximate_member_count - Approximate number of members in this guild
+* @property {number} approximate_presence_count - Approximate number of online members in this guild
+* @property {string} description - The description for the guild
+*/
 
 /**
- * @summary [Guild Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object}
- * @example
- * {
- *   reason: 'being too cool',
- *   user: {
- *     username: 'Goodsie',
- *     discriminator: '1410',
- *     id: '274685280429015040',
- *     avatar: 'asdfasdf',
- *     public_flags: 4194368
- *   }
- * }
- * @typedef {Object} GuildBan
- * @property {?string} reason - The reason for the ban
- * @property {User} user - The banned user
- */
+* @summary [Guild Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object}
+* @example
+* {
+*   reason: 'being too cool',
+*   user: {
+*     username: 'Goodsie',
+*     discriminator: '1410',
+*     id: '274685280429015040',
+*     avatar: 'asdfasdf',
+*     public_flags: 4194368
+*   }
+* }
+* @typedef {Object} GuildBan
+* @property {?string} reason - The reason for the ban
+* @property {User} user - The banned user
+*/
 
 /**
- * @summary [Guild Voice Region]{@link https://discord.com/developers/docs/resources/voice#voice-region-object}
- * @typedef {Object} GuildVoiceRegion
- * @property {string} id - Unique ID for the region
- * @property {string} name - Name of the region
- * @property {boolean} optimal - `true` for a single server that is closest to the current user's client
- * @property {boolean} deprecated - Whether this is a deprecated voice region
- * @property {boolean} custom - Whether this is a custom voice region (used for events/etc)
- */
+* @summary [Guild Voice Region]{@link https://discord.com/developers/docs/resources/voice#voice-region-object}
+* @typedef {Object} GuildVoiceRegion
+* @property {string} id - Unique ID for the region
+* @property {string} name - Name of the region
+* @property {boolean} optimal - `true` for a single server that is closest to the current user's client
+* @property {boolean} deprecated - Whether this is a deprecated voice region
+* @property {boolean} custom - Whether this is a custom voice region (used for events/etc)
+*/
 
 /**
- * @summary Guild Integration Expire Behavior
- * @typedef {number} GuildIntegrationExpireBehavior
- * | Name | Value |
- * |------|-------|
- * | Kick | 0 |
- * | Remove Role | 1 |
- */
+* @summary Guild Integration Expire Behavior
+* @typedef {number} GuildIntegrationExpireBehavior
+* | Name | Value |
+* |------|-------|
+* | Kick | 0 |
+* | Remove Role | 1 |
+*/
 
 /**
- * @summary Guild Integration Account
- * @typedef {Object} GuildIntegrationAccount
- * @property {string} id - ID of the account
- * @property {string} name - Name of the account
- */
+* @summary Guild Integration Account
+* @typedef {Object} GuildIntegrationAccount
+* @property {string} id - ID of the account
+* @property {string} name - Name of the account
+*/
 
 /**
- * @summary Guild Integration Application
- * @typedef {Object} GuildIntegrationApplication
- * @property {Snowflake} id - The ID of the app
- * @property {string} name - The name of the app
- * @property {string | null} icon - The icon hash of the app
- * @property {string} description - The description of the app
- * @property {User} [bot] - The bot associated with this application
- */
+* @summary Guild Integration Application
+* @typedef {Object} GuildIntegrationApplication
+* @property {Snowflake} id - The ID of the app
+* @property {string} name - The name of the app
+* @property {string | null} icon - The icon hash of the app
+* @property {string} description - The description of the app
+* @property {User} [bot] - The bot associated with this application
+*/
 
 /**
- * @summary [Guild Integration]{@link https://discord.com/developers/docs/resources/guild#integration-object}
- * @typedef {Object} GuildIntegration
- * @property {Snowflake} id - Integration ID
- * @property {string} name - Integration name
- * @property {'twitch' | 'youtube' | 'discord'} type - Integration type
- * @property {boolean} [enabled] - Is this integration enabled
- * @property {boolean} [syncing] - Is this integration syncing
- * @property {Snowflake} [role_id] - ID that this integration uses for "subscribers"
- * @property {boolean} [enable_emoticons] - Whether emoticons should be synced for this integration
- * @property {GuildIntegrationExpireBehavior} [expire_behavior] - The behavior of expiring subscribers
- * @property {number} [expire_grace_period] - The grace period (in days) before expiring subscribers
- * @property {User} [user] - User for this integration
- * @property {GuildIntegrationAccount} account - Integration account information
- * @property {string} [synced_at] - When this integration was last synced
- * @property {number} [subscriber_count] - How many subscribers this integration has
- * @property {boolean} [revoked] - Has this integration been revoked
- * @property {GuildIntegrationApplication} [application] - The bot/OAuth2 application for discord integrations
- */
+* @summary [Guild Integration]{@link https://discord.com/developers/docs/resources/guild#integration-object}
+* @typedef {Object} GuildIntegration
+* @property {Snowflake} id - Integration ID
+* @property {string} name - Integration name
+* @property {'twitch' | 'youtube' | 'discord'} type - Integration type
+* @property {boolean} [enabled] - Is this integration enabled
+* @property {boolean} [syncing] - Is this integration syncing
+* @property {Snowflake} [role_id] - ID that this integration uses for "subscribers"
+* @property {boolean} [enable_emoticons] - Whether emoticons should be synced for this integration
+* @property {GuildIntegrationExpireBehavior} [expire_behavior] - The behavior of expiring subscribers
+* @property {number} [expire_grace_period] - The grace period (in days) before expiring subscribers
+* @property {User} [user] - User for this integration
+* @property {GuildIntegrationAccount} account - Integration account information
+* @property {string} [synced_at] - When this integration was last synced
+* @property {number} [subscriber_count] - How many subscribers this integration has
+* @property {boolean} [revoked] - Has this integration been revoked
+* @property {GuildIntegrationApplication} [application] - The bot/OAuth2 application for discord integrations
+*/
 
 /**
- * @summary [Guild Widget]{@link https://discord.com/developers/docs/resources/guild#guild-widget-object}
- * @typedef {Object} GuildWidget 
- * @property {Snowflake} id - Guild ID
- * @property {string} name - Guild name (2-100 characters)
- * @property {?string} instant_invite - Instant invite for the guilds specified widget invite channel
- * @property {PartialChannel[]} channels - Voice and stage channels which are accessible by `@everyone`
- * @property {GuildWidgetUser} members - Special widget user objects that includes users presence
- * @property {number} presence_count - Number of online members in this guild
- */
+* @summary [Guild Widget]{@link https://discord.com/developers/docs/resources/guild#guild-widget-object}
+* @typedef {Object} GuildWidget 
+* @property {Snowflake} id - Guild ID
+* @property {string} name - Guild name (2-100 characters)
+* @property {?string} instant_invite - Instant invite for the guilds specified widget invite channel
+* @property {PartialChannel[]} channels - Voice and stage channels which are accessible by `@everyone`
+* @property {GuildWidgetUser} members - Special widget user objects that includes users presence
+* @property {number} presence_count - Number of online members in this guild
+*/
 
 /**
- * @summary [Guild Widget Settings]{@link https://discord.com/developers/docs/resources/guild#guild-widget-settings-object}
- * @typedef {Object} GuildWidgetSettings
- * @property {boolean} enabled - Whether the widget is enabled
- * @property {Snowflake} channel_id - The widget channel ID
- */
+* @summary [Guild Widget Settings]{@link https://discord.com/developers/docs/resources/guild#guild-widget-settings-object}
+* @typedef {Object} GuildWidgetSettings
+* @property {boolean} enabled - Whether the widget is enabled
+* @property {Snowflake} channel_id - The widget channel ID
+*/
 
 /**
- * @summary [Guild Widget Style Options]{@link https://discord.com/developers/docs/resources/guild#get-guild-widget-image-widget-style-options}
- * @description
- * - [Shield]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=shield} - shield style widget with Discord icon and guild members online count (default)
- * - [banner1]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner1} - large image with guild icon, name and online count. "POWERED BY DISCORD" as the footer of the widget
- * - [banner2]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner2} - smaller widget style with guild icon, name and online count. Split on the right with Discord logo
- * - [banner3]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner3} - large image with guild icon, name and online count. In the footer, Discord logo on the left and "Chat Now" on the right
- * - [banner4]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner4} - large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom
- * @typedef {string} GuildWidgetStyleOptions
- */
+* @summary [Guild Widget Style Options]{@link https://discord.com/developers/docs/resources/guild#get-guild-widget-image-widget-style-options}
+* @description
+* - [Shield]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=shield} - shield style widget with Discord icon and guild members online count (default)
+* - [banner1]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner1} - large image with guild icon, name and online count. "POWERED BY DISCORD" as the footer of the widget
+* - [banner2]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner2} - smaller widget style with guild icon, name and online count. Split on the right with Discord logo
+* - [banner3]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner3} - large image with guild icon, name and online count. In the footer, Discord logo on the left and "Chat Now" on the right
+* - [banner4]{@link https://discord.com/api/guilds/81384788765712384/widget.png?style=banner4} - large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom
+* @typedef {string} GuildWidgetStyleOptions
+*/
 
 /**
- * @summary Guild Widget Partial User Objects
- * @typedef {Object} GuildWidgetUser
- * @property {string} id - Anonymized to prevent abuse
- * @property {string} username
- * @property {string} discriminator - Anonymized to prevent abuse
- * @property {string} avatar - Anonymized to prevent abuse
- * @property {string} status - User presence
- * @property {string} avatar_url
- */
+* @summary Guild Widget Partial User Objects
+* @typedef {Object} GuildWidgetUser
+* @property {string} id - Anonymized to prevent abuse
+* @property {string} username
+* @property {string} discriminator - Anonymized to prevent abuse
+* @property {string} avatar - Anonymized to prevent abuse
+* @property {string} status - User presence
+* @property {string} avatar_url
+*/
 
 /**
- * @summary [Guild Template]{@link https://discord.com/developers/docs/resources/guild-template#guild-template-object}
- * @description
- * Represents a code that when used, creates a guild based on a snapshot of an existing guild
- * @typedef {Object} GuildTemplate 
- * @property {string} name - Template name
- * @property {string} code - The template code (unique ID)
- * @property {?string} description - The description for the template
- * @property {number} usage_count - Number of times this template has been used
- * @property {Snowflake} creator_id - The ID of the user who created the template
- * @property {User} creator - The user who created the template
- * @property {string} created_at - When this template was created
- * @property {string} updated_at - When this template was last synced to the source guild
- * @property {Snowflake} source_guild_id - The ID of the guild this template is based on
- * @property {Object} serialized_source_guild - The guild snapshot this template contains
- * @property {?boolean} is_dirty - Whether the template has unsynced changes
- */
+* @summary [Guild Template]{@link https://discord.com/developers/docs/resources/guild-template#guild-template-object}
+* @description
+* Represents a code that when used, creates a guild based on a snapshot of an existing guild
+* @typedef {Object} GuildTemplate 
+* @property {string} name - Template name
+* @property {string} code - The template code (unique ID)
+* @property {?string} description - The description for the template
+* @property {number} usage_count - Number of times this template has been used
+* @property {Snowflake} creator_id - The ID of the user who created the template
+* @property {User} creator - The user who created the template
+* @property {string} created_at - When this template was created
+* @property {string} updated_at - When this template was last synced to the source guild
+* @property {Snowflake} source_guild_id - The ID of the guild this template is based on
+* @property {Object} serialized_source_guild - The guild snapshot this template contains
+* @property {?boolean} is_dirty - Whether the template has unsynced changes
+*/
 
 /**
- * @summary [Guild Onboarding]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object}
- * @description
- * Represents the [onboarding]{@link https://support.discord.com/hc/en-us/articles/11074987197975-Community-Onboarding-FAQ} flow for a guild
- * @typedef {Object} GuildOnboarding
- * @property {Snowflake} guild_id - ID of the guild this onboarding is part of
- * @property {OnboardingPrompt[]} prompts - Prompts shown during onboarding and in customize community
- * @property {Snowflake[]} default_channel_ids - Channel IDs that members get opted into automatically
- * @property {boolean} enabled - Whether onboarding is enabled in the guild
- */
+* @summary [Guild Onboarding]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object}
+* @description
+* Represents the [onboarding]{@link https://support.discord.com/hc/en-us/articles/11074987197975-Community-Onboarding-FAQ} flow for a guild
+* @typedef {Object} GuildOnboarding
+* @property {Snowflake} guild_id - ID of the guild this onboarding is part of
+* @property {OnboardingPrompt[]} prompts - Prompts shown during onboarding and in customize community
+* @property {Snowflake[]} default_channel_ids - Channel IDs that members get opted into automatically
+* @property {boolean} enabled - Whether onboarding is enabled in the guild
+*/
 
 /**
- * @summary [Onboarding Prompt]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure}
- * @typedef {Object} OnboardingPrompt
- * @property {Snowflake} id - ID of the prompt
- * @property {OnboardingPromptType} type - Type of prompt
- * @property {OnboardingPromptOption[]} options - Options available within the prompt
- * @property {string} title - Title of the prompt
- * @property {boolean} single_select - Indicates whether users are limited to selecting one option for the prompt
- * @property {boolean} required - Indicates whether the prompt is required before a user completes the onboarding flow
- * @property {boolean} in_onboarding
- * - Indicates whether the prompt is present in the onboarding flow.
- * - If `false`, the prompt will only appear in the Channels & Roles tab
- */
+* @summary [Onboarding Prompt]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure}
+* @typedef {Object} OnboardingPrompt
+* @property {Snowflake} id - ID of the prompt
+* @property {OnboardingPromptType} type - Type of prompt
+* @property {OnboardingPromptOption[]} options - Options available within the prompt
+* @property {string} title - Title of the prompt
+* @property {boolean} single_select - Indicates whether users are limited to selecting one option for the prompt
+* @property {boolean} required - Indicates whether the prompt is required before a user completes the onboarding flow
+* @property {boolean} in_onboarding
+* - Indicates whether the prompt is present in the onboarding flow.
+* - If `false`, the prompt will only appear in the Channels & Roles tab
+*/
 
 /**
- * @summary [Prompt Option]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure}
- * @typedef {Object} OnboardingPromptOption
- * @property {Snowflake} id - ID of the prompt option
- * @property {Snowflake[]} channel_ids - IDs for channels a member is added to when the option is selected
- * @property {Snowflake[]} role_ids - IDs for roles assigned to a member when the option is selected
- * @property {Emoji} emoji - Emoji of the option
- * @property {string} title - Title of the option
- * @property {?string} description - Description of the option
- */
+* @summary [Prompt Option]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure}
+* @typedef {Object} OnboardingPromptOption
+* @property {Snowflake} id - ID of the prompt option
+* @property {Snowflake[]} channel_ids - IDs for channels a member is added to when the option is selected
+* @property {Snowflake[]} role_ids - IDs for roles assigned to a member when the option is selected
+* @property {Emoji} emoji - Emoji of the option
+* @property {string} title - Title of the option
+* @property {?string} description - Description of the option
+*/
 
 /**
- * @summary [Onboarding Prompt Types]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types}
- * @typedef {number} OnboardingPromptType
- * | Name | Value |
- * |------|-------|
- * | Multiple Choice | 0  |
- * | Dropdown        | 1  |
- */
+* @summary [Onboarding Prompt Types]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types}
+* @typedef {number} OnboardingPromptType
+* | Name | Value |
+* |------|-------|
+* | Multiple Choice | 0  |
+* | Dropdown        | 1  |
+*/
 
 /**
- * @summary [Onboarding Mode]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode}
- * @typedef {number} OnboardingMode
- * | Name | Value |
- * |------|-------|
- * | Onboarding Default  | 0  |
- * | Onboarding Advanced | 1  |
- */
+* @summary [Onboarding Mode]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode}
+* @typedef {number} OnboardingMode
+* | Name | Value |
+* |------|-------|
+* | Onboarding Default  | 0  |
+* | Onboarding Advanced | 1  |
+*/
 
 /**
- * @summary [Guild Home Settings]{@link }
- * @description
- * Represents the [onboarding]{@link } flow for a guild
- * @typedef {Object} GuildHomeSettings
- * @property {Snowflake} guild_id
- * @property {boolean} enabled
- * @property {WelcomeMessage} [welcome_message]
- * @property {NewMemberAction} [new_member_actions]
- * @property {ResourceChannel[]} [resource_channels]
- */
+* @summary [Guild Home Settings]{@link }
+* @description
+* Represents the [onboarding]{@link } flow for a guild
+* @typedef {Object} GuildHomeSettings
+* @property {Snowflake} guild_id
+* @property {boolean} enabled
+* @property {WelcomeMessage} [welcome_message]
+* @property {NewMemberAction} [new_member_actions]
+* @property {ResourceChannel[]} [resource_channels]
+*/
 
 /**
- * @summary [WelcomeMessage]{@link }
- * @typedef {Object} WelcomeMessage
- * @property {Snowflake[]} author_ids
- * @property {string} message
- */
+* @summary [WelcomeMessage]{@link }
+* @typedef {Object} WelcomeMessage
+* @property {Snowflake[]} author_ids
+* @property {string} message
+*/
 
 /**
- * @summary [Resource Channel]{@link }
- * @typedef {Object} ResourceChannel
- * @property {Snowflake} channel_id
- * @property {string} title
- * @property {string} description
- * @property {?PartialEmoji} [emoji]
- * @property {?string} [icon]
- * 
- */
+* @summary [Resource Channel]{@link }
+* @typedef {Object} ResourceChannel
+* @property {Snowflake} channel_id
+* @property {string} title
+* @property {string} description
+* @property {?PartialEmoji} [emoji]
+* @property {?string} [icon]
+* 
+*/
 /**
- * @summary [New Member Action]{@link }
- * @typedef {Object} NewMemberAction
- * @property {Snowflake} channel_id
- * @property {NewMemberActionType} action_type
- * @property {string} title
- * @property {string} description
- * @property {?PartialEmoji} [emoji]
- * @property {?string} [icon]
- */
+* @summary [New Member Action]{@link }
+* @typedef {Object} NewMemberAction
+* @property {Snowflake} channel_id
+* @property {NewMemberActionType} action_type
+* @property {string} title
+* @property {string} description
+* @property {?PartialEmoji} [emoji]
+* @property {?string} [icon]
+*/
 
 /**
- * @summary [New Member Action Type]{@link }
- * @typedef {number} NewMemberActionType
- * | Name | Value |
- * |------|-------|
- * | View | 0  |
- * | Talk | 1  |
- */
-
-/**
- * @summary [Guild Create Event]{@link https://discord.com/developers/docs/topics/gateway-events#guild-create}
- * @typedef {Object} GuildParams
- * @property {Snowflake} id
- * @property {string} name
- * @property {string} created_at
- * @property {?string} description
- * @property {GuildMFALevel} mfa_level
- * @property {boolean} premium_progress_bar_enabled
- * @property {unknown} hub_type
- * @property {?Snowflake} latest_onboarding_question_id
- * @property {?string} vanity_url_code
- * @property {?Snowflake} public_updates_channel_id
- * @property {number} max_stage_video_channel_users
- * @property {?string} splash
- * @property {boolean} lazy
- * @property {number} premium_subscription_count
- * @property {SystemChannelFlags} system_channel_flags
- * @property {DefaultMessageNotificationLevel} default_message_notifications
- * @property {?string} banner
- * @property {number} max_members
- * @property {?Snowflake} safety_alerts_channel_id
- * @property {LocaleString} preferred_locale
- * @property {?string} discovery_splash
- * @property {?string} icon
- * @property {GuildHashes} guild_hashes
- * @property {boolean} nsfw
- * @property {GuildVerificationLevel} verification_level
- * @property {GuildNSFWLevel} nsfw_level
- * @property {?Snowflake} application_id
- * @property {Snowflake} owner_id
- * @property {Array<Object>} embedded_activities
- * @property {unknown} home_header
- * @property {?Snowflake} rules_channel_id
- * @property {?Snowflake} system_channel_id
- * @property {number} afk_timeout
- * @property {number} premium_tier
- * @property {number} max_video_channel_user
- * @property {?Snowflake} afk_channel_id
- * @property {ExplicitContentFilterLevel} explicit_content_filter
- * @property {Sticker[]} stickers
- * @property {Emoji[]} emojis
- * @property {Role[]} roles
- * @property {Date | string} joined_at
- * @property {?unknown} incidents_data 
- * @property {boolean} large
- * @property {boolean} unavailable - `true` if this guild is unavailable due to an outage
- * @property {Member[]} members
- * @property {?Channel[]} threads
- * @property {Channel[]} channels
- * @property {GuildFeatures[]} features
- * @property {GuildPresenceParams[]} presences - Presences of the members in the guild, will only include non-offline members if the size is greater than `large` threshold
- * @property {VoiceState[]} voice_states
- * @property {GuildScheduledEvent[]} guild_scheduled_events
- * @property {StageInstance[]} stage_instances
- * @property {SoundboardSound[]} soundboard_sounds
- * @property {Object<string, number>} application_command_counts
- * @property {number} [emojiCount]
- * @property {number} [stickerCount]
- * @property {number} channelCount
- * @property {number} roleCount
- * @property {number} member_count
- * @property {string} [icon_url]
- * @property {string} [banner_url]
- * @property {string} [splash_url]
- * @property {string} [discovery_splash_url]
- */
+* @summary [New Member Action Type]{@link }
+* @typedef {number} NewMemberActionType
+* | Name | Value |
+* |------|-------|
+* | View | 0  |
+* | Talk | 1  |
+*/
 
 /**
  * @summary [Presence Update Event]{@link https://discord.com/developers/docs/topics/gateway-events#presence-update}
@@ -2119,184 +2131,252 @@
  */
 
 /**
- * @summary [Mention Object in MESSAGE_CREATE Event]{@link https://discord.com/developers/docs/topics/gateway-events#message-create-message-create-extra-fields}
- * @typedef {object} MessageCreateMentions
- * @property {string} username
- * @property {?string} global_name
- * @property {string} [display_name]
- * @property {Snowflake} id
- * @property {?string} avatar
- * @property {?string} avatar_decoration_data
- * @property {number} public_flags
- * @property {MemberParams} member
- */
+* @summary [Guild Create Event]{@link https://discord.com/developers/docs/topics/gateway-events#guild-create}
+* @typedef {Object} GuildParams
+* @property {Snowflake} id
+* @property {string} name
+* @property {string} created_at
+* @property {?string} description
+* @property {GuildMFALevel} mfa_level
+* @property {boolean} premium_progress_bar_enabled
+* @property {unknown} hub_type
+* @property {?Snowflake} latest_onboarding_question_id
+* @property {?string} vanity_url_code
+* @property {?Snowflake} public_updates_channel_id
+* @property {number} max_stage_video_channel_users
+* @property {?string} splash
+* @property {boolean} lazy
+* @property {number} premium_subscription_count
+* @property {SystemChannelFlags} system_channel_flags
+* @property {DefaultMessageNotificationLevel} default_message_notifications
+* @property {?string} banner
+* @property {number} max_members
+* @property {?Snowflake} safety_alerts_channel_id
+* @property {LocaleString} preferred_locale
+* @property {?string} discovery_splash
+* @property {?string} icon
+* @property {GuildHashes} guild_hashes
+* @property {boolean} nsfw
+* @property {GuildVerificationLevel} verification_level
+* @property {GuildNSFWLevel} nsfw_level
+* @property {?Snowflake} application_id
+* @property {Snowflake} owner_id
+* @property {Array<Object>} embedded_activities
+* @property {unknown} home_header
+* @property {?Snowflake} rules_channel_id
+* @property {?Snowflake} system_channel_id
+* @property {number} afk_timeout
+* @property {number} premium_tier
+* @property {number} max_video_channel_user
+* @property {?Snowflake} afk_channel_id
+* @property {ExplicitContentFilterLevel} explicit_content_filter
+* @property {Sticker[]} stickers
+* @property {Emoji[]} emojis
+* @property {Role[]} roles
+* @property {ISO8601Timestamp} joined_at
+* @property {?unknown} incidents_data 
+* @property {boolean} large
+* @property {boolean} unavailable - `true` if this guild is unavailable due to an outage
+* @property {Member[]} members
+* @property {?Channel[]} threads
+* @property {Channel[]} channels
+* @property {GuildFeatures[]} features
+* @property {GuildPresenceParams[]} presences - Presences of the members in the guild, will only include non-offline members if the size is greater than `large` threshold
+* @property {VoiceState[]} voice_states
+* @property {GuildScheduledEvent[]} guild_scheduled_events
+* @property {StageInstance[]} stage_instances
+* @property {SoundboardSound[]} soundboard_sounds
+* @property {Object<string, number>} application_command_counts
+* @property {number} [emojiCount]
+* @property {number} [stickerCount]
+* @property {number} channelCount
+* @property {number} roleCount
+* @property {number} member_count
+* @property {string} [icon_url]
+* @property {string} [banner_url]
+* @property {string} [splash_url]
+* @property {string} [discovery_splash_url]
+*/
 
 /**
- * @typedef {object} GuildHashes
- * @property {number} version
- * @property {{omitted: boolean, hash: string}} roles
- * @property {{omitted: boolean, hash: string}} metadata
- * @property {{omitted: boolean, hash: string}} channels
- */
+* @summary [Mention Object in MESSAGE_CREATE Event]{@link https://discord.com/developers/docs/topics/gateway-events#message-create-message-create-extra-fields}
+* @typedef {object} MessageCreateMentions
+* @property {string} username
+* @property {?string} global_name
+* @property {string} [display_name]
+* @property {Snowflake} id
+* @property {?string} avatar
+* @property {?string} avatar_decoration_data
+* @property {number} public_flags
+* @property {MemberParams} member
+*/
 
 /**
- * @summary [Presence Update Event]{@link https://discord.com/developers/docs/topics/gateway-events#presence-update}
- * @typedef {object} PresenceUpdate
- * @property {User} user
- * @property {MemberParams} member
- * @property {Snowflake} guild_id
- * @property {'online'|'offline'|'idle'|'dnd'} status
- * @property {Activity[]} activities
- * @property {ClientStatus} client_status
- * @property {number} timestamp
- */
+* @typedef {object} GuildHashes
+* @property {number} version
+* @property {{omitted: boolean, hash: string}} roles
+* @property {{omitted: boolean, hash: string}} metadata
+* @property {{omitted: boolean, hash: string}} channels
+*/
 
 /**
- * [Soundboard Sound]{@link }
- * - undocumented soundboard object
- * @typedef {Object} SoundboardSound
- * @property {number} volume
- * @property {Snowflake} user_id
- * @property {Snowflake} sound_id
- * @property {string} name
- * @property {Snowflake} guild_id
- * @property {?string} emoji_name
- * @property {?Snowflake} emoji_id
- * @property {boolean} available
- */
-/**
- * @summary [SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object}
- * @typedef {Object} SKU
- * @property {Snowflake} id - ID of SKU
- * @property {Snowflake} application_id - ID of the parent application
- * @property {SKUType} type - The [type of SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object-sku-types}
- * @property {string} name - Customer-facing name of your premium offering
- * @property {string} slug - System-generated URL slug based on the SKU's name
- * @property {?Snowflake} dependent_sku_id - ???
- * @property {?string} manifest_labels - ???
- * @property {?ISO8601Timestamp} release_date - ???
- * @property {SKUAccessType} access_type - ???
- * @property {string[]} features - ???
- * @property {SKUFlags} flags - ???
- * @property {boolean} premium - ???
- * @property {boolean} show_age_gate - ???
- */
+* @summary [Presence Update Event]{@link https://discord.com/developers/docs/topics/gateway-events#presence-update}
+* @typedef {object} PresenceUpdate
+* @property {User} user
+* @property {MemberParams} member
+* @property {Snowflake} guild_id
+* @property {'online'|'offline'|'idle'|'dnd'} status
+* @property {Activity[]} activities
+* @property {ClientStatus} client_status
+* @property {number} timestamp
+*/
 
 /**
- * @summary SKU Flags
- * @typedef {number} SKUFlags
- * | Flag | Value |
- * |--------------------|--------|
- * | Guild Subscription | 1 << 7 |
- * | User Subscription  | 1 << 8 |
- * - The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
- */
+* [Soundboard Sound]{@link }
+* - undocumented soundboard object
+* @typedef {Object} SoundboardSound
+* @property {number} volume
+* @property {Snowflake} user_id
+* @property {Snowflake} sound_id
+* @property {string} name
+* @property {Snowflake} guild_id
+* @property {?string} emoji_name
+* @property {?Snowflake} emoji_id
+* @property {boolean} available
+*/
+/**
+* @summary [SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object}
+* @typedef {Object} SKU
+* @property {Snowflake} id - ID of SKU
+* @property {Snowflake} application_id - ID of the parent application
+* @property {SKUType} type - The [type of SKU]{@link https://discord.com/developers/docs/monetization/skus#sku-object-sku-types}
+* @property {string} name - Customer-facing name of your premium offering
+* @property {string} slug - System-generated URL slug based on the SKU's name
+* @property {?Snowflake} dependent_sku_id - ???
+* @property {?string} manifest_labels - ???
+* @property {?ISO8601Timestamp} release_date - ???
+* @property {SKUAccessType} access_type - ???
+* @property {string[]} features - ???
+* @property {SKUFlags} flags - ???
+* @property {boolean} premium - ???
+* @property {boolean} show_age_gate - ???
+*/
 
 /**
- * @summary SKU Access Types
- * @typedef {number} SKUAccessType
- * ### For subscriptions, there are two types of access levels you can offer to users:
- * - Guild Subscriptions: A subscription purchased by a user and applied to a single server. Everyone in that server gets your premium benefits.
- * - User Subscriptions: A subscription purchased by a user for themselves. They get access to your premium benefits in every server.
- */
+* @summary SKU Flags
+* @typedef {number} SKUFlags
+* | Type | Value       | Description |
+* |------|-------------|-------------|
+* | Available          | 1 << 2      | SKU is available for purchase
+* | Guild Subscription | 1 << 7      | Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server
+* | User Subscription  | 1 << 8      | Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server
+* - The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
+*/
 
 /**
- * @summary [Sku Type]{@link https://discord.com/developers/docs/game-sdk/store#data-models-skutype-enum}
- * @typedef {number} SKUType
- * - For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type: 6`.
- * - For any current implementations, you will want to use the SKU defined by `type: 5`.
- * - A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.
- * 
- * | Type | ID | Description |
- * |-----------------|---|-------------|
- * | Subscription    | 5 | Represents a recurring subscription |
- * | Scription_Group | 6 | System-generated group for each SUBSCRIPTION SKU created |
- */
+* @summary SKU Access Types
+* @typedef {number} SKUAccessType
+* ### For subscriptions, there are two types of access levels you can offer to users:
+* - Guild Subscriptions: A subscription purchased by a user and applied to a single server. Everyone in that server gets your premium benefits.
+* - User Subscriptions: A subscription purchased by a user for themselves. They get access to your premium benefits in every server.
+*/
 
 /**
- * @summary [SkuPrice]{@link https://discord.com/developers/docs/game-sdk/store#data-models-skuprice-struct}
- * @typedef {Object} SkuPrice
- * @property {Uint32Array} Amount
- * @property {string} Currency
- */
+* @summary [Sku Type]{@link https://discord.com/developers/docs/game-sdk/store#data-models-skutype-enum}
+* @typedef {number} SKUType
+* - For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type: 6`.
+* - For any current implementations, you will want to use the SKU defined by `type: 5`.
+* - A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.
+* 
+* | Type | ID | Description |
+* |-----------------|---|-------------|
+* | Subscription    | 5 | Represents a recurring subscription |
+* | Scription_Group | 6 | System-generated group for each SUBSCRIPTION SKU created |
+*/
 
 /**
- * @summary [Entitlement Type]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlementtype-enum}
- * @typedef {number} EntitlementType
- * | Type | ID    | Description |
- * |------|-------|-------------|
- * | Application Subscription| 8 | Entitlement was purchased as an app subscription |
- */
+* @summary [SkuPrice]{@link https://discord.com/developers/docs/game-sdk/store#data-models-skuprice-struct}
+* @typedef {Object} SkuPrice
+* @property {Uint32Array} Amount
+* @property {string} Currency
+*/
 
 /**
- * @ignore
- * @typedef {Object} PartialEntitlement
- * @property {Snowflake} id - ID of the entitlement
- * @property {Snowflake} sku_id - ID of the SKU
- * @property {Snowflake} application_id
- * @property {number} gift_code_flags - ???
- * @property {boolean} deleted - ???
- * @property {Snowflake} promotion_id - ???
- * @property {Snowflake} [user_id]
- * @property {Snowflake} [guild_id]
- * @property {EntitlementType} type - The [type of entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types}
- * @property {boolean} consumed - Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false`.
- */
-/**
- * @summary [Entitlement]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlement-struct}
- * @typedef {Object} Entitlement
- * @property {Snowflake} id - ID of the entitlement
- * @property {Snowflake} sku_id - ID of the SKU
- * @property {Snowflake} application_id
- * @property {Snowflake} subscription_id - ???
- * @property {number} gift_code_flags - ???
- * @property {boolean} deleted - ???
- * @property {Snowflake} promotion_id - ???
- * @property {Snowflake} [user_id]
- * @property {Snowflake} [guild_id]
- * @property {EntitlementType} type - The [type of entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types}
- * @property {boolean} consumed - Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false`.
- * @property {ISO8601Timestamp} [starts_at] - Start date at which the entitlement is valid. Not present when using test entitlements
- * @property {ISO8601Timestamp} [ends_at] - Date at which the entitlement is no longer valid. Not present when using test entitlements
- */
+* @summary [Entitlement Type]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlementtype-enum}
+* @typedef {number} EntitlementType
+* | Type | Value | Description |
+* |------|-------|-------------|
+* | Application Subscription| 8 | Entitlement was purchased as an app subscription |
+*/
 
 /**
-     * A Discord locale string, possible values are:
-     * * en-US (English, US)
-     * * en-GB (English, UK)
-     * * bg (Bulgarian)
-     * * zh-CN (Chinese, China)
-     * * zh-TW (Chinese, Taiwan)
-     * * hr (Croatian)
-     * * cs (Czech)
-     * * da (Danish)
-     * * nl (Dutch)
-     * * fi (Finnish)
-     * * fr (French)
-     * * de (German)
-     * * el (Greek)
-     * * hi (Hindi)
-     * * hu (Hungarian)
-     * * it (Italian)
-     * * ja (Japanese)
-     * * ko (Korean)
-     * * lt (Lithuanian)
-     * * no (Norwegian)
-     * * pl (Polish)
-     * * pt-BR (Portuguese, Brazilian)
-     * * ro (Romanian, Romania)
-     * * ru (Russian)
-     * * es-ES (Spanish)
-     * * sv-SE (Swedish)
-     * * th (Thai)
-     * * tr (Turkish)
-     * * uk (Ukrainian)
-     * * vi (Vietnamese)
-     * @see {@link https://discord.com/developers/docs/reference#locales}
-     * @typedef {string} Locale
-     */
+* @ignore
+* @typedef {Object} PartialEntitlement
+* @property {Snowflake} id - ID of the entitlement
+* @property {Snowflake} sku_id - ID of the SKU
+* @property {Snowflake} application_id
+* @property {number} gift_code_flags - ???
+* @property {boolean} deleted - ???
+* @property {Snowflake} promotion_id - ???
+* @property {Snowflake} [user_id]
+* @property {Snowflake} [guild_id]
+* @property {EntitlementType} type - The [type of entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types}
+* @property {boolean} consumed - Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false`.
+*/
+/**
+* @summary [Entitlement]{@link https://discord.com/developers/docs/game-sdk/store#data-models-entitlement-struct}
+* @typedef {Object} Entitlement
+* @property {Snowflake} id - ID of the entitlement
+* @property {Snowflake} sku_id - ID of the SKU
+* @property {Snowflake} application_id
+* @property {Snowflake} subscription_id - ???
+* @property {number} gift_code_flags - ???
+* @property {boolean} deleted - ???
+* @property {Snowflake} promotion_id - ???
+* @property {Snowflake} [user_id]
+* @property {Snowflake} [guild_id]
+* @property {EntitlementType} type - The [type of entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types}
+* @property {boolean} consumed - Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false`.
+* @property {ISO8601Timestamp} [starts_at] - Start date at which the entitlement is valid. Not present when using test entitlements
+* @property {ISO8601Timestamp} [ends_at] - Date at which the entitlement is no longer valid. Not present when using test entitlements
+*/
 
-// @ts-ignore
+/**
+* A Discord locale string, possible values are:
+* * en-US (English, US)
+* * en-GB (English, UK)
+* * bg (Bulgarian)
+* * zh-CN (Chinese, China)
+* * zh-TW (Chinese, Taiwan)
+* * hr (Croatian)
+* * cs (Czech)
+* * da (Danish)
+* * nl (Dutch)
+* * fi (Finnish)
+* * fr (French)
+* * de (German)
+* * el (Greek)
+* * hi (Hindi)
+* * hu (Hungarian)
+* * it (Italian)
+* * ja (Japanese)
+* * ko (Korean)
+* * lt (Lithuanian)
+* * no (Norwegian)
+* * pl (Polish)
+* * pt-BR (Portuguese, Brazilian)
+* * ro (Romanian, Romania)
+* * ru (Russian)
+* * es-ES (Spanish)
+* * sv-SE (Swedish)
+* * th (Thai)
+* * tr (Turkish)
+* * uk (Ukrainian)
+* * vi (Vietnamese)
+* @see {@link https://discord.com/developers/docs/reference#locales}
+* @typedef {string} locale
+*/
+
 const Locale = {
   Indonesian: 'id',
   EnglishUS: 'en-US',
@@ -2332,21 +2412,44 @@ const Locale = {
 };
 
 /**
- * A type alias representing a locale string, which is one of the available Discord locales
- *
- * @typedef {Locale} LocaleString
- */
+* A type alias representing a locale string, which is one of the available Discord locales
+*
+* @typedef {locale} LocaleString
+*/
 
 /**
- * A type alias representing a partial localization map, which maps Discord locales to localized strings
- *
- * @global
- * @typedef {Object<LocaleString, string | null>} LocalizationMap
- */
+* A type alias representing a partial localization map, which maps Discord locales to localized strings
+*
+* @global
+* @typedef {Object<LocaleString, string | null>} LocalizationMap
+*/
 
 /**
- * @global
- */
+* @typedef {Object} ExtendedPayload
+* @property {User} [user]
+* @property {Member} [member]
+* @property {Interaction} [interaction]
+* @property {Message} [message]
+* @property {Channel} channel
+* @property {string} [username]
+* @property {Snowflake} [guild_id]
+* @property {Snowflake} [user_id]
+* @property {Snowflake} [id]
+* @property {User} [author]
+* @property {User} [inviter]
+* @property {User} [target_user]
+* @property {string} [code]
+* @property {ISO8601Timestamp} [created_at]
+* @property {Message[]} [mentions]
+* @property {string[]} [badges]
+* @property {string} [nick]
+* @property {ResolvedData} [data]
+* @property {string} [url]
+* @property {number} [uses]
+* @property {number} [max_uses]
+* @property {number} [max_age]
+* @property {boolean} [temporary]
+*/
 
 /**
  * @summary [Button Component]{@link https://discord.com/developers/docs/interactions/message-components#buttons}
@@ -2566,3 +2669,4 @@ const Locale = {
  * @property {number} [max_age]
  * @property {boolean} [temporary]
  */
+

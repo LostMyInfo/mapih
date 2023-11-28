@@ -16,7 +16,7 @@ module.exports = {
    * @summary
    * ### [Get Invite]{@link https://discord.com/developers/docs/resources/invite#get-invite}
    * @example
-   * await params.api.discord.invites.retrieve({
+   * await api.discord.invites.retrieve({
    *   invite_code: '0vCdhLbwjZZTWZLD',
    *   with_counts: true,
    *   with_expiration: true
@@ -48,7 +48,7 @@ module.exports = {
    * @summary
    * ### [Delete Invite]{@link https://discord.com/developers/docs/resources/invite#delete-invite}
    * @example
-   * await params.api.discord.invites.revoke({
+   * await api.discord.invites.revoke({
    *   invite_code: '0vCdhLbwjZZTWZLD'
    * });
    * @memberof module:invites#

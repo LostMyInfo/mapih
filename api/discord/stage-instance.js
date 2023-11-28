@@ -44,7 +44,7 @@ module.exports = {
    * @summary
    * ### [Get Stage Instance]{@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
    * @example
-   * await params.api.discord.stageInstance.retrieve({
+   * await api.discord.stageInstance.retrieve({
    *   channel_id: '0000000000'
    * });
    * @memberof module:stageInstance#
@@ -63,7 +63,7 @@ module.exports = {
    * @summary
    * ### [Create Stage Instance]{@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
    * @example
-   * await params.api.discord.stageInstance.create({
+   * await api.discord.stageInstance.create({
    *   channel_id: '0000000000',
    *   topic: 'My super cool stage',
    *   privacy_level: 2,
@@ -94,7 +94,7 @@ module.exports = {
    * @summary
    * ### [Modify Stage Instance]{@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
    * @example
-   * await params.api.discord.stageInstance.update({
+   * await api.discord.stageInstance.update({
    *   channel_id: '0000000000',
    *   topic: 'My new stage name',
    *   privacy_level: 1
@@ -118,7 +118,7 @@ module.exports = {
    * @summary
    * ### [Delete Stage Instance]{@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
    * @example
-   * await params.api.discord.stageInstance.destroy({
+   * await api.discord.stageInstance.destroy({
    *   channel_id: '0000000000'
    * });
    * @memberof module:stageInstance#

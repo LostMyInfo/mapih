@@ -170,18 +170,17 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
 
     let body = `grant_type=${types[grant_type]}&client_id=${client_id}&client_secret=${client_secret}`;
     
-    if (types[grant_type] === 'authorization_code' && oauth2_redirect && code) {
+    if (types[grant_type] === 'authorization_code' && oauth2_redirect && code)
       body += `&redirect_uri=${encodeURIComponent(oauth2_redirect)}&code=${code}`;
-    } else if (types[grant_type] === 'refresh_token' && refresh_token) {
+    else if (types[grant_type] === 'refresh_token' && refresh_token)
       body += `&refresh_token=${refresh_token}`;
-    } else if (types[grant_type] === 'client_credentials' && scope) {
+    else if (types[grant_type] === 'client_credentials' && scope)
       body += `&scope=${scope}`;
-    } else if (types[grant_type] === 'user' && token) {
+    else if (types[grant_type] === 'user' && token)
       body = '';
-    } else if (types[grant_type] === 'revoke' && token) {
+    else if (types[grant_type] === 'revoke' && token)
       body = `${body.replace(/^(.*?)&/, '')}&token=${token}`;
-    }
-    
+        
     const headers = grant_type === 'getUserCreds'
       ? { Authorization: `${token?.token_type} ${token?.access_token}` }
       : { 'Content-Type': 'application/x-www-form-urlencoded' };
@@ -205,9 +204,8 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
       body
     };
 
-    if (method === 'post') {
+    if (method === 'post')
       responseBody.statusCode = 200;
-    }
 
     const attempt = await https[method](responseBody);
     

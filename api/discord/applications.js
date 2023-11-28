@@ -1,5 +1,4 @@
 // @ts-check
-const { ApplicationCommandType } = require('../../enum');
 const { attemptHandler } = require('../resources/functions');
 
 // Applications
@@ -15,7 +14,7 @@ module.exports = {
    * @summary
    * ### [Get Application Role Connection Metadata Records]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records}
    * @example
-   * await params.api.discord.applications.appRoleConnectionMeta({
+   * await api.discord.applications.appRoleConnectionMeta({
    *   application_id: '0000000000000'
    * });
    * @memberof module:applications#
@@ -34,7 +33,7 @@ module.exports = {
    * @summary
    * ### [Update Application Role Connection Metadata Records]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records}
    * @example
-   * await params.api.discord.applications.updateAppRoleConnectionMeta({
+   * await api.discord.applications.updateAppRoleConnectionMeta({
    *   application_id: '0000000000000'
    * });
    * @memberof module:applications#
@@ -63,7 +62,7 @@ module.exports = {
      * - This is to be used for both global and guild commands.
      * - Provide a guild_id field if using for a guild command.
      * @example
-     * await params.api.discord.applications.commands.retrieve({
+     * await api.discord.applications.commands.retrieve({
      *   command_id: '0000000000',
      *   application_id: '0000000000',
      *   guild_id: '0000000000' // optional
@@ -92,7 +91,7 @@ module.exports = {
      * - This is to be used for both global and guild commands.
      * - Provide a guild_id field if using for a guild command.
      * @example
-     * await params.api.discord.applications.commands.getAll({
+     * await api.discord.applications.commands.getAll({
      *   application_id: '0000000000',
      *   guild_id: '0000000000' // optional
      * });
@@ -125,7 +124,7 @@ module.exports = {
      * - This is to be used for both global and guild commands.
      * - Provide a guild_id field if using for a guild command.
      * @example
-     * await params.api.discord.applications.commands.create({
+     * await api.discord.applications.commands.create({
      *   name: 'slashcommand',
      *   description: 'Command description',
      *   guild_id: '0000000000', // optional
@@ -205,7 +204,7 @@ module.exports = {
      * - Provide a guild_id field if using for a guild command.
      * - All fields are optional, but any fields provided will entirely overwrite the existing values of those fields.
      * @example
-     * await params.api.discord.applications.commands.modify({
+     * await api.discord.applications.commands.modify({
      *   command_id: '0000000000',
      *   guild_id: '0000000000', // optional
      *   name: 'slashcommand',
@@ -270,7 +269,7 @@ module.exports = {
      * - This is to be used for both global and guild commands.
      * - Provide a guild_id field if using for a guild command.
      * @example
-     * await params.api.discord.applications.commands.destroy({
+     * await api.discord.applications.commands.destroy({
      *   application_id: '0000000000',
      *   command_id: '0000000000',
      *   guild_id: '0000000000' // optional
@@ -303,7 +302,7 @@ module.exports = {
      * - This is to be used for both global and guild commands.
      * - Provide a guild_id field if using for a guild command.
      * @example
-     * await params.api.discord.applications.commands.bulkOverwrite({
+     * await api.discord.applications.commands.bulkOverwrite({
      *   application_id: '0000000000',
      *   guild_id: '0000000000', // optional
      *   application_commands: [commands]
@@ -332,7 +331,7 @@ module.exports = {
      * ### [Get Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
      * - Fetches permissions for a specific command for your application in a guild
      * @example
-     * await params.api.discord.applications.commands.retrievePermissions({
+     * await api.discord.applications.commands.retrievePermissions({
      *   guild_id: '0000000000',
      *   command_id: '0000000000'
      * });
@@ -355,7 +354,7 @@ module.exports = {
      * ### [Get Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
      * - Fetches permissions for all commands for your application in a guild
      * @example
-     * await params.api.discord.applications.commands.getAllPermissions({
+     * await api.discord.applications.commands.getAllPermissions({
      *   guild_id: '0000000000'
      * });
      * @memberof module:commands#
@@ -379,7 +378,7 @@ module.exports = {
      * - This endpoint requires authentication with a Bearer token that has permission to manage the guild and its roles.
      * - For more information, read about [Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#permissions}
      * @example
-     * await params.api.discord.applications.commands.modifyPermissions({
+     * await api.discord.applications.commands.modifyPermissions({
      *   guild_id: '0000000000',
      *   command_id: '0000000000'
      * });
@@ -420,7 +419,7 @@ module.exports = {
      * @summary
      * ### [List Entitlements]{@link https://discord.com/developers/docs/monetization/entitlements#list-entitlements}
      * @example
-     * await params.api.discord.applications.entitlements.getAll({
+     * await api.discord.applications.entitlements.getAll({
      *   application_id: '0000000000',
      *   user_id: '0000000000',
      *   before: '0000000000',
@@ -467,7 +466,7 @@ module.exports = {
      * - After creating a test entitlement, you'll need to reload your Discord client.
      * - After doing so, you'll see that your server or user now has premium access.
      * @example
-     * await params.api.discord.applications.entitlements.create({
+     * await api.discord.applications.entitlements.create({
      *   application_id: '0000000000',
      *   sku_id: '0000000000',
      *   owner_id: '0000000000',
@@ -495,7 +494,7 @@ module.exports = {
      * @summary
      * ### [Delete Test Entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#delete-test-entitlement}
      * @example
-     * await params.api.discord.applications.entitlements.destroy({
+     * await api.discord.applications.entitlements.destroy({
      *   application_id: '0000000000',
      *   entitlement_id: '0000000000'
      * });
@@ -529,7 +528,7 @@ module.exports = {
      * Because of how the SKU and subscription systems work, you will see two SKUs for your premium offering.
      * For integration and testing entitlements, you should use the SKU with `type: 5`.
      * @example
-     * await params.api.discord.applications.SKUs.getAll({
+     * await api.discord.applications.SKUs.getAll({
      *   application_id: '0000000000000'
      * });
      * @memberof module:commands#

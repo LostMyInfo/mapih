@@ -17,7 +17,7 @@ module.exports = {
    * @summary
    * ### [Get User]{@link https://discord.com/developers/docs/resources/user#get-user}
    * @example
-   * await params.api.discord.users.retrieve({
+   * await api.discord.users.retrieve({
    *   user_id: '0000000000'
    * });
    * @memberof module:users#
@@ -34,9 +34,8 @@ module.exports = {
     attempt.badges = getBadges(attempt.public_flags ?? attempt.flags);
     attempt.created_at = retrieveDate(attempt.id, true);
     attempt.avatarURL = avatarFromObject(attempt.id, attempt.avatar);
-    if (attempt.banner) {
+    if (attempt.banner)
       attempt.bannerURL = generateCDN(attempt, 'banner');
-    }
     return attempt;
   }, // End of Get User
 
@@ -46,7 +45,7 @@ module.exports = {
    * - For OAuth2, this requires the `identify` scope, which will return the object without an email.
    * - If `email` scope is provided, the object will inlude an email.
    * @example
-   * await params.api.discord.users.currentUser();
+   * await api.discord.users.currentUser();
    * @memberof module:users#
    * @function currentUser
    * @returns {Promise<User>} [User]{@link https://discord.com/developers/docs/resources/user#user-object} object
@@ -64,9 +63,9 @@ module.exports = {
    * - This endpoint returns 200 guilds by default, which is the maximum number of guilds a non-bot user can join.
    * - Therefore, pagination is not needed for integrations that need to get a list of the users' guilds.
    * @example
-   * await params.api.discord.users.myGuilds(params);
+   * await api.discord.users.myGuilds(params);
    * @example
-   * await params.api.discord.users.myGuilds();
+   * await api.discord.users.myGuilds();
    * @function myGuilds
    * @memberof module:users#
    * @param {object} [params=null]
@@ -104,7 +103,7 @@ module.exports = {
    * ### [Get Current User Guild Member]{@link https://discord.com/developers/docs/resources/user#get-current-user-guild-member}
    * - Requires the `guilds.members.read` OAuth2 scope.
    * @example
-   * await params.api.discord.users.currentMember({
+   * await api.discord.users.currentMember({
    *   guild_id: '0000000000'
    * });
    * @function currentMember
@@ -123,7 +122,7 @@ module.exports = {
    * @summary
    * ### [Modify Current User]{@link https://discord.com/developers/docs/resources/user#modify-current-user}
    * @example
-   * await params.api.discord.users.modifyCurrent({
+   * await api.discord.users.modifyCurrent({
    *   username: 'newUsername',
    *   avatar: 'https://www.imgURL.com' // or buffer
    * });
@@ -150,7 +149,7 @@ module.exports = {
    * ### [Get User Connections]{@link https://discord.com/developers/docs/resources/user#get-user-connections}
    * - Requires the `connections` OAuth2 scope.
    * @example
-   * await params.api.discord.users.connections();
+   * await api.discord.users.connections();
    * @function connections
    * @memberof module:users#
    * @returns {Promise<Connection[]>} List of [Connection]{@link https://discord.com/developers/docs/resources/user#connection-object} objects
@@ -166,7 +165,7 @@ module.exports = {
    * ### [Get User Application Role Connection]{@link https://discord.com/developers/docs/resources/user#get-user-application-role-connection}
    * - Requires an OAuth2 access token with `role_connections.write` scope for the application specified in the path
    * @example
-   * await params.api.discord.users.appRoleConnection({
+   * await api.discord.users.appRoleConnection({
    *   application_id: '0000000000'
    * });
    * @function appRoleConnection
@@ -186,7 +185,7 @@ module.exports = {
    * ### [Update User Application Role Connection]{@link https://discord.com/developers/docs/resources/user#update-user-application-role-connection}
    * - Requires an OAuth2 access token with `role_connections.write` scope for the application specified in the path
    * @example
-   * await params.api.discord.users.updateAppRoleConnection({
+   * await api.discord.users.updateAppRoleConnection({
    *   application_id: '0000000000',
    *   platform_name: 'OnSocket'
    * });
@@ -214,7 +213,7 @@ module.exports = {
    * @summary
    * ### [Create DM]{@link https://discord.com/developers/docs/resources/user#create-dm}
    * @example
-   * await params.api.discord.users.createDM({
+   * await api.discord.users.createDM({
    *   recipient_id: '0000000000',
    *   content: 'sup Eric',
    * });
@@ -242,9 +241,9 @@ module.exports = {
       }
     });
 
-    if (params.attachments && params.attachments?.length) {
+    if (params.attachments && params.attachments?.length)
       return sendAttachment(params, `channels/${response.id}/messages`, 'post');
-    } else {
+    else {
       return attemptHandler({
         method: 'post',
         path: `channels/${response.id}/messages`,
@@ -267,7 +266,7 @@ module.exports = {
    * @summary
    * ### [Create Group DM]{@link https://discord.com/developers/docs/resources/user#create-group-dm}
    * @example
-   * await params.api.discord.users.createGroupDM({
+   * await api.discord.users.createGroupDM({
    *   access_tokens: [
    *     '0000000000',
    *     '0000000000'  
@@ -304,9 +303,9 @@ module.exports = {
       }
     });
 
-    if (params.attachments && params.attachments?.length) {
+    if (params.attachments && params.attachments?.length)
       return sendAttachment(params, `channels/${DMChannel.id}/messages`, 'post');
-    } else {
+    else {
       return attemptHandler({
         method: 'post',
         path: `channels/${DMChannel.id}/messages`,
@@ -329,7 +328,7 @@ module.exports = {
    * @summary
    * ### [Leave Guild]{@link https://discord.com/developers/docs/resources/user#leave-guild}
    * @example
-   * await params.api.discord.users.leaveGuild({
+   * await api.discord.users.leaveGuild({
    *   guild_id: '0000000000'
    * });
    * @function leaveGuild

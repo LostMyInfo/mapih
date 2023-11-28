@@ -26,7 +26,7 @@ module.exports = {
    * @summary
    * ### [Get Channel]{@link https://discord.com/developers/docs/resources/channel#get-channel}
    * @example
-   * await params.api.discord.channels.retrieve({
+   * await api.discord.channels.retrieve({
    *   channel_id: '0000000000'
    * });
    * @memberof module:channels#
@@ -44,7 +44,6 @@ module.exports = {
     return res;
   }, // End of Get Channel
   
-  
   /**
    * @summary
    * ### [Modify Channel]{@link https://discord.com/developers/docs/resources/channel#modify-channel}
@@ -52,7 +51,7 @@ module.exports = {
    * 
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
-   * await params.api.discord.channels.modify({
+   * await api.discord.channels.modify({
    *   channel_id: '0000000000',
    *   name: 'newName,
    *   position: 1
@@ -93,7 +92,7 @@ module.exports = {
    * @param {ChannelFlags} [params.flags]
    * @returns {Promise<Channel>} The updated [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object
    */
-  modify: async (params) => 
+  modify: async (params) =>
     attemptHandler({
       method: 'patch',
       path: `channels/${params.channel_id}`,
@@ -108,7 +107,7 @@ module.exports = {
    * 
    * Fires a [Channel Delete]{@link https://discord.com/developers/docs/topics/gateway-events#channel-delete} Gateway event (or [Thread Delete]{@link https://discord.com/developers/docs/topics/gateway-events#thread-delete} if the channel was a thread).
    * @example
-   * await params.api.discord.channels.destroy({
+   * await api.discord.channels.destroy({
    *   channel_id: '0000000000'
    * });
    * @memberof module:channels#
@@ -133,7 +132,7 @@ module.exports = {
    * 
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
-   * await params.api.discord.channels.editPermissions({
+   * await api.discord.channels.editPermissions({
    *   channel_id: '0000000000',
    *   overwrite_id: '0000000000',
    *   type: 1, // member
@@ -191,7 +190,7 @@ module.exports = {
    * @summary
    * ### [Get Channel Invites]{@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
    * @example
-   * await params.api.discord.channels.getInvites({
+   * await api.discord.channels.getInvites({
    *   channel_id: '0000000000'
    * });
    * @memberof module:channels#
@@ -205,9 +204,8 @@ module.exports = {
       method: 'get',
       path: `channels/${params.channel_id}/invites`
     });
-    for (let a of attempt) {
+    for (let a of attempt)
       a = /* await */extendPayload(a/* , params*/);
-    }
     return attempt;
   }, // End of Get Channel Invites
   
@@ -217,7 +215,7 @@ module.exports = {
    * 
    * Fires an [Invite Create]{@link https://discord.com/developers/docs/topics/gateway-events#invite-create} Gateway event.
    * @example
-   * await params.api.discord.channels.inviteCreate({
+   * await api.discord.channels.inviteCreate({
    *   channel_id: '0000000000',
    *   max_age: 7200,
    *   max_uses: 1
@@ -283,7 +281,7 @@ module.exports = {
    * 
    * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
    * @example
-   * await params.api.discord.channels.pinMessage({
+   * await api.discord.channels.pinMessage({
    *   channel_id: '0000000000',
    *   message_id: '0000000000'
    * });
@@ -307,7 +305,7 @@ module.exports = {
    * 
    * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
    * @example
-   * await params.api.discord.channels.unpinMessage({
+   * await api.discord.channels.unpinMessage({
    *   channel_id: '0000000000',
    *   message_id: '0000000000'
    * });
@@ -328,7 +326,7 @@ module.exports = {
    * @summary
    * ### [Get Pinned Messages]{@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
    * @example
-   * await params.api.discord.channels.getPinnedMessages({
+   * await api.discord.channels.getPinnedMessages({
    *   channel_id: '0000000000'
    * });
    * @memberof module:channels#
@@ -342,9 +340,8 @@ module.exports = {
       method: 'get',
       path: `channels/${params.channel_id}/pins`
     });
-    for (let message of attempt) {
+    for (let message of attempt)
       message = /* await */extendPayload(message/* , params*/);
-    }
     return attempt;
   }, // End of Get Pinned Messages
   
@@ -374,7 +371,7 @@ module.exports = {
    * 
    * Fires a [Webhooks Update]{@link https://discord.com/developers/docs/topics/gateway-events#webhooks-update} Gateway event.
    * @example
-   * await params.api.discord.channels.followAnnouncementChannel({
+   * await api.discord.channels.followAnnouncementChannel({
    *   channel_id: '0000000000'
    *   webhook_channel_id: '0000000000'
    * });
@@ -398,7 +395,7 @@ module.exports = {
    * @summary
    * ### [Group DM Add Recipient]{@link https://discord.com/developers/docs/resources/channel#group-dm-add-recipient}
    * @example
-   * await params.api.discord.channels.groupDMadd({
+   * await api.discord.channels.groupDMadd({
    *   channel_id: '0000000000',
    *   user_id: '0000000000',
    *   access_token: 'abcdef123456',
@@ -427,7 +424,7 @@ module.exports = {
    * @summary
    * ### [Group DM Remove Recipient]{@link https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
    * @example
-   * await params.api.discord.channels.groupDMremove({
+   * await api.discord.channels.groupDMremove({
    *   channel_id: '0000000000',
    *   user_id: '0000000000'
    * });
@@ -458,7 +455,30 @@ module.exports = {
   
   messages: {
 
-    retrieve,
+    /**
+     * @summary
+     * ### [Get Channel Message]{@link https://discord.com/developers/docs/resources/channel#get-channel-message}
+     * @example
+     * await api.discord.channels.messages.retrieve({
+     *   channel_id: '0000000000',
+     *   message_id: '0000000000'
+     * });
+     * @memberof module:channels.messages#
+     * @function retrieve
+     * @param {Object} params
+     * @param {Snowflake | undefined} params.channel_id
+     * @param {Snowflake} params.message_id
+     * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
+     */
+    retrieve: async (params) => {
+      const attempt = await attemptHandler({
+        method: 'get',
+        path: `channels/${params.channel_id}/messages/${params.message_id}`
+      });
+      attempt.typeName = messageType[attempt?.type];
+      return extendPayload(attempt/* , params*/);
+    }, // End of Get Channel Message
+    
     /**
      * @summary
      * ### [Create Message]{@link https://discord.com/developers/docs/resources/channel#create-message}
@@ -468,12 +488,12 @@ module.exports = {
      * 
      * Fires a [Message Create]{@link https://discord.com/developers/docs/topics/gateway-events#message-create} Gateway event.
      * @example
-     * await params.api.discord.channels.messages.create({
+     * await api.discord.channels.messages.create({
      *   channel_id: params.channel_id,
      *   content: 'sup Eric'
      * });
      * @example
-     * await params.api.discord.channels.messages.create({
+     * await api.discord.channels.messages.create({
      *   channel_id: '0000000000',
      *   content: '',
      *   embeds: [{
@@ -491,7 +511,7 @@ module.exports = {
      *   }]
      * });
      * @example
-     * await params.api.discord.channels.messages.create({
+     * await api.discord.channels.messages.create({
      *   channel_id: params.channel_id,
      *   content: 'this will surprese all mentions',
      *   allowed_mentions: {
@@ -516,9 +536,9 @@ module.exports = {
      * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
      */
     create: async (params) => {
-      if (params.attachments && params.attachments?.length) {
+      if (params.attachments && params.attachments?.length)
         return sendAttachment(params, `channels/${params.channel_id}/messages`, 'post');
-      } else {
+      else {
         
         if (params.embeds?.length) {
           for (const embed of params.embeds) {
@@ -559,7 +579,7 @@ module.exports = {
      * 
      * Fires a [Message Update]{@link https://discord.com/developers/docs/topics/gateway-events#message-update} Gateway event.
      * @example
-     * await params.api.discord.channels.messages.update({
+     * await api.discord.channels.messages.update({
      *   channel_id: '0000000000',
      *   message_id: '0000000000',
      *   content: 'new message content',
@@ -579,13 +599,14 @@ module.exports = {
      * @returns {Promise<Message>} The updated [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
      */
     update: async (params) => {
-      if (params.attachments && params.attachments?.length) {
+      if (params.attachments && params.attachments?.length)
         return sendAttachment(params, `channels/${params.channel_id}/messages/${params.message_id}`, 'patch');
-      } else {
-        const message = await retrieve({
-          channel_id: params.channel_id,
-          message_id: params.message_id
+      else {
+        const message = await attemptHandler({
+          method: 'get',
+          path: `channels/${params.channel_id}/messages/${params.message_id}`
         });
+
         const { embeds } = params;
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
@@ -593,7 +614,7 @@ module.exports = {
           path: `channels/${params.channel_id}/messages/${params.message_id}`,
           body: {
             content: params.content ?? message.content,
-            embeds: (message?.embeds?.length || embed) ? [{
+            embeds: params.embeds && !params.embeds.length ? [] : [{
               title: embed?.title ?? message.embeds?.[0]?.title,
               description: embed?.description ?? message.embeds?.[0]?.description,
               color: embed?.color ?? message.embeds?.[0]?.color,
@@ -611,8 +632,8 @@ module.exports = {
                 icon_url: embed?.footer?.icon_url ?? message.embeds?.[0]?.footer?.icon_url
               },
               fields: embed?.fields ?? message.embeds?.[0]?.fields
-            }] : [],
-            components: params.components ?? message.components,
+            }],
+            components: params.components && !params.components.length ? [] : (message.components ?? []),
             attachments: params.attachments ?? message.attachments,
             allowed_mentions: params.allowed_mentions
           }
@@ -627,7 +648,7 @@ module.exports = {
      * 
      * Fires a [Message Delete]{@link https://discord.com/developers/docs/topics/gateway-events#message-delete} Gateway event
      * @example
-     * await params.api.discord.channels.messages.destroy({
+     * await api.discord.channels.messages.destroy({
      *   channel_id: '0000000000',
      *   message_id: '0000000000'
      * });
@@ -651,7 +672,7 @@ module.exports = {
      * - This endpoint will not delete messages older than 2 weeks.
      * - If attempted to delete messages older than 2 weeks or have duplicate message IDs, it will fail with a `400 BAD REQUEST`
      * @example
-     * await params.api.discord.channels.messages.bulkDelete({
+     * await api.discord.channels.messages.bulkDelete({
      *   channel_id: '0000000000',
      *   messages: [
      *     '0000000000',
@@ -678,7 +699,7 @@ module.exports = {
      * 
      * Crosspost a message in an Announcement Channel to following channels.
      * @example
-     * await params.api.discord.channels.messages.crosspost({
+     * await api.discord.channels.messages.crosspost({
      *   channel_id: '0000000000',
      *   message_id: '0000000000'
      * });
@@ -723,9 +744,8 @@ module.exports = {
         method: 'get',
         path
       });
-      for (let message of attempt) {
+      for (let message of attempt)
         message = /* await */extendPayload(message/* , params*/);
-      }
       return attempt;
     } // End of Get Channel Messages
 
@@ -747,7 +767,7 @@ module.exports = {
      * ### [Start Thread in Forum Channel]{@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
      * Creates a new thread in a forum channel, and sends a message within the created thread.
      * @example
-     * await params.api.discord.channels.threads.forumThreadCreate({
+     * await api.discord.channels.threads.forumThreadCreate({
      *   channel_id: '0000000000',
      *   name: 'thread name',
      *   message: {
@@ -795,9 +815,9 @@ module.exports = {
             tag_ids.push((tagsMap.get(appliedTag)).id);
       }
       
-      if (params.message?.attachments && params.message?.attachments?.length) {
+      if (params.message?.attachments && params.message?.attachments?.length)
         return sendAttachment(params, `channels/${params.channel_id}/threads`, 'post');
-      } else {
+      else {
         return attemptHandler({
           method: 'post',
           path: `channels/${params.channel_id}/threads`,
@@ -828,7 +848,7 @@ module.exports = {
      * - Does not work on a `GUILD_FORUM` channel.
      * - The ID of the created thread will be the same as the ID of the source message, and as such a message can only have a single thread created from it.
      * @example
-     * await params.api.discord.channels.threads.createFromMessage({
+     * await api.discord.channels.threads.createFromMessage({
      *   channel_id: '0000000000',
      *   message_id: '0000000000',
      *   name: 'thread name',
@@ -863,7 +883,7 @@ module.exports = {
      * ### [Start Thread without Message]{@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
      * Creates a new thread that is not connected to an existing message.
      * @example
-     * await params.api.discord.channels.threads.createWithoutMessage({
+     * await api.discord.channels.threads.createWithoutMessage({
      *   channel_id: '0000000000',
      *   name: 'thread name',
      *   type: 11 / PUBLIC_THREAD
@@ -906,7 +926,7 @@ module.exports = {
      * Adds the current user to a thread.
      * - Requires the thread is not archived.
      * @example
-     * await params.api.discord.channels.threads.join({
+     * await api.discord.channels.threads.join({
      *   channel_id: '0000000000'
      * });
      * @memberof module:channels.threads#
@@ -928,7 +948,7 @@ module.exports = {
      * Removes the current user from a thread.
      * - Requires the thread is not archived.
      * @example
-     * await params.api.discord.channels.threads.leave({
+     * await api.discord.channels.threads.leave({
      *   channel_id: '0000000000'
      * });
      * @memberof module:channels.threads#
@@ -950,7 +970,7 @@ module.exports = {
      * - Requires the ability to send messages in the thread.
      * - Requires the thread is not archived.
      * @example
-     * await params.api.discord.channels.threads.addMember({
+     * await api.discord.channels.threads.addMember({
      *   channel_id: '0000000000',
      *   user_id: '0000000000'
      * });
@@ -974,7 +994,7 @@ module.exports = {
      * - Requires the `MANAGE_THREADS` permission, or the creator of the thread if it is a `PRIVATE_THREAD`. 
      * - Requires the thread is not archived.
      * @example
-     * await params.api.discord.channels.threads.removeMember({
+     * await api.discord.channels.threads.removeMember({
      *   channel_id: '0000000000',
      *   user_id: '0000000000'
      * });
@@ -996,7 +1016,7 @@ module.exports = {
      * ### [Get Thread Member]{@link https://discord.com/developers/docs/resources/channel#get-thread-member}
      * - When `with_member` is set to `true`, the thread member object will include a `member` field containing a [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} object
      * @example
-     * await params.api.discord.channels.threads.getMember({
+     * await api.discord.channels.threads.getMember({
      *   channel_id: '0000000000',
      *   user_id: '0000000000',
      *   with_member: true
@@ -1024,7 +1044,7 @@ module.exports = {
      * ### [List Thread Members]{@link https://discord.com/developers/docs/resources/channel#list-thread-members}
      * - When `with_member` is set to `true`, the thread member object will include a `member` field containing a [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} object
      * @example
-     * await params.api.discord.channels.threads.getAllMembers({
+     * await api.discord.channels.threads.getAllMembers({
      *   channel_id: '0000000000',
      *   with_member: true
      * });
@@ -1047,9 +1067,8 @@ module.exports = {
         path
       });
 
-      for (let a of attempt) {
+      for (let a of attempt)
         a = /* await */extendPayload(a/* , params*/);
-      }
       return attempt;
       // return extendUser(attempt);
     }, // End of List Thread Members
@@ -1062,7 +1081,7 @@ module.exports = {
      * - When called on a `GUILD_ANNOUNCEMENT` channel, returns threads of [type]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-types} `ANNOUNCEMENT_THREAD`.
      * - Threads are ordered by `archive_timestamp`, in descending order.
      * @example
-     * await params.api.discord.channels.threads.getAllPublicArchived({
+     * await api.discord.channels.threads.getAllPublicArchived({
      *   channel_id: '0000000000',
      *   limit: 10
      * });
@@ -1091,7 +1110,7 @@ module.exports = {
      * Returns archived threads in the channel that are of [type]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-types} `PRIVATE_THREAD`.
      * - Threads are ordered by `archive_timestamp`, in descending order.
      * @example
-     * await params.api.discord.channels.threads.getAllPrivateArchived({
+     * await api.discord.channels.threads.getAllPrivateArchived({
      *   channel_id: '0000000000',
      *   limit: 10
      * });
@@ -1120,7 +1139,7 @@ module.exports = {
      * Returns archived threads in the channel that are of [type]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-types} `PRIVATE_THREAD`, and the user has joined.
      * - Threads are ordered by their `id`, in descending order.
      * @example
-     * await params.api.discord.channels.threads.listJoinedPrivateArchivedThreads({
+     * await api.discord.channels.threads.listJoinedPrivateArchivedThreads({
      *   channel_id: '0000000000',
      *   limit: 10
      * });
@@ -1161,7 +1180,7 @@ module.exports = {
      * @summary
      * ### [Create Reaction]{@link https://discord.com/developers/docs/resources/channel#create-reaction}
      * @example
-     * await params.api.discord.channels.reactions.create({
+     * await api.discord.channels.reactions.create({
      *   channel_id: '0000000000000',
      *   message_id: '0000000000000',
      *   emoji: 'name:id'
@@ -1184,7 +1203,7 @@ module.exports = {
      * @summary
      * ### [Delete Own Reaction]{@link https://discord.com/developers/docs/resources/channel#delete-own-reaction}
      * @example
-     * await params.api.discord.channels.reactions.deleteOwn({
+     * await api.discord.channels.reactions.deleteOwn({
      *   channel_id: '0000000000000',
      *   message_id: '0000000000000',
      *   emoji: ':name:id'
@@ -1207,7 +1226,7 @@ module.exports = {
      * @summary
      * ### [Delete User Reaction]{@link https://discord.com/developers/docs/resources/channel#delete-user-reaction}
      * @example
-     * await params.api.discord.channels.reactions.deleteUser({
+     * await api.discord.channels.reactions.deleteUser({
      *   channel_id: '0000000000000',
      *   message_id: '0000000000000',
      *   user_id: '0000000000',
@@ -1232,7 +1251,7 @@ module.exports = {
      * @summary
      * ### [Delete All Reactions]{@link https://discord.com/developers/docs/resources/channel#delete-all-reactions}
      * @example
-     * await params.api.discord.channels.reactions.deleteAll({
+     * await api.discord.channels.reactions.deleteAll({
      *   channel_id: '000000000000000000',
      *   message_id: '000000000000000000'
      * });
@@ -1253,7 +1272,7 @@ module.exports = {
      * @summary
      * ### [Delete All Reactions for Emoji]{@link https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji}
      * @example
-     * await params.api.discord.channels.reactions.deleteAllEmoji({
+     * await api.discord.channels.reactions.deleteAllEmoji({
      *   channel_id: '0000000000000',
      *   message_id: '0000000000000',
      *   emoji: ':name:id'
@@ -1266,7 +1285,7 @@ module.exports = {
      * @param {string} params.emoji
      * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
      */
-    deleteAllEmoji: (params) =>
+    deleteAllEmoji: async (params) =>
       attemptHandler({
         method: 'del',
         path: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}`
@@ -1276,7 +1295,7 @@ module.exports = {
      * @summary
      * ### [Get Reactions]{@link https://discord.com/developers/docs/resources/channel#get-reactions}
      * @example
-     * await params.api.discord.channels.reactions.getUsers({
+     * await api.discord.channels.reactions.getUsers({
      *   channel_id: '0000000000',
      *   message_id: '0000000000',
      *   emoji: ':name:id,
@@ -1301,35 +1320,10 @@ module.exports = {
         path
       });
 
-      for (let a of attempt) {
+      for (let a of attempt)
         a = /* await */extendPayload(a/* , params*/);
-      }
       return attempt;
     } // End of Get Reactions
     
   }
 };
-
-/**
- * @summary
- * ### [Get Channel Message]{@link https://discord.com/developers/docs/resources/channel#get-channel-message}
- * @example
- * await params.api.discord.channels.messages.retrieve({
- *   channel_id: '0000000000',
- *   message_id: '0000000000'
- * });
- * @memberof module:channels.messages#
- * @function retrieve
- * @param {Object} params
- * @param {Snowflake | undefined} params.channel_id
- * @param {Snowflake} params.message_id
- * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
- */
-async function retrieve(params) {
-  const attempt = await attemptHandler({
-    method: 'get',
-    path: `channels/${params.channel_id}/messages/${params.message_id}`
-  });
-  attempt.typeName = messageType[attempt?.type];
-  return extendPayload(attempt/* , params*/);
-} // End of Get Channel Message

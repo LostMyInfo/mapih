@@ -39,7 +39,7 @@ module.exports = {
    * @summary
    * ### [List Auto Moderation Rules for Guild]{@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    * @example
-   * await params.api.discord.automod.getAllRules({
+   * await api.discord.automod.getAllRules({
    *   guild_id: '0000000000'
    * });
    * @function getAllRules
@@ -58,7 +58,7 @@ module.exports = {
    * @summary
    * ### [Create Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
    * @example
-   * await params.api.discord.automod.createRule({
+   * await api.discord.automod.createRule({
    *   guild_id: '0000000000',
    *   name: 'EricsAutoModRule',
    *   event_type: 1 // MESSAGE_SEND
@@ -106,7 +106,7 @@ module.exports = {
    * @summary
    * ### [Modify Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
    * @example
-   * await params.api.discord.automod.modifyRule({
+   * await api.discord.automod.modifyRule({
    *   guild_id: '0000000000',
    *   auto_moderation_rule_id: '00000',
    *   name: 'EricsAutoModRule',
@@ -147,7 +147,7 @@ module.exports = {
    * @summary
    * ### [Delete Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule}
    * @example
-   * await params.api.discord.automod.destroyRule({
+   * await api.discord.automod.destroyRule({
    *   guild_id: '0000000000',
    *   auto_moderation_rule_id: '00000'
    * });

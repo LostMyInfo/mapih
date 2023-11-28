@@ -29,7 +29,77 @@ module.exports = {
    */
   callback: {
 
-    get_original,
+    /**
+     * @summary
+     * ### [Get Original Interaction Response]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
+     * - Returns the initial Interaction response.
+     * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage} 
+     * #### Example Response:
+     * ```js
+     * {
+     *   id: '1099441272671961208',
+     *   type: 20,
+     *   content: 'hello',
+     *   channel_id: '1029236067200684145',
+     *   author: {
+     *     id: '1008074004713701420',
+     *     username: 'LostMySocket',
+     *     global_name: null,
+     *     display_name: null,
+     *     avatar: '6394f90cf69e24f5d4d8897bc78f5313',
+     *     discriminator: '5808',
+     *     public_flags: 0,
+     *     bot: true,
+     *     avatar_decoration_data: null
+     *   },
+     *   attachments: [],
+     *   embeds: [],
+     *   mentions: [],
+     *   mention_roles: [],
+     *   pinned: false,
+     *   mention_everyone: false,
+     *   tts: false,
+     *   timestamp: '2023-04-22T21:07:06.036000+00:00',
+     *   edited_timestamp: null,
+     *   flags: 64,
+     *   components: [],
+     *   application_id: '1008074004713701420',
+     *   interaction: {
+     *     id: '1099441271820529795',
+     *     type: 2,
+     *     name: 'colors random',
+     *     user: {
+     *       id: '298617055190712322',
+     *       username: 'LostMyInfo',
+     *       global_name: null,
+     *       display_name: null,
+     *       avatar: '161fca985f4f8c45770e249ab38a47cd',
+     *       discriminator: '0001',
+     *       public_flags: 4194432,
+     *       avatar_decoration_data: null
+     *     }
+     *   },
+     *   webhook_id: '1008074004713701420'
+     * }
+     * ```
+     * @example
+     * await api.discord.interactions.callback.get_original(params);
+     * @memberof module:interactions.callback#
+     * @method get_original
+     * @param {InteractionParams} params 
+     * @returns {Promise<?Message>}
+     */
+    get_original: async (params) => {
+      try {
+        const attempt = await attemptHandler({
+          method: 'get',
+          path: `webhooks/${params.application_id}/${params.token}/messages/@original`
+        });
+        return extendPayload(attempt/* , params*/);
+      } catch (error) {
+        return null;
+      }
+    },
 
     /**
      * @summary
@@ -39,7 +109,7 @@ module.exports = {
      * 
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `4` (`CHANNEL_MESSAGE_WITH_SOURCE`)
      * @example
-     * await params.api.discord.interactions.callback.reply(params, {
+     * await api.discord.interactions.callback.reply(params, {
      *   ephemeral: true,
      *   content: 'content',
      *   embeds: [{
@@ -60,15 +130,15 @@ module.exports = {
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.return_date]
-     * @returns {Promise<boolean | Date>} 
+     * @returns {Promise<boolean | string>} 
      */
     reply: async (params, input = {}) => {
-      input.flags = (input.ephemeral) ? (1 << 6) : 0;
+      input.flags = input.ephemeral ? (1 << 6) : 0;
       let message;
       try {
-        if (input.attachments && input.attachments?.length) {
+        if (input.attachments && input.attachments?.length)
           message = await sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
-        } else {
+        else {
           message = await https.post({
             url: encodeURI('discord.com'),
             path: encodeURI(`/api/v10/interactions/${params.id}/${params.token}/callback`),
@@ -76,7 +146,7 @@ module.exports = {
             body: JSON.stringify({ type: 4, data: input })
           });
         
-          if (message.statusCode !== 204) {
+          if (message.statusCode !== 204) 
             throw new Error(
               message.body.length
                 ? isValidJSON(message.body)
@@ -84,36 +154,14 @@ module.exports = {
                   : message.body
                 : message
             );
-          }
         }
-        // console.log('\nmessage\n\n', message);
-        if (message.headers && input.return_date) {
-          console.log('\nmessage.headers && input.return_date:', message.headers.date);
+        if (message.headers && input.return_date)
           return message.headers.date;
-        } else return true;
+        else return true;
       } catch (e) {
-        console.log('ERROR IN INTERACTIONS.CALLBACK.REPLY, thrown below');
         throw e;
       }
     },
-
-    /*
-    async reply(params, input = {}) {
-      try {
-        const url = `/api/v10/interactions/${params.id}/${params.token}/callback`;
-        input.flags = (input.ephemeral) ? (1 << 6) : 0;
-        let r, a;
-        (input.attachments && input.attachments?.length)
-          ? a = await sendAttachment('data', input, url, 'post', 4, input.flags)
-          : r = await https.post({
-            url: encodeURI('discord.com'),
-            path: encodeURI(url),
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 4, data: input })
-          });
-        return r ? returnErr(r) : a;
-      } catch (e) { return e; }
-    },*/
 
     /**
      * @summary
@@ -125,11 +173,11 @@ module.exports = {
      * 
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `5` (`DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE`)
      * @example
-     * await params.api.discord.interactions.callback.defer(params, {
+     * await api.discord.interactions.callback.defer(params, {
      *   ephemeral: true
      * });
      * @example
-     * await params.api.discord.interactions.callback.defer(params)
+     * await api.discord.interactions.callback.defer(params)
      * @memberof module:interactions.callback#
      * @method defer
      * @param {InteractionParams} params event parameters
@@ -137,8 +185,8 @@ module.exports = {
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<string>}
      */
-    async defer(params, input = {}) {
-      return handleCallbacks({
+    defer: async (params, input = {}) =>
+      handleCallbacks({
         method: 'post',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 5,
@@ -146,8 +194,7 @@ module.exports = {
           flags: input.ephemeral ? (1 << 6) : 0
         },
         return_date: true
-      });
-    },
+      }),
 
     /**
      * @summary
@@ -158,11 +205,11 @@ module.exports = {
      * 
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `6` (`DEFERRED_UPDATE_MESSAGE` *for components)
      * @example
-     * await params.api.discord.interactions.callback.component_defer(params, {
+     * await api.discord.interactions.callback.component_defer(params, {
      *   ephemeral: true
      * });
      * @example
-     * await params.api.discord.interactions.callback.component_defer(params)
+     * await api.discord.interactions.callback.component_defer(params)
      * @memberof module:interactions.callback#
      * @method component_defer
      * @param {InteractionParams} params event parameters
@@ -170,8 +217,8 @@ module.exports = {
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    async component_defer(params, input = {}) {
-      return handleCallbacks({
+    component_defer: async (params, input = {}) =>
+      handleCallbacks({
         method: 'post',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 6,
@@ -179,8 +226,7 @@ module.exports = {
           flags: input.ephemeral ? (1 << 6) : 0
         },
         return_date: true
-      });
-    },
+      }),
 
     /**
      * @summary
@@ -189,7 +235,7 @@ module.exports = {
      * 
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `7` (`UPDATE_MESSAGE` *for components)
      * @example
-     * await params.api.discord.interactions.callback.component_update(params, {
+     * await api.discord.interactions.callback.component_update(params, {
      *   content: 'updated content',
      *   components: [{
      *     type: 1,
@@ -207,6 +253,7 @@ module.exports = {
      * @param {InteractionParams} params
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
+     * @param {number} [input.flags]
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
      * @param {Component} [input.components]
@@ -215,21 +262,19 @@ module.exports = {
      * @param {AllowedMentions} [input.allowed_mentions]
      * @returns {Promise<?{statusCode: 204, body: undefined}>} 
      */
-    async component_update(params, input = {}) {
+    component_update: async (params, input = {}) => {
       const url = `interactions/${params.id}/${params.token}/callback`;
-      let flags;
-      input.ephemeral ? flags = (1 << 6) : flags = 0;
-      if (input.attachments && input.attachments.length) {
-        // console.log('attachments in component_update\n', input.attachments);
-        return sendAttachment('data', input, url, 'post', 7, flags);
-      } else {
+      input.flags = input.ephemeral ? (1 << 6) : 0;
+      if (input.attachments && input.attachments.length)
+        // @ts-ignore
+        return sendAttachment('data', input, url, 'post', 7, input.flags);
+      else
         return handleCallbacks({
           method: 'post',
           path: url,
           type: 7,
           data: input
         });
-      }
     },
 
     /**
@@ -245,15 +290,13 @@ module.exports = {
      * @param {Array<Pick<ApplicationCommandOptionChoice, 'name' | 'value'>>} input.choices
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    async autocomplete_reply(params, input) {
-      
-      return handleCallbacks({
+    autocomplete_reply: async (params, input) =>
+      handleCallbacks({
         method: 'post',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 8,
         data: input
-      });
-    },
+      }),
 
     /**
      * @summary
@@ -271,14 +314,13 @@ module.exports = {
      * @param {Component} input.components
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    async modal_reply(params, input) {
-      return handleCallbacks({
+    modal_reply: async (params, input) =>
+      handleCallbacks({
         method: 'post',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 9,
         data: input
-      });
-    },
+      }),
 
     /**
      * @summary
@@ -286,7 +328,7 @@ module.exports = {
      * - Edits the initial Interaction response.
      * - Functions the same as [Edit Webhook Message]{@link module:webhooks#updateMessage} 
      * @example
-     * await params.api.discord.interactions.callback.edit_original(params, {
+     * await api.discord.interactions.callback.edit_original(params, {
      *   content: 'new content',
      * });
      * @memberof module:interactions.callback#
@@ -301,44 +343,47 @@ module.exports = {
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<?Message>}
      */
-    async edit_original(params, input = {}) {
+    edit_original: async (params, input = {}) => {
       const endpoint = `webhooks/${params.application_id}/${params.token}/messages/@original`;
-      let flags;
-      input.ephemeral ? flags = (1 << 6) : flags = 0;
-      if (input.attachments && input.attachments.length) {
-        return sendAttachment('body', input, endpoint, 'patch', null, flags);
-      } else {
+      if (input.attachments && input.attachments.length)
+        return sendAttachment('body', input, endpoint, 'patch', null, 0);
+      else {
         let message;
         try {
-          message = await get_original(params);
+          message = await attemptHandler({
+            method: 'get',
+            path: `webhooks/${params.application_id}/${params.token}/messages/@original`
+          });
         } catch (error) {}
         if (!message) return null;
         
+        const { embeds } = input;
+        const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
           method: 'patch',
           path: endpoint,
           body: {
             content: input.content ?? message.content,
-            embeds: input?.embeds?.[0] || message.embeds?.[0] ? [{
-              title: input.embeds?.[0]?.title ?? message?.embeds?.[0]?.title,
-              description: input.embeds?.[0]?.description ?? message?.embeds?.[0]?.description,
-              color: input.embeds?.[0]?.color ?? message?.embeds?.[0]?.color,
-              url: input.embeds?.[0]?.url ?? message?.embeds?.[0]?.url,
-              timestamp: input.embeds?.[0]?.timestamp ?? message?.embeds?.[0]?.timestamp,
-              image: { url: input.embeds?.[0]?.image?.url ?? message?.embeds?.[0]?.image?.url },
-              thumbnail: { url: input.embeds?.[0]?.thumbnail?.url ?? message?.embeds?.[0]?.thumbnail?.url },
+            embeds: input.embeds && !input.embeds.length ? [] : [{
+              title: embed?.title ?? message.embeds?.[0]?.title,
+              description: embed?.description ?? message.embeds?.[0]?.description,
+              color: embed?.color ?? message.embeds?.[0]?.color,
+              url: embed?.url ?? message.embeds?.[0]?.url,
+              timestamp: embed?.timestamp ?? message.embeds?.[0]?.timestamp,
+              image: { url: embed?.image?.url ?? message.embeds?.[0]?.image?.url },
+              thumbnail: { url: embed?.thumbnail?.url ?? message.embeds?.[0]?.thumbnail?.url },
               author: {
-                name: input.embeds?.[0]?.author?.name ?? message?.embeds?.[0]?.author?.name,
-                icon_url: input.embeds?.[0]?.author?.icon_url ?? message?.embeds?.[0]?.author?.icon_url,
-                url: input.embeds?.[0]?.author?.url ?? message?.embeds?.[0]?.author?.url
+                name: embed?.author?.name ?? message.embeds?.[0]?.author?.name,
+                icon_url: embed?.author?.icon_url ?? message.embeds?.[0]?.author?.icon_url,
+                url: embed?.author?.url ?? message.embeds?.[0]?.author?.url
               },
               footer: {
-                text: input.embeds?.[0]?.footer?.text ?? message?.embeds?.[0]?.footer?.text,
-                icon_url: input.embeds?.[0]?.footer?.icon_url ?? message?.embeds?.[0]?.footer?.icon_url
+                text: embed?.footer?.text ?? message.embeds?.[0]?.footer?.text,
+                icon_url: embed?.footer?.icon_url ?? message.embeds?.[0]?.footer?.icon_url
               },
-              fields: input.embeds?.[0]?.fields ?? message?.embeds?.[0]?.fields
-            }] : [],
-            components: input.components ?? message.components ?? [],
+              fields: embed?.fields ?? message.embeds?.[0]?.fields
+            }],
+            components: input.components && !input.components.length ? [] : (message.components ?? []),
             allowed_mentions: input.allowed_mentions,
             attachments: input.attachments ?? message.attachments ?? []
           }
@@ -352,18 +397,17 @@ module.exports = {
      * ### [Delete Original Interaction Response]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
      * - Deletes the initial Interaction response.
      * @example
-     * await params.api.discord.interactions.callback.delete_original(params);
+     * await api.discord.interactions.callback.delete_original(params);
      * @memberof module:interactions.callback#
      * @method delete_original
      * @param {InteractionParams} params 
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    async delete_original(params) {
-      return attemptHandler({
+    delete_original: async (params) =>
+      attemptHandler({
         method: 'del',
         path: `webhooks/${params.application_id}/${params.token}/messages/@original`
-      });
-    },
+      }),
 
     /**
      * @summary
@@ -377,14 +421,13 @@ module.exports = {
      * @param {object} [input]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    async upgrade(params, input) {
-      return handleCallbacks({
+    upgrade: async (params, input) =>
+      handleCallbacks({
         method: 'post',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 10,
         data: input
-      });
-    }
+      })
   },
 
   /**
@@ -394,7 +437,32 @@ module.exports = {
    */
   followup: {
 
-    get,
+    /**
+     * @summary
+     * ### [Get Followup Message]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
+     * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage}
+     * @example
+     * await api.discord.interactions.followup.get(params, {
+     *   message_id: '0000000000'
+     * });
+     * @memberof module:interactions.followup#
+     * @method get
+     * @param {InteractionParams} params 
+     * @param {object} input
+     * @param {Snowflake} input.message_id
+     * @param {Snowflake} [input.thread_id]
+     * @returns {Promise<Message>}
+     */
+    get: async (params, input) => {
+      let path = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
+      path += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
+  
+      const attempt = await attemptHandler({
+        method: 'get',
+        path
+      });
+      return extendPayload(attempt);
+    },
 
     /**
      * @summary
@@ -404,7 +472,7 @@ module.exports = {
      * - Functions the same as [Execute Webhook]{@link module:webhooks#execute}, but `wait` is always true.
      * - The `thread_id`, `avatar_url`, and `username` parameters are not supported when using this endpoint for interaction followups.
      * @example
-     * await params.api.discord.interactions.followup.create(params, {
+     * await api.discord.interactions.followup.create(params, {
      *   ephemeral: true,
      *   content: 'followup message',
      *   embeds: [{
@@ -426,13 +494,12 @@ module.exports = {
      * @param {string} [input.thread_name]
      * @returns {Promise<?Message>}
      */
-    async create(params, input = {}) {
-      let flags;
-      input.ephemeral ? flags = (1 << 6) : flags = 0;
+    create: async (params, input = {}) => {
+      const flags = input.ephemeral ? (1 << 6) : 0;
       const url = `webhooks/${params.application_id}/${params.token}`;
-      if (input.attachments && input.attachments.length) {
+      if (input.attachments && input.attachments.length)
         return sendAttachment('body', input, url, 'post', null, flags);
-      } else {
+      else {
 
         if (input.embeds?.length) {
           for (const embed of input.embeds) {
@@ -474,7 +541,7 @@ module.exports = {
      *     - (without regard to whether or not an `allowed_mentions` was present in the request that originally created the message)
      * - The `attachments` array must contain all attachments that should be present after the edit, including retained and new attachments
      * @example
-     * await params.api.discord.interactions.followup.edit(params, {
+     * await api.discord.interactions.followup.edit(params, {
      *   content: 'new content',
      *   message_id: '0000000000'
      * });
@@ -492,41 +559,45 @@ module.exports = {
      * @param {Snowflake} [input.thread_id]
      * @returns {Promise<?Message>}
      */
-    async edit(params, input) {
-      let flags, endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
+    edit: async (params, input) => {
+      const flags = input.ephemeral ? (1 << 6) : 0;
+      let endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
       endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
-      input.ephemeral ? flags = (1 << 6) : flags = 0;
-      if (input.attachments && input.attachments.length) {
+      if (input.attachments && input.attachments.length)
         return sendAttachment('body', input, endpoint, 'patch', null, flags);
-      } else {
-        const message = await get(params, {
-          message_id: input.message_id
+      else {
+        const message = await attemptHandler({
+          method: 'get',
+          path: endpoint
         });
+
+        const { embeds } = input;
+        const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
           method: 'patch',
           path: endpoint,
           body: {
             content: input.content ?? message.content,
-            embeds: input?.embeds?.[0] || message.embeds[0] ? [{
-              title: input.embeds?.[0]?.title ?? message?.embeds?.[0]?.title,
-              description: input.embeds?.[0]?.description ?? message?.embeds?.[0]?.description,
-              color: input.embeds?.[0]?.color ?? message?.embeds?.[0]?.color,
-              url: input.embeds?.[0]?.url ?? message?.embeds?.[0]?.url,
-              timestamp: input.embeds?.[0]?.timestamp ?? message?.embeds?.[0]?.timestamp,
-              image: { url: input.embeds?.[0]?.image?.url ?? message?.embeds?.[0]?.image?.url },
-              thumbnail: { url: input.embeds?.[0]?.thumbnail?.url ?? message?.embeds?.[0]?.thumbnail?.url },
+            embeds: input.embeds && !input.embeds.length ? [] : [{
+              title: embed?.title ?? message.embeds?.[0]?.title,
+              description: embed?.description ?? message.embeds?.[0]?.description,
+              color: embed?.color ?? message.embeds?.[0]?.color,
+              url: embed?.url ?? message.embeds?.[0]?.url,
+              timestamp: embed?.timestamp ?? message.embeds?.[0]?.timestamp,
+              image: { url: embed?.image?.url ?? message.embeds?.[0]?.image?.url },
+              thumbnail: { url: embed?.thumbnail?.url ?? message.embeds?.[0]?.thumbnail?.url },
               author: {
-                name: input.embeds?.[0]?.author?.name ?? message?.embeds?.[0]?.author?.name,
-                icon_url: input.embeds?.[0]?.author?.icon_url ?? message?.embeds?.[0]?.author?.icon_url,
-                url: input.embeds?.[0]?.author?.url ?? message?.embeds?.[0]?.author?.url
+                name: embed?.author?.name ?? message.embeds?.[0]?.author?.name,
+                icon_url: embed?.author?.icon_url ?? message.embeds?.[0]?.author?.icon_url,
+                url: embed?.author?.url ?? message.embeds?.[0]?.author?.url
               },
               footer: {
-                text: input.embeds?.[0]?.footer?.text ?? message?.embeds?.[0]?.footer?.text,
-                icon_url: input.embeds?.[0]?.footer?.icon_url ?? message?.embeds?.[0]?.footer?.icon_url
+                text: embed?.footer?.text ?? message.embeds?.[0]?.footer?.text,
+                icon_url: embed?.footer?.icon_url ?? message.embeds?.[0]?.footer?.icon_url
               },
-              fields: input.embeds?.[0]?.fields ?? message?.embeds?.[0]?.fields
-            }] : [],
-            components: input.components ?? message.components ?? [],
+              fields: embed?.fields ?? message.embeds?.[0]?.fields
+            }],
+            components: input.components && !input.components.length ? [] : (message.components ?? []),
             allowed_mentions: input.allowed_mentions,
             attachments: input.attachments ?? message.attachments ?? []
           }
@@ -539,7 +610,7 @@ module.exports = {
      * @summary
      * ### [Delete Followup Message]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
      * @example
-     * await params.api.discord.interactions.followup.del(params, {
+     * await api.discord.interactions.followup.del(params, {
      *   message_id: '0000000000'
      * });
      * @memberof module:interactions.followup#
@@ -549,12 +620,11 @@ module.exports = {
      * @param {Snowflake} input.message_id
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    async del(params, input) {
-      return attemptHandler({
+    del: async (params, input) =>
+      attemptHandler({
         method: 'del',
         path: `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}`
-      });
-    }
+      })
   }
 };
 
@@ -565,8 +635,7 @@ module.exports = {
  * @param {string} url 
  * @param {string} method 
  * @param {?number} type 
- * @param {number} flags 
- * @returns {Promise<?Message>}
+ * @param {number} flags
  */
 async function sendAttachment(sender, params, url, method, type, flags) {
   const FormData = require('form-data');
@@ -576,10 +645,8 @@ async function sendAttachment(sender, params, url, method, type, flags) {
   try {
   
     for (const attachment of params.attachments) {
-      // console.log('params', JSON.stringify(params.embeds, null, 2));
-      if ((!attachment.file && !attachment.url) || !attachment.filename) {
+      if ((!attachment.file && !attachment.url) || !attachment.filename)
         throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
-      }
       
       if (await isValidMedia(attachment.file)) {
         if (typeof attachment.file === 'string') {
@@ -589,20 +656,19 @@ async function sendAttachment(sender, params, url, method, type, flags) {
           attachment.file = Buffer.from(response.data);
         }
 
-      } else if (!Buffer.isBuffer(attachment.file)) {
+      } else if (!Buffer.isBuffer(attachment.file))
         throw new Error('\nInvalid file-type provided. Must be of type Buffer or a valid image URL.\n');
-      }
     }
 
-    for (let i = 0; i < params.attachments.length; i++) {
+    for (let i = 0; i < params.attachments.length; i++)
       form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
-    };
 
     params.flags = flags;
     // if (params.method !== 'patch') {
     // console.log('\n\nPARAMS.METHOD !== \'PATCH\'\n\n');
     // console.log('params from interactions sendAttachment() pre map\n', params);
 
+    // @ts-ignore
     params.attachments = params.attachments.map((a, index) => ({
       id: index, filename: a.filename, description: a.description ?? ''
     }));
@@ -635,16 +701,13 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       }
     });
     
-    if (response.status < 200 || response.status >= 300) {
+    if (response.status < 200 || response.status >= 300)
       throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.data.errors}\n`);
-    }
     
     return response.data;
 
   } catch (e) {
-
-    // console.error(error);
-    console.log('Object.keys(error) in sendAttachment:\n', Object.keys(e));
+    // @ts-ignore
     throw getAxiosError(e);
     
     /* const errinfo = {};
@@ -696,6 +759,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
 async function handleCallbacks(params) {
   try {
 
+    // @ts-ignore
     const r = await https[params.method]({
       url: encodeURI('discord.com'),
       path: encodeURI(`/api/v10/${params.path}`),
@@ -723,106 +787,6 @@ async function handleCallbacks(params) {
   }
 }
 
-/**
- * @summary
- * ### [Get Original Interaction Response]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
- * - Returns the initial Interaction response.
- * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage} 
- * #### Example Response:
- * ```js
- * {
- *   id: '1099441272671961208',
- *   type: 20,
- *   content: 'hello',
- *   channel_id: '1029236067200684145',
- *   author: {
- *     id: '1008074004713701420',
- *     username: 'LostMySocket',
- *     global_name: null,
- *     display_name: null,
- *     avatar: '6394f90cf69e24f5d4d8897bc78f5313',
- *     discriminator: '5808',
- *     public_flags: 0,
- *     bot: true,
- *     avatar_decoration_data: null
- *   },
- *   attachments: [],
- *   embeds: [],
- *   mentions: [],
- *   mention_roles: [],
- *   pinned: false,
- *   mention_everyone: false,
- *   tts: false,
- *   timestamp: '2023-04-22T21:07:06.036000+00:00',
- *   edited_timestamp: null,
- *   flags: 64,
- *   components: [],
- *   application_id: '1008074004713701420',
- *   interaction: {
- *     id: '1099441271820529795',
- *     type: 2,
- *     name: 'colors random',
- *     user: {
- *       id: '298617055190712322',
- *       username: 'LostMyInfo',
- *       global_name: null,
- *       display_name: null,
- *       avatar: '161fca985f4f8c45770e249ab38a47cd',
- *       discriminator: '0001',
- *       public_flags: 4194432,
- *       avatar_decoration_data: null
- *     }
- *   },
- *   webhook_id: '1008074004713701420'
- * }
- * ```
- * @example
- * await params.api.discord.interactions.callback.get_original(params);
- * @memberof module:interactions.callback#
- * @method get_original
- * @param {InteractionParams} params 
- * @returns {Promise<?Message>}
- */
-async function get_original(params) {
-  try {
-    const attempt = await attemptHandler({
-      method: 'get',
-      path: `webhooks/${params.application_id}/${params.token}/messages/@original`
-    });
-    // attempt.trueType = messageType[attempt.type];
-    return extendPayload(attempt/* , params*/);
-  } catch (error) {
-    // console.error(error);
-    return null;
-  }
-}
-
-/**
- * @summary
- * ### [Get Followup Message]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
- * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage}
- * @example
- * await params.api.discord.interactions.followup.get(params, {
- *   message_id: '0000000000'
- * });
- * @memberof module:interactions.followup#
- * @method get
- * @param {InteractionParams} params 
- * @param {object} input
- * @param {Snowflake} input.message_id
- * @param {Snowflake} [input.thread_id]
- * @returns {Promise<Message>}
- */
-async function get(params, input) {
-  let path = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
-  path += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
-  
-  const attempt = await attemptHandler({
-    method: 'get',
-    path
-  });
-  return extendPayload(attempt);
-}
 
 /**
  * @typedef {Object} InteractionParams

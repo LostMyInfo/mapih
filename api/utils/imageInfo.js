@@ -81,7 +81,6 @@ function readUInt(input, bits, offset, isBigEndian) {
 function buildImage(mime, height, width, orientation, mimeType = `image/${mime}`) {
   const extension = [...new Map([[/a?png/i, 'png'], [/jpeg/i, 'jpg']])]
     .find(([reg]) => reg.test(mime))?.[1] || mime;
-  console.log('extension:', extension);
   const result = {
     extension, mimeType, height, width, orientation
   };
@@ -97,7 +96,6 @@ const typeHandlers = {
   png: {
     validate: (input) => {
       if (toUTF8(input, 1, 8) === 'PNG\r\n\x1a\n') {
-        
         let chunk = toUTF8(input, 12, 16);
         if (chunk === 'CgBI')
           chunk = toUTF8(input, 28, 32);
@@ -131,7 +129,6 @@ const typeHandlers = {
             const isBig = byteAlign === '4d4d',
               dirEntries = readUInt(exifBlock, 16, 14, isBig);
             
-            // for (const entry of dirEntries) {
             for (let entry = 0; entry < dirEntries; entry++) {
               if ((16 + entry * 12) > exifBlock.length) break;
               const block = exifBlock.slice(16 + entry * 12, (16 + entry * 12) + 12);
@@ -143,7 +140,6 @@ const typeHandlers = {
               if (readUInt(block, 32, 4, isBig) !== 1) break;
               orientation = readUInt(block, 16, 8, isBig);
             }
-            // orientation = extractOrientation(exifBlock, byteAlign === '4d4d');
           }
         }
 
@@ -186,7 +182,8 @@ const typeHandlers = {
         if (((i[0] & 0xc0) === 0) && ((i[0] & 0x01) === 0)) {
           height = 1 + readUInt(i, 24, 7, false);
           width = 1 + readUInt(i, 24, 4, false);
-        } else throw new TypeError('Invalid WebP');
+        } else
+          throw new TypeError('Invalid WebP');
       }
 
       // lossy
@@ -244,16 +241,15 @@ function detector(input) {
  * @returns {Image}
  */
 function imageInfo(input) {
-  if (!(input instanceof Uint8Array || Buffer.isBuffer(input) || ArrayBuffer.isView(input))) {
+  if (!(input instanceof Uint8Array || Buffer.isBuffer(input) || ArrayBuffer.isView(input)))
     throw new TypeError(`Expected the 'input' argument to be of type 'Uint8Array', 'Buffer', or 'ArrayBuffer', recieved: '${typeof input}'`);
-  }
   
   input = input instanceof Uint8Array ? input : new Uint8Array(input);
+
   if (!(input.length > 1))
     throw new RangeError('Insufficient buffer size.');
 
   const type = detector(input);
-  console.log('type from detector', type);
   if (type && type in typeHandlers)
     return typeHandlers[type].calculate(input) ?? undefined;
   
