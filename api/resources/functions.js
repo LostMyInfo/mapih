@@ -981,7 +981,7 @@ function getAxiosError(error) {
 
 async function slackHandler(options = {}) {
   try {
-
+    const { https } = require('../utils/newhttps');
     const attempt = await https({
       url: `https://slack.com/api/${options.endpoint}`,
       method: options.method || 'GET',
