@@ -9,7 +9,7 @@ const { default: axios, AxiosError, isAxiosError } = require('axios');
 const FormData = require('form-data');
 
 // const https = require('../utils/https');
-const { https } = require('../utils/newhttps');
+const https = require('../utils/https');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
@@ -57,13 +57,22 @@ module.exports = {
     }
 
     try {
-      
-      const attempt = await https({
-        method: params.method,
+
+      const attempt = await https[params.method]({
+        // method: params.method,
+        url: encodeURI('discord.com'),
+        path: encodeURI(`/api/v10/${params.endpoint}`),
+        headers: headers,
+        body: params.body ? JSON.stringify(params.body) : ''
+      });
+      /*
+      const attempt = await https[params.method]({
+        // method: params.method,
         url: `https://discord.com/api/v10/${params.endpoint}`,
         headers,
         body: params.body ? JSON.stringify(params.body) : ''
       });
+      */
       // console.log('attempt in functions', attempt);
       if (attempt.statusCode === 204) return {
         statusCode: 204,
