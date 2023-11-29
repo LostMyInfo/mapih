@@ -68,21 +68,9 @@ module.exports = {
    * @memberof module:chat#
    * @function post
    * @param {Object} params
-   * @param {string} params.channel
-   * @param {string} [params.text]
-   * @param {SlackBlock[]} [params.blocks]
-   * @param {SlackAttachment[]} [params.attachments]
-   * @param {string} [params.icon_emoji]
-   * @param {string} [params.icon_url]
-   * @param {boolean} [params.link_names]
-   * @param {string} [params.metadata]
-   * @param {boolean} [params.mrkdwn]
-   * @param {string} [params.parse]
-   * @param {boolean} [params.reply_broadcast]
-   * @param {string} [params.thread_ts]
-   * @param {boolean} [params.unfurl_links]
-   * @param {boolean} [params.unfurl_media]
-   * @param {string} [params.username]
+   * @param {string} params.view
+   * @param {string} [params.trigger_id]
+   * @param {SlackBlock[]} [params.interactivity_pointer]
    * @returns {Promise<SlackMessageResponse>} A list of [Application Role Connection Metadata]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object} objects for the given application.
    */
   open: async (params) =>

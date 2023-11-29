@@ -31,14 +31,14 @@ module.exports = {
    * @returns {Promise<ExtendedInvite>} An [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-object} object for the given code
    */
   retrieve: async (params) => {
-    let path = `invites/${params.invite_code}?`;
-    path += `${params.with_counts ? `&with_counts=${params.with_counts}` : ''}`;
-    path += `${params.with_expiration ? `&with_expiration=${params.with_expiration}` : ''}`;
-    path += `${params.guild_scheduled_event_id ? `&guild_scheduled_event_id=${params.guild_scheduled_event_id}` : ''}`;
+    let endpoint = `invites/${params.invite_code}?`;
+    endpoint += `${params.with_counts ? `&with_counts=${params.with_counts}` : ''}`;
+    endpoint += `${params.with_expiration ? `&with_expiration=${params.with_expiration}` : ''}`;
+    endpoint += `${params.guild_scheduled_event_id ? `&guild_scheduled_event_id=${params.guild_scheduled_event_id}` : ''}`;
     
     const attempt = await attemptHandler({
       method: 'get',
-      path
+      endpoint
     });
 
     return extendPayload(attempt);
@@ -60,7 +60,7 @@ module.exports = {
   revoke: async (params) => {
     const attempt = await attemptHandler({
       method: 'del',
-      path: `invites/${params.invite_code}`
+      endpoint: `invites/${params.invite_code}`
     });
     return extendPayload(attempt);
   }

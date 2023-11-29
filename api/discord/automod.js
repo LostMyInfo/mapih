@@ -32,7 +32,7 @@ module.exports = {
   retrieveRule: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`
+      endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`
     }), // End of Get Auto Moderation Rule
 
   /**
@@ -51,7 +51,7 @@ module.exports = {
   getAllRules: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/auto-moderation/rules`
+      endpoint: `guilds/${params.guild_id}/auto-moderation/rules`
     }), // End of List Auto Moderation Rules for Guild
 
   /**
@@ -89,7 +89,7 @@ module.exports = {
   createRule: async (params) =>
     attemptHandler({
       method: 'post',
-      path: `guilds/${params.guild_id}/auto-moderation/rules`,
+      endpoint: `guilds/${params.guild_id}/auto-moderation/rules`,
       body: {
         name: params.name,
         event_type: params.event_type,
@@ -139,7 +139,7 @@ module.exports = {
   modifyRule: async (params) =>
     attemptHandler({
       method: 'patch',
-      path: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`,
+      endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`,
       body: params
     }), // End of Modify Auto Moderation Rule
 
@@ -162,7 +162,7 @@ module.exports = {
   destroyRule: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`
+      endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`
     }) // End of Delete Auto Moderation Rule
 
 };

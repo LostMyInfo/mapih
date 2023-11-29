@@ -26,7 +26,7 @@ module.exports = {
   appRoleConnectionMeta: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `applications/${params.application_id}/role-connections/metadata`
+      endpoint: `applications/${params.application_id}/role-connections/metadata`
     }), // End of Get Application Role Connection Metadata Records
 
   /**
@@ -45,7 +45,7 @@ module.exports = {
   updateAppRoleConnectionMeta: async (params) =>
     attemptHandler({
       method: 'put',
-      path: `applications/${params.application_id}/role-connections/metadata`
+      endpoint: `applications/${params.application_id}/role-connections/metadata`
     }), // End of Update Application Role Connection Metadata Records
 
   
@@ -81,7 +81,7 @@ module.exports = {
 
       return attemptHandler({
         method: 'get',
-        path: paths.join('/')
+        endpoint: paths.join('/')
       });
     }, // End of Get Guild Command && Get Global Command
 
@@ -111,7 +111,7 @@ module.exports = {
 
       const attempt = await attemptHandler({
         method: 'get',
-        path: paths.join('/')
+        endpoint: paths.join('/')
       });
       // console.log('attempt in applications');
       return attempt;
@@ -192,7 +192,7 @@ module.exports = {
 
       return attemptHandler({
         method: 'post',
-        path: paths.join('/'),
+        endpoint: paths.join('/'),
         body
       });
     }, // End of Create Application Command
@@ -258,7 +258,7 @@ module.exports = {
 
       return attemptHandler({
         method: 'patch',
-        path: paths.join('/'),
+        endpoint: paths.join('/'),
         body
       });
     }, // End of Edit Application Command
@@ -288,7 +288,7 @@ module.exports = {
 
       return attemptHandler({
         method: 'del',
-        path: paths.join('/')
+        endpoint: paths.join('/')
       });
     }, // End of Delete Application Command
 
@@ -321,7 +321,7 @@ module.exports = {
       
       return attemptHandler({
         method: 'put',
-        path: paths.join('/'),
+        endpoint: paths.join('/'),
         body: params.application_commands || []
       });
     }, // End of Bulk Overwrite Application Commands
@@ -346,7 +346,7 @@ module.exports = {
     retrievePermissions: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `applications/${params.application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`
+        endpoint: `applications/${params.application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`
       }), // End of Get Application Command Permissions
 
     /**
@@ -367,7 +367,7 @@ module.exports = {
     getAllPermissions: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `applications/${params.application_id}/guilds/${params.guild_id}/commands/permissions`
+        endpoint: `applications/${params.application_id}/guilds/${params.guild_id}/commands/permissions`
       }), // End of Get Guild Application Command Permissions
 
     /**
@@ -400,7 +400,7 @@ module.exports = {
     modifyPermissions: async (params) =>
       attemptHandler({
         method: 'put',
-        path: `applications/${params.application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`,
+        endpoint: `applications/${params.application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`,
         body: {
           permissions: params.permissions
         }
@@ -440,7 +440,7 @@ module.exports = {
      * @returns {Promise<Entitlement[]>} All [Entitlements]{@link https://discord.com/developers/docs/monetization/entitlements#list-entitlements} for a given application
      */
     getAll: async (params) => {
-      let path = `applications/${params.application_id}/entitlements?`;
+      let endpoint = `applications/${params.application_id}/entitlements?`;
       const queryParams = [];
 
       if (params.user_id) queryParams.push(`user_id=${params.user_id}`);
@@ -450,11 +450,11 @@ module.exports = {
       if (params.after) queryParams.push(`after=${params.after}`);
       if (params.limit) queryParams.push(`limit=${params.limit}`);
       if (params.exclude_ended) queryParams.push(`exclude_ended=${params.exclude_ended}`);
-      path += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
+      endpoint += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
 
       return attemptHandler({
         method: 'get',
-        path
+        endpoint
       });
     }, // End of List Entitlements
 
@@ -486,7 +486,7 @@ module.exports = {
     create: async (params) =>
       attemptHandler({
         method: 'post',
-        path: `applications/${params.application_id}/entitlements`,
+        endpoint: `applications/${params.application_id}/entitlements`,
         body: params
       }), // End of Create Test Entitlement
     
@@ -508,7 +508,7 @@ module.exports = {
     destroy: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `applications/${params.application_id}/entitlements/${params.entitlement_id}`
+        endpoint: `applications/${params.application_id}/entitlements/${params.entitlement_id}`
       }) // End of Delete Test Entitlement
 
   }, // End of applications.entitlements
@@ -540,7 +540,7 @@ module.exports = {
     getAll: async (params) => 
       attemptHandler({
         method: 'get',
-        path: `applications/${params.application_id}/skus`
+        endpoint: `applications/${params.application_id}/skus`
       }) // End of List SKUs
     
   } // End of applications.SKUs

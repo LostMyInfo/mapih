@@ -1,3 +1,4 @@
+// @ts-check
 /* eslint-disable node/no-unsupported-features/es-builtins */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable brace-style */
@@ -7,7 +8,8 @@
 const { default: axios, AxiosError, isAxiosError } = require('axios');
 const FormData = require('form-data');
 
-const https = require('../utils/https');
+// const https = require('../utils/https');
+const { https } = require('../utils/newhttps');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
@@ -40,27 +42,26 @@ module.exports = {
    * API Handler Creator
    * @param {Object} params
    * @param {Method} params.method
-   * @param {string} params.path
+   * @param {string} params.endpoint
    * @param {Object} [params.body]
-   * @param {string} [params.reason]
    * @returns {Promise<*>}
    * @private
    */
   attemptHandler: async (params) => {
-    const headers = {
-      'Authorization': `Bot ${token()}`
-    };
+    const headers = new Headers({
+      'Authorization': `Bot ${token('discord')}`
+    });
+
+    if (!params.endpoint.includes('prune')) {
+      headers.append('content-type', 'application/json');
+    }
+
     try {
-      if (!params.path.includes('prune')) {
-        headers['Content-Type'] = 'application/json';
-      }
-      if (params.reason) {
-        headers['X-Audit-Log-Reason'] = params.reason;
-      }
-      const attempt = await https[params.method]({
-        url: encodeURI('discord.com'),
-        path: encodeURI(`/api/v10/${params.path}`),
-        headers: headers,
+      
+      const attempt = await https({
+        method: params.method,
+        url: `https://discord.com/api/v10/${params.endpoint}`,
+        headers,
         body: params.body ? JSON.stringify(params.body) : ''
       });
       // console.log('attempt in functions', attempt);
@@ -967,7 +968,7 @@ async function slackHandler(options = {}) {
       method: options.method || 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': `Bearer xoxb-${slackToken}`
+        'Authorization': `Bearer xoxb-${token('slack')}`
       },
       ...(options.body && { body: options.body })
     });
@@ -1059,10 +1060,17 @@ function buildQueryString(url, params, encode = true) {
 }
 
 /**
+ * @param {string} type
  * @returns {string}
  */
-function token() {
-  const token = require('../../Api').get_token() ?? process.env.token;
-  if (!token) throw new Error('Bot token not set. Please initialize the library first.');
+function token(type) {
+  const token = type === 'discord'
+    ? require('../../Api').get_discord_token() ?? process.env.token
+    : require('../../Api').get_slack_token() ?? process.env.slackToken;
+  if (!token) throw new Error(
+    type === 'discord'
+      ? 'Bot token not set. Please initialize the library first.'
+      : 'Slack token not set. Please initialize the library first.'
+  );
   return token;
 }
