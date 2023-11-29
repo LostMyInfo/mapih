@@ -31,6 +31,14 @@ module.exports = {
     users: require('./api/discord/users')
   
   },
+  
+  slack: {
+
+    chat: require('./api/slack/chat'),
+    conversations: require('./api/slack/conversations'),
+    views: require('./api/slack/views')
+  
+  }
 
   utils: {
 
@@ -39,4 +47,3 @@ module.exports = {
   
   }
 };
-
