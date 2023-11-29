@@ -1,6 +1,6 @@
 {
   "name": "mapih",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Api Handlers: Handles Discord API endpoints.",
   "main": "Api.js",
   "types": "./dist/Api.d.ts",
