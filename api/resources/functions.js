@@ -48,13 +48,23 @@ module.exports = {
    * @private
    */
   attemptHandler: async (params) => {
+
+    const headers = {
+      'Authorization': `Bot ${token('discord')}`
+    };
+
+    if (!params.endpoint.includes('prune'))
+      headers['content-type'], 'application/json';
+  
+    /*
     const headers = new Headers({
       'Authorization': `Bot ${token('discord')}`
     });
 
-    if (!params.endpoint.includes('prune')) {
+    if (!params.endpoint.includes('prune'))
       headers.append('content-type', 'application/json');
-    }
+  
+    */
 
     try {
 
@@ -1074,8 +1084,8 @@ function buildQueryString(url, params, encode = true) {
  */
 function token(type) {
   const token = type === 'discord'
-    ? require('../../Api').get_discord_token() ?? process.env.token
-    : require('../../Api').get_slack_token() ?? process.env.slackToken;
+    ? require('../../Api').get_discord_token() || process.env.token
+    : require('../../Api').get_slack_token() || process.env.slackToken;
   if (!token) throw new Error(
     type === 'discord'
       ? 'Bot token not set. Please initialize the library first.'
