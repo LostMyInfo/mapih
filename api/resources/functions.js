@@ -54,7 +54,7 @@ module.exports = {
     };
 
     if (!params.endpoint.includes('prune'))
-      headers['content-type'], 'application/json';
+      headers['Content-Type'], 'application/json';
   
     /*
     const headers = new Headers({
