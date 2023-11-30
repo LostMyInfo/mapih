@@ -76,7 +76,7 @@ module.exports = {
    */
   create: async (params) => attemptHandler({
     method: 'post',
-    path: 'guilds',
+    endpoint: 'guilds',
     body: {
       name: params.name,
       roles: params.roles ?? [],
@@ -130,7 +130,7 @@ module.exports = {
       
     return attemptHandler({
       method: 'patch',
-      path: `guilds/${params.guild_id}`,
+      endpoint: `guilds/${params.guild_id}`,
       body: params
     });
   }, // End of Modify Guild
@@ -147,7 +147,7 @@ module.exports = {
   destroy: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `guilds/${params.guild_id}`
+      endpoint: `guilds/${params.guild_id}`
     }), // End of Delete Guild
 
   /**
@@ -168,7 +168,7 @@ module.exports = {
   retrieve: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}?with_counts=${params.with_counts || false}`
+      endpoint: `guilds/${params.guild_id}?with_counts=${params.with_counts || false}`
     });
 
     attempt.channelCount = attempt.channels?.length;
@@ -209,7 +209,7 @@ module.exports = {
   getPreview: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/preview`
+      endpoint: `guilds/${params.guild_id}/preview`
     }), // End of Get Guild Preview
 
   /**
@@ -232,7 +232,7 @@ module.exports = {
   retrieveBan: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/bans/${params.user_id}`
+      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`
     });
     attempt.user.created_at = retrieveDate(attempt.user.id, true);
     attempt.user.badges = getBadges(attempt.user.public_flags);
@@ -258,14 +258,14 @@ module.exports = {
    * @returns {Promise<GuildBan[]>} List of [Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object} objects for the users banned from this guild.
    */
   getAllBans: async (params) => {
-    let path = `guilds/${params.guild_id}/bans?`;
-    path += `${params.limit ? `&limit=${params.limit}` : ''}`;
-    path += `${params.before ? `&before=${params.before}` : ''}`;
-    path += `${params.after ? `&after=${params.after}` : ''}`;
+    let endpoint = `guilds/${params.guild_id}/bans?`;
+    endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
+    endpoint += `${params.before ? `&before=${params.before}` : ''}`;
+    endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       
     const attempt = await attemptHandler({
       method: 'get',
-      path
+      endpoint
     });
     for (const ban of attempt) {
       ban.user.created_at = retrieveDate(attempt.user.id, true);
@@ -295,7 +295,7 @@ module.exports = {
    */
   createBan: async (params) => attemptHandler({
     method: 'put',
-    path: `guilds/${params.guild_id}/bans/${params.user_id}`,
+    endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
     body: {
       delete_message_seconds: params.delete_message_seconds ?? 0
     }
@@ -321,7 +321,7 @@ module.exports = {
   removeBan: async (params) =>
     attemptHandler({
       method: 'put',
-      path: `guilds/${params.guild_id}/bans/${params.user_id}`
+      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`
     }), // End of Create Guild Ban
 
   /**
@@ -336,7 +336,7 @@ module.exports = {
   getInvites: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/invites`
+      endpoint: `guilds/${params.guild_id}/invites`
     });
     for (let a of attempt)
       a = extendPayload(a);
@@ -363,7 +363,7 @@ module.exports = {
   modifyMFAlevel: async (params) =>
     attemptHandler({
       method: 'post',
-      path: `guilds/${params.guild_id}/mfa`,
+      endpoint: `guilds/${params.guild_id}/mfa`,
       body: { level: params.level }
     }), // End of Modify Guild MFA Level
 
@@ -390,13 +390,13 @@ module.exports = {
    * @returns {Promise<{pruned: number}>} An object with one `pruned` key indicating the number of members that would be removed in a prune operation.
    */
   getPruneCount: async (params) => {
-    let path = `guilds/${params.guild_id}/prune?`;
-    path += `${params.days ? `&days=${params.days}` : ''}`;
-    path += `${params.include_roles ? `&include_roles=${params.include_roles}` : ''}`;
+    let endpoint = `guilds/${params.guild_id}/prune?`;
+    endpoint += `${params.days ? `&days=${params.days}` : ''}`;
+    endpoint += `${params.include_roles ? `&include_roles=${params.include_roles}` : ''}`;
     
     return attemptHandler({
       method: 'get',
-      path,
+      endpoint,
       body: {}
     });
   }, // End of Get Guild Prune Count
@@ -429,7 +429,7 @@ module.exports = {
   beginPrune: async (params) =>
     attemptHandler({
       method: 'post',
-      path: `guilds/${params.guild_id}/prune`,
+      endpoint: `guilds/${params.guild_id}/prune`,
       body: {
         days: params.days ?? 7,
         compute_prune_count: params.compute_prune_count || true,
@@ -449,7 +449,7 @@ module.exports = {
   getVoiceRegions: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/regions`
+      endpoint: `guilds/${params.guild_id}/regions`
     }), // End of Get Guild Voice Regions
   
   /**
@@ -471,7 +471,7 @@ module.exports = {
   getIntegrations: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/integrations`
+      endpoint: `guilds/${params.guild_id}/integrations`
     }), // End of Get Guild Integrations
 
   /**
@@ -495,7 +495,7 @@ module.exports = {
   destroyIntegration: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `guilds/${params.guild_id}/integrations/${params.integration_id}`
+      endpoint: `guilds/${params.guild_id}/integrations/${params.integration_id}`
     }), // End of Delete Guild Integration
 
   /**
@@ -510,7 +510,7 @@ module.exports = {
   retrieveWidget: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/widget.json`
+      endpoint: `guilds/${params.guild_id}/widget.json`
     }), // End Get Guild Widget
   
   /**
@@ -525,7 +525,7 @@ module.exports = {
   retrieveWidgetSettings: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/widget`
+      endpoint: `guilds/${params.guild_id}/widget`
     }), // End Get Guild Widget Settings
   
   /**
@@ -562,7 +562,7 @@ module.exports = {
   retrieveWidgetImage: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/widget.png?style=${params.style ?? 'shield'}`
+      endpoint: `guilds/${params.guild_id}/widget.png?style=${params.style ?? 'shield'}`
     }), // End Get Guild Widget Image
   
   /**
@@ -585,7 +585,7 @@ module.exports = {
   modifyWidget: async (params) =>
     attemptHandler({
       method: 'patch',
-      path: `guilds/${params.guild_id}/widget`,
+      endpoint: `guilds/${params.guild_id}/widget`,
       body: params
     }), // End of Modify Guild Widget
 
@@ -601,7 +601,7 @@ module.exports = {
   retrieveVanityURL: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/vanity-url`
+      endpoint: `guilds/${params.guild_id}/vanity-url`
     }), // End of Get$|y Guild Vanity URL
   
   /**
@@ -616,7 +616,7 @@ module.exports = {
   getWelcomeScreen: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/welcome-screen`
+      endpoint: `guilds/${params.guild_id}/welcome-screen`
     }), // End of Get Guild Welcome Screen
   
   /**
@@ -639,7 +639,7 @@ module.exports = {
   modifyWelcomeScreen: async (params) =>
     attemptHandler({
       method: 'patch',
-      path: `guilds/${params.guild_id}/welcome-screen`,
+      endpoint: `guilds/${params.guild_id}/welcome-screen`,
       body: params
     }), // End of Modify Guild Welcome Screen
   
@@ -660,7 +660,7 @@ module.exports = {
   getOnboarding: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/onboarding`
+      endpoint: `guilds/${params.guild_id}/onboarding`
     }), // End of Get Guild Onboarding
   
   /**
@@ -711,7 +711,7 @@ module.exports = {
   modifyOnboarding: async (params) =>
     attemptHandler({
       method: 'put',
-      path: `guilds/${params.guild_id}/onboarding`
+      endpoint: `guilds/${params.guild_id}/onboarding`
     }), // End of Modify Guild Onbaording
   
   /**
@@ -730,7 +730,7 @@ module.exports = {
   newMemberWelcome: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/new-member-welcome`
+      endpoint: `guilds/${params.guild_id}/new-member-welcome`
     }), // End of Get New Member Welcome
 
 
@@ -765,7 +765,7 @@ module.exports = {
     getAll: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/channels`
+        endpoint: `guilds/${params.guild_id}/channels`
       }), // End of Get Guild Channels
   
     /**
@@ -809,7 +809,7 @@ module.exports = {
     create: async (params) =>
       attemptHandler({
         method: 'post',
-        path: `guilds/${params.guild_id}/channels`,
+        endpoint: `guilds/${params.guild_id}/channels`,
         body: {
           name: params.name,
           type: params.type ?? 0,
@@ -855,7 +855,7 @@ module.exports = {
     modifyPositions: async (params) =>
       attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/channels`,
+        endpoint: `guilds/${params.guild_id}/channels`,
         body: params
       }) // End of Modify Guild Channel Positions
   },
@@ -892,7 +892,7 @@ module.exports = {
     retrieve: async (params) => {
       const attempt = await attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/members/${params.user_id}`
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}`
       });
       if (!params.member_only) {
         return extendPayload(attempt/* , params*/);
@@ -918,12 +918,12 @@ module.exports = {
      * @returns {Promise<Member[]>} List of [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} objects
      */
     getAll: async (params) => {
-      let path = `guilds/${params.guild_id}/members?`;
-      path += `${params.limit ? `&limit=${params.limit}` : ''}`;
-      path += `${params.after ? `&after=${params.after}` : ''}`;
+      let endpoint = `guilds/${params.guild_id}/members?`;
+      endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
+      endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       const attempt = await attemptHandler({
         method: 'get',
-        path
+        endpoint
       });
       attempt.forEach((/** @type {Member} */ member) => {
         member.user.badges = getBadges(member.user.public_flags);
@@ -951,11 +951,11 @@ module.exports = {
      * @returns {Promise<Member[]>} List of [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} objects whose username or nickname starts with a provided string
      */
     search: async (params) => {
-      let path = `guilds/${params.guild_id}/members/search?query=${params.query}`;
-      path += `${params.limit ? `&limit=${params.limit}` : ''}`;
+      let endpoint = `guilds/${params.guild_id}/members/search?query=${params.query}`;
+      endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       const attempt = await attemptHandler({
         method: 'get',
-        path
+        endpoint
       });
       const [payload] = attempt || [];
       if (payload.length === 1) {
@@ -999,7 +999,7 @@ module.exports = {
     remove: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/members/${params.user_id}`,
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}`,
         body: { reason: params.reason ?? null }
       }), // End of Remove Guild Member
 
@@ -1030,7 +1030,7 @@ module.exports = {
     update: async (params) => {
       const attempt = await attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/members/${params.user_id}`,
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}`,
         body: params
       });
       attempt.displayName = attempt.nick ?? attempt.user.display_name ?? attempt.user.global_name ?? attempt.user.username;
@@ -1059,7 +1059,7 @@ module.exports = {
     updateCurrent: async (params) =>
       attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/members/@me`,
+        endpoint: `guilds/${params.guild_id}/members/@me`,
         body: params
       }), // End of Modify Current Member
 
@@ -1084,7 +1084,7 @@ module.exports = {
     addRole: async (params) =>
       attemptHandler({
         method: 'put',
-        path: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`
       }), // End of Add Guild Member Role
 
     /**
@@ -1108,7 +1108,7 @@ module.exports = {
     removeRole: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`
       }), // End of Remove Guild Member Role
 
     /**
@@ -1180,7 +1180,7 @@ module.exports = {
 
       const attempt = await attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/members/${params.user_id}`,
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}`,
         body: {
           communication_disabled_until: timestamp
         }
@@ -1221,7 +1221,7 @@ module.exports = {
     retrieve: async (params) => {
       const roles = await attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/roles`
+        endpoint: `guilds/${params.guild_id}/roles`
       });
       const targetRole = roles.find((/** @type {Role} */ x) => x.id === params.role_id);
       if (!targetRole)
@@ -1248,7 +1248,7 @@ module.exports = {
   
       const attempt = await attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/roles`
+        endpoint: `guilds/${params.guild_id}/roles`
       });
 
       for (const role of attempt) {
@@ -1286,7 +1286,7 @@ module.exports = {
     create: async (params) => {
       const attempt = await attemptHandler({
         method: 'post',
-        path: `guilds/${params.guild_id}/roles`,
+        endpoint: `guilds/${params.guild_id}/roles`,
         body: {
           name: params.name ?? 'new role',
           permissions: params.permissions ?? null,
@@ -1333,7 +1333,7 @@ module.exports = {
 
       const attempt = await attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/roles/${params.role_id}`,
+        endpoint: `guilds/${params.guild_id}/roles/${params.role_id}`,
         body: params
       });
       if (attempt.permissions > 0)
@@ -1360,7 +1360,7 @@ module.exports = {
     destroy: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/roles/${params.role_id}`
+        endpoint: `guilds/${params.guild_id}/roles/${params.role_id}`
       }), // End of Delete Guild Role
 
     /**
@@ -1397,7 +1397,7 @@ module.exports = {
         roles.push({ id: role.id, position: role.position });
       return attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/roles`,
+        endpoint: `guilds/${params.guild_id}/roles`,
         body: roles
       }); // End of Modify Guild Role Positions
     }
@@ -1432,7 +1432,7 @@ module.exports = {
     retrieve: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/emojis/${params.emoji_id}`
+        endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`
       }), // End of Get Guild Emoji
 
     /**
@@ -1451,7 +1451,7 @@ module.exports = {
     getAll: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/emojis`
+        endpoint: `guilds/${params.guild_id}/emojis`
       }), // End of List Guild Emojis
 
     /**
@@ -1478,7 +1478,7 @@ module.exports = {
     create: async (params) =>
       attemptHandler({
         method: 'post',
-        path: `guilds/${params.guild_id}/emojis`,
+        endpoint: `guilds/${params.guild_id}/emojis`,
         body: {
           name: params.name,
           image: params.image ? (await imageData(params.image, 'base64string')).data : null,
@@ -1508,7 +1508,7 @@ module.exports = {
     update: async (params) =>
       attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/emojis/${params.emoji_id}`,
+        endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`,
         body: params
       }), // End of Modify Guild Emoji
 
@@ -1531,7 +1531,7 @@ module.exports = {
     destroy: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/emojis/${params.emoji_id}`
+        endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`
       }) // End of Delete Guild Emoji
   },
 
@@ -1563,7 +1563,7 @@ module.exports = {
     retrieve: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `stickers/${params.sticker_id}`
+        endpoint: `stickers/${params.sticker_id}`
       }), // End of Get Sticker
 
     /**
@@ -1578,7 +1578,7 @@ module.exports = {
     nitroPacks: async () =>
       attemptHandler({
         method: 'get',
-        path: 'sticker-packs'
+        endpoint: 'sticker-packs'
       }), // End of List Nitro Sticker Packs
 
     /**
@@ -1598,7 +1598,7 @@ module.exports = {
     getAll: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/stickers`
+        endpoint: `guilds/${params.guild_id}/stickers`
       }), // End of Get Sticker
 
     /**
@@ -1620,7 +1620,7 @@ module.exports = {
     retrieveGuildSticker: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/stickers/${params.sticker_id}`
+        endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`
       }), // End of Get Guild Sticker
 
     /**
@@ -1647,7 +1647,7 @@ module.exports = {
     update: async (params) =>
       attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/stickers/${params.sticker_id}`,
+        endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`,
         body: params
       }), // End of Modify Guild Sticker
 
@@ -1671,7 +1671,7 @@ module.exports = {
     destroy: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/stickers/${params.sticker_id}`
+        endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`
       }), // End of Delete Guild Sticker
 
     /**
@@ -1771,7 +1771,7 @@ module.exports = {
     retrieve: async (params) => {
       const attempt = await attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}?with_user_count=${params.with_user_count || true}`
+        endpoint: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}?with_user_count=${params.with_user_count || true}`
       });
       if (attempt.creator) {
         attempt.creator.badges = getBadges(attempt.creator.public_flags);
@@ -1802,7 +1802,7 @@ module.exports = {
     getAll: async (params) => {
       const attempt = await attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/scheduled-events?with_user_count=${params.with_user_count || true}`
+        endpoint: `guilds/${params.guild_id}/scheduled-events?with_user_count=${params.with_user_count || true}`
       });
       for (const event of attempt) {
         if (event.creator) {
@@ -1840,14 +1840,14 @@ module.exports = {
      * @returns {Promise<EventUser[]>} A list of [Guild Scheduled Event User]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object} objects
      */
     getUsers: async (params) => {
-      let path = `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}/users?`;
-      path += `${params.limit ? `&limit=${params.limit}` : ''}`;
-      path += `${params.with_member ? `&with_member=${params.with_member}` : ''}`;
-      path += `${params.before ? `&before=${params.before}` : ''}`;
-      path += `${params.after ? `&after=${params.after}` : ''}`;
+      let endpoint = `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}/users?`;
+      endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
+      endpoint += `${params.with_member ? `&with_member=${params.with_member}` : ''}`;
+      endpoint += `${params.before ? `&before=${params.before}` : ''}`;
+      endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       const attempt = await attemptHandler({
         method: 'get',
-        path
+        endpoint
       });
       for (const event of attempt) {
         event.user.badges = getBadges(event.user.public_flags);
@@ -1894,7 +1894,7 @@ module.exports = {
 
       return attemptHandler({
         method: 'post',
-        path: `guilds/${params.guild_id}/scheduled-events`,
+        endpoint: `guilds/${params.guild_id}/scheduled-events`,
         body: {
           name: params.name,
           description: params.description ?? null,
@@ -1945,7 +1945,7 @@ module.exports = {
 
       return attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}`,
+        endpoint: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}`,
         body: params
       });
     }, // End of Modify Guild Scheduled Event
@@ -1969,7 +1969,7 @@ module.exports = {
     destroy: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}`
+        endpoint: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}`
       }) // End of Delete Guild Scheduled Event
   },
 
@@ -2000,7 +2000,7 @@ module.exports = {
     retrieve: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/templates/${params.template_code}`
+        endpoint: `guilds/templates/${params.template_code}`
       }), // End of Get Guild Template
 
     /**
@@ -2020,7 +2020,7 @@ module.exports = {
     getAll: async (params) =>
       attemptHandler({
         method: 'get',
-        path: `guilds/${params.guild_id}/templates`
+        endpoint: `guilds/${params.guild_id}/templates`
       }), // End of Get Guild Templates
 
     /**
@@ -2043,7 +2043,7 @@ module.exports = {
     create: async (params) =>
       attemptHandler({
         method: 'post',
-        path: `guilds/${params.guild_id}/templates`,
+        endpoint: `guilds/${params.guild_id}/templates`,
         body: {
           name: params.name,
           description: params.description ?? null
@@ -2069,7 +2069,7 @@ module.exports = {
     createGuild: async (params) =>
       attemptHandler({
         method: 'post',
-        path: `guilds/templates/${params.template_code}`,
+        endpoint: `guilds/templates/${params.template_code}`,
         body: {
           name: params.name,
           icon: params.icon ? (await imageData(params.icon, 'base64string')).data : null
@@ -2095,7 +2095,7 @@ module.exports = {
     sync: async (params) =>
       attemptHandler({
         method: 'put',
-        path: `guilds/${params.guild_id}/templates/${params.template_code}`
+        endpoint: `guilds/${params.guild_id}/templates/${params.template_code}`
       }), // End of Sync Guild Template
 
     /**
@@ -2119,7 +2119,7 @@ module.exports = {
     update: async (params) =>
       attemptHandler({
         method: 'patch',
-        path: `guilds/${params.guild_id}/templates/${params.template_code}`,
+        endpoint: `guilds/${params.guild_id}/templates/${params.template_code}`,
         body: params
       }), // End of Modify Guild Template
 
@@ -2142,7 +2142,7 @@ module.exports = {
     destroy: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `guilds/${params.guild_id}/templates/${params.template_code}`
+        endpoint: `guilds/${params.guild_id}/templates/${params.template_code}`
       }) // End of Delete Guild Template
   }
 };

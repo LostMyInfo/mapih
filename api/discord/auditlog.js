@@ -35,7 +35,7 @@ module.exports = {
    * @returns {Promise<AuditLog>} [Audit Log]{@link https://discord.com/developers/docs/resources/audit-log#audit-log-object} object
    */
   retrieve: async (params) => {
-    let path = `guilds/${params.guild_id}/audit-logs?`;
+    let endpoint = `guilds/${params.guild_id}/audit-logs?`;
     const queryParams = [];
 
     if (params.limit) queryParams.push(`limit=${params.limit}`);
@@ -44,19 +44,19 @@ module.exports = {
     if (params.before) queryParams.push(`before=${params.before}`);
     if (params.after) queryParams.push(`after=${params.after}`);
 
-    path += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
+    endpoint += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
 
     /*
-    let path = `guilds/${params.guild_id}/audit-logs?`;
-    path += `${params.limit ? `&limit=${params.limit}` : ''}`;
-    path += `${params.action_type ? `&action_type=${params.action_type}` : ''}`;
-    path += `${params.user_id ? `&user_id=${params.user_id}` : ''}`;
-    path += `${params.before ? `&before=${params.before}` : ''}`;
-    path += `${params.after ? `&after=${params.after}` : ''}`;
+    let endpoint = `guilds/${params.guild_id}/audit-logs?`;
+    endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
+    endpoint += `${params.action_type ? `&action_type=${params.action_type}` : ''}`;
+    endpoint += `${params.user_id ? `&user_id=${params.user_id}` : ''}`;
+    endpoint += `${params.before ? `&before=${params.before}` : ''}`;
+    endpoint += `${params.after ? `&after=${params.after}` : ''}`;
     */
     const attempt = await attemptHandler({
       method: 'get',
-      path
+      endpoint
     });
     if (attempt.audit_log_entries.length)
       attempt.audit_log_entries.forEach((/** @type {AuditLogEntry} */ log) => {

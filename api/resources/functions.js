@@ -4,14 +4,16 @@
 /* eslint-disable max-statements-per-line */
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-syntax */
+// @ts-check
 const { default: axios, AxiosError, isAxiosError } = require('axios');
-const FormData = require('form-data');
+// const FormData = require('form-data');
 
-const https = require('../utils/https');
+const { https } = require('../utils/newhttps');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
 const sizeOf = require('../utils/imageInfo');
+const imageInfo = require('../utils/imageInfo');
 
 /**
  * @global
@@ -40,53 +42,31 @@ module.exports = {
    * API Handler Creator
    * @param {Object} params
    * @param {Method} params.method
-   * @param {string} params.path
+   * @param {string} params.endpoint
    * @param {Object} [params.body]
-   * @param {string} [params.reason]
    * @returns {Promise<*>}
    * @private
    */
   attemptHandler: async (params) => {
-    const headers = {
-      'Authorization': `Bot ${token()}`
-    };
+    
+    const headers = new Headers({
+      'Authorization': `Bot ${token('discord')}`
+    });
+
+    if (!params.endpoint.includes('prune'))
+      headers.append('content-type', 'application/json');
+
     try {
-      if (!params.path.includes('prune')) {
-        headers['Content-Type'] = 'application/json';
-      }
-      if (params.reason) {
-        headers['X-Audit-Log-Reason'] = params.reason;
-      }
-      const attempt = await https[params.method]({
-        url: encodeURI('discord.com'),
-        path: encodeURI(`/api/v10/${params.path}`),
-        headers: headers,
+
+      const attempt = await https({
+        method: params.method,
+        url: `https://discord.com/api/v10/${params.endpoint}`,
+        headers,
         body: params.body ? JSON.stringify(params.body) : ''
       });
       // console.log('attempt in functions', attempt);
-      if (attempt.statusCode === 204) return {
-        statusCode: 204,
-        message: 'Success'
-      };
-
-      else if (attempt.statusCode >= 200 && attempt.statusCode < 300) {
-        
-        try {
-          return JSON.parse(attempt.body);
-        } catch {
-          return attempt.body;
-        }
-
-      } else {
-        // console.log('error in else\n', attempt.body);
-        throw new Error(
-          attempt.body.length
-            ? isValidJSON(attempt.body)
-              ? JSON.stringify(returnErr(attempt), null, 2)
-              : attempt.body
-            : attempt
-        );
-      }
+      return attempt;
+      
     } catch (e) {
       throw e;
     }
@@ -109,19 +89,39 @@ module.exports = {
           throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
         }
       
+        let file;
         if (await isValidMedia(attachment.file)) {
           if (typeof attachment.file === 'string') {
+            const response = await fetch(attachment.file);
+            const buffer = await response.arrayBuffer();
+            file = new Blob([buffer]);
+            /*
             const response = await axios.get(attachment.file, {
               responseType: 'arraybuffer'
             });
             attachment.file = Buffer.from(response.data);
+            */
           }
         
-        } else if (!Buffer.isBuffer(attachment.file)) {
+          // } else if (!Buffer.isBuffer(attachment.file)) {
+        } else if (!(attachment.file instanceof Blob)) {
           throw new Error('\nInvalid file-type provided. Must be of type Buffer or a valid image URL.\n');
+        } else {
+          file = attachment.file;
         }
+        form.append('files', file, attachment.filename);
       }
 
+      const payload = {
+        ...params,
+        attachments: params.attachments.map((/** @type {{ filename: any; description: any; }} */ a, /** @type {any} */ index) => ({
+          id: index,
+          filename: a.filename,
+          description: a.description ?? ''
+        }))
+      };
+  
+      /*
       for (let i = 0; i < params.attachments.length; i++) {
         form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
       };
@@ -129,17 +129,32 @@ module.exports = {
       params.attachments = params.attachments.map((a, index) => ({
         id: index, filename: a.filename, description: a.description ?? ''
       }));
-    
+      */
       // console.log('params from sendAttachment()\n', params);
 
-      form.append('payload_json', JSON.stringify(params));
+      form.append('payload_json', JSON.stringify(payload));
 
+      const response = await fetch(`https://discord.com/api/v10/${path}`, {
+        method,
+        body: form,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bot ${token('discord')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.statusText}\n`);
+      }
+  
+      return response.json();
+      /*
       const response = await axios({
         method, url: `https://discord.com/api/v10/${path}`,
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bot ${process.env.token}`
+          'Authorization': `Bot ${token('discord')}`
         }
       });
     
@@ -148,9 +163,11 @@ module.exports = {
       }
     
       return response.data;
-    
+      */
+      
     } catch (e) {
-      throw getAxiosError(e);
+      throw e;
+      // throw getAxiosError(e);
     }
   }
 };
@@ -180,6 +197,7 @@ function avatarFromObject(userID, avatarID, guildID, memberAvatarID) {
   const base = 'https://cdn.discordapp.com';
   
   if (!avatarID && !memberAvatarID) {
+    // @ts-ignore
     return `${base}/embed/avatars/${Number((BigInt(userID) >> 22n) % 6n)}.png`;
   }
   
@@ -197,14 +215,23 @@ function avatarFromObject(userID, avatarID, guildID, memberAvatarID) {
  * @param {string|undefined} url
  * @param {'image'|'audio'|'video'} [content_type]
  * @param {number} [timeout]
- * @returns {Promise<boolean>}
+ * @returns {Promise<boolean|undefined>}
  */
 async function isValidMediaURL(url, content_type = 'image', timeout = 5000) {
   if (!url) return false;
   try {
-    const response = await axios.head(url, { timeout });
-    const contentType = response.headers['content-type'];
-    console.log('\nCONTENT TYPE IN isValidMediaURL:', contentType);
+    const controller = new AbortController();
+    const timeoutID = setTimeout(() => controller.abort(), timeout);
+
+    const response = await fetch(url, {
+      method: 'HEAD',
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutID);
+    if (!response.ok) return false;
+
+    const contentType = response.headers.get('content-type');
     return contentType?.startsWith(`${content_type}/`);
   } catch (error) {
     return false;
@@ -294,7 +321,7 @@ async function isValidMedia(media, media_type = 'image') {
 
 /**
  * Validates a payload as JSON
- * @param {Object} payload
+ * @param {string} payload
  * @returns {boolean}
  */
 function isValidJSON(payload) {
@@ -311,7 +338,7 @@ function isValidJSON(payload) {
    * @param {string|Buffer|undefined} media
    * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
    * @param {boolean} [datastringbuffer]
-   * @returns {Promise<{data: Buffer | undefined, type: string | undefined}>}
+   * @returns {Promise<{data: Buffer | string | undefined, type: string | null | undefined}>}
    */
 async function imageData(media, encoding, datastringbuffer) {
 
@@ -323,26 +350,40 @@ async function imageData(media, encoding, datastringbuffer) {
     
     let imageBuffer, mimetype;
     if (typeof media === 'string') {
+      const response = await fetch(media);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
+      }
+
+      const buffer = await response.arrayBuffer();
+      imageBuffer = Buffer.from(buffer);
+      mimetype = response.headers.get('content-type');
+      /*
       const response = await axios.get(media, {
         responseType: 'arraybuffer'
       });
 
       if (response.status !== 200)
         throw new Error(`Failed to fetch image: ${response.statusText}`);
+        
       imageBuffer = response.data;
       mimetype = response.headers['content-type'];
+      */
     } else imageBuffer = media;
 
-    let option, data;
+    let data;
     if (encoding === 'base64string') {
-      option = Buffer.from(imageBuffer);
+      const option = Buffer.from(imageBuffer);
+      data = `data:${mimetype};base64,${option.toString('base64')}`;
       data = `data:${mimetype};base64,${option.toString('base64')}`;
       if (datastringbuffer)
         data = Buffer.from(option.toString('base64'), 'base64');
     } else if (encoding === 'binarystring')
       data = imageBuffer.toString('binary');
-    else if (encoding)
-      data = Buffer.from(imageBuffer, encoding);
+    else if (encoding && ['base64', 'utf-8', 'binary'].includes(encoding))
+      data = Buffer.from(imageBuffer).toString(encoding);
+      // data = Buffer.from(imageBuffer, encoding);
     else
       data = Buffer.from(imageBuffer);
     
@@ -416,7 +457,7 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
 
 /**
  * @param {Buffer} buffer 
- * @param {'image/png' | 'image/gif' | 'image/apng'} type
+ * @param {string} type
  * @param {number} size
  * @param {number} [MAX_SIZE] 
  * @returns {Promise<{image: Buffer, height: number, width: number, size: number}>}
@@ -520,6 +561,9 @@ function generateCDN(object, media, size = '1024', x = '') {
 function parsePermissions(permissions) {
   const flags = Object.entries(PERMISSION_NAMES);
   if (!permissions) return [];
+  /**
+   * @type {string[]}
+   */
   const permission_names = [];
   if (permissions > 0) {
     for (let p = 0; p < flags.length; p++) {
@@ -1059,10 +1103,17 @@ function buildQueryString(url, params, encode = true) {
 }
 
 /**
+ * @param {string} type
  * @returns {string}
  */
-function token() {
-  const token = require('../../Api').get_token() ?? process.env.token;
-  if (!token) throw new Error('Bot token not set. Please initialize the library first.');
+function token(type) {
+  const token = type === 'discord'
+    ? require('../../Api').get_discord_token() || process.env.token
+    : require('../../Api').get_slack_token() || process.env.slackToken;
+  if (!token) throw new Error(
+    type === 'discord'
+      ? 'Bot token not set. Please initialize the library first.'
+      : 'Slack token not set. Please initialize the library first.'
+  );
   return token;
 }

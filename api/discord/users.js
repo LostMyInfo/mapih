@@ -29,7 +29,7 @@ module.exports = {
   retrieve: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `users/${params.user_id}`
+      endpoint: `users/${params.user_id}`
     });
     attempt.badges = getBadges(attempt.public_flags ?? attempt.flags);
     attempt.created_at = retrieveDate(attempt.id, true);
@@ -53,7 +53,7 @@ module.exports = {
   currentUser: async () =>
     attemptHandler({
       method: 'get',
-      path: 'users/@me'
+      endpoint: 'users/@me'
     }), // End of Get Current User
   
   /** 
@@ -75,15 +75,15 @@ module.exports = {
    * @returns {Promise<PartialGuild[]>} List of [partial Guild]{@link https://discord.com/developers/docs/resources/user#get-current-user-guilds-example-partial-guild} objects
    */
   myGuilds: async (params) => {
-    let path = 'users/@me/guilds?';
+    let endpoint = 'users/@me/guilds?';
     if (params) {
-      path += `${params.limit ? `&limit=${params.limit}` : ''}`;
-      path += `${params.before ? `&before=${params.before}` : ''}`;
-      path += `${params.after ? `&after=${params.after}` : ''}`;
+      endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
+      endpoint += `${params.before ? `&before=${params.before}` : ''}`;
+      endpoint += `${params.after ? `&after=${params.after}` : ''}`;
     }
     const attempt = await attemptHandler({
       method: 'get',
-      path
+      endpoint
     });
     for (const guild of attempt) {
       if (guild.icon)
@@ -115,7 +115,7 @@ module.exports = {
   currentMember: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `users/@me/guilds/${params.guild_id}/member`
+      endpoint: `users/@me/guilds/${params.guild_id}/member`
     }), // End of Get Current User Guild Member
 
   /**
@@ -137,7 +137,7 @@ module.exports = {
   modifyCurrent: async (params) =>
     attemptHandler({
       method: 'post',
-      path: 'users/@me',
+      endpoint: 'users/@me',
       body: {
         username: params.username ?? null,
         avatar: params.avatar ? (await imageData(params.avatar, 'base64string')).data : null
@@ -157,7 +157,7 @@ module.exports = {
   connections: async () =>
     attemptHandler({
       method: 'get',
-      path: 'users/@me/connections'
+      endpoint: 'users/@me/connections'
     }), // End of Get User Connections
 
   /**
@@ -177,7 +177,7 @@ module.exports = {
   appRoleConnection: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `users/@me/applications/${params.application_id}/role-connection`
+      endpoint: `users/@me/applications/${params.application_id}/role-connection`
     }), // End of Get User Application Role Connection
 
   /**
@@ -201,7 +201,7 @@ module.exports = {
   updateAppRoleConnection: async (params) =>
     attemptHandler({
       method: 'put',
-      path: `users/@me/applications/${params.application_id}/role-connection`,
+      endpoint: `users/@me/applications/${params.application_id}/role-connection`,
       body: {
         platform_name: params.platform_name ?? null,
         platform_username: params.platform_username ?? null,
@@ -235,7 +235,7 @@ module.exports = {
   createDM: async (params) => {
     const response = await attemptHandler({
       method: 'post',
-      path: 'users/@me/channels',
+      endpoint: 'users/@me/channels',
       body: {
         recipient_id: params.recipient_id
       }
@@ -246,7 +246,7 @@ module.exports = {
     else {
       return attemptHandler({
         method: 'post',
-        path: `channels/${response.id}/messages`,
+        endpoint: `channels/${response.id}/messages`,
         body: {
           content: params.content ?? '',
           embeds: params.embeds ?? [],
@@ -296,7 +296,7 @@ module.exports = {
   createGroupDM: async (params) => {
     const DMChannel = await attemptHandler({
       method: 'post',
-      path: 'users/@me/channels',
+      endpoint: 'users/@me/channels',
       body: {
         access_tokens: params.access_tokens,
         nicks: params.nicks
@@ -308,7 +308,7 @@ module.exports = {
     else {
       return attemptHandler({
         method: 'post',
-        path: `channels/${DMChannel.id}/messages`,
+        endpoint: `channels/${DMChannel.id}/messages`,
         body: {
           content: params.content ?? '',
           embeds: params.embeds ?? [],
@@ -340,6 +340,6 @@ module.exports = {
   leaveGuild: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `users/@me/guilds/${params.guild_id}`
+      endpoint: `users/@me/guilds/${params.guild_id}`
     }) // End of Leave Guild
 };

@@ -1,23 +1,40 @@
-let token = undefined;
+// @ts-check
+/**
+ * @type {string | undefined}
+ */
+let discordToken = undefined;
+/**
+ * @type {string | undefined}
+ */
+let slackToken = undefined;
 
 module.exports = {
 
   /**
-   * @param {string} bot_token 
+   * @param {Object} options
+   * @param {string} [options.discord]
+   * @param {string} [options.slack]
    */
-  initialize: function(bot_token) {
-    token = bot_token;
+  initialize: function(options) {
+    if (options.discord) discordToken = options.discord;
+    if (options.slack) slackToken = options.slack;
   },
 
   /**
-   * @returns {string}
+   * @returns {string|undefined}
    */
-  get_token: function() {
-    return token;
+  get_discord_token: function() {
+    return discordToken;
+  },
+
+  /**
+   * @returns {string|undefined}
+   */
+  get_slack_token: function() {
+    return slackToken;
   },
 
   discord: {
-
     auditlog: require('./api/discord/auditlog'),
     automod: require('./api/discord/automod'),
     invites: require('./api/discord/invites'),
@@ -29,14 +46,16 @@ module.exports = {
     interactions: require('./api/discord/interactions'),
     oauth2: require('./api/discord/oauth2'),
     users: require('./api/discord/users')
+  },
   
+  slack: {
+    chat: require('./api/slack/chat'),
+    conversations: require('./api/slack/conversations'),
+    views: require('./api/slack/views')
   },
 
   utils: {
-
     https: require('./api/utils/https'),
     aray: require('./api/utils/aray')
-  
   }
 };
-

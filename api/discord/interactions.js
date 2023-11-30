@@ -93,7 +93,7 @@ module.exports = {
       try {
         const attempt = await attemptHandler({
           method: 'get',
-          path: `webhooks/${params.application_id}/${params.token}/messages/@original`
+          endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
         });
         return extendPayload(attempt/* , params*/);
       } catch (error) {
@@ -352,7 +352,7 @@ module.exports = {
         try {
           message = await attemptHandler({
             method: 'get',
-            path: `webhooks/${params.application_id}/${params.token}/messages/@original`
+            endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
           });
         } catch (error) {}
         if (!message) return null;
@@ -361,7 +361,7 @@ module.exports = {
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
           method: 'patch',
-          path: endpoint,
+          endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
             embeds: input.embeds && !input.embeds.length ? [] : [{
@@ -406,7 +406,7 @@ module.exports = {
     delete_original: async (params) =>
       attemptHandler({
         method: 'del',
-        path: `webhooks/${params.application_id}/${params.token}/messages/@original`
+        endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
       }),
 
     /**
@@ -454,12 +454,12 @@ module.exports = {
      * @returns {Promise<Message>}
      */
     get: async (params, input) => {
-      let path = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
-      path += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
+      let endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
+      endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
   
       const attempt = await attemptHandler({
         method: 'get',
-        path
+        endpoint
       });
       return extendPayload(attempt);
     },
@@ -512,7 +512,7 @@ module.exports = {
 
         const attempt = await attemptHandler({
           method: 'post',
-          path: url,
+          endpoint: url,
           body: {
             content: input.content ?? '',
             embeds: input.embeds?.length ? input.embeds : [],
@@ -568,14 +568,14 @@ module.exports = {
       else {
         const message = await attemptHandler({
           method: 'get',
-          path: endpoint
+          endpoint: endpoint
         });
 
         const { embeds } = input;
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
           method: 'patch',
-          path: endpoint,
+          endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
             embeds: input.embeds && !input.embeds.length ? [] : [{
@@ -623,7 +623,7 @@ module.exports = {
     del: async (params, input) =>
       attemptHandler({
         method: 'del',
-        path: `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}`
+        endpoint: `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}`
       })
   }
 };

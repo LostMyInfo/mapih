@@ -32,7 +32,7 @@ module.exports = {
   retrieve: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `webhooks/${params.webhook_id}`
+      endpoint: `webhooks/${params.webhook_id}`
     });
     attempt.typeName = WebhookType[attempt.type];
     if (attempt.user) {
@@ -63,7 +63,7 @@ module.exports = {
   retrieveWithToken: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `webhooks/${params.webhook_id}/${params.webhook_token}`
+      endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`
     }), // End of Get Webhook with Token
     
   /** 
@@ -82,7 +82,7 @@ module.exports = {
   retrieveChannel: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `channels/${params.channel_id}/webhooks`
+      endpoint: `channels/${params.channel_id}/webhooks`
     });
     for (const webhook of attempt) {
       webhook.typeName = WebhookType[webhook.type];
@@ -112,7 +112,7 @@ module.exports = {
   retrieveGuild: async (params) => {
     const attempt = await attemptHandler({
       method: 'get',
-      path: `guilds/${params.guild_id}/webhooks`
+      endpoint: `guilds/${params.guild_id}/webhooks`
     });
     for (const webhook of attempt) {
       webhook.typeName = WebhookType[webhook.type];
@@ -146,11 +146,11 @@ module.exports = {
    * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
    */
   retrieveMessage: async (params) => {
-    let path = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
-    path += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
+    let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
+    endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     const attempt = await attemptHandler({
       method: 'get',
-      path
+      endpoint
     });
     return extendPayload(attempt/* , params*/);
   }, // End of Get Webhook Message
@@ -174,11 +174,11 @@ module.exports = {
    * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
    */
   destroyMessage: async (params) => {
-    let path = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
-    path += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
+    let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
+    endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     return attemptHandler({
       method: 'del',
-      path
+      endpoint
     });
   }, // End of Delete Webhook Message
 
@@ -203,7 +203,7 @@ module.exports = {
   create: async (params) =>
     attemptHandler({
       method: 'post',
-      path: `channels/${params.channel_id}/webhooks`,
+      endpoint: `channels/${params.channel_id}/webhooks`,
       body: {
         name: params.name,
         avatar: params.avatar ? (await imageData(params.avatar, 'base64string')).data : null
@@ -234,7 +234,7 @@ module.exports = {
     if (params.avatar) params.avatar = (await imageData(params.avatar, 'base64string')).data;
     return attemptHandler({
       method: 'patch',
-      path: `webhooks/${params.webhook_id}`,
+      endpoint: `webhooks/${params.webhook_id}`,
       body: params
     });
   }, // End of Modify Webhook
@@ -263,7 +263,7 @@ module.exports = {
     if (params.avatar) params.avatar = (await imageData(params.avatar, 'base64string')).data;
     return attemptHandler({
       method: 'patch',
-      path: `webhooks/${params.webhook_id}/${params.webhook_token}`,
+      endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`,
       body: params
     });
   }, // End of Modify Webhook with Token
@@ -284,7 +284,7 @@ module.exports = {
   destroy: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `webhooks/${params.webhook_id}`
+      endpoint: `webhooks/${params.webhook_id}`
     }), // End of Delete Webhook
 
   /**
@@ -305,7 +305,7 @@ module.exports = {
   destroyWithToken: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `webhooks/${params.webhook_id}/${params.webhook_token}`
+      endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`
     }), // End of Delete Webhook with Token
 
   /**
@@ -357,15 +357,15 @@ module.exports = {
    * @returns {Promise<{statusCode: string, message: string}>} `204 No Content` response depending on the `wait` query parameter
    */
   execute: async (params) => {
-    let path = `webhooks/${params.webhook_id}/${params.webhook_token}?`;
-    path += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
-    path += `${params.wait ? `&wait=${params.wait}` : false}`;
+    let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}?`;
+    endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
+    endpoint += `${params.wait ? `&wait=${params.wait}` : false}`;
     if (params.attachments && params.attachments?.length)
-      return sendAttachment(params, path, 'post');
+      return sendAttachment(params, endpoint, 'post');
     else {
       return attemptHandler({
         method: 'post',
-        path,
+        endpoint,
         body: {
           username: params.username ?? null,
           avatar_url: params.avatar_url ?? null,
@@ -416,14 +416,14 @@ module.exports = {
    * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
    */
   updateMessage: async (params) => {
-    let path = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
-    path += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
+    let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
+    endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     if (params.attachments && params.attachments?.length)
-      return sendAttachment(params, path, 'patch');
+      return sendAttachment(params, endpoint, 'patch');
     else {
       return attemptHandler({
         method: 'patch',
-        path,
+        endpoint,
         body: params
       });
     }

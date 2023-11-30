@@ -56,7 +56,7 @@ module.exports = {
   retrieve: async (params) =>
     attemptHandler({
       method: 'get',
-      path: `stage-instances/${params.channel_id}`
+      endpoint: `stage-instances/${params.channel_id}`
     }), // End of Get Stage Instance
 
   /**
@@ -81,7 +81,7 @@ module.exports = {
   create: async (params) =>
     attemptHandler({
       method: 'post',
-      path: 'stage-instances',
+      endpoint: 'stage-instances',
       body: {
         channel_id: params.channel_id,
         topic: params.topic,
@@ -110,7 +110,7 @@ module.exports = {
   update: async (params) =>
     attemptHandler({
       method: 'patch',
-      path: `stage-instances/${params.channel_id}`,
+      endpoint: `stage-instances/${params.channel_id}`,
       body: params
     }), // End of Modify Stage Instance
 
@@ -130,7 +130,7 @@ module.exports = {
   destroy: async (params) =>
     attemptHandler({
       method: 'del',
-      path: `stage-instances/${params.channel_id}`,
+      endpoint: `stage-instances/${params.channel_id}`,
       body: {}
     })
 
