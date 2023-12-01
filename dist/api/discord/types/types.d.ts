@@ -1,75 +1,120 @@
-// @ts-check
-/**
- * A Discord locale string, possible values are:
- * * en-US (English, US)
- * * en-GB (English, UK)
- * * bg (Bulgarian)
- * * zh-CN (Chinese, China)
- * * zh-TW (Chinese, Taiwan)
- * * hr (Croatian)
- * * cs (Czech)
- * * da (Danish)
- * * nl (Dutch)
- * * fi (Finnish)
- * * fr (French)
- * * de (German)
- * * el (Greek)
- * * hi (Hindi)
- * * hu (Hungarian)
- * * it (Italian)
- * * ja (Japanese)
- * * ko (Korean)
- * * lt (Lithuanian)
- * * no (Norwegian)
- * * pl (Polish)
- * * pt-BR (Portuguese, Brazilian)
- * * ro (Romanian, Romania)
- * * ru (Russian)
- * * es-ES (Spanish)
- * * sv-SE (Swedish)
- * * th (Thai)
- * * tr (Turkish)
- * * uk (Ukrainian)
- * * vi (Vietnamese)
- */
-type Locale = string;
 declare namespace Locale {
-    const Indonesian: string;
-    const EnglishUS: string;
-    const EnglishGB: string;
-    const Bulgarian: string;
-    const ChineseCN: string;
-    const ChineseTW: string;
-    const Croatian: string;
-    const Czech: string;
-    const Danish: string;
-    const Dutch: string;
-    const Finnish: string;
-    const French: string;
-    const German: string;
-    const Greek: string;
-    const Hindi: string;
-    const Hungarian: string;
-    const Italian: string;
-    const Japanese: string;
-    const Korean: string;
-    const Lithuanian: string;
-    const Norwegian: string;
-    const Polish: string;
-    const PortugueseBR: string;
-    const Romanian: string;
-    const Russian: string;
-    const SpanishES: string;
-    const Swedish: string;
-    const Thai: string;
-    const Turkish: string;
-    const Ukrainian: string;
-    const Vietnamese: string;
+    let Indonesian: string;
+    let EnglishUS: string;
+    let EnglishGB: string;
+    let Bulgarian: string;
+    let ChineseCN: string;
+    let ChineseTW: string;
+    let Croatian: string;
+    let Czech: string;
+    let Danish: string;
+    let Dutch: string;
+    let Finnish: string;
+    let French: string;
+    let German: string;
+    let Greek: string;
+    let Hindi: string;
+    let Hungarian: string;
+    let Italian: string;
+    let Japanese: string;
+    let Korean: string;
+    let Lithuanian: string;
+    let Norwegian: string;
+    let Polish: string;
+    let PortugueseBR: string;
+    let Romanian: string;
+    let Russian: string;
+    let SpanishES: string;
+    let Swedish: string;
+    let Thai: string;
+    let Turkish: string;
+    let Ukrainian: string;
+    let Vietnamese: string;
 }
 type Snowflake = string;
 type ISO8601Timestamp = string;
-type PermNames = "ADD_REACTIONS" | "ADMINISTRATOR" | "ATTACH_FILES" | "BAN_MEMBERS" | "CHANGE NICKNAME" | "CONNECT" | "CREATE_INSTANT_INVITE" | "CREATE_PRIVATE_THREADS" | "CREATE_PUBLIC_THREADS" | "DEAFEN_MEMBERS" | "EMBED_LINKS" | "KICK_MEMBERS" | "MANAGE_CHANNELS" | "MANAGE_EMOJIS_AND_STICKERS" | "MANAGE_EVENTS" | "MANAGE_SERVER" | "MANAGE_MESSAGES" | "MANAGE_NICKNAMES" | "MANAGE_ROLES" | "MANAGE_THREADS" | "MANAGE_WEBHOOKS" | "MENTION_EVERYONE" | "MODERATE_MEMBERS" | "MOVE_MEMBERS" | "MUTE_MEMBERS" | "PRIORITY_SPEAKER" | "READ_MESSAGE_HISTORY" | "REQUEST_TO_SPEAK" | "SEND_MESSAGES" | "SEND_MESSAGES_IN_THREADS" | "SEND_TTS_MESSAGES" | "SPEAK" | "VIDEO" | "USE_APPLICATION_COMMANDS" | "USE_EMBEDDED_ACTIVITIES" | "USE_EXTERNAL_EMOJIS" | "USE_EXTERNAL_STICKERS" | "USE_VOICE_ACTIVITY" | "VIEW_AUDIT_LOG" | "VIEW_CHANNEL" | "VIEW_SERVER_INSIGHTS";
-type UserFlags = 'Discord Employee' | 'Partnered Server Owner' | 'HypeSquad Events Member' | 'Bug Hunter Level 1' | 'House Bravery Member' | 'House Brilliance Member' | 'House Balance Member' | 'Early Nitro Supporter' | 'User is a team' | 'Bug Hunter Level 2' | 'Verified Bot' | 'Early Verified Bot Developer' | 'Discord Certified Moderator' | 'Interactions Handler' | 'Active Developer';
+type PermissionNames = "ADD_REACTIONS" | "ADMINISTRATOR" | "ATTACH_FILES" | "BAN_MEMBERS" | "CHANGE NICKNAME" | "CONNECT" | "CREATE_INSTANT_INVITE" | "CREATE_PRIVATE_THREADS" | "CREATE_PUBLIC_THREADS" | "DEAFEN_MEMBERS" | "EMBED_LINKS" | "KICK_MEMBERS" | "MANAGE_CHANNELS" | "MANAGE_EMOJIS_AND_STICKERS" | "MANAGE_EVENTS" | "MANAGE_SERVER" | "MANAGE_MESSAGES" | "MANAGE_NICKNAMES" | "MANAGE_ROLES" | "MANAGE_THREADS" | "MANAGE_WEBHOOKS" | "MENTION_EVERYONE" | "MODERATE_MEMBERS" | "MOVE_MEMBERS" | "MUTE_MEMBERS" | "PRIORITY_SPEAKER" | "READ_MESSAGE_HISTORY" | "REQUEST_TO_SPEAK" | "SEND_MESSAGES" | "SEND_MESSAGES_IN_THREADS" | "SEND_TTS_MESSAGES" | "SPEAK" | "VIDEO" | "USE_APPLICATION_COMMANDS" | "USE_EMBEDDED_ACTIVITIES" | "USE_EXTERNAL_EMOJIS" | "USE_EXTERNAL_STICKERS" | "USE_VOICE_ACTIVITY" | "VIEW_AUDIT_LOG" | "VIEW_CHANNEL" | "VIEW_SERVER_INSIGHTS" | "MANAGE_GUILD_EXPRESSIONS";
+/**
+ * | Permission               | Value | Description | Channel Types |
+ * |--------------------------|-------|-------------|---------------|
+ * | Create Instant Invite    | 1 << 0 | Allows creation of instant invites | T, V, S |
+ * | Kick Members             | 1 << 1 | Allows kicking members |
+ * | Ban Members              | 1 << 2 | Allows banning members |
+ * | Administrator            | 1 << 3 | Allows all permissions and bypasses channel permission overwrites |
+ * | Manage Channels          | 1 << 4 | Allows management and editing of channels | T, V, S |
+ * | Manage Guild             | 1 << 5 | Allows management and editing of the guild |
+ * | Add Reactions            | 1 << 6 | Allows for the addition of reactions to messages | T, V, S |
+ * | View Audit Log           | 1 << 7 | Allows for viewing of audit logs |
+ * | Priority Speaker         | 1 << 8 | Allows for using priority speaker in a voice channel | V |
+ * | Stream                   | 1 << 9 | Allows the user to go live | V, S |
+ * | View Channel             | 1 << 10 | Allows guild members to view a channel, which includes reading messages in text channels and joining voice channels | T, V, S |
+ * | Send Messages            | 1 << 11 | Allows for sending messages in a channel and creating threads in a forum (does not allow sending messages in threads) | T, V, S |
+ * | Send TTS Messages        | 1 << 12 | Allows for sending of /tts messages | T, V, S |
+ * | Manage Messages          | 1 << 13 | Allows for deletion of other users messages | T, V, S |
+ * | Embed Links              | 1 << 14 | Links sent by users with this permission will be auto-embedded | T, V, S |
+ * | Attach Files             | 1 << 15 | Allows for uploading images and files | T, V, S |
+ * | Read Message History     | 1 << 16 | Allows for reading of message history | T, V, S |
+ * | Mention Everyone         | 1 << 17 | Allows for using the `@everyone` tag to notify all users in a channel, and the `@here` tag to notify all online users in a channel | T, V, S |
+ * | Use External Emojis      | 1 << 18 | Allows the usage of custom emojis from other servers | T, V, S |
+ * | View Guild Insights      | 1 << 19 | Allows for viewing guild insights |
+ * | Connect                  | 1 << 20 | Allows for joining of a voice channel | V, S |
+ * | Speak                    | 1 << 21 | Allows for speaking in a voice channel | V |
+ * | Mute Members             | 1 << 22 | Allows for muting members in a voice channel | V, S |
+ * | Deafen Members           | 1 << 23 | Allows for deafening of members in a voice channel | V |
+ * | Move Members             | 1 << 24 | Allows for moving of members between voice channels | V, S
+ * | Use VAD                  | 1 << 25 | Allows for using voice-activity-detection in a voice channel | V |
+ * | Change Nickname          | 1 << 26 | Allows for modification of own nickname |
+ * | Manage Nicknames         | 1 << 27 | Allows for modification of other users nicknames |
+ * | Manage Roles             | 1 << 28 | Allows management and editing of roles | T, V, S |
+ * | Manage Webhooks          | 1 << 29 | Allows management and editing of webhooks | T, V, S |
+ * | Manage Guild Expressions | 1 << 30 | Allows for editing and deleting emojis, stickers, and soundboard sounds created by all users |
+ * | Use Application Commands | 1 << 31 | Allows members to use application commands, including slash commands and context menu commands. | T, V, S |
+ * | Request To Speak         | 1 << 32 | Allows for requesting to speak in stage channels. (This permission is under active development and may be changed or removed.) | S |
+ * | Manage Events            | 1 << 33 | Allows for editing and deleting scheduled events created by all users | V, S |
+ * | Manage Threads           | 1 << 34 | Allows for deleting and archiving threads, and viewing all private threads | T |
+ * | Create Public Threads    | 1 << 35 | Allows for creating public and announcement threads | T |
+ * | Create Private Threads   | 1 << 36 | Allows for creating private threads | T |
+ * | Use External Stickers    | 1 << 37 | Allows the usage of custom stickers from other servers | T, V, S |
+ * | Send Messages In Threads | 1 << 38 | Allows for sending messages in threads | T |
+ * | Use Embedded Activities  | 1 << 39 | Allows for using Activities (applications with the `EMBEDDED` flag) in a voice channel | V |
+ * | Moderate Members         | 1 << 40 | Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels |
+ * | View Creator Monetization Analytics | 1 << 41 | Allows for viewing role subscription insights |
+ * | Use Soundboard           | 1 << 42 | Allows for using soundboard in a voice channel | V |
+ * | Create Guild Expressions | 1 << 43 | Allows for creating emojis, stickers, and soundboard sounds, and editing and deleting those created by the current user |
+ * | Create Events            | 1 << 44 | Allows for creating scheduled events, and editing and deleting those created by the current user | V, S |
+ * | Use External Sounds      | 1 << 45 | Allows the usage of custom soundboard sounds from other servers | V |
+ * | Send Voice Messages      | 1 << 46 | Allows sending voice messages | T, V, S |
+ */
+type PermissionFlags = number;
+/**
+ * | Flag                         |
+ * |------------------------------|
+ * | Discord Employee             |
+ * | Partnered Server Owner       |
+ * | HypeSquad Events Member      |
+ * | Bug Hunter Level 1           |
+ * | House Bravery Member         |
+ * | House Brilliance Member      |
+ * | House Balance Member         |
+ * | Early Nitro Supporter        |
+ * | User is a team               |
+ * | Bug Hunter Level 2           |
+ * | Verified Bot                 |
+ * | Early Verified Bot Developer |
+ * | Discord Certified Moderator  |
+ * | Interactions Handler         |
+ * | Active Developer             |
+ */
+type UserFlags = string;
+/**
+ * | Flag | Value | Description | Editable |
+ * |----------------------|--------|-------------------------------------------------------|-------|
+ * | Did rejoin           | 1 << 0 | Member has left and rejoined the guild                | false |
+ * | Completed Onboarding | 1 << 1 | Member has completed onboarding                       | false |
+ * | Bypass Verification  | 1 << 2 | Member is exempt from guild verification requirements | true  |
+ * | Started Onboarding   | 1 << 3 | Member has started onboarding                         | false |
+ */
+type GuildMemberFlags = number;
 /**
  * | Name | Description |
  * |------|-------------|
@@ -102,7 +147,7 @@ type UserFlags = 'Discord Employee' | 'Partnered Server Owner' | 'HypeSquad Even
  * | voice | allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval
  * | webhook.incoming | this generates a webhook that is returned in the oauth token response for authorization code grants
  */
-type OAuth2Scopes = 'activities.read' | 'activites.write' | 'applications.builds.read' | 'applications.builds.upload' | 'applications.commands' | 'applications.commands.update' | 'applications.commands.permissions.update' | 'applications.entitlements' | 'applications.store.update' | 'bot' | 'connections' | 'dm_channels.read' | 'email' | 'gdm.join' | 'guilds' | 'guilds.join' | 'guilds.members.read' | 'identify' | 'messages.read' | 'relationships.read' | 'role_connections.write' | 'rpc' | 'rpc.activities.write' | 'rpc.notifications.read' | 'rpc.voice.read' | 'rpc.voice.write' | 'voice' | 'webhook.incoming';
+type OAuth2Scopes = string;
 type AccessTokenResponse = {
     /**
      * - Type of token
@@ -119,7 +164,7 @@ type ApplicationCommand = {
      * - [Type of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types}. Defaults to `1`.
      */
     type?: number | undefined;
-    trueType: string;
+    typeName: string;
     /**
      * - ID of the parent application
      */
@@ -613,7 +658,7 @@ type ExtendedInvite = {
 };
 type ExtendedUser = {
     badges: UserFlags[];
-    created_at: Date;
+    created_at: string;
     /**
      * The user's id
      */
@@ -691,7 +736,7 @@ type ExtendedUser = {
 };
 type User = {
     badges: UserFlags[];
-    created_at: Date;
+    created_at: string;
     /**
      * The user's id
      */
@@ -1013,7 +1058,7 @@ type Channel = {
      * - The [type of channel]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-types}
      */
     type: ChannelType;
-    trueType: string;
+    typeName: string;
     /**
      * - The id of the guild (may be missing for some channel objects received over gateway guild dispatches)
      */
@@ -1146,6 +1191,8 @@ type Channel = {
      * - The [Default Forum Layout]{@link https://discord.com/developers/docs/resources/channel#channel-object-forum-layout-types} view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin
      */
     default_forum_layout?: number | undefined;
+    created_at?: string | undefined;
+    last_message_sent?: string | undefined;
 };
 type DMChannel = {
     id: Snowflake;
@@ -1236,6 +1283,7 @@ type Message = {
      * - [Type of message]{@link https://discord.com/developers/docs/resources/channel#message-object-message-types}
      */
     type: MessageType;
+    typeName: string;
     /**
      * - [Message Activity]{@link https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure} object.
      */
@@ -1565,6 +1613,8 @@ type StageInstance = {
     guild_scheduled_event_id: Snowflake | null;
 };
 type GuildScheduledEvent = {
+    statusName: string;
+    entityTypeName: string;
     /**
      * - The ID of the scheduled event
      */
@@ -1883,11 +1933,11 @@ type AuditLogChange = {
     /**
      * - New value of the key
      */
-    new_value?: string;
+    new_value?: any;
     /**
      * - Old value of the key
      */
-    old_value?: string;
+    old_value?: any;
     /**
      * - Name of the changed entity, with a few exceptions
      */
@@ -1960,6 +2010,7 @@ type AuditLogEntry = {
      * - [Type of action]{@link https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events} that occured
      */
     action_type: AuditLogEventType;
+    action_name: string;
     /**
      * - Additional info for certain event types
      */
@@ -2079,6 +2130,7 @@ type Webhook = {
      * - The [type]{@link https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types} of the webhook
      */
     type: WebhookType;
+    typeName: string;
     /**
      * - The guild ID this webhook is for, if any
      */
@@ -2221,22 +2273,22 @@ type Embed = {
     /**
      * - Timestamp of embed content
      */
-    timestamp?: string | number | Date | undefined;
+    timestamp?: string | number | undefined;
     /**
      * - Footer information for the bottom of the embed
      */
     footer?: {
         text: string;
-        icon_url: string | null;
-    } | undefined;
+        icon_url: string | undefined;
+    } | null | undefined;
     /**
      * - Author information for the top of the embed
      */
     author?: {
         name: string;
-        url: string;
-        icon_url: string | null;
-    } | undefined;
+        url: (string | undefined) | null;
+        icon_url: (string | undefined) | null;
+    } | null | undefined;
     /**
      * - Image information
      */
@@ -2279,7 +2331,7 @@ type Attachment = {
     /**
      * - File to send
      */
-    file: Buffer | string | undefined;
+    file: Buffer | string;
     /**
      * - Name of file attached
      */
@@ -2329,11 +2381,11 @@ type RecurrenceRule = {
     start: ISO8601Timestamp;
     end: ISO8601Timestamp | null;
     frequency: RecurrenceRuleFrequency;
-    interval: number;
+    interval: number | null;
     by_weekday: RecurrenceRuleWeekdays[] | null;
     by_month: RecurrenceRuleMonths[] | null;
-    by_month_day: unknown | null;
-    by_year_day: unknown | null;
+    by_month_day: number[] | null;
+    by_year_day: number[] | null;
     count: number | null;
 };
 /**
@@ -2519,17 +2571,17 @@ type TextInputStyle = number;
 type MemberParams = {
     roles: Snowflake[];
     hexColor: number;
-    unusual_dm_activity_until: Date | null;
-    premium_since: Date | null;
+    unusual_dm_activity_until: ISO8601Timestamp | null;
+    premium_since: ISO8601Timestamp | null;
     pending: boolean;
     nick: string | null;
     mute: boolean;
-    joined_at: Date;
+    joined_at: ISO8601Timestamp;
     flags: number;
     deaf: boolean;
-    communication_disabled_until: Date | null;
+    communication_disabled_until: ISO8601Timestamp | null;
     avatar: string | null;
-    permission_names: PermNames[];
+    permission_names: PermissionNames[];
     displayName: string;
     displayAvatar: string;
 };
@@ -2644,7 +2696,7 @@ type Member = {
      * - When the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out
      */
     communication_disabled_until: ISO8601Timestamp;
-    permission_names: PermNames[];
+    permission_names: PermissionNames[];
 };
 type Role = {
     /**
@@ -2694,7 +2746,7 @@ type Role = {
      */
     managed: boolean;
     flags: number;
-    permission_names: PermNames[];
+    permission_names: PermissionNames[];
 };
 type RoleTags = {
     /**
@@ -3315,7 +3367,7 @@ type OnboardingMode = number;
 type GuildHomeSettings = {
     guild_id: Snowflake;
     enabled: boolean;
-    welcome_message?: WelcomeMessage;
+    welcome_message?: WelcomeMessage | undefined;
     new_member_actions?: NewMemberAction | undefined;
     resource_channels?: ResourceChannel[] | undefined;
 };
@@ -3345,6 +3397,13 @@ type NewMemberAction = {
  * | Talk | 1  |
  */
 type NewMemberActionType = number;
+type GuildPresenceParams = {
+    user: Pick<User, 'id'>;
+    guild_id: Snowflake;
+    status: 'online' | 'offline' | 'idle' | 'dnd';
+    activities: Activity[];
+    client_status: ClientStatus;
+};
 type GuildParams = {
     id: Snowflake;
     name: string;
@@ -3386,7 +3445,7 @@ type GuildParams = {
     stickers: Sticker[];
     emojis: Emoji[];
     roles: Role[];
-    joined_at: Date | string;
+    joined_at: ISO8601Timestamp;
     incidents_data: unknown | null;
     large: boolean;
     /**
@@ -3417,13 +3476,6 @@ type GuildParams = {
     banner_url?: string | undefined;
     splash_url?: string | undefined;
     discovery_splash_url?: string | undefined;
-};
-type GuildPresenceParams = {
-    user: Pick<User, 'id'>;
-    guild_id: Snowflake;
-    status: 'online' | 'offline' | 'idle' | 'dnd';
-    activities: Activity[];
-    client_status: ClientStatus;
 };
 type MessageCreateMentions = {
     username: string;
@@ -3528,10 +3580,11 @@ type SKU = {
     show_age_gate: boolean;
 };
 /**
- * | Flag | Value |
- * |--------------------|--------|
- * | Guild Subscription | 1 << 7 |
- * | User Subscription  | 1 << 8 |
+ * | Type | Value       | Description |
+ * |------|-------------|-------------|
+ * | Available          | 1 << 2      | SKU is available for purchase
+ * | Guild Subscription | 1 << 7      | Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server
+ * | User Subscription  | 1 << 8      | Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server
  * - The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
  */
 type SKUFlags = number;
@@ -3557,7 +3610,7 @@ type SkuPrice = {
     Currency: string;
 };
 /**
- * | Type | ID    | Description |
+ * | Type | Value | Description |
  * |------|-------|-------------|
  * | Application Subscription| 8 | Entitlement was purchased as an app subscription |
  */
@@ -3641,13 +3694,72 @@ type Entitlement = {
     ends_at?: string | undefined;
 };
 /**
+ * A Discord locale string, possible values are:
+ * * en-US (English, US)
+ * * en-GB (English, UK)
+ * * bg (Bulgarian)
+ * * zh-CN (Chinese, China)
+ * * zh-TW (Chinese, Taiwan)
+ * * hr (Croatian)
+ * * cs (Czech)
+ * * da (Danish)
+ * * nl (Dutch)
+ * * fi (Finnish)
+ * * fr (French)
+ * * de (German)
+ * * el (Greek)
+ * * hi (Hindi)
+ * * hu (Hungarian)
+ * * it (Italian)
+ * * ja (Japanese)
+ * * ko (Korean)
+ * * lt (Lithuanian)
+ * * no (Norwegian)
+ * * pl (Polish)
+ * * pt-BR (Portuguese, Brazilian)
+ * * ro (Romanian, Romania)
+ * * ru (Russian)
+ * * es-ES (Spanish)
+ * * sv-SE (Swedish)
+ * * th (Thai)
+ * * tr (Turkish)
+ * * uk (Ukrainian)
+ * * vi (Vietnamese)
+ */
+type locale = string;
+/**
  * A type alias representing a locale string, which is one of the available Discord locales
  */
-type LocaleString = Locale;
+type LocaleString = locale;
 /**
  * A type alias representing a partial localization map, which maps Discord locales to localized strings
  */
 type LocalizationMap = any;
+type ExtendedPayload = {
+    user?: User | undefined;
+    member?: Member | undefined;
+    interaction?: Interaction | undefined;
+    message?: Message | undefined;
+    channel: Channel;
+    username?: string | undefined;
+    guild_id?: string | undefined;
+    user_id?: string | undefined;
+    id?: string | undefined;
+    author?: User | undefined;
+    inviter?: User | undefined;
+    target_user?: User | undefined;
+    code?: string | undefined;
+    created_at?: string | undefined;
+    mentions?: Message[] | undefined;
+    badges?: string[] | undefined;
+    nick?: string | undefined;
+    data?: ResolvedData | undefined;
+    url?: string | undefined;
+    uses?: number | undefined;
+    max_uses?: number | undefined;
+    max_age?: number | undefined;
+    temporary?: boolean | undefined;
+};
 type Button = {
     /**
      * - The type of the component (2 for button).
@@ -3810,27 +3922,27 @@ type ResolvedData = {
     /**
      * - The ids and [User]{@link https://discord.com/developers/docs/resources/user#user-object} objects
      */
-    users?: Record<Snowflake, User>;
+    users?: any;
     /**
      * - The ids and partial [Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} objects
      */
-    members?: Record<Snowflake, MemberParams>;
+    members?: any;
     /**
      * - The ids and [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} objects
      */
-    roles?: Record<Snowflake, Role>;
+    roles?: any;
     /**
      * - The ids and partial [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} objects
      */
-    channels?: Record<Snowflake, Channel>;
+    channels?: any;
     /**
      * - The ids and partial [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} objects
      */
-    messages?: Record<Snowflake, Message>;
+    messages?: any;
     /**
      * - The ids and [Attachment]{@link https://discord.com/developers/docs/resources/channel#attachment-object} objects
      */
-    attachments?: Record<Snowflake, Attachment>;
+    attachments?: any;
 };
 type MessageComponentInteractionData = {
     custom_id: string;
@@ -3856,4 +3968,56 @@ type ModalSubmitInteractionData = {
     components?: ActionRow<ModalSubmitComponentData>[] | undefined;
 };
 type InteractionData = ModalSubmitInteractionData | ApplicationCommandInteractionData | MessageComponentInteractionData;
+type InteractionParams = {
+    timestamp: number;
+    id: Snowflake;
+    application_id: Snowflake;
+    /**
+     * - [Type of interaction]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type}
+     */
+    type: InteractionType;
+    /**
+     * - Interaction data payload
+     */
+    data: ModalSubmitComponentData | ApplicationCommandInteractionData | MessageComponentInteractionData;
+    guild_id: Snowflake;
+    channel_id?: string | undefined;
+    /**
+     * - Guild member data for the invoking user, including permissions
+     */
+    member: Member;
+    /**
+     * - User object for the invoking user, if invoked in a DM
+     */
+    user?: User | undefined;
+    /**
+     * - Continuation token for responding to the interaction
+     */
+    token: string;
+    /**
+     * - Read-only property, always 1
+     */
+    version: number;
+    /**
+     * - For components, the message they were attached to
+     */
+    message: Message;
+    /**
+     * - Bitwise set of permissions the app or bot has within the channel the interaction was sent from
+     */
+    app_permissions?: string | undefined;
+    /**
+     * - Selected language of the invoking user
+     */
+    locale?: string | undefined;
+    /**
+     * - Guild's preferred locale, if invoked in a guild
+     */
+    guild_locale?: string | undefined;
+    entitlements: Entitlement[];
+    entitlement_sku_ids: Snowflake[];
+    channel: Channel;
+    guild: GuildParams;
+    api: any;
+};
 //# sourceMappingURL=types.d.ts.map

@@ -4,6 +4,8 @@
 
 const { https } = require('../utils/newhttps');
 const { attemptHandler, extendPayload, isValidMedia, token } = require('../resources/functions');
+const { embedModifier } = require('../resources/functions');
+const { ResponseError } = require('../resources/Errors');
 
 /**
  * @file
@@ -85,7 +87,7 @@ module.exports = {
      * await api.discord.interactions.callback.get_original(params);
      * @memberof module:interactions.callback#
      * @method get_original
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @returns {Promise<?Message>}
      */
     get_original: async (params) => {
@@ -118,7 +120,7 @@ module.exports = {
      * })
      * @memberof module:interactions.callback#
      * @method reply
-     * @param {InteractionParams} params
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {number} [input.flags]
@@ -133,20 +135,14 @@ module.exports = {
      */
     reply: async (params, input = {}) => {
       input.flags = input.ephemeral ? (1 << 6) : 0;
-      
+      if (input.embeds?.length) {
+        input.embeds = embedModifier(input.embeds);
+      }
+
       try {
         if (input.attachments && input.attachments?.length)
           return sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
         else {
-          if (input.embeds?.length) {
-            for (const embed of input.embeds) {
-              if (embed.footer?.icon_url && !embed.footer?.text)
-                embed.footer.text = '\u200b';
-              if (embed.author?.icon_url && !embed.author?.name)
-                embed.author.name = '\u200b';
-            }
-          }
-
           await attemptHandler({
             method: 'post',
             endpoint: `interactions/${params.id}/${params.token}/callback`,
@@ -163,13 +159,12 @@ module.exports = {
           });
         }
         if (input.return_date)
-          return new Date()
+          return new Date();
         else return true;
       } catch (e) {
         throw e;
       }
     },
-
         
         
     /**
@@ -189,7 +184,7 @@ module.exports = {
      * await api.discord.interactions.callback.defer(params)
      * @memberof module:interactions.callback#
      * @method defer
-     * @param {InteractionParams} params event parameters
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params event parameters
      * @param {object} [input] user input
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<Date>}
@@ -221,7 +216,7 @@ module.exports = {
      * await api.discord.interactions.callback.component_defer(params)
      * @memberof module:interactions.callback#
      * @method component_defer
-     * @param {InteractionParams} params event parameters
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params event parameters
      * @param {object} [input] user input
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -259,7 +254,7 @@ module.exports = {
      * });
      * @memberof module:interactions.callback#
      * @method component_update
-     * @param {InteractionParams} params
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {number} [input.flags]
@@ -293,7 +288,7 @@ module.exports = {
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `8` (`APPLICATION_COMMAND_AUTOCOMPLETE_RESULT`)
      * @memberof module:interactions.callback#
      * @method autocomplete_reply
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params 
      * @param {object} input
      * @param {Array<Pick<ApplicationCommandOptionChoice, 'name' | 'value'>>} input.choices
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -315,7 +310,7 @@ module.exports = {
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `9` (`MODAL`)
      * @memberof module:interactions.callback#
      * @method modal_reply
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params 
      * @param {Object} input
      * @param {string} input.custom_id
      * @param {string} input.title
@@ -341,7 +336,7 @@ module.exports = {
      * });
      * @memberof module:interactions.callback#
      * @method edit_original
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @param {object} input
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
@@ -408,7 +403,7 @@ module.exports = {
      * await api.discord.interactions.callback.delete_original(params);
      * @memberof module:interactions.callback#
      * @method delete_original
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
     delete_original: async (params) =>
@@ -425,7 +420,7 @@ module.exports = {
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `10` (`PREMIUM_REQUIRED`)
      * @memberof module:interactions.callback#
      * @method upgrade
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params 
      * @param {object} [input]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
@@ -455,7 +450,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method get
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @param {Snowflake} [input.thread_id]
@@ -490,7 +485,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method create
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {string} [input.content]
@@ -505,19 +500,13 @@ module.exports = {
     create: async (params, input = {}) => {
       const flags = input.ephemeral ? (1 << 6) : 0;
       const url = `webhooks/${params.application_id}/${params.token}`;
+      if (input.embeds?.length) {
+        input.embeds = embedModifier(input.embeds);
+      }
+      
       if (input.attachments && input.attachments.length)
         return sendAttachment('body', input, url, 'post', null, flags);
       else {
-
-        if (input.embeds?.length) {
-          for (const embed of input.embeds) {
-            if (embed.footer?.icon_url && !embed.footer?.text)
-              embed.footer.text = '\u200b';
-            if (embed.author?.icon_url && !embed.author?.name)
-              embed.author.name = '\u200b';
-          }
-        }
-
         const attempt = await attemptHandler({
           method: 'post',
           endpoint: url,
@@ -554,7 +543,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method edit
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @param {boolean} [input.ephemeral]
@@ -622,7 +611,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method del
-     * @param {InteractionParams} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -638,7 +627,7 @@ module.exports = {
 /**
  * 
  * @param {string} sender 
- * @param {Payload} params 
+ * @param {*} params 
  * @param {string} url 
  * @param {string} method 
  * @param {?number} type 
@@ -654,33 +643,21 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       if (!attachment.file || !attachment.filename)
         throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
     
-      let file;
-      if (await isValidMedia(attachment.file)) {
-        if (typeof attachment.file === 'string') {
-          const response = await fetch(attachment.file);
-          const buffer = await response.arrayBuffer();
-          file = new Blob([buffer]);
-        }
+      if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
+        const response = await fetch(attachment.file);
+        attachment.file = await response.blob();
       } else if (!(attachment.file instanceof Blob))
-        throw new Error('\nInvalid file-type provided. Must be of type Buffer or a valid image URL.\n');
-      else file = attachment.file;
- 
-      if (file) form.append('files', file, attachment.filename);
+        throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
+  
+      form.append(`files[${params.attachments.indexOf(attachment)}]`, attachment.file, attachment.filename);
     }
 
     params.flags = flags;
-    // if (params.method !== 'patch') {
-    // console.log('\n\nPARAMS.METHOD !== \'PATCH\'\n\n');
-    // console.log('params from interactions sendAttachment() pre map\n', params);
-
-    // @ts-ignore
-    params.attachments = params.attachments.map((a, index) => ({
-      id: index, filename: a.filename, description: a.description ?? ''
+    params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
+      id: index,
+      filename: a.filename,
+      description: a.description || ''
     }));
-  
-    // }
-  
-    // console.log('params from interactions sendAttachment() post map\n', params);
 
     if (sender === 'data') {
       /*
@@ -701,18 +678,17 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       method,
       body: form,
       headers: {
-        'Content-Type': 'multipart/form-data',
         'Authorization': `Bot ${token('discord')}`
       }
     });
 
     if (!response.ok)
-      throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.statusText}\n`);
+      throw new ResponseError(await response.json(), response, 'discord_error');
 
     return response.json();
 
   } catch (e) {
-    throw e
+    throw e;
   }
 };
 
@@ -743,39 +719,3 @@ async function handleCallbacks(params) {
     throw error;
   }
 }
-
-/**
- * @typedef {Object} InteractionParams
- * @property {number} timestamp
- * @property {Snowflake} id
- * @property {Snowflake} application_id
- * @property {InteractionType} type - [Type of interaction]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type}
- * @property {ModalSubmitComponentData | ApplicationCommandInteractionData | MessageComponentInteractionData} data - Interaction data payload
- * @property {Snowflake} guild_id
- * @property {Snowflake} [channel_id]
- * @property {Member} member - Guild member data for the invoking user, including permissions
- * @property {User} [user] - User object for the invoking user, if invoked in a DM
- * @property {string} token - Continuation token for responding to the interaction
- * @property {number} version - Read-only property, always 1
- * @property {Message} message - For components, the message they were attached to
- * @property {string} [app_permissions] - Bitwise set of permissions the app or bot has within the channel the interaction was sent from
- * @property {string} [locale] - Selected language of the invoking user
- * @property {string} [guild_locale] - Guild's preferred locale, if invoked in a guild
- * @property {Entitlement[]} entitlements
- * @property {Snowflake[]} entitlement_sku_ids
- * @property {Channel} channel
- * @property {GuildParams} guild
- * @property {import('../../Api')} api
- */
-
-/**
- * @typedef {Object} Payload
- * @property {boolean} [ephemeral]
- * @property {number} [flags]
- * @property {string} [content]
- * @property {Embed[]} [embeds]
- * @property {Component} [components]
- * @property {Array<Omit<Attachment, 'proxy_url' | 'size' | 'height' | 'width'>>} [attachments]
- * @property {boolean} [tts]
- * @property {AllowedMentions} [allowed_mentions]
- */

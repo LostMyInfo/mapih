@@ -6,7 +6,7 @@
  * @module oauth2
  */
 
-const {https} = require('../utils/newhttps');
+const { https } = require('../utils/newhttps');
 
 module.exports = {
 

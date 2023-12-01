@@ -4,6 +4,7 @@
 
 const { attemptHandler, imageData, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload, token } = require('../resources/functions');
 const { ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
+const { ResponseError } = require('../resources/Errors');
 
 /**
  * @file All Discord API endpoints relating to guild functions
@@ -1723,13 +1724,12 @@ module.exports = {
           method: 'post',
           body: form,
           headers: {
-            'Content-Type': 'multipart/form-data',
             'Authorization': `Bot ${token('discord')}`
           }
         });
 
         if (!response.ok)
-          throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.statusText}\n`);
+          throw new ResponseError(await response.json(), response, 'discord_error');
   
         return response.json();
         

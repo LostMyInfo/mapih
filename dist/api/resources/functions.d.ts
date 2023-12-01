@@ -1,10 +1,10 @@
-export type ErrorObject = {
-    status: string | number;
-    message: string;
-    success: boolean;
-    error?: any;
-};
 export type Method = 'get' | 'post' | 'put' | 'patch' | 'del';
+/**
+ * @ignore
+ * @param {Embed[]} embeds
+ * @returns {Embed[]}
+ */
+export function embedModifier(embeds: Embed[]): Embed[];
 /**
  *
  * @param {Snowflake} userID
@@ -44,23 +44,23 @@ export function generateCDN(object: Guild | User | Role, media: 'icon' | 'banner
  * @param {string|undefined} url
  * @param {'image'|'audio'|'video'} [content_type]
  * @param {number} [timeout]
- * @returns {Promise<boolean>}
+ * @returns {Promise<boolean|undefined>}
  */
-export function isValidMediaURL(url: string | undefined, content_type?: "audio" | "video" | "image" | undefined, timeout?: number | undefined): Promise<boolean>;
+export function isValidMediaURL(url: string | undefined, content_type?: "audio" | "video" | "image" | undefined, timeout?: number | undefined): Promise<boolean | undefined>;
 /**
-   * ### Takes an image URL or buffer of any type and returns a buffer or string.
-   * - Image URL to buffer
-   * - Image URL to UTF-8/binary/base64 encoded buffer
-   * - Image URL to base64 encoded data string
-   * - Any buffer to base64 data string
-   * @param {string|Buffer|undefined} media
-   * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
-   * @param {boolean} [datastringbuffer]
-   * @returns {Promise<{data: string | Buffer | undefined, type: string | undefined}>}
-   */
-export function imageData(media: string | Buffer | undefined, encoding?: "binary" | "base64" | "utf-8" | "base64string" | "binarystring" | undefined, datastringbuffer?: boolean | undefined): Promise<{
-    data: string | Buffer | undefined;
-    type: string | undefined;
+ * ### Takes an image URL or buffer of any type and returns a buffer or string.
+ * - Image URL to buffer
+ * - Image URL to UTF-8/binary/base64 encoded buffer
+ * - Image URL to base64 encoded data string
+ * - Any buffer to base64 data string
+ * @param {string|Buffer|undefined} media
+ * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
+ * @param {boolean} [datastringbuffer]
+ * @returns {Promise<{data: Buffer | string | undefined, type: string | null | undefined}>}
+ */
+export function imageData(media: string | Buffer | undefined, encoding?: "utf-8" | "base64" | "binary" | "base64string" | "binarystring" | undefined, datastringbuffer?: boolean | undefined): Promise<{
+    data: Buffer | string | undefined;
+    type: string | null | undefined;
 }>;
 /**
  * Validates an image buffer
@@ -77,15 +77,15 @@ export function isValidMediaBuffer(buffer: Buffer, media_type?: "audio" | "image
  */
 export function isValidMedia(media: string | Buffer | undefined, media_type?: "audio" | "image" | undefined): Promise<boolean | null>;
 /**
- * @function resizePNG resizes a PNG to 320px x 320px as required by Discord to use as a sticker.
+ * @function resizeImage resizes a PNG to 320px x 320px as required by Discord to use as a sticker.
  * @param {Buffer} buffer
- * @param {'image/png' | 'image/gif'} type
+ * @param {string} type
  * @param {number} [width=320]
  * @param {number} [height=320]
  * @param {number} [MAX_SIZE = 524288]
  * @returns {Promise<{image: Buffer} | {image: Buffer, startSize: number, startHeight: number, startWidth: number, finishSize: number, finishHeight: number, finishWidth: number}>}
  */
-export function resizeImage(buffer: Buffer, type: 'image/png' | 'image/gif', width?: number | undefined, height?: number | undefined, MAX_SIZE?: number | undefined): Promise<{
+export function resizeImage(buffer: Buffer, type: string, width?: number | undefined, height?: number | undefined, MAX_SIZE?: number | undefined): Promise<{
     image: Buffer;
 } | {
     image: Buffer;
@@ -100,48 +100,50 @@ export function resizeImage(buffer: Buffer, type: 'image/png' | 'image/gif', wid
  * @param {string|number} value
  * @param {boolean} snowflake
  * @param {'relative'|'date'|'full'|'all'|undefined} [style]
- * @returns {string|Date|{timestamp: number, date: string, relative: string, full: string}}
+ * @returns {string}
  */
-export function retrieveDate(value: string | number, snowflake: boolean, style?: 'relative' | 'date' | 'full' | 'all' | undefined): string | Date | {
-    timestamp: number;
-    date: string;
-    relative: string;
-    full: string;
-};
+export function retrieveDate(value: string | number, snowflake: boolean, style?: 'relative' | 'date' | 'full' | 'all' | undefined): string;
 /**
  * Validates a payload as JSON
- * @param {Object} payload
+ * @param {string} payload
  * @returns {boolean}
  */
-export function isValidJSON(payload: Object): boolean;
+export function isValidJSON(payload: string): boolean;
 /**
- *
- * @param {Object} payload
+ * @param {ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction} payload
  * @returns
  */
-export function extendPayload(payload: Object): Object;
-export function returnErr(r: any): {
-    statusCode: any;
-    message: any;
-};
+export function extendPayload(payload: ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction): ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction;
 /**
- * @typedef {Object} ErrorObject
- * @property {string|number} status
- * @property {string} message
- * @property {boolean} success
- * @property {*} [error]
+ * API Handler Creator
+ * @param {Object} options
+ * @param {Method} options.method
+ * @param {string} options.endpoint
+ * @param {Object} [options.body]
+ * @returns {Promise<*>}
+ * @private
  */
+export function slackHandler(options: {
+    method: Method;
+    endpoint: string;
+    body?: Object | undefined;
+}): Promise<any>;
 /**
- * @param {AxiosError} error
- * @returns {ErrorObject}
+   * @param {string} url
+   * @param {Object} params
+   * @param {boolean} encode
+   * @returns {string}
+   */
+export function buildQueryString(url: string, params: Object, encode?: boolean): string;
+/**
+ * @param {string} type
+ * @returns {string}
  */
-export function getAxiosError(error: AxiosError): ErrorObject;
-import { AxiosError } from "axios";
+export function token(type: string): string;
 export declare function attemptHandler(params: {
     method: Method;
-    path: string;
+    endpoint: string;
     body?: Object | undefined;
-    reason?: string | undefined;
 }): Promise<any>;
-export declare function sendAttachment(params: Object, path: string, method: Method): Promise<any>;
+export declare function sendAttachment(params: any, path: string, method: Method): Promise<any>;
 //# sourceMappingURL=functions.d.ts.map

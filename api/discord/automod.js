@@ -157,7 +157,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.auto_moderation_rule_id
-   * @returns {Promise<{}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroyRule: async (params) =>
     attemptHandler({

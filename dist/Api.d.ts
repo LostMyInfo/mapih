@@ -1,6 +1,11 @@
-// @ts-check
+export function initialize(options: {
+    discord?: string | undefined;
+    slack?: string | undefined;
+}): void;
+export function get_discord_token(): string | undefined;
+export function get_slack_token(): string | undefined;
 export namespace discord {
-    const auditlog: {
+    let auditlog: {
         retrieve: (params: {
             guild_id: string;
             limit?: number | undefined;
@@ -10,7 +15,7 @@ export namespace discord {
             after?: string | undefined;
         }) => Promise<AuditLog>;
     };
-    const automod: {
+    let automod: {
         retrieveRule: (params: {
             guild_id: string;
             auto_moderation_rule_id: string;
@@ -45,7 +50,7 @@ export namespace discord {
             auto_moderation_rule_id: string;
         }) => Promise<{}>;
     };
-    const invites: {
+    let invites: {
         retrieve: (params: {
             invite_code: string;
             with_counts?: boolean | undefined;
@@ -56,7 +61,7 @@ export namespace discord {
             invite_code: string;
         }) => Promise<ExtendedInvite>;
     };
-    const applications: {
+    let applications: {
         appRoleConnectionMeta: (params: {
             application_id: string;
         }) => Promise<ApplicationRoleConnectionMetadata[]>;
@@ -84,7 +89,7 @@ export namespace discord {
                 dm_permission?: boolean | undefined;
                 default_member_permissions?: string | undefined;
                 nsfw?: boolean | undefined;
-                type?: string | undefined;
+                type?: number | undefined;
                 options?: ApplicationCommandOption[] | undefined;
             }) => Promise<ApplicationCommand>;
             modify: (params: {
@@ -160,7 +165,7 @@ export namespace discord {
             }) => Promise<SKU[]>;
         };
     };
-    const channels: {
+    let channels: {
         retrieve: (params: {
             channel_id: string;
         }) => Promise<Channel>;
@@ -196,14 +201,14 @@ export namespace discord {
             allow?: string | null | undefined;
             deny?: string | null | undefined;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         deletePermission: (params: {
             channel_id: string;
             overwrite_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         getInvites: (params: {
@@ -223,14 +228,14 @@ export namespace discord {
             channel_id: string;
             message_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         unpinMessage: (params: {
             channel_id: string;
             message_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         getPinnedMessages: (params: {
@@ -239,7 +244,7 @@ export namespace discord {
         typingCreate: (params: {
             channel_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         followAnnouncementChannel: (params: {
@@ -288,14 +293,14 @@ export namespace discord {
                 channel_id: string;
                 message_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             bulkDelete: (params: {
                 channel_id: string;
                 messages: string[];
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             crosspost: (params: {
@@ -337,27 +342,27 @@ export namespace discord {
             join: (params: {
                 channel_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             leave: (params: {
                 channel_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             addMember: (params: {
                 channel_id: string;
                 user_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             removeMember: (params: {
                 channel_id: string;
                 user_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             retrieveMember: (params: {
@@ -393,7 +398,7 @@ export namespace discord {
                 message_id: string;
                 emoji: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             deleteOwn: (params: {
@@ -401,7 +406,7 @@ export namespace discord {
                 message_id: string;
                 emoji: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             deleteUser: (params: {
@@ -410,14 +415,14 @@ export namespace discord {
                 user_id: string;
                 emoji: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             deleteAll: (params: {
                 channel_id: string;
                 message_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             deleteAllEmoji: (params: {
@@ -425,7 +430,7 @@ export namespace discord {
                 message_id: string;
                 emoji: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             getUsers: (params: {
@@ -437,7 +442,7 @@ export namespace discord {
             }) => Promise<User[]>;
         };
     };
-    const guilds: {
+    let guilds: {
         create: (params: {
             name: string;
             region?: string | undefined;
@@ -452,7 +457,7 @@ export namespace discord {
             default_message_notifications?: number | undefined;
             explicit_content_filter?: number | undefined;
             afk_channel_id?: string | undefined;
-            afk_timeout?: 300 | 60 | 900 | 1800 | 3600 | undefined;
+            afk_timeout?: 60 | 300 | 900 | 1800 | 3600 | undefined;
             system_channel_id?: string | undefined;
             system_channel_flags?: number | undefined;
         }) => Promise<Guild>;
@@ -467,15 +472,15 @@ export namespace discord {
             discovery_splash?: string | Buffer | undefined;
             banner?: string | Buffer | undefined;
             verification_level?: number | undefined;
-            default_message_notifications?: DefaultMessageNotificationLevel;
-            explicit_content_filter?: ExplicitContentFilterLevel;
+            default_message_notifications?: number | undefined;
+            explicit_content_filter?: number | undefined;
             rules_channel_id?: string | undefined;
             public_updates_channel_id?: string | undefined;
             features?: GuildFeatures[] | undefined;
             afk_channel_id?: string | undefined;
-            afk_timeout?: 300 | 60 | 900 | 1800 | 3600 | undefined;
+            afk_timeout?: 60 | 300 | 900 | 1800 | 3600 | undefined;
             system_channel_id?: string | undefined;
-            system_channel_flags?: SystemChannelFlags;
+            system_channel_flags?: number | undefined;
             premium_progress_bar_enabled?: boolean | undefined;
         }) => Promise<Guild>;
         destroy: (params: {
@@ -506,14 +511,14 @@ export namespace discord {
             user_id: string;
             delete_message_seconds?: number | undefined;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         removeBan: (params: {
             guild_id: string;
             user_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         getInvites: (params: {
@@ -548,7 +553,7 @@ export namespace discord {
             guild_id: string;
             integration_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         retrieveWidget: (params: {
@@ -569,7 +574,7 @@ export namespace discord {
         retrieveVanityURL: (params: {
             guild_id: string;
         }) => Promise<{
-            code: string;
+            code: number;
             uses: number;
         }>;
         getWelcomeScreen: (params: {
@@ -600,23 +605,24 @@ export namespace discord {
             }) => Promise<Channel[]>;
             create: (params: {
                 guild_id: string;
-                name?: string | undefined;
-                type?: number | undefined;
-                topic?: string | undefined;
-                bitrate?: number | undefined;
-                user_limit?: number | undefined;
-                rate_limit_per_user?: number | undefined;
-                position?: number | undefined;
-                permission_overwrites?: Overwrite[] | undefined;
-                parent_id?: string | undefined;
-                nsfw?: boolean | undefined;
-                rtc_region?: string | undefined;
-                video_quality_mode?: number | undefined;
-                default_auto_archive_duration?: number | undefined;
-                default_reaction_emoji?: DefaultReaction | undefined;
-                available_tags?: ForumTag[] | undefined;
-                default_sort_order?: number | undefined;
-                default_forum_layout?: number | undefined;
+                name: string;
+                type?: number | null | undefined;
+                topic?: string | null | undefined;
+                bitrate?: number | null | undefined;
+                user_limit?: number | null | undefined;
+                rate_limit_per_user?: number | null | undefined;
+                position?: number | null | undefined;
+                permission_overwrites?: Overwrite[] | null | undefined;
+                parent_id?: string | null | undefined;
+                nsfw?: boolean | null | undefined;
+                rtc_region?: string | null | undefined;
+                video_quality_mode?: number | null | undefined;
+                default_auto_archive_duration?: number | null | undefined;
+                default_reaction_emoji?: DefaultReaction | null | undefined;
+                available_tags?: ForumTag[] | null | undefined;
+                default_sort_order?: number | null | undefined;
+                default_forum_layout?: number | null | undefined;
+                default_thread_rate_limit_per_user?: number | null | undefined;
             }) => Promise<Channel[]>;
             modifyPositions: (params: {
                 guild_id: string;
@@ -625,7 +631,7 @@ export namespace discord {
                 lock_permissions?: boolean | null | undefined;
                 parent_id?: string | null | undefined;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
         };
@@ -650,7 +656,7 @@ export namespace discord {
                 user_id: string;
                 reason?: string | undefined;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             update: (params: {
@@ -662,7 +668,7 @@ export namespace discord {
                 deaf?: boolean | undefined;
                 channel_id?: string | undefined;
                 communication_disabled_until?: string | undefined;
-                flags?: UserFlags;
+                flags?: number | undefined;
             }) => Promise<Member>;
             updateCurrent: (params: {
                 guild_id: string;
@@ -673,7 +679,7 @@ export namespace discord {
                 user_id: string;
                 role_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             removeRole: (params: {
@@ -681,10 +687,10 @@ export namespace discord {
                 user_id: string;
                 role_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
-            getPermissionNames: (userRoles: object[], guildRoles: object[]) => import("./api/discord/guilds").PermNames[];
+            getPermissionNames: (userRoles: string[], guildRoles: Role[]) => PermissionNames[];
             timeout: (params: {
                 guild_id: string;
                 user_id: string;
@@ -724,7 +730,7 @@ export namespace discord {
                 guild_id: string;
                 role_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             modifyPositions: (params: {
@@ -759,7 +765,7 @@ export namespace discord {
                 guild_id: string;
                 emoji_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
         };
@@ -786,7 +792,7 @@ export namespace discord {
                 guild_id: string;
                 sticker_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
             create: (params: {
@@ -795,7 +801,7 @@ export namespace discord {
                 description?: string | undefined;
                 tags: string;
                 file: string | Buffer | undefined;
-            }) => Promise<Sticker>;
+            }) => Promise<Sticker | undefined>;
         };
         events: {
             retrieve: (params: {
@@ -845,7 +851,7 @@ export namespace discord {
                 guild_id: string;
                 guild_scheduled_event_id: string;
             }) => Promise<{
-                statusCode: string;
+                statusCode: number;
                 message: string;
             }>;
         };
@@ -882,7 +888,7 @@ export namespace discord {
             }) => Promise<GuildTemplate>;
         };
     };
-    const webhooks: {
+    let webhooks: {
         retrieve: (params: {
             webhook_id: string;
         }) => Promise<Webhook>;
@@ -908,7 +914,7 @@ export namespace discord {
             message_id: string;
             thread_id?: string | undefined;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         create: (params: {
@@ -931,14 +937,14 @@ export namespace discord {
         destroy: (params: {
             webhook_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         destroyWithToken: (params: {
             webhook_id: string;
             webhook_token: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         execute: (params: {
@@ -957,7 +963,7 @@ export namespace discord {
             thread_id?: string | undefined;
             wait?: boolean | undefined;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
         updateMessage: (params: {
@@ -972,7 +978,7 @@ export namespace discord {
             allowed_mentions?: AllowedMentions | undefined;
         }) => Promise<Message>;
     };
-    const stageInstance: {
+    let stageInstance: {
         retrieve: (params: {
             channel_id: string;
         }) => Promise<StageInstance>;
@@ -990,14 +996,14 @@ export namespace discord {
         destroy: (params: {
             channel_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
     };
-    const interactions: {
+    let interactions: {
         callback: {
-            get_original: (params: import("./api/discord/interactions").InteractionParams) => Promise<Message | null>;
-            reply: (params: import("./api/discord/interactions").InteractionParams, input?: {
+            get_original: (params: Pick<InteractionParams, "token" | "application_id">) => Promise<Message | null>;
+            reply: (params: Pick<InteractionParams, "id" | "token">, input?: {
                 ephemeral?: boolean | undefined;
                 flags?: number | undefined;
                 content?: string | undefined;
@@ -1008,64 +1014,65 @@ export namespace discord {
                 allowed_mentions?: AllowedMentions | undefined;
                 return_date?: boolean | undefined;
             }) => Promise<boolean | Date>;
-            defer(params: import("./api/discord/interactions").InteractionParams, input?: {
+            defer: (params: Pick<InteractionParams, "id" | "token">, input?: {
                 ephemeral?: boolean | undefined;
-            } | undefined): Promise<string>;
-            component_defer(params: import("./api/discord/interactions").InteractionParams, input?: {
+            } | undefined) => Promise<Date>;
+            component_defer: (params: Pick<InteractionParams, "id" | "token">, input?: {
                 ephemeral?: boolean | undefined;
-            } | undefined): Promise<{
+            } | undefined) => Promise<{
                 statusCode: 204;
                 body: undefined;
             }>;
-            component_update(params: import("./api/discord/interactions").InteractionParams, input?: {
+            component_update: (params: Pick<InteractionParams, "id" | "token">, input?: {
                 ephemeral?: boolean | undefined;
+                flags?: number | undefined;
                 content?: string | undefined;
                 embeds?: Embed[] | undefined;
                 components?: Component | undefined;
                 attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
                 tts?: boolean | undefined;
                 allowed_mentions?: AllowedMentions | undefined;
-            }): Promise<{
+            }) => Promise<{
                 statusCode: 204;
                 body: undefined;
             } | null>;
-            autocomplete_reply(params: import("./api/discord/interactions").InteractionParams, input: {
+            autocomplete_reply: (params: Pick<InteractionParams, "id" | "token">, input: {
                 choices: Pick<ApplicationCommandOptionChoice, "name" | "value">[];
-            }): Promise<{
+            }) => Promise<{
                 statusCode: 204;
                 body: undefined;
             }>;
-            modal_reply(params: import("./api/discord/interactions").InteractionParams, input: {
+            modal_reply: (params: Pick<InteractionParams, "id" | "token">, input: {
                 custom_id: string;
                 title: string;
                 components: Component;
-            }): Promise<{
+            }) => Promise<{
                 statusCode: 204;
                 body: undefined;
             }>;
-            edit_original(params: import("./api/discord/interactions").InteractionParams, input?: {
+            edit_original: (params: Pick<InteractionParams, "token" | "application_id">, input?: {
                 content?: string | undefined;
                 embeds?: Embed[] | undefined;
                 components?: Component | undefined;
                 attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
                 allowed_mentions?: AllowedMentions | undefined;
                 ephemeral?: boolean | undefined;
-            }): Promise<Message | null>;
-            delete_original(params: import("./api/discord/interactions").InteractionParams): Promise<{
+            }) => Promise<Message | null>;
+            delete_original: (params: Pick<InteractionParams, "token" | "application_id">) => Promise<{
                 statusCode: 204;
                 body: undefined;
             }>;
-            upgrade(params: import("./api/discord/interactions").InteractionParams, input?: object | undefined): Promise<{
+            upgrade: (params: Pick<InteractionParams, "id" | "token">, input?: object | undefined) => Promise<{
                 statusCode: 204;
                 body: undefined;
             }>;
         };
         followup: {
-            get: (params: import("./api/discord/interactions").InteractionParams, input: {
+            get: (params: Pick<InteractionParams, "token" | "application_id">, input: {
                 message_id: string;
                 thread_id?: string | undefined;
             }) => Promise<Message>;
-            create(params: import("./api/discord/interactions").InteractionParams, input?: {
+            create: (params: Pick<InteractionParams, "token" | "application_id">, input?: {
                 ephemeral?: boolean | undefined;
                 content?: string | undefined;
                 embeds?: Embed[] | undefined;
@@ -1074,8 +1081,8 @@ export namespace discord {
                 tts?: boolean | undefined;
                 allowed_mentions?: AllowedMentions | undefined;
                 thread_name?: string | undefined;
-            }): Promise<Message | null>;
-            edit(params: import("./api/discord/interactions").InteractionParams, input: {
+            }) => Promise<Message | null>;
+            edit: (params: Pick<InteractionParams, "token" | "application_id">, input: {
                 message_id: string;
                 ephemeral?: boolean | undefined;
                 content?: string | undefined;
@@ -1084,16 +1091,16 @@ export namespace discord {
                 attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
                 allowed_mentions?: AllowedMentions | undefined;
                 thread_id?: string | undefined;
-            }): Promise<Message | null>;
-            del(params: import("./api/discord/interactions").InteractionParams, input: {
+            }) => Promise<Message | null>;
+            del: (params: Pick<InteractionParams, "token" | "application_id">, input: {
                 message_id: string;
-            }): Promise<{
+            }) => Promise<{
                 statusCode: 204;
                 body: undefined;
             }>;
         };
     };
-    const oauth2: {
+    let oauth2: {
         token: {
             get: (params: {
                 client_id: string;
@@ -1123,7 +1130,7 @@ export namespace discord {
             }) => Promise<Omit<AccessTokenResponse, "refresh_token"> | null>;
         };
     };
-    const users: {
+    let users: {
         retrieve: (params: {
             user_id: string;
         }) => Promise<User>;
@@ -1149,7 +1156,7 @@ export namespace discord {
             platform_name?: string | undefined;
             platform_username?: string | undefined;
             metadata?: ApplicationRoleConnectionMetadata | undefined;
-        }) => Promise<object>;
+        }) => Promise<ApplicationRoleConnection>;
         createDM: (params: {
             recipient_id: string;
             content?: string | undefined;
@@ -1181,13 +1188,97 @@ export namespace discord {
         leaveGuild: (params: {
             guild_id: string;
         }) => Promise<{
-            statusCode: string;
+            statusCode: number;
             message: string;
         }>;
     };
 }
+export namespace slack {
+    let chat: {
+        post: (params: {
+            channel: string;
+            text?: string | undefined;
+            blocks?: SlackBlock[] | undefined;
+            attachments?: SlackAttachment[] | undefined;
+            icon_emoji?: string | undefined;
+            icon_url?: string | undefined;
+            link_names?: boolean | undefined;
+            metadata?: string | undefined;
+            mrkdwn?: boolean | undefined;
+            parse?: string | undefined;
+            reply_broadcast?: boolean | undefined;
+            thread_ts?: string | undefined;
+            unfurl_links?: boolean | undefined;
+            unfurl_media?: boolean | undefined;
+            username?: string | undefined;
+        }) => Promise<SlackMessageResponse>;
+        postEphemeral: (params: {
+            channel: string;
+            user: string;
+            text?: string | undefined;
+            blocks?: SlackBlock[] | undefined;
+            attachments?: SlackAttachment[] | undefined;
+            icon_emoji?: string | undefined;
+            icon_url?: string | undefined;
+            link_names?: boolean | undefined;
+            metadata?: string | undefined;
+            mrkdwn?: boolean | undefined;
+            parse?: string | undefined;
+            reply_broadcast?: boolean | undefined;
+            thread_ts?: string | undefined;
+            unfurl_links?: boolean | undefined;
+            unfurl_media?: boolean | undefined;
+            username?: string | undefined;
+        }) => Promise<SlackMessageResponse>;
+        update: (params: {
+            channel: string;
+            timestamp: string;
+            text?: string | undefined;
+            blocks?: SlackBlock[] | undefined;
+            attachments?: SlackAttachment[] | undefined;
+            file_ids?: string[] | undefined;
+            link_names?: boolean | undefined;
+            metadata?: string | undefined;
+            parse?: string | undefined;
+            reply_broadcast?: boolean | undefined;
+        }) => Promise<any>;
+        destroy: (params: {
+            channel: string;
+            timestamp: string;
+        }) => Promise<{
+            ok: boolean;
+            channel: string;
+            ts: string;
+        }>;
+        meMessage: (params: {
+            channel: string;
+            text: string;
+        }) => Promise<{
+            ok: boolean;
+            channel: string;
+            ts: string;
+        }>;
+        scheduled: {
+            create: (params: any) => Promise<any>;
+            list: (params: any) => Promise<any>;
+        };
+    };
+    let conversations: typeof import("./api/slack/conversations");
+    let views: {
+        /**
+         * @param {Object} options
+         * @param {string} [options.discord]
+         * @param {string} [options.slack]
+         */
+        open: (params: {
+            view: string;
+            trigger_id?: string | undefined;
+            interactivity_pointer?: SlackBlock[] | undefined;
+        }) => Promise<SlackMessageResponse>;
+    };
+}
 export namespace utils {
-    const https: {
+    let https: {
         get(params: {
             url: string;
             path?: string | undefined;
@@ -1202,10 +1293,14 @@ export namespace utils {
         patch(params: any): Promise<any>;
         del(params: any): Promise<any>;
     };
-    const aray: {
+    let aray: {
         put(params: {
             index: string | number;
-            value: any;
+            value: any; /**
+             * @param {Object} options
+             * @param {string} [options.discord]
+             * @param {string} [options.slack]
+             */
             ttl?: number | undefined;
         }): Promise<boolean>;
         get(params: {

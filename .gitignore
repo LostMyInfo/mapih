@@ -1,3 +1,5 @@
 decls
 tsconfig.json
 node_modules
+test.js
+.env

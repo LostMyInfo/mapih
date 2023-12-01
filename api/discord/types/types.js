@@ -313,7 +313,7 @@
  * @property {?string} [details] - What the player is currently doing
  * @property {?string} [state] - User's current party status
  * @property {?PartialEmoji} [emoji] - Emoji used for custom status
- * @property {{id: string, size: Array<number, number>}} [party] - Information for the current party of the player
+ * @property {{id: string, size: Array<number>}} [party] - Information for the current party of the player
  * @property {{large_image: string, large_text: string, small_image: string, small_text: string}} [assets] - Images for the presence and their hover texts
  * @property {{join: string, spectate: string, match: string}} [secrets] - Secrets for Rich Presence joining and spectating
  * @property {boolean} [instance] - Whether or not the activity is an instanced game session
@@ -1618,7 +1618,7 @@
 * @property {boolean} pending - Whether the user has not yet passed the guilds Membership Screening requirements
 * @property {string} permissions - Total permissions of the member in the channel
 * @property {ISO8601Timestamp} communication_disabled_until - When the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out
-* @property {PermNames[]} permission_names
+* @property {PermissionNames[]} permission_names
 */
 
 /**
@@ -1638,7 +1638,7 @@
 * @property {RoleTags} [tags] - The [tags]{@link RoleTags} this role has
 * @property {boolean} managed - Whether this role is managed by an integration
 * @property {number} flags
-* @property {PermNames[]} permission_names
+* @property {PermissionNames[]} permission_names
 */
 
 /**
@@ -2644,6 +2644,30 @@ const Locale = {
 /**
  * @summary [Interaction Data]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data}
  * @typedef {ModalSubmitInteractionData | ApplicationCommandInteractionData | MessageComponentInteractionData} InteractionData
+ */
+
+/**
+ * @typedef {Object} InteractionParams
+ * @property {number} timestamp
+ * @property {Snowflake} id
+ * @property {Snowflake} application_id
+ * @property {InteractionType} type - [Type of interaction]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type}
+ * @property {ModalSubmitComponentData | ApplicationCommandInteractionData | MessageComponentInteractionData} data - Interaction data payload
+ * @property {Snowflake} guild_id
+ * @property {Snowflake} [channel_id]
+ * @property {Member} member - Guild member data for the invoking user, including permissions
+ * @property {User} [user] - User object for the invoking user, if invoked in a DM
+ * @property {string} token - Continuation token for responding to the interaction
+ * @property {number} version - Read-only property, always 1
+ * @property {Message} message - For components, the message they were attached to
+ * @property {string} [app_permissions] - Bitwise set of permissions the app or bot has within the channel the interaction was sent from
+ * @property {string} [locale] - Selected language of the invoking user
+ * @property {string} [guild_locale] - Guild's preferred locale, if invoked in a guild
+ * @property {Entitlement[]} entitlements
+ * @property {Snowflake[]} entitlement_sku_ids
+ * @property {Channel} channel
+ * @property {GuildParams} guild
+ * @property {import('../../Api')} api
  */
 
 /**

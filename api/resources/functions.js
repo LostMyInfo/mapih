@@ -5,7 +5,6 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 // @ts-check
-// const FormData = require('form-data');
 
 const { https } = require('../utils/newhttps');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
@@ -20,6 +19,7 @@ const { ResponseError } = require('./Errors');
  */
 
 module.exports = {
+  embedModifier,
   avatarFromObject,
   getBadges,
   parsePermissions,
@@ -32,8 +32,6 @@ module.exports = {
   retrieveDate,
   isValidJSON,
   extendPayload,
-  // returnErr,
-  // getAxiosError,
   slackHandler,
   buildQueryString,
   token,
@@ -72,12 +70,12 @@ module.exports = {
   },
 
   /**
- * Handles multipart form-data for Discord attachments
- * @param {*} params
- * @param {string} path 
- * @param {Method} method
- * @private
- */
+   * Handles multipart form-data for Discord attachments
+   * @param {*} params
+   * @param {string} path 
+   * @param {Method} method
+   * @private
+   */
   sendAttachment: async (params, path, method) => {
     try {
       const form = new FormData();
@@ -309,17 +307,7 @@ async function imageData(media, encoding, datastringbuffer) {
       const buffer = await response.arrayBuffer();
       imageBuffer = Buffer.from(buffer);
       mimetype = response.headers.get('content-type');
-      /*
-      const response = await axios.get(media, {
-        responseType: 'arraybuffer'
-      });
-
-      if (response.status !== 200)
-        throw new Error(`Failed to fetch image: ${response.statusText}`);
-        
-      imageBuffer = response.data;
-      mimetype = response.headers['content-type'];
-      */
+      
     } else imageBuffer = media;
 
     let data;
@@ -675,6 +663,21 @@ function returnErr(r) {
 */
 
 /**
+       * @ignore
+       * @param {Embed[]} embeds 
+       * @returns {Embed[]}
+       */
+function embedModifier(embeds) {
+  for (const embed of embeds) {
+    if (embed.footer?.icon_url && !embed.footer?.text)
+      embed.footer.text = '\u200b';
+    if (embed.author?.icon_url && !embed.author?.name)
+      embed.author.name = '\u200b';
+  }
+  return embeds;
+}
+
+/**
  * @param {ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction} payload
  * @returns 
  */
@@ -915,7 +918,7 @@ async function slackHandler(options) {
 
   } catch (error) {
     console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
-    throw error
+    throw error;
   }
 }
 
