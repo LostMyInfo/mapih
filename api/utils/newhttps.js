@@ -1,4 +1,5 @@
 // @ts-check
+const { ResponseError } = require('../resources/Errors');
 
 /**
  * @example
@@ -49,8 +50,13 @@ async function https(params) {
 
   try {
     const response = await fetch(url, options);
-    if (!response.ok)
-      throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+    if (!response.ok) {
+    // console.log(await response.text())
+      if (url.includes('discord'))
+        throw new ResponseError(await response.json(), response, 'discord_error');
+      else if (url.includes('slack'))
+        throw new ResponseError(await response.json(), response, 'slack_error');
+    }
 
     return response.json();
   } catch (error) {

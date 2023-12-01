@@ -600,6 +600,8 @@
  * @property {number} [default_thread_rate_limit_per_user] - The initial `rate_limit_per_user` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.
  * @property {?SortOrderType} [default_sort_order] - The [Default Sort Order Type]{@link https://discord.com/developers/docs/resources/channel#channel-object-sort-order-types} used to order posts in `GUILD_FORUM` channels. Defaults to `null`, which indicates a preferred sort order hasn't been set by a channel admin
  * @property {ForumLayoutType} [default_forum_layout] - The [Default Forum Layout]{@link https://discord.com/developers/docs/resources/channel#channel-object-forum-layout-types} view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin
+ * @property {string} [created_at]
+ * @property {string} [last_message_sent]
  */
 
 /**

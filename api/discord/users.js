@@ -196,7 +196,7 @@ module.exports = {
    * @param {string} [params.platform_name] - The vanity name of the platform a bot has connected (max 50 characters)
    * @param {string} [params.platform_username] - The username on the platform a bot has connected (max 100 characters)
    * @param {ApplicationRoleConnectionMetadata} [params.metadata]
-   * @returns {Promise<object>} The [Application Role Connection]{@link https://discord.com/developers/docs/resources/user#application-role-connection-object} for the user
+   * @returns {Promise<ApplicationRoleConnection>} The [Application Role Connection]{@link https://discord.com/developers/docs/resources/user#application-role-connection-object} for the user
    */
   updateAppRoleConnection: async (params) =>
     attemptHandler({
@@ -335,7 +335,7 @@ module.exports = {
    * @memberof module:users#
    * @param {object} params
    * @param {string} params.guild_id
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   leaveGuild: async (params) =>
     attemptHandler({

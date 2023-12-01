@@ -6,8 +6,7 @@
  * @module oauth2
  */
 
-const { isValidJSON, returnErr } = require('../resources/functions');
-const https = require('../utils/https');
+const {https} = require('../utils/newhttps');
 
 module.exports = {
 
@@ -168,7 +167,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
       getUserCreds: 'user'
     };
 
-    let body = `grant_type=${types[grant_type]}&client_id=${client_id}&client_secret=${client_secret}`;
+    let body = `grant_type=${types[grant_type]}&client_id=${client_id}&client_secret=${client_secret}` || undefined;
     
     if (types[grant_type] === 'authorization_code' && oauth2_redirect && code)
       body += `&redirect_uri=${encodeURIComponent(oauth2_redirect)}&code=${code}`;
@@ -177,9 +176,9 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
     else if (types[grant_type] === 'client_credentials' && scope)
       body += `&scope=${scope}`;
     else if (types[grant_type] === 'user' && token)
-      body = '';
+      body = undefined;
     else if (types[grant_type] === 'revoke' && token)
-      body = `${body.replace(/^(.*?)&/, '')}&token=${token}`;
+      body = `${body?.replace(/^(.*?)&/, '')}&token=${token}`;
         
     const headers = grant_type === 'getUserCreds'
       ? { Authorization: `${token?.token_type} ${token?.access_token}` }
@@ -188,7 +187,6 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
     /**
      * @typedef {Object} ResponseBody
      * @property {string} url
-     * @property {string} path
      * @property {Object} headers
      * @property {Object} [body]
      * @property {number} [statusCode]
@@ -198,8 +196,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
      * @type {ResponseBody}
      */
     const responseBody = {
-      url: encodeURI('discord.com'),
-      path: encodeURI(path),
+      url: `https://discord.com${path}`,
       headers,
       body
     };
@@ -207,23 +204,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
     if (method === 'post')
       responseBody.statusCode = 200;
 
-    const attempt = await https[method](responseBody);
-    
-    if (attempt.statusCode >= 200) {
-      try {
-        return JSON.parse(attempt.body);
-      } catch {
-        return attempt.body;
-      }
-    } else {
-      throw new Error(
-        attempt.body.length
-          ? isValidJSON(attempt.body)
-            ? returnErr(attempt)
-            : attempt.body
-          : attempt
-      );
-    }
+    return https(responseBody);
     
   } catch (e) {
     console.log(e);

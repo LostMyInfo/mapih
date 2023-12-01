@@ -46,7 +46,7 @@ module.exports = {
    */
   post: async (params) =>
     slackHandler({
-      method: 'POST',
+      method: 'post',
       endpoint: 'chat.postMessage',
       body: {
         channel: params.channel,
@@ -109,7 +109,7 @@ module.exports = {
    */
   postEphemeral: async (params) =>
     slackHandler({
-      method: 'POST',
+      method: 'post',
       endpoint: 'chat.postEphemeral',
       body: {
         channel: params.channel,
@@ -167,7 +167,7 @@ module.exports = {
    */
   update: async (params) =>
     slackHandler({
-      method: 'POST',
+      method: 'post',
       endpoint: 'chat.update',
       body: {
         channel: params.channel,
@@ -202,7 +202,7 @@ module.exports = {
    */
   destroy: async (params) =>
     slackHandler({
-      method: 'POST',
+      method: 'post',
       endpoint: 'chat.delete',
       body: {
         channel: params.channel,
@@ -227,7 +227,7 @@ module.exports = {
    */
   meMessage: async (params) =>
     slackHandler({
-      method: 'POST',
+      method: 'post',
       endpoint: 'chat.meMessage',
       body: {
         channel: params.channel,
@@ -239,7 +239,7 @@ module.exports = {
 
     create: async (params) =>
       slackHandler({
-        method: 'POST',
+        method: 'post',
         endpoint: 'chat.scheduleMessage',
         body: {
           channel: params.channel,
@@ -260,7 +260,7 @@ module.exports = {
 
     list: async (params) =>
       slackHandler({
-        method: 'POST',
+        method: 'post',
         endpoint: 'chat.scheduledMessages.list',
         body: {
           channel: params.channel ?? undefined,

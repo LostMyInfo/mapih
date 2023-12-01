@@ -1,19 +1,18 @@
-// @ts-check
 /* eslint-disable node/no-unsupported-features/es-builtins */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable brace-style */
 /* eslint-disable max-statements-per-line */
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-syntax */
-const { default: axios, AxiosError, isAxiosError } = require('axios');
-const FormData = require('form-data');
+// @ts-check
+// const FormData = require('form-data');
 
-// const https = require('../utils/https');
-const https = require('../utils/https');
+const { https } = require('../utils/newhttps');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
-const sizeOf = require('../utils/imageInfo');
+const { imageInfo } = require('../utils/imageInfo');
+const { ResponseError } = require('./Errors');
 
 /**
  * @global
@@ -33,10 +32,11 @@ module.exports = {
   retrieveDate,
   isValidJSON,
   extendPayload,
-  returnErr,
-  getAxiosError,
+  // returnErr,
+  // getAxiosError,
   slackHandler,
   buildQueryString,
+  token,
   
   /**
    * API Handler Creator
@@ -48,65 +48,24 @@ module.exports = {
    * @private
    */
   attemptHandler: async (params) => {
-
-    const headers = {
-      'Authorization': `Bot ${token('discord')}`
-    };
-
-    if (!params.endpoint.includes('prune'))
-      headers['Content-Type'] = 'application/json';
-  
-    /*
+    
     const headers = new Headers({
       'Authorization': `Bot ${token('discord')}`
     });
 
     if (!params.endpoint.includes('prune'))
       headers.append('content-type', 'application/json');
-  
-    */
 
     try {
 
-      const attempt = await https[params.method]({
-        // method: params.method,
-        url: encodeURI('discord.com'),
-        path: encodeURI(`/api/v10/${params.endpoint}`),
-        headers: headers,
-        body: params.body ? JSON.stringify(params.body) : ''
-      });
-      /*
-      const attempt = await https[params.method]({
-        // method: params.method,
+      return https({
+        method: params.method,
         url: `https://discord.com/api/v10/${params.endpoint}`,
         headers,
         body: params.body ? JSON.stringify(params.body) : ''
       });
-      */
-      // console.log('attempt in functions', attempt);
-      if (attempt.statusCode === 204) return {
-        statusCode: 204,
-        message: 'Success'
-      };
-
-      else if (attempt.statusCode >= 200 && attempt.statusCode < 300) {
-        
-        try {
-          return JSON.parse(attempt.body);
-        } catch {
-          return attempt.body;
-        }
-
-      } else {
-        // console.log('error in else\n', attempt.body);
-        throw new Error(
-          attempt.body.length
-            ? isValidJSON(attempt.body)
-              ? JSON.stringify(returnErr(attempt), null, 2)
-              : attempt.body
-            : attempt
-        );
-      }
+      // console.log('attempt in functions', attempt)
+      
     } catch (e) {
       throw e;
     }
@@ -114,63 +73,51 @@ module.exports = {
 
   /**
  * Handles multipart form-data for Discord attachments
- * @param {Object} params
+ * @param {*} params
  * @param {string} path 
  * @param {Method} method
  * @private
  */
   sendAttachment: async (params, path, method) => {
     try {
-
       const form = new FormData();
       
       for (const attachment of params.attachments) {
-        if (!attachment.file || !attachment.filename) {
+        if (!attachment.file || !attachment.filename)
           throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
-        }
-      
-        if (await isValidMedia(attachment.file)) {
-          if (typeof attachment.file === 'string') {
-            const response = await axios.get(attachment.file, {
-              responseType: 'arraybuffer'
-            });
-            attachment.file = Buffer.from(response.data);
-          }
-        
-        } else if (!Buffer.isBuffer(attachment.file)) {
-          throw new Error('\nInvalid file-type provided. Must be of type Buffer or a valid image URL.\n');
-        }
-      }
 
-      for (let i = 0; i < params.attachments.length; i++) {
-        form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
-      };
+        if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
+          const response = await fetch(attachment.file);
+          attachment.file = await response.blob();
+        } else if (!(attachment.file instanceof Blob))
+          throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
     
-      params.attachments = params.attachments.map((a, index) => ({
-        id: index, filename: a.filename, description: a.description ?? ''
+        form.append(`files[${params.attachments.indexOf(attachment)}]`, attachment.file, attachment.filename);
+      }
+      
+      params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
+        id: index,
+        filename: a.filename,
+        description: a.description || ''
       }));
-    
-      // console.log('params from sendAttachment()\n', params);
 
       form.append('payload_json', JSON.stringify(params));
 
-      const response = await axios({
-        method, url: `https://discord.com/api/v10/${path}`,
-        data: form,
+      const response = await fetch(`https://discord.com/api/v10/${path}`, {
+        method,
+        body: form,
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bot ${process.env.token}`
+          'Authorization': `Bot ${token('discord')}`
         }
       });
-    
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.statusText}\n`);
-      }
-    
-      return response.data;
-    
+
+      if (!response.ok)
+        throw new ResponseError(await response.json(), response, 'discord_error');
+  
+      return response.json();
+      
     } catch (e) {
-      throw getAxiosError(e);
+      throw e;
     }
   }
 };
@@ -184,7 +131,7 @@ function getBadges(flags) {
   if (!flags) return [];
   const FLAGS = Object.entries(USER_FLAGS);
   return FLAGS
-    .filter(([name, value]) => flags & value)
+    .filter(([, value]) => flags & value)
     .map(([name]) => name);
 }
 
@@ -200,6 +147,7 @@ function avatarFromObject(userID, avatarID, guildID, memberAvatarID) {
   const base = 'https://cdn.discordapp.com';
   
   if (!avatarID && !memberAvatarID) {
+    // @ts-ignore
     return `${base}/embed/avatars/${Number((BigInt(userID) >> 22n) % 6n)}.png`;
   }
   
@@ -217,14 +165,23 @@ function avatarFromObject(userID, avatarID, guildID, memberAvatarID) {
  * @param {string|undefined} url
  * @param {'image'|'audio'|'video'} [content_type]
  * @param {number} [timeout]
- * @returns {Promise<boolean>}
+ * @returns {Promise<boolean|undefined>}
  */
 async function isValidMediaURL(url, content_type = 'image', timeout = 5000) {
   if (!url) return false;
   try {
-    const response = await axios.head(url, { timeout });
-    const contentType = response.headers['content-type'];
-    console.log('\nCONTENT TYPE IN isValidMediaURL:', contentType);
+    const controller = new AbortController();
+    const timeoutID = setTimeout(() => controller.abort(), timeout);
+
+    const response = await fetch(url, {
+      method: 'HEAD',
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutID);
+    if (!response.ok) return false;
+
+    const contentType = response.headers.get('content-type');
     return contentType?.startsWith(`${content_type}/`);
   } catch (error) {
     return false;
@@ -314,7 +271,7 @@ async function isValidMedia(media, media_type = 'image') {
 
 /**
  * Validates a payload as JSON
- * @param {Object} payload
+ * @param {string} payload
  * @returns {boolean}
  */
 function isValidJSON(payload) {
@@ -331,7 +288,7 @@ function isValidJSON(payload) {
    * @param {string|Buffer|undefined} media
    * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
    * @param {boolean} [datastringbuffer]
-   * @returns {Promise<{data: Buffer | undefined, type: string | undefined}>}
+   * @returns {Promise<{data: Buffer | string | undefined, type: string | null | undefined}>}
    */
 async function imageData(media, encoding, datastringbuffer) {
 
@@ -343,26 +300,40 @@ async function imageData(media, encoding, datastringbuffer) {
     
     let imageBuffer, mimetype;
     if (typeof media === 'string') {
+      const response = await fetch(media);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
+      }
+
+      const buffer = await response.arrayBuffer();
+      imageBuffer = Buffer.from(buffer);
+      mimetype = response.headers.get('content-type');
+      /*
       const response = await axios.get(media, {
         responseType: 'arraybuffer'
       });
 
       if (response.status !== 200)
         throw new Error(`Failed to fetch image: ${response.statusText}`);
+        
       imageBuffer = response.data;
       mimetype = response.headers['content-type'];
+      */
     } else imageBuffer = media;
 
-    let option, data;
+    let data;
     if (encoding === 'base64string') {
-      option = Buffer.from(imageBuffer);
+      const option = Buffer.from(imageBuffer);
+      data = `data:${mimetype};base64,${option.toString('base64')}`;
       data = `data:${mimetype};base64,${option.toString('base64')}`;
       if (datastringbuffer)
         data = Buffer.from(option.toString('base64'), 'base64');
     } else if (encoding === 'binarystring')
       data = imageBuffer.toString('binary');
-    else if (encoding)
-      data = Buffer.from(imageBuffer, encoding);
+    else if (encoding && ['base64', 'utf-8', 'binary'].includes(encoding))
+      data = Buffer.from(imageBuffer).toString(encoding);
+      // data = Buffer.from(imageBuffer, encoding);
     else
       data = Buffer.from(imageBuffer);
     
@@ -387,7 +358,7 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
   try {
 
     let image;
-    const { width: startWidth, height: startHeight } = sizeOf(buffer);
+    const { width: startWidth, height: startHeight } = imageInfo(buffer);
     const startSize = buffer.length;
 
     if (type === 'image/png') {
@@ -436,7 +407,7 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
 
 /**
  * @param {Buffer} buffer 
- * @param {'image/png' | 'image/gif' | 'image/apng'} type
+ * @param {string} type
  * @param {number} size
  * @param {number} [MAX_SIZE] 
  * @returns {Promise<{image: Buffer, height: number, width: number, size: number}>}
@@ -474,7 +445,6 @@ async function reduceSize(buffer, type, size, MAX_SIZE = 524288) {
  * @param {'relative'|'date'|'full'|'all'|undefined} [style] 
  * @returns {string}
  */
-
 function retrieveDate(value, snowflake, style) {
   if (!value) return `Invalid or missing argument: ${value ?? 'undefined'}`;
   const EPOCH = 1420070400000;
@@ -540,6 +510,9 @@ function generateCDN(object, media, size = '1024', x = '') {
 function parsePermissions(permissions) {
   const flags = Object.entries(PERMISSION_NAMES);
   if (!permissions) return [];
+  /**
+   * @type {string[]}
+   */
   const permission_names = [];
   if (permissions > 0) {
     for (let p = 0; p < flags.length; p++) {
@@ -550,7 +523,7 @@ function parsePermissions(permissions) {
   }
   return permission_names;
 }
-
+/*
 function returnErr(r) {
   let parsed;
   try {
@@ -699,10 +672,10 @@ function returnErr(r) {
   
   throw error;
 }
+*/
 
 /**
- * 
- * @param {ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember} payload
+ * @param {ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction} payload
  * @returns 
  */
 /* async */function extendPayload(payload/* , params*/) {
@@ -914,74 +887,17 @@ function returnErr(r) {
 }
 
 /**
- * @typedef {Object} ErrorObject
- * @property {string|number} status
- * @property {string} message
- * @property {boolean} success
- * @property {*} [error]
- */
-
-/**
- * @param {AxiosError} error
- * @returns {ErrorObject}
- */
-function getAxiosError(error) {
-  const errObj = {};
-  // response.status = ###
-  // response.statusText = ''
-
-  console.log(`\n${'-'.repeat(13)}\nGETAXIOSERROR\n${'-'.repeat(13)}\n`);
-  // if (error.code) console.log('error.code:', error.code);
-  // if (error.message) console.log('error.message:', error.message);
-  // if (error.response?.status) console.log('error.response.status:', error.response?.status);
-  // if (error.response?.statusText) console.log('error.response.statusText:', error.response?.statusText);
-
-  if (error.response && error.response.status) {
-    errObj.status = error.response.status;
-  } else if (error.code) errObj.status = error.code;
-
-  if (error.response && error.response.statusText) {
-    errObj.message = error.response.statusText;
-  } else {
-    errObj.message = error.message;
-  }
-
-  if (error.response && error.response.data) {
-    // console.log(JSON.stringify(error.response.data, null, 2))
-    if (error.response.data.message && error.response.data.code) {
-      // console.log('keys', Object.keys(error));
-      console.log(returnErr(error.response));
-      // @ts-ignore
-      return returnErr(error.response);
-    } else if ((Object.keys(error.response.data).length) > 1) {
-      console.log('\nObject.keys(error.response.data)\n\n', error.response.data);
-      errObj.error = error.response.data;
-      console.log('\nerrObj1\n\n', errObj);
-    } else if (error.response.data?.detail) {
-      console.log('\nerror.response.data?.detail\n\n', error.response.data);
-      errObj.error = error.response.data?.detail.toString().includes('[object Object]')
-        ? JSON.parse(JSON.stringify(error.response.data.detail, null, 2))
-        : JSON.stringify(error.response.data?.detail, null, 2);
-      console.log('\nerrObj2\n\n', errObj);
-    } else if (error.response.data?.error) {
-      console.log('\nerror.response.data?.error\n\n', error.response.data);
-      typeof error.response.data.error === 'string'
-        ? errObj.error = error.response.data?.error
-        : errObj.error = JSON.stringify(error.response.data.error, null, 2);
-      console.log('\nerrObj3\n\n', errObj);
-    }
-  } else if (error.cause) {
-    errObj.cause = error.cause;
-    console.log('\nerrObj4\n\n', errObj);
-  }
-  errObj.success = false;
-  // console.log('\n\nFINAL ERROBJ IN GETAXIOSERROR\n\n', errObj);
-  return errObj;
-}
-
-async function slackHandler(options = {}) {
+   * API Handler Creator
+   * @param {Object} options
+   * @param {Method} options.method
+   * @param {string} options.endpoint
+   * @param {Object} [options.body]
+   * @returns {Promise<*>}
+   * @private
+   */
+async function slackHandler(options) {
   try {
-    const { https } = require('../utils/newhttps');
+
     const attempt = await https({
       url: `https://slack.com/api/${options.endpoint}`,
       method: options.method || 'GET',
@@ -991,79 +907,24 @@ async function slackHandler(options = {}) {
       },
       ...(options.body && { body: options.body })
     });
-
+    /*
     if (!attempt.ok)
       return parseSlackError(attempt);
-
+    */
     return attempt;
 
   } catch (error) {
     console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
-    // throw error
+    throw error
   }
 }
 
-
-function parseSlackError(err) {
-  console.log('err in parseSlackError:\n', err);
-  const errs = {};
-  if (!err.errors && !err.response_metadata) {
-    return { message: err.error };
-  }
-  for (const e of err.errors ?? err.response_metadata?.messages) {
-    // const match = e.match(/^.*(?=\s\[)|(?<=:\/).*(?=\])/gmi);
-    const match = e.match(/^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
-    const specificProp = e.match(/(?<=:\s)(\w+)(?!\[)/gi)?.[0];
-    // const specificProp = e.match(/:\s(\w+)(?!\[)/i)?.[1];
-    const [message] = match;
-    let [, path] = match,
-      newPath = '';
-    path = path.split('/');
-    const prop = path[0];
-    errs[prop] = errs[prop] || [];
-
-    for (const p of path) {
-      newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
-    }
-
-    path = path.slice(2).join('.');
-    newPath = newPath.slice(1);
-
-    for (const block of blocks) {
-      // const propname = ``
-      if (specificProp) {
-        errs[prop][`${message} (${newPath})`] = { [specificProp]: get(block, specificProp) };
-      } else {
-        console.log(get(block, path));
-        errs[prop][`${message} (${newPath})`] = get(block, path);
-      }
-      console.log(errs);
-    }
-  }
-  console.log('final errs', errs);
-  return errs;
-}
-
-function get(obj, path, defaultValue = undefined) {
-  const travel = (regexp) =>
-    String.prototype.split
-      .call(path, regexp)
-      .filter(Boolean)
-      .reduce((res, key) => (
-        res !== null && res !== undefined
-          ? res[key]
-          : res
-      ), obj);
-  const result
-    = travel(/[,[\]]+?/) ||
-    travel(/[,[\].]+?/);
-
-  return result === undefined || result === obj
-    ? defaultValue
-    : result;
-}
-
-
+/**
+   * @param {string} url
+   * @param {Object} params
+   * @param {boolean} encode
+   * @returns {string}
+   */
 function buildQueryString(url, params, encode = true) {
   const queryParams = new URLSearchParams();
 

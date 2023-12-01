@@ -171,7 +171,7 @@ module.exports = {
    * @param {string} params.webhook_token
    * @param {Snowflake} params.message_id
    * @param {Snowflake} [params.thread_id]
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroyMessage: async (params) => {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
@@ -279,7 +279,7 @@ module.exports = {
    * @function destroy
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -300,7 +300,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
    * @param {string} params.webhook_token
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroyWithToken: async (params) =>
     attemptHandler({
@@ -354,7 +354,7 @@ module.exports = {
    * Waits for server confirmation of message send before response, and returns the created message body.
    * 
    * When `false`, a message that is not saved does not return an error
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content` response depending on the `wait` query parameter
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content` response depending on the `wait` query parameter
    */
   execute: async (params) => {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}?`;

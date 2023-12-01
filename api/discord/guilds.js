@@ -2,10 +2,8 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
 'use strict';
 
-const { attemptHandler, imageData, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload } = require('../resources/functions');
+const { attemptHandler, imageData, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload, token } = require('../resources/functions');
 const { ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
-const { default: axios } = require('axios');
-const { imageInfo } = require('../utils/imageInfo');
 
 /**
  * @file All Discord API endpoints relating to guild functions
@@ -291,7 +289,7 @@ module.exports = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
    * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   createBan: async (params) => attemptHandler({
     method: 'put',
@@ -316,7 +314,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   removeBan: async (params) =>
     attemptHandler({
@@ -490,7 +488,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.integration_id
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroyIntegration: async (params) =>
     attemptHandler({
@@ -596,7 +594,7 @@ module.exports = {
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
-   * @returns {Promise<{code: string, uses: number}>} A partial [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-object} object for guilds with that feature enabled
+   * @returns {Promise<{code: number, uses: number}>} A partial [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-object} object for guilds with that feature enabled
    */
   retrieveVanityURL: async (params) =>
     attemptHandler({
@@ -850,7 +848,7 @@ module.exports = {
      * @param {?number} [params.position] - Sorting position of the channel
      * @param {?boolean} [params.lock_permissions] - Syncs the permission overwrites with the new parent, if moving to a new category
      * @param {?Snowflake} [params.parent_id] - The new parent ID for the channel that is moved
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     modifyPositions: async (params) =>
       attemptHandler({
@@ -994,7 +992,7 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {string} [params.reason] - Reason for the kick
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     remove: async (params) =>
       attemptHandler({
@@ -1079,7 +1077,7 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {Snowflake} params.role_id
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     addRole: async (params) =>
       attemptHandler({
@@ -1103,7 +1101,7 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {Snowflake} params.role_id
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     removeRole: async (params) =>
       attemptHandler({
@@ -1355,7 +1353,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.role_id
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
@@ -1526,7 +1524,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.emoji_id
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
@@ -1666,7 +1664,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.sticker_id
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
@@ -1701,41 +1699,42 @@ module.exports = {
      * @returns {Promise<Sticker|undefined>} [Sticker]{@link https://discord.com/developers/docs/resources/sticker#sticker-object} object
      */
     create: async (params) => {
-      const { Blob } = require('node:buffer');
-      const form = new (require('undici').FormData)();
+      const form = new FormData();
       try {
       
         const file = await imageData(params.file);
         const { data, type } = file;
-        if (!data) return;
-        const trueType = (imageInfo(data)).mimeType;
+        if (!type || !data || !(data instanceof Buffer)) return;
+        // const trueType = (imageInfo(data)).mimeType;
       
-        const newFile = await resizeImage(data, trueType);
+        const newFile = await resizeImage(data, type);
         if (!newFile)
           throw new Error('There was an error while converting/resizing the asset');
-
-        // @ts-ignore
+        
+        // file = new Blob([buffer]);
+        
         form.append('file', new Blob([newFile.image], { type: 'image/png' }), 'filename');
         form.append('name', params.name);
         if (params.description)
           form.append('description', params.description);
         form.append('tags', params.tags);
 
-
-        const response = await axios({
+        const response = await fetch(`https://discord.com/api/v10/guilds/${params.guild_id}/stickers`, {
           method: 'post',
-          url: `https://discord.com/api/v10/guilds/${params.guild_id}/stickers`,
-          data: form,
+          body: form,
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bot ${process.env.token}`
+            'Authorization': `Bot ${token('discord')}`
           }
         });
 
-        return response.data;
-
-      } catch (/** @type {*} */ e) {
-        throw e.response?.data ?? e;
+        if (!response.ok)
+          throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.statusText}\n`);
+  
+        return response.json();
+        
+      } catch (e) {
+        throw e;
       }
     } // End of Create Guild Sticker
   },
@@ -1964,7 +1963,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.guild_scheduled_event_id
-     * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({

@@ -2,9 +2,8 @@
 // @ts-check
 'use-strict';
 
-const { default: axios } = require('axios');
-const https = require('../utils/https');
-const { isValidJSON, returnErr, attemptHandler, extendPayload, isValidMedia, getAxiosError } = require('../resources/functions');
+const { https } = require('../utils/newhttps');
+const { attemptHandler, extendPayload, isValidMedia, token } = require('../resources/functions');
 
 /**
  * @file
@@ -130,39 +129,49 @@ module.exports = {
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.return_date]
-     * @returns {Promise<boolean | string>} 
+     * @returns {Promise<boolean | Date>} 
      */
     reply: async (params, input = {}) => {
       input.flags = input.ephemeral ? (1 << 6) : 0;
-      let message;
+      
       try {
         if (input.attachments && input.attachments?.length)
-          message = await sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
+          return sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
         else {
-          message = await https.post({
-            url: encodeURI('discord.com'),
-            path: encodeURI(`/api/v10/interactions/${params.id}/${params.token}/callback`),
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 4, data: input })
+          if (input.embeds?.length) {
+            for (const embed of input.embeds) {
+              if (embed.footer?.icon_url && !embed.footer?.text)
+                embed.footer.text = '\u200b';
+              if (embed.author?.icon_url && !embed.author?.name)
+                embed.author.name = '\u200b';
+            }
+          }
+
+          await attemptHandler({
+            method: 'post',
+            endpoint: `interactions/${params.id}/${params.token}/callback`,
+            body: {
+              type: 4,
+              data: {
+                content: input.content ?? '',
+                embeds: input.embeds ?? [],
+                components: input.components ?? [],
+                tts: input.tts || false,
+                allowed_mentions: input.allowed_mentions ?? null
+              }
+            }
           });
-        
-          if (message.statusCode !== 204) 
-            throw new Error(
-              message.body.length
-                ? isValidJSON(message.body)
-                  ? JSON.stringify(returnErr(message), null, 2)
-                  : message.body
-                : message
-            );
         }
-        if (message.headers && input.return_date)
-          return message.headers.date;
+        if (input.return_date)
+          return new Date()
         else return true;
       } catch (e) {
         throw e;
       }
     },
 
+        
+        
     /**
      * @summary
      * ### Create Interaction Response (Deferred)
@@ -183,7 +192,7 @@ module.exports = {
      * @param {InteractionParams} params event parameters
      * @param {object} [input] user input
      * @param {boolean} [input.ephemeral]
-     * @returns {Promise<string>}
+     * @returns {Promise<Date>}
      */
     defer: async (params, input = {}) =>
       handleCallbacks({
@@ -266,7 +275,6 @@ module.exports = {
       const url = `interactions/${params.id}/${params.token}/callback`;
       input.flags = input.ephemeral ? (1 << 6) : 0;
       if (input.attachments && input.attachments.length)
-        // @ts-ignore
         return sendAttachment('data', input, url, 'post', 7, input.flags);
       else
         return handleCallbacks({
@@ -520,8 +528,7 @@ module.exports = {
             tts: input.tts || false,
             allowed_mentions: input.allowed_mentions ?? null,
             thread_name: input.thread_name ?? null,
-            flags,
-            attachments: input.attachments ?? []
+            flags
           }
         });
         return extendPayload(attempt/* , params*/);
@@ -638,30 +645,28 @@ module.exports = {
  * @param {number} flags
  */
 async function sendAttachment(sender, params, url, method, type, flags) {
-  const FormData = require('form-data');
+
   const form = new FormData();
 
   if (!params.attachments) return null;
   try {
-  
     for (const attachment of params.attachments) {
-      if ((!attachment.file && !attachment.url) || !attachment.filename)
+      if (!attachment.file || !attachment.filename)
         throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
-      
+    
+      let file;
       if (await isValidMedia(attachment.file)) {
         if (typeof attachment.file === 'string') {
-          const response = await axios.get(attachment.file, {
-            responseType: 'arraybuffer'
-          });
-          attachment.file = Buffer.from(response.data);
+          const response = await fetch(attachment.file);
+          const buffer = await response.arrayBuffer();
+          file = new Blob([buffer]);
         }
-
-      } else if (!Buffer.isBuffer(attachment.file))
+      } else if (!(attachment.file instanceof Blob))
         throw new Error('\nInvalid file-type provided. Must be of type Buffer or a valid image URL.\n');
+      else file = attachment.file;
+ 
+      if (file) form.append('files', file, attachment.filename);
     }
-
-    for (let i = 0; i < params.attachments.length; i++)
-      form.append(`files[${i}]`, params.attachments[i].file, params.attachments[i].filename);
 
     params.flags = flags;
     // if (params.method !== 'patch') {
@@ -672,9 +677,9 @@ async function sendAttachment(sender, params, url, method, type, flags) {
     params.attachments = params.attachments.map((a, index) => ({
       id: index, filename: a.filename, description: a.description ?? ''
     }));
-    
+  
     // }
-    
+  
     // console.log('params from interactions sendAttachment() post map\n', params);
 
     if (sender === 'data') {
@@ -691,59 +696,24 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       // console.log('newparams\n', params);      
       form.append('payload_json', JSON.stringify({ data: newparams }));
     }
-    const response = await axios({
-      method: `${method}`,
-      url: `https://discord.com/api/v10/${url}`,
-      data: form,
+  
+    const response = await fetch(`https://discord.com/api/v10/${url}`, {
+      method,
+      body: form,
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bot ${process.env.token}`
+        'Authorization': `Bot ${token('discord')}`
       }
     });
-    
-    if (response.status < 200 || response.status >= 300)
-      throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.data.errors}\n`);
-    
-    return response.data;
+
+    if (!response.ok)
+      throw new Error(`\nRequest failed with statusCode: ${response.status}\n${response.statusText}\n`);
+
+    return response.json();
 
   } catch (e) {
-    // @ts-ignore
-    throw getAxiosError(e);
-    
-    /* const errinfo = {};
-    if (e.response && e.response.status) {
-      errinfo.status = e.response.status;
-    } else if (e.code) errinfo.status = e.code;
-    if (e.response && e.response.statusText) {
-      errinfo.message = e.response.statusText;
-    } else if (e.message) errinfo.message = e.message;
-    if (e.response && e.response.data) {
-      if ((Object.keys(e.response.data).length) > 1) {
-        errinfo.error = e.response.data;
-      } else errinfo.error = e.response.data?.error;
-    }
-    */
-    /*
-    if (e.response?.data) {
-      if (e.response.data.code)
-        errinfo.code = e.response.data.code;
-      if (e.response.data.message)
-        errinfo.message = e.response.data.message;
-      if (e.response.data.errors)
-        errinfo.details = JSON.stringify(e.response.data.errors, null, 2);
-    } else if (e?.name) {
-      errinfo.name = e?.name;
-      if (e.message)
-        errinfo.message = e.message;
-      if (e.code)
-        errinfo.code = e.code;
-    } else {
-      throw e;
-    }
-    */
-    // throw errinfo;
+    throw e
   }
-
 };
 
 /**
@@ -759,34 +729,20 @@ async function sendAttachment(sender, params, url, method, type, flags) {
 async function handleCallbacks(params) {
   try {
 
-    // @ts-ignore
-    const r = await https[params.method]({
-      url: encodeURI('discord.com'),
-      path: encodeURI(`/api/v10/${params.path}`),
-      headers: { 'Content-Type': 'application/json' },
+    const r = await https({
+      method: params.method,
+      url: `https://discord.com/api/v10/${params.path}`,
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
       body: JSON.stringify({ type: params.type, data: params.data })
     });
 
-    if (r.statusCode >= 200 && r.statusCode < 300) {
-      if (params.return_date) return r.headers.date;
-      try {
-        return JSON.parse(r.body);
-      } catch (e) { return r.body ?? r; }
-    } else {
-      throw new Error(
-        r.body.length
-          ? isValidJSON(r.body)
-            ? returnErr(r)
-            : r.body
-          : r
-      );
-    }
+    return r;
+    
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     throw error;
   }
 }
-
 
 /**
  * @typedef {Object} InteractionParams

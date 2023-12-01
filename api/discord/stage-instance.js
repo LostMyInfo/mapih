@@ -125,7 +125,7 @@ module.exports = {
    * @function destroy
    * @param {object} params
    * @param {Snowflake} params.channel_id
-   * @returns {Promise<{statusCode: string, message: string}>} `204 No Content`
+   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
