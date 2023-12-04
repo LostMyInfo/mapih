@@ -1,18 +1,24 @@
 # Mapih
 
-Mapih is a collection of Discord Api handlers as well as other useful utilities.
-
-This package uses your bot token. You must pass it via the process environment.  
-ie: process.env.token  
-
-Docs coming soon
-
-```js
-const api = require('mapih');
-
+Mapih is a collection of Discord and Slack (in progress) Api handlers as well as other useful utilities.
+---
+## Authenticating
+##### Option 1
+Place a variable in your `.env` file named `token` with your bot's token. (`slackToken` for slack API key).
+##### Option 2
+```javascript
+const mapih = require('mapih');
+mapih.initialize({
+  discord: 'bot_token_here',
+  slack: 'slack_auth_token_here' // optional
+});
+```
+---
+### Basic usage
+```javascript
 (async() => {
 
-  await api.discord.channels.messages.create({
+  await mapih.discord.channels.messages.create({
     channel_id: '774133713733812275',
     content: 'hello'
   });
