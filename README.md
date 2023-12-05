@@ -1,6 +1,6 @@
 # Mapih
 
-Mapih is a collection of Discord and Slack (in progress) Api handlers as well as other useful utilities.
+Mapih is a comprehensive collection of Discord and Slack (in progress) API endpoint handlers as well as other useful utilities.
 ---
 ## Authenticating
 ##### Option 1
@@ -8,6 +8,7 @@ Place a variable in your `.env` file named `token` with your bot's token. (`slac
 ##### Option 2
 ```javascript
 const mapih = require('mapih');
+
 mapih.initialize({
   discord: 'bot_token_here',
   slack: 'slack_auth_token_here' // optional
