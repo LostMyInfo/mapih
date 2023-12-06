@@ -1,15 +1,15 @@
 # Mapih
-##### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers and utilities.
+#### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers and utilities.
 ---
 ## Authentication
 
 Choose one of the following methods to authenticate:
 
-### Option 1: Using Environment Variables
+#### Option 1: Using Environment Variables
 
 Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slackToken` for Slack).
 
-### Option 2: Using Initialization Function
+#### Option 2: Using Initialization Function
 
 ```javascript
 const mapih = require('mapih');
@@ -20,7 +20,7 @@ mapih.initialize({
 });
 ```
 ---
-### Basic usage
+## Basic usage
 ```javascript
 (async() => {
 
