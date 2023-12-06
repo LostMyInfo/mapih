@@ -1,7 +1,7 @@
 {
   "name": "mapih",
   "version": "2.6.0",
-  "description": "Api Handlers: Handles Discord API endpoints.",
+  "description": "Complete collection of Discord API endpoint handlers.",
   "main": "Api.js",
   "types": "./dist/Api.d.ts",
   "scripts": {
@@ -9,19 +9,29 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gidsola/mapih.git"
+    "url": "git+https://github.com/lostmyinfo/mapih.git"
   },
   "keywords": [
     "api",
     "discord",
-    "endpoints"
+    "slack",
+    "endpoints",
+    "handlers",
+    "integration",
+    "utilities",
+    "javascript",
+    "nodejs",
+    "node.js",
+    "development",
+    "library",
+    "bot"
   ],
   "author": "Eric (LostMyInfo)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gidsola/mapih/issues"
+    "url": "https://github.com/lostmyinfo/mapih/issues"
   },
-  "homepage": "https://github.com/gidsola/mapih#readme",
+  "homepage": "https://github.com/lostmyinfo/mapih#readme",
   "dependencies": {
     "gifenc": "^1.0.3",
     "sharp": "^0.32.5",
