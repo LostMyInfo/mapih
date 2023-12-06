@@ -6,5 +6,6 @@ export function retrieve(params: {
 }): Promise<ExtendedInvite>;
 export function revoke(params: {
     invite_code: string;
+    reason?: string | undefined
 }): Promise<ExtendedInvite>;
 //# sourceMappingURL=invites.d.ts.map

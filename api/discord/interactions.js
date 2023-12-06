@@ -93,7 +93,7 @@ module.exports = {
     get_original: async (params) => {
       try {
         const attempt = await attemptHandler({
-          method: 'get',
+          method: 'GET',
           endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
         });
         return extendPayload(attempt/* , params*/);
@@ -144,7 +144,7 @@ module.exports = {
           return sendAttachment('data', input, `interactions/${params.id}/${params.token}/callback`, 'post', 4, input.flags);
         else {
           await attemptHandler({
-            method: 'post',
+            method: 'POST',
             endpoint: `interactions/${params.id}/${params.token}/callback`,
             body: {
               type: 4,
@@ -191,7 +191,7 @@ module.exports = {
      */
     defer: async (params, input = {}) =>
       handleCallbacks({
-        method: 'post',
+        method: 'POST',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 5,
         data: {
@@ -223,7 +223,7 @@ module.exports = {
      */
     component_defer: async (params, input = {}) =>
       handleCallbacks({
-        method: 'post',
+        method: 'POST',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 6,
         data: {
@@ -273,7 +273,7 @@ module.exports = {
         return sendAttachment('data', input, url, 'post', 7, input.flags);
       else
         return handleCallbacks({
-          method: 'post',
+          method: 'POST',
           path: url,
           type: 7,
           data: input
@@ -295,7 +295,7 @@ module.exports = {
      */
     autocomplete_reply: async (params, input) =>
       handleCallbacks({
-        method: 'post',
+        method: 'POST',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 8,
         data: input
@@ -319,7 +319,7 @@ module.exports = {
      */
     modal_reply: async (params, input) =>
       handleCallbacks({
-        method: 'post',
+        method: 'POST',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 9,
         data: input
@@ -354,7 +354,7 @@ module.exports = {
         let message;
         try {
           message = await attemptHandler({
-            method: 'get',
+            method: 'GET',
             endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
           });
         } catch (error) {}
@@ -363,7 +363,7 @@ module.exports = {
         const { embeds } = input;
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
-          method: 'patch',
+          method: 'PATCH',
           endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
@@ -387,8 +387,7 @@ module.exports = {
               fields: embed?.fields ?? message.embeds?.[0]?.fields
             }],
             components: input.components && !input.components.length ? [] : (message.components ?? []),
-            allowed_mentions: input.allowed_mentions,
-            attachments: input.attachments ?? message.attachments ?? []
+            allowed_mentions: input.allowed_mentions
           }
         });
         return extendPayload(attempt/* , params*/);
@@ -408,7 +407,7 @@ module.exports = {
      */
     delete_original: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
       }),
 
@@ -426,7 +425,7 @@ module.exports = {
      */
     upgrade: async (params, input) =>
       handleCallbacks({
-        method: 'post',
+        method: 'POST',
         path: `interactions/${params.id}/${params.token}/callback`,
         type: 10,
         data: input
@@ -461,7 +460,7 @@ module.exports = {
       endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
   
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
       return extendPayload(attempt);
@@ -508,7 +507,7 @@ module.exports = {
         return sendAttachment('body', input, url, 'post', null, flags);
       else {
         const attempt = await attemptHandler({
-          method: 'post',
+          method: 'POST',
           endpoint: url,
           body: {
             content: input.content ?? '',
@@ -563,14 +562,14 @@ module.exports = {
         return sendAttachment('body', input, endpoint, 'patch', null, flags);
       else {
         const message = await attemptHandler({
-          method: 'get',
+          method: 'GET',
           endpoint: endpoint
         });
 
         const { embeds } = input;
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
-          method: 'patch',
+          method: 'PATCH',
           endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
@@ -618,7 +617,7 @@ module.exports = {
      */
     del: async (params, input) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}`
       })
   }

@@ -6,6 +6,7 @@
 // //////////////////////////////////////////////////////////////////////
 // https://discord.com/developers/docs/resources/channel#channels-resource
 const { messageType, channelType } = require('../../enum');
+const { embedModifier } = require('../resources/functions');
 const { attemptHandler, sendAttachment, extendPayload } = require('../resources/functions');
 
 /*
@@ -37,7 +38,7 @@ module.exports = {
    */
   retrieve: async (params) => {
     const res = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `channels/${params.channel_id}`
     });
     res.typeName = channelType[res.type];
@@ -90,13 +91,15 @@ module.exports = {
    * @param {?SortOrderType} [params.default_sort_order]
    * @param {ForumLayoutType} [params.default_forum_layout]
    * @param {ChannelFlags} [params.flags]
+   * @param {string} [params.reason]
    * @returns {Promise<Channel>} The updated [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object
    */
   modify: async (params) =>
     attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `channels/${params.channel_id}`,
-      body: params
+      body: params,
+      reason: params.reason ?? null
     }), // End of Modify Channel
   
   /**
@@ -115,12 +118,14 @@ module.exports = {
    * @fires channels#channel_delete
    * @param {Object} params
    * @param {Snowflake} params.channel_id
+   * @param {string} [params.reason]
    * @returns {Promise<Channel>} The deleted [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object
    */
   destroy: async (params) =>
     attemptHandler({
-      method: 'del',
-      endpoint: `channels/${params.channel_id}`
+      method: 'DELETE',
+      endpoint: `channels/${params.channel_id}`,
+      reason: params.reason ?? null
     }), // End of Delete/Close Channel
   
   /**
@@ -147,19 +152,21 @@ module.exports = {
    * @param {0|1} params.type - 0 for a role or 1 for a member
    * @param {?string} [params.allow='0'] - The bitwise value of all allowed permissions (default '0')
    * @param {?string} [params.deny='0'] - The bitwise value of all disallowed permissions (default '0')
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
-  editPermissions: async (params) =>
+  editPermissions: async (params) => 
     attemptHandler({
-      method: 'put',
+      method: 'PUT',
       endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`,
       body: {
         type: params.type,
-        allow: params.allow ?? '0',
-        deny: params.deny ?? '0'
-      }
+        allow: params.allow?.toString() ?? '0',
+        deny: params.deny?.toString() ?? '0'
+      },
+      reason: params.reason ?? null
     }), // End of Edit Channel Permissions
-
+  
   /**
    * @summary
    * ### [Delete Channel Permission]{@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
@@ -178,12 +185,14 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.overwrite_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   deletePermission: async (params) =>
     attemptHandler({
-      method: 'del',
-      endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`
+      method: 'DELETE',
+      endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`,
+      reason: params.reason ?? null
     }), // End of Delete Channel Permission
   
   /**
@@ -201,7 +210,7 @@ module.exports = {
    */
   getInvites: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `channels/${params.channel_id}/invites`
     });
     for (let a of attempt)
@@ -243,6 +252,7 @@ module.exports = {
    * Required if `target_type` is 2
    * 
    * The application must have the `EMBEDDED` flag
+   * @param {string} [params.reason]
    * @returns {Promise<ExtendedInvite>} [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-object} object
    */
   inviteCreate: async (params) => {
@@ -256,9 +266,10 @@ module.exports = {
       target_application_id: params.target_application_id ?? null
     } : {};
     const attempt = await attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `channels/${params.channel_id}/invites`,
-      body
+      body,
+      reason: params.reason ?? null
     });
     /*
     if (attempt.inviter) {
@@ -291,12 +302,14 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.message_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   pinMessage: async (params) =>
     attemptHandler({
-      method: 'put',
-      endpoint: `channels/${params.channel_id}/pins/${params.message_id}`
+      method: 'PUT',
+      endpoint: `channels/${params.channel_id}/pins/${params.message_id}`,
+      reason: params.reason ?? null
     }), // End of Pin Message
   
   /**
@@ -314,12 +327,14 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.message_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   unpinMessage: async (params) =>
     attemptHandler({
-      method: 'del',
-      endpoint: `channels/${params.channel_id}/pins/${params.message_id}`
+      method: 'DELETE',
+      endpoint: `channels/${params.channel_id}/pins/${params.message_id}`,
+      reason: params.reason ?? null
     }), // End of Unpin Message
   
   /**
@@ -337,7 +352,7 @@ module.exports = {
    */
   getPinnedMessages: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `channels/${params.channel_id}/pins`
     });
     for (let message of attempt)
@@ -360,7 +375,7 @@ module.exports = {
    */
   typingCreate: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `channels/${params.channel_id}/typing`
     }), // End of Trigger Typing Indicator
   
@@ -384,7 +399,7 @@ module.exports = {
    */
   followAnnouncementChannel: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `channels/${params.channel_id}/followers`,
       body: {
         webhook_channel_id: params.webhook_channel_id
@@ -412,7 +427,7 @@ module.exports = {
    */
   groupDMadd: async (params) =>
     attemptHandler({
-      method: 'put',
+      method: 'PUT',
       endpoint: `channels/${params.channel_id}/recipients/${params.user_id}`,
       body: {
         access_token: params.access_token,
@@ -437,7 +452,7 @@ module.exports = {
    */
   groupDMremove: async (params) =>
     attemptHandler({
-      method: 'del',
+      method: 'DELETE',
       endpoint: `channels/${params.channel_id}/recipients/${params.user_id}`
     }), // End of Group DM Remove Recipient
 
@@ -472,7 +487,7 @@ module.exports = {
      */
     retrieve: async (params) => {
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}`
       });
       attempt.typeName = messageType[attempt?.type];
@@ -536,21 +551,15 @@ module.exports = {
      * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object
      */
     create: async (params) => {
+      if (params.embeds && params.embeds.length) {
+        params.embeds = embedModifier(params.embeds);
+      }
       if (params.attachments && params.attachments?.length)
-        return sendAttachment(params, `channels/${params.channel_id}/messages`, 'post');
+        return sendAttachment(params, `channels/${params.channel_id}/messages`, 'POST');
       else {
         
-        if (params.embeds?.length) {
-          for (const embed of params.embeds) {
-            if (embed.footer?.icon_url && !embed.footer?.text)
-              embed.footer.text = '\u200b';
-            if (embed.author?.icon_url && !embed.author?.name)
-              embed.author.name = '\u200b';
-          }
-        }
-        
         const attempt = await attemptHandler({
-          method: 'post',
+          method: 'POST',
           endpoint: `channels/${params.channel_id}/messages`,
           body: {
             content: params.content ?? '',
@@ -600,17 +609,17 @@ module.exports = {
      */
     update: async (params) => {
       if (params.attachments && params.attachments?.length)
-        return sendAttachment(params, `channels/${params.channel_id}/messages/${params.message_id}`, 'patch');
+        return sendAttachment(params, `channels/${params.channel_id}/messages/${params.message_id}`, 'PATCH');
       else {
         const message = await attemptHandler({
-          method: 'get',
+          method: 'GET',
           endpoint: `channels/${params.channel_id}/messages/${params.message_id}`
         });
 
         const { embeds } = params;
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
-          method: 'patch',
+          method: 'PATCH',
           endpoint: `channels/${params.channel_id}/messages/${params.message_id}`,
           body: {
             content: params.content ?? message.content,
@@ -634,7 +643,6 @@ module.exports = {
               fields: embed?.fields ?? message.embeds?.[0]?.fields
             }],
             components: params.components && !params.components.length ? [] : (message.components ?? []),
-            attachments: params.attachments ?? message.attachments,
             allowed_mentions: params.allowed_mentions
           }
         });
@@ -658,12 +666,14 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
-        method: 'del',
-        endpoint: `channels/${params.channel_id}/messages/${params.message_id}`
+        method: 'DELETE',
+        endpoint: `channels/${params.channel_id}/messages/${params.message_id}`,
+        reason: params.reason ?? null
       }), // End of Delete Message
     
     /**
@@ -684,13 +694,15 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake[]} params.messages
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     bulkDelete: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `channels/${params.channel_id}/messages/bulk-delete`,
-        body: { messages: params.messages }
+        body: { messages: params.messages },
+        reason: params.reason ?? null
       }), // End of Bulk Delete Messages
 
     /**
@@ -712,7 +724,7 @@ module.exports = {
      */
     crosspost: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/crosspost`
       }), // End of Crosspost Message
   
@@ -741,7 +753,7 @@ module.exports = {
       endpoint += `${params.before ? `&before=${params.before}` : ''}`;
       endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
       for (let message of attempt)
@@ -791,6 +803,7 @@ module.exports = {
      * Can be set to: 60, 1440, 4320, 10080
      * @param {number} [params.rate_limit_per_user] - Amount of seconds a user has to wait before sending another message (0-21600)
      * @param {Snowflake[]} [params.applied_tags] - The IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` channel
+     * @param {string} [params.reason]
      * @returns {Promise<Channel>} A channel with a nested message object
      */
     forumThreadCreate: async (params) => {
@@ -800,7 +813,7 @@ module.exports = {
          * @type {ForumTag[]}
          */
         const availableTags = (await attemptHandler({
-          method: 'get',
+          method: 'GET',
           endpoint: `channels/${params.channel_id}`
         }))?.available_tags;
         const tagsMap = new Map();
@@ -816,10 +829,10 @@ module.exports = {
       }
       
       if (params.message?.attachments && params.message?.attachments?.length)
-        return sendAttachment(params, `channels/${params.channel_id}/threads`, 'post');
+        return sendAttachment(params, `channels/${params.channel_id}/threads`, 'POST');
       else {
         return attemptHandler({
-          method: 'post',
+          method: 'POST',
           endpoint: `channels/${params.channel_id}/threads`,
           body: {
             name: params.name,
@@ -834,7 +847,8 @@ module.exports = {
             auto_archive_duration: params.auto_archive_duration ?? null,
             rate_limit_per_user: params.rate_limit_per_user ?? null,
             applied_tags: tag_ids
-          }
+          },
+          reason: params.reason ?? null
         });
       }
     }, // End of Start Thread in Forum Channel
@@ -865,17 +879,19 @@ module.exports = {
      * 
      * Can be set to: 60, 1440, 4320, 10080
      * @param {number} [params.rate_limit_per_user] - Amount of seconds a user has to wait before sending another message (0-21600)
+     * @param {string} [params.reason]
      * @returns {Promise<Channel>} [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} on success
      */
     createFromMessage: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/threads`,
         body: {
           name: params.name,
           auto_archive_duration: params.auto_archive_duration ?? null,
           rate_limit_per_user: params.rate_limit_per_user ?? null
-        }
+        },
+        reason: params.reason ?? null
       }), // End of Start Thread from Message
   
     /**
@@ -905,11 +921,12 @@ module.exports = {
      * 
      * Can be set to: 60, 1440, 4320, 10080
      * @param {number} [params.rate_limit_per_user] - Amount of seconds a user has to wait before sending another message (0-21600)
+     * @param {string} [params.reason]
      * @returns {Promise<Channel>} [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} on success
      */
     createWithoutMessage: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `channels/${params.channel_id}/threads`,
         body: {
           name: params.name,
@@ -917,7 +934,8 @@ module.exports = {
           invitable: params.invitable || false,
           auto_archive_duration: params.auto_archive_duration ?? null,
           rate_limit_per_user: params.rate_limit_per_user ?? null
-        }
+        },
+        reason: params.reason ?? null
       }), // End of Start Thread from Message
   
     /**
@@ -937,7 +955,7 @@ module.exports = {
      */
     join: async (params) =>
       attemptHandler({
-        method: 'put',
+        method: 'PUT',
         endpoint: `channels/${params.channel_id}/thread-members/@me`
       }), // End of Join Thread
   
@@ -959,7 +977,7 @@ module.exports = {
      */
     leave: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `channels/${params.channel_id}/thread-members/@me`
       }), // End of Leave Thread
   
@@ -983,7 +1001,7 @@ module.exports = {
      */
     addMember: async (params) =>
       attemptHandler({
-        method: 'put',
+        method: 'PUT',
         endpoint: `channels/${params.channel_id}/thread-members/${params.user_id}`
       }), // End of Add Thread Member
   
@@ -1007,7 +1025,7 @@ module.exports = {
      */
     removeMember: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `channels/${params.channel_id}/thread-members/${params.user_id}`
       }), // End of Remove Thread Member
   
@@ -1033,7 +1051,7 @@ module.exports = {
       let endpoint = `channels/${params.channel_id}/thread-members/${params.user_id}?`;
       endpoint += `${params.with_member ? `&with_member=${params.with_member}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
       return extendPayload(attempt/* , params*/);
@@ -1063,7 +1081,7 @@ module.exports = {
       endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
 
@@ -1099,7 +1117,7 @@ module.exports = {
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       endpoint += `${params.before ? `&before=${params.before}` : ''}`;
       return attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
     }, // End of List Public Archived Threads
@@ -1128,7 +1146,7 @@ module.exports = {
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       endpoint += `${params.before ? `&before=${params.before}` : ''}`;
       return attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
     }, // End of List Private Archived Threads
@@ -1157,7 +1175,7 @@ module.exports = {
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       endpoint += `${params.before ? `&before=${params.before}` : ''}`;
       return attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
     } // End of List Private Archived Threads
@@ -1195,7 +1213,7 @@ module.exports = {
      */
     create: async (params) =>
       attemptHandler({
-        method: 'put',
+        method: 'PUT',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/@me`
       }), // End of Create Reaction
     
@@ -1218,7 +1236,7 @@ module.exports = {
      */
     deleteOwn: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/@me`
       }), // End of Delete Own Reaction
     
@@ -1243,7 +1261,7 @@ module.exports = {
      */
     deleteUser: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/${params.user_id}`
       }), // End of Delete User Reaction
     
@@ -1264,7 +1282,7 @@ module.exports = {
      */
     deleteAll: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions`
       }), // End of Delete All Reaction
     
@@ -1287,7 +1305,7 @@ module.exports = {
      */
     deleteAllEmoji: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}`
       }), // End of Delete All Reactions for Emoji
     
@@ -1316,7 +1334,7 @@ module.exports = {
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
 

@@ -23,15 +23,13 @@ const { ResponseError } = require('../resources/Errors');
  * @param {string} [params.method]
  * @param {Object|string} [params.body]
  * @param {*|HeadersInit} [params.headers] 
+ * @param {string} [match]
  * @returns 
  */
-async function https(params) {
-  let url = typeof params === 'string'
-    ? params
-    : params.url;
-  
+async function https(params, match = undefined) {
+  let url = typeof params === 'string' ? params : params.url;
   if (!url) throw new Error('Please provide a url');
-  if (!url.startsWith('https://') && !url.startsWith('http://'))
+  if (!url.startsWith('http'))
     url = `https://${url}`;
 
   const headers = new Headers(params.headers || {});
@@ -50,15 +48,47 @@ async function https(params) {
 
   try {
     const response = await fetch(url, options);
-    if (!response.ok) {
-    // console.log(await response.text())
-      if (url.includes('discord'))
-        throw new ResponseError(await response.json(), response, 'discord_error');
-      else if (url.includes('slack'))
-        throw new ResponseError(await response.json(), response, 'slack_error');
-    }
+    // console.log(response);
+    const json = await response.json().catch(() => null);
 
-    return response.json();
+    if (response.ok && response.status === 204)
+      return { statusCode: response.status, message: 'success' };
+    
+    if (!response.ok || (json && json.ok == false))
+      throw (match = (url.match(/discord|slack/))?.[0])
+        ? new ResponseError(json, response, `${match}_error`)
+        : new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+
+    /*
+    if (!response.ok || (json && json.ok == false)) {
+      throw url.includes('discord')
+        ? new ResponseError(json, response, 'discord_error')
+        : url.includes('slack')
+          ? new ResponseError(json, response, 'slack_error')
+          : new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+    }
+    */
+    /*
+    let jsonResponse;
+    try {
+      jsonResponse = await response.json();
+    } catch (error) { }
+    // console.log('jsonResponse:', jsonResponse);
+    console.log('response.ok:', response.ok);
+    if (response.ok && response.status >= 200 && response.status <= 300 && jsonResponse)
+      return jsonResponse;
+
+    if (!response.ok || (jsonResponse && jsonResponse.ok == false)) {
+      if (url.includes('discord'))
+        throw new ResponseError(jsonResponse, response, 'discord_error');
+      else if (url.includes('slack'))
+        throw new ResponseError(jsonResponse, response, 'slack_error');
+      else
+        throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+    }
+    */
+  
+    return json;
   } catch (error) {
     throw error;
   }

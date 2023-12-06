@@ -1,12 +1,9 @@
+// @ts-check
 export function create(params: {
     name: string;
     region?: string | undefined;
     roles?: Role[] | undefined;
-    channels?: {
-        id: string;
-        type: number;
-        name: string;
-    } | undefined;
+    channels?: PartialChannel[] | undefined;
     icon?: string | undefined;
     verification_level?: number | undefined;
     default_message_notifications?: number | undefined;
@@ -37,9 +34,11 @@ export function update(params: {
     system_channel_id?: string | undefined;
     system_channel_flags?: number | undefined;
     premium_progress_bar_enabled?: boolean | undefined;
+    reason?: string | undefined
 }): Promise<Guild>;
 export function destroy(params: {
     guild_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: string;
     message: string;
@@ -65,6 +64,7 @@ export function createBan(params: {
     guild_id: string;
     user_id: string;
     delete_message_seconds?: number | undefined;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -72,6 +72,7 @@ export function createBan(params: {
 export function removeBan(params: {
     guild_id: string;
     user_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -95,6 +96,7 @@ export function beginPrune(params: {
     days: number;
     compute_prune_count: boolean;
     include_roles?: string[] | undefined;
+    reason?: string | undefined
 }): Promise<{
     pruned: number;
 }>;
@@ -107,6 +109,7 @@ export function getIntegrations(params: {
 export function destroyIntegration(params: {
     guild_id: string;
     integration_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -125,6 +128,7 @@ export function modifyWidget(params: {
     guild_id: string;
     enabled?: boolean | undefined;
     channel_id?: string | undefined;
+    reason?: string | undefined
 }): Promise<GuildWidget>;
 export function retrieveVanityURL(params: {
     guild_id: string;
@@ -140,6 +144,7 @@ export function modifyWelcomeScreen(params: {
     enabled?: boolean | undefined;
     welcome_channels?: GuildWelcomeScreenChannel[] | undefined;
     description?: string | undefined;
+    reason?: string | undefined
 }): Promise<GuildWelcomeScreen>;
 export function getOnboarding(params: {
     guild_id: string;
@@ -150,6 +155,7 @@ export function modifyOnboarding(params: {
     default_channel_ids: string[];
     enabled: boolean;
     mode: number;
+    reason?: string | undefined
 }): Promise<GuildOnboarding>;
 export function newMemberWelcome(params: {
     guild_id: string;
@@ -178,14 +184,13 @@ export namespace channels {
         default_sort_order?: number | null | undefined;
         default_forum_layout?: number | null | undefined;
         default_thread_rate_limit_per_user?: number | null | undefined;
+        reason?: string | undefined
     }): Promise<Channel[]>;
     export { create_1 as create };
     export function modifyPositions(params: {
         guild_id: string;
-        id: string;
-        position?: number | null | undefined;
-        lock_permissions?: boolean | null | undefined;
-        parent_id?: string | null | undefined;
+        channels: ModifyPositionsChannel[];
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -227,16 +232,19 @@ export namespace members {
         channel_id?: string | undefined;
         communication_disabled_until?: string | undefined;
         flags?: number | undefined;
+        reason?: string | undefined
     }): Promise<Member>;
     export { update_1 as update };
     export function updateCurrent(params: {
         guild_id: string;
         nick?: string | undefined;
+        reason?: string | undefined
     }): Promise<Member>;
     export function addRole(params: {
         guild_id: string;
         user_id: string;
         role_id: string;
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -245,6 +253,7 @@ export namespace members {
         guild_id: string;
         user_id: string;
         role_id: string;
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -254,6 +263,7 @@ export namespace members {
         guild_id: string;
         user_id: string;
         duration?: number | null | undefined;
+        reason?: string | undefined
     }): Promise<Member>;
 }
 export namespace roles {
@@ -275,6 +285,7 @@ export namespace roles {
         icon?: string | undefined;
         unicode_emoji?: string | undefined;
         mentionable?: boolean | undefined;
+        reason?: string | undefined
     }): Promise<Role>;
     export { create_2 as create };
     export function update_2(params: {
@@ -287,11 +298,13 @@ export namespace roles {
         icon?: string | Buffer | undefined;
         unicode_emoji?: string | undefined;
         mentionable?: boolean | undefined;
+        reason?: string | undefined
     }): Promise<Role>;
     export { update_2 as update };
     export function destroy_1(params: {
         guild_id: string;
         role_id: string;
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -303,6 +316,7 @@ export namespace roles {
             id: string;
             position?: number | undefined;
         }[];
+        reason?: string | undefined
     }): Promise<Role[]>;
     export { modifyPositions_1 as modifyPositions };
 }
@@ -321,6 +335,7 @@ export namespace emojis {
         name: string;
         image: string | Buffer;
         roles?: string[] | undefined;
+        reason?: string | undefined
     }): Promise<Emoji>;
     export { create_3 as create };
     export function update_3(params: {
@@ -328,11 +343,13 @@ export namespace emojis {
         emoji_id: string;
         name: string;
         roles?: string[] | undefined;
+        reason?: string | undefined
     }): Promise<Emoji>;
     export { update_3 as update };
     export function destroy_2(params: {
         guild_id: string;
         emoji_id: string;
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -359,11 +376,13 @@ export namespace stickers {
         name?: string | undefined;
         description?: string | null | undefined;
         tags?: string | undefined;
+        reason?: string | undefined
     }): Promise<Sticker>;
     export { update_4 as update };
     export function destroy_3(params: {
         guild_id: string;
         sticker_id: string;
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -409,6 +428,7 @@ export namespace events {
         entity_metadata?: EventEntityMetadata | undefined;
         scheduled_start_time: string;
         scheduled_end_time?: string | undefined;
+        reason?: string | undefined
     }): Promise<GuildScheduledEvent>;
     export { create_5 as create };
     export function update_5(params: {
@@ -424,6 +444,7 @@ export namespace events {
         entity_metadata?: EventEntityMetadata | undefined;
         scheduled_start_time?: string | undefined;
         scheduled_end_time?: string | undefined;
+        reason?: string | undefined
     }): Promise<GuildScheduledEvent>;
     export { update_5 as update };
     export function destroy_4(params: {

@@ -1194,6 +1194,27 @@ export namespace discord {
     };
 }
 export namespace slack {
+    let users: {
+        info: (params: {
+            user: string;
+            include_locale?: boolean | undefined
+        }) => Promise<SlackUser>;
+        list: (params: {
+            cursor?: string | undefined
+            include_locale?: boolean | undefined
+            limit?: number | undefined
+            team_id?: string | undefined
+        }) => Promise<SlackUser[]>;
+        identify: () => Promise<UserIdentity>;
+        getProfile: (params: {
+            user?: string;
+            include_locale?: boolean | undefined
+        }) => Promise<UserProfile>;
+        lookup: (params: {
+            email: string;
+        }) => Promise<{ ok: boolean, user: SlackUser; }>;
+    };
+
     let chat: {
         post: (params: {
             channel: string;

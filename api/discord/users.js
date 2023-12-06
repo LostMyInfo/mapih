@@ -28,7 +28,7 @@ module.exports = {
    */
   retrieve: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `users/${params.user_id}`
     });
     attempt.badges = getBadges(attempt.public_flags ?? attempt.flags);
@@ -52,7 +52,7 @@ module.exports = {
    */
   currentUser: async () =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: 'users/@me'
     }), // End of Get Current User
   
@@ -82,7 +82,7 @@ module.exports = {
       endpoint += `${params.after ? `&after=${params.after}` : ''}`;
     }
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint
     });
     for (const guild of attempt) {
@@ -114,7 +114,7 @@ module.exports = {
    */
   currentMember: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `users/@me/guilds/${params.guild_id}/member`
     }), // End of Get Current User Guild Member
 
@@ -136,7 +136,7 @@ module.exports = {
    */
   modifyCurrent: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: 'users/@me',
       body: {
         username: params.username ?? null,
@@ -156,7 +156,7 @@ module.exports = {
    */
   connections: async () =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: 'users/@me/connections'
     }), // End of Get User Connections
 
@@ -176,7 +176,7 @@ module.exports = {
    */
   appRoleConnection: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `users/@me/applications/${params.application_id}/role-connection`
     }), // End of Get User Application Role Connection
 
@@ -200,7 +200,7 @@ module.exports = {
    */
   updateAppRoleConnection: async (params) =>
     attemptHandler({
-      method: 'put',
+      method: 'PUT',
       endpoint: `users/@me/applications/${params.application_id}/role-connection`,
       body: {
         platform_name: params.platform_name ?? null,
@@ -234,7 +234,7 @@ module.exports = {
    */
   createDM: async (params) => {
     const response = await attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: 'users/@me/channels',
       body: {
         recipient_id: params.recipient_id
@@ -242,10 +242,10 @@ module.exports = {
     });
 
     if (params.attachments && params.attachments?.length)
-      return sendAttachment(params, `channels/${response.id}/messages`, 'post');
+      return sendAttachment(params, `channels/${response.id}/messages`, 'POST');
     else {
       return attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `channels/${response.id}/messages`,
         body: {
           content: params.content ?? '',
@@ -295,7 +295,7 @@ module.exports = {
    */
   createGroupDM: async (params) => {
     const DMChannel = await attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: 'users/@me/channels',
       body: {
         access_tokens: params.access_tokens,
@@ -304,10 +304,10 @@ module.exports = {
     });
 
     if (params.attachments && params.attachments?.length)
-      return sendAttachment(params, `channels/${DMChannel.id}/messages`, 'post');
+      return sendAttachment(params, `channels/${DMChannel.id}/messages`, 'POST');
     else {
       return attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `channels/${DMChannel.id}/messages`,
         body: {
           content: params.content ?? '',
@@ -339,7 +339,7 @@ module.exports = {
    */
   leaveGuild: async (params) =>
     attemptHandler({
-      method: 'del',
+      method: 'DELETE',
       endpoint: `users/@me/guilds/${params.guild_id}`
     }) // End of Leave Guild
 };

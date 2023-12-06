@@ -15,110 +15,101 @@ const { ResponseError } = require('./Errors');
 
 /**
  * @global
- * @typedef {'get'|'post'|'put'|'patch'|'del'} Method
+ * @typedef {'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} Method
  */
 
-module.exports = {
-  embedModifier,
-  avatarFromObject,
-  getBadges,
-  parsePermissions,
-  generateCDN,
-  isValidMediaURL,
-  imageData,
-  isValidMediaBuffer,
-  isValidMedia,
-  resizeImage,
-  retrieveDate,
-  isValidJSON,
-  extendPayload,
-  slackHandler,
-  buildQueryString,
-  token,
-  
-  /**
-   * API Handler Creator
-   * @param {Object} params
-   * @param {Method} params.method
-   * @param {string} params.endpoint
-   * @param {Object} [params.body]
-   * @returns {Promise<*>}
-   * @private
-   */
-  attemptHandler: async (params) => {
+/**
+ * API Handler Creator
+ * @param {Object} params
+ * @param {Method} params.method
+ * @param {string} params.endpoint
+ * @param {Object} [params.body]
+ * @param {?string} [params.reason]
+ * @returns {Promise<*>}
+ * @private
+ */
+async function attemptHandler(params) {
+  // console.log('params in attemptHandler:', params);
+  const headers = new Headers({
+    'Authorization': `Bot ${token('discord')}`
+  });
+
+  if (!params.endpoint.includes('prune'))
+    headers.append('content-type', 'application/json');
+
+  if (params.reason)
+    headers.append('x-audit-log-reason', params.reason);
     
-    const headers = new Headers({
-      'Authorization': `Bot ${token('discord')}`
+  try {
+
+    return https({
+      method: params.method,
+      url: `https://discord.com/api/v10/${params.endpoint}`,
+      headers,
+      body: params.body ? JSON.stringify(params.body) : ''
+    });
+    // console.log('attempt in functions', attempt)
+      
+  } catch (e) {
+    throw e;
+  }
+}
+
+/**
+ * Handles multipart form-data for Discord attachments
+ * @param {*} params
+ * @param {string} path 
+ * @param {Method} method
+ * @private
+ */
+async function sendAttachment(params, path, method) {
+  try {
+    const form = new FormData();
+    
+    for (const attachment of params.attachments) {
+      if (!attachment.file || !attachment.filename)
+        throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
+
+      if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
+        const response = await fetch(attachment.file);
+        attachment.file = await response.blob();
+      } else if (!(attachment.file instanceof Blob))
+        throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
+  
+      form.append(`files[${params.attachments.indexOf(attachment)}]`, attachment.file, attachment.filename);
+    }
+    
+    params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
+      id: index,
+      filename: a.filename,
+      description: a.description || ''
+    }));
+
+    form.append('payload_json', JSON.stringify(params));
+
+    const response = await fetch(`https://discord.com/api/v10/${path}`, {
+      method,
+      body: form,
+      headers: {
+        'Authorization': `Bot ${token('discord')}`
+      }
     });
 
-    if (!params.endpoint.includes('prune'))
-      headers.append('content-type', 'application/json');
+    if (!response.ok)
+      throw new ResponseError(await response.json(), response, 'discord_error');
 
-    try {
-
-      return https({
-        method: params.method,
-        url: `https://discord.com/api/v10/${params.endpoint}`,
-        headers,
-        body: params.body ? JSON.stringify(params.body) : ''
-      });
-      // console.log('attempt in functions', attempt)
-      
-    } catch (e) {
-      throw e;
-    }
-  },
-
-  /**
-   * Handles multipart form-data for Discord attachments
-   * @param {*} params
-   * @param {string} path 
-   * @param {Method} method
-   * @private
-   */
-  sendAttachment: async (params, path, method) => {
-    try {
-      const form = new FormData();
-      
-      for (const attachment of params.attachments) {
-        if (!attachment.file || !attachment.filename)
-          throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
-
-        if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
-          const response = await fetch(attachment.file);
-          attachment.file = await response.blob();
-        } else if (!(attachment.file instanceof Blob))
-          throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
+    return response.json();
     
-        form.append(`files[${params.attachments.indexOf(attachment)}]`, attachment.file, attachment.filename);
-      }
-      
-      params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
-        id: index,
-        filename: a.filename,
-        description: a.description || ''
-      }));
-
-      form.append('payload_json', JSON.stringify(params));
-
-      const response = await fetch(`https://discord.com/api/v10/${path}`, {
-        method,
-        body: form,
-        headers: {
-          'Authorization': `Bot ${token('discord')}`
-        }
-      });
-
-      if (!response.ok)
-        throw new ResponseError(await response.json(), response, 'discord_error');
-  
-      return response.json();
-      
-    } catch (e) {
-      throw e;
-    }
+  } catch (e) {
+    throw e;
   }
-};
+}
+async function getAppId() {
+  return (await attemptHandler({
+    method: 'GET',
+    endpoint: 'applications/@me'
+  }))?.id;
+}
 
 /**
  * @ignore
@@ -223,10 +214,7 @@ function isValidMediaBuffer(buffer, media_type = 'audio') {
   };
 
   if (validHeaders[media_type].includes(headerString)) {
-    console.log('if (validHeaders[media_type].includes(headerString))');
     if (headerString === '4f67675300020000') {
-      console.log('if (headerString === \'4f67675300020000\')');
-      console.log('opusIdentifier', buffer.toString('utf8', 28, 32));
       if (buffer.toString('utf8', 28, 32) === 'Opus') {
         return true;
       }
@@ -234,7 +222,6 @@ function isValidMediaBuffer(buffer, media_type = 'audio') {
     return true;
   }
   return false;
-  // return validImageHeaders.includes(headerString);
 }
 
 /**
@@ -511,162 +498,12 @@ function parsePermissions(permissions) {
   }
   return permission_names;
 }
-/*
-function returnErr(r) {
-  let parsed;
-  try {
-    parsed = JSON.parse(r.body);
-    // console.log('PARSED ERROR' + '\n' + JSON.stringify(parsed, null, 2));
-  } catch (e) {
-    if (!r.body) {
-      parsed = r?.data ?? r;
-      console.log('\nERROR IN returnErr (!r.body)\n', parsed);
-    }
-  }
-  
-
-  const errinfo = {};
-  function parseErrors(obj) {
-    for (const [key, value] of Object.entries(obj)) {
-      // console.log('key:', key);
-
-      if (!/\d/.test(key) && key !== 'errors' && key !== '_errors' && key !== 'code') {
-        // console.log('value:', JSON.stringify(value, null, 2));
-
-      }
-
-      if (value && typeof value === 'object') {
-        for (const [key1, value1] of Object.entries(value)) {
-          // console.log('key1:', key1);
-          // console.log('value1:', JSON.stringify(value1));
-          // console.log('Object.entries(value1)?.[0]', Object.entries(value1)?.[0]?.[1]);
-          if (!/\d/.test(key1) && key1 !== 'errors' && key1 !== '_errors' && key1 !== 'code' && (value1?.['_errors']?.[0]?.['message'] || Object.entries(value1)?.[0]?.[1]?.['_errors']?.[0]?.['message'])) {
-            
-            // console.log('value1:', JSON.stringify(value1, null, 2));
-            errinfo[key1] = value1?.['_errors']?.[0]?.['message'] || Object.entries(value1)?.[0]?.[1]?.['_errors']?.[0]?.['message'];
-            // console.log('errinfo1\n', errinfo);
-          } else
-
-            if (value1 && typeof value1 === 'object') {
-              for (const [key2, value2] of Object.entries(value1)) {
-              // console.log('key2:', key2);
-              // console.log('value2:', JSON.stringify(value2));
-
-                if (!/\d/.test(key2) && key2 !== 'errors' && key2 !== '_errors' && key2 !== 'code' && (value2?.['_errors']?.[0]?.['message'] || Object.entries(value2)?.[0]?.[1]?.['_errors']?.[0]?.['message'])) {
-                // console.log('value2:', JSON.stringify(value2, null, 2));
-
-                } else
-
-                  if (value2 && typeof value2 === 'object') {
-                    for (const [key3, value3] of Object.entries(value2)) {
-                      // console.log('key3:', key3);
-                      // console.log('value3:', JSON.stringify(value3));
-
-                      if (!/\d/.test(key3) && key3 !== 'errors' && key3 !== '_errors' && key3 !== 'code' && (value3?.['_errors']?.[0]?.['message']  || Object.entries(value3)?.[0]?.[1]?.['_errors']?.[0]?.['message'])) {
-                        // console.log('value3:', JSON.stringify(value3, null, 2));
-                        errinfo[key1] = {
-                          [key3]: value3?.['_errors']?.[0]?.['message']  || Object.entries(value3)?.[0]?.[1]?.['_errors']?.[0]?.['message']
-                        };
-                      } else
-
-                        if (value3 && typeof value3 === 'object') {
-                          for (const [key4, value4] of Object.entries(value3)) {
-                            // console.log('key4:', key4);
-                            // console.log('value4:', JSON.stringify(value4));
-
-                            if (!/\d/.test(key4) && key4 !== 'errors' && key4 !== '_errors' && key4 !== 'code' && value4?.['_errors']?.[0]?.['message']) {
-                              // console.log('value4:', JSON.stringify(value4, null, 2));
-                              errinfo[key1] = {
-                                [key2]: {
-                                  [key4]: value4?.['_errors']?.[0]?.['message']
-                                } //  = value3?.['_errors']?.[0]?.['message'];
-                              };
-                            } else
-
-                              if (value4 && typeof value4 === 'object') {
-                                for (const [key5, value5] of Object.entries(value4)) {
-                                  // console.log('key5:', key5);
-                                  // console.log('value5:', JSON.stringify(value5));
-
-                                  if (!/\d/.test(key5) && key5 !== 'errors' && key5 !== '_errors' && key5 !== 'code' && value5?.['_errors']?.[0]?.['message']) {
-                                    // console.log('value5:', JSON.stringify(value5, null, 2));
-                                    errinfo[key1] = {
-                                      [`${key3} (${key4})`]: {
-                                        [key5]: value5?.['_errors']?.[0]?.['message']
-                                      } //  = value3?.['_errors']?.[0]?.['message'];
-                                    };
-                                  } else
-
-                                    if (value5 && typeof value5 === 'object') {
-                                      for (const [key6, value6] of Object.entries(value5)) {
-                                        // console.log('key6:', key6);
-
-                                        if (!/\d/.test(key6) && key6 !== 'errors' && key6 !== '_errors' && key6 !== 'code' && value6?.['_errors']?.[0]?.['message']) {
-                                          // console.log('value6:', JSON.stringify(value6, null, 2));
-
-                                        } else
-
-                                          if (value6 && typeof value6 === 'object') {
-                                            for (const [key7, value7] of Object.entries(value6)) {
-                                              // console.log('key7:', key7);
-
-                                              if (!/\d/.test(key7) && key7 !== 'errors' && key7 !== '_errors' && key7 !== 'code' && value7?.['_errors']?.[0]?.['message']) {
-                                                // console.log('value7:', JSON.stringify(value7, null, 2));
-
-                                                errinfo[key1] = {
-                                                  [key3]: {
-                                                    [key5]: { // value5?.['_errors']?.[0]?.['message']
-                                                      [key7]: value7?.['_errors']?.[0]?.['message']
-                                                    }
-                                                  } //  = value3?.['_errors']?.[0]?.['message'];
-                                                };
-                                              }
-                                            }
-                                          }
-                                      }
-                                    }
-                                }
-                              }
-                          }
-                        }
-                    }
-                  }
-              }
-            }
-        }
-      } // else if (key === '_errors' && Array.isArray(value)) {}
-    }
-    return errinfo;
-  }
-  
-  parseErrors(parsed);
-  // console.log('PARSED.MESSAGE:', parsed.message.replace(/^\d+:\s/, ''));
-  
-  // Error.prototype.statusCode
-  const error = new Error(parsed.message.replace(/^\d+:\s/, ''));
-  error.statusCode = r.statusCode ?? r.status ?? r.code;
-  
-  if (parsed.code !== 0) 
-    error.code = parsed.code;
-  
-  if (parsed.retry_after)
-    error.retry_after = parsed.retry_after;
-
-  if (parsed.global || parsed.global === false)
-    error.global = parsed.global;
-
-  if (parsed.errors)
-    error.details = errinfo;
-  
-  throw error;
-}
-*/
 
 /**
-       * @ignore
-       * @param {Embed[]} embeds 
-       * @returns {Embed[]}
-       */
+ * @ignore
+ * @param {Embed[]} embeds 
+ * @returns {Embed[]}
+ */
 function embedModifier(embeds) {
   for (const embed of embeds) {
     if (embed.footer?.icon_url && !embed.footer?.text)
@@ -901,7 +738,7 @@ function embedModifier(embeds) {
 async function slackHandler(options) {
   try {
 
-    const attempt = await https({
+    return https({
       url: `https://slack.com/api/${options.endpoint}`,
       method: options.method || 'GET',
       headers: {
@@ -910,14 +747,9 @@ async function slackHandler(options) {
       },
       ...(options.body && { body: options.body })
     });
-    /*
-    if (!attempt.ok)
-      return parseSlackError(attempt);
-    */
-    return attempt;
 
   } catch (error) {
-    console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
+    // console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
     throw error;
   }
 }
@@ -928,7 +760,7 @@ async function slackHandler(options) {
    * @param {boolean} encode
    * @returns {string}
    */
-function buildQueryString(url, params, encode = true) {
+function buildQueryString(url, params, encode = false) {
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -957,3 +789,25 @@ function token(type) {
   );
   return token;
 }
+
+module.exports = {
+  embedModifier,
+  avatarFromObject,
+  getBadges,
+  parsePermissions,
+  generateCDN,
+  isValidMediaURL,
+  imageData,
+  isValidMediaBuffer,
+  isValidMedia,
+  resizeImage,
+  retrieveDate,
+  isValidJSON,
+  extendPayload,
+  slackHandler,
+  buildQueryString,
+  token,
+  attemptHandler,
+  sendAttachment,
+  getAppId
+};

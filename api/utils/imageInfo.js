@@ -176,7 +176,7 @@ const typeHandlers = {
     calculate: (i, height = 0, width = 0) => {
       const chunk = toUTF8(i, 12, 16);
       i = i.slice(20, 30);
-      console.log('chunk:', chunk);
+      // console.log('chunk:', chunk);
       // extended
       if (chunk === 'VP8X') {
         if (((i[0] & 0xc0) === 0) && ((i[0] & 0x01) === 0)) {

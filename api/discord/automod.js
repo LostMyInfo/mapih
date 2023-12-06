@@ -31,7 +31,7 @@ module.exports = {
    */
   retrieveRule: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`
     }), // End of Get Auto Moderation Rule
 
@@ -50,7 +50,7 @@ module.exports = {
    */
   getAllRules: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/auto-moderation/rules`
     }), // End of List Auto Moderation Rules for Guild
 
@@ -75,6 +75,7 @@ module.exports = {
    * @memberof module:automod#
    * @fires automod#rule_create
    * @param {Object} params
+   * @param {string} [params.reason]
    * @param {Snowflake} params.guild_id
    * @param {string} params.name
    * @param {AutoModEventType} params.event_type - The [Event Type]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types}
@@ -88,7 +89,7 @@ module.exports = {
    */
   createRule: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `guilds/${params.guild_id}/auto-moderation/rules`,
       body: {
         name: params.name,
@@ -99,7 +100,8 @@ module.exports = {
         enabled: params.enabled || false,
         exempt_roles: params.exempt_roles ?? [],
         exempt_channels: params.exempt_channels ?? []
-      }
+      },
+      reason: params.reason ?? null
     }), // End of Create Auto Moderation Rule
 
   /**
@@ -127,6 +129,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.auto_moderation_rule_id
+   * @param {string} [params.reason]
    * @param {string} [params.name]
    * @param {AutoModEventType} [params.event_type] - The [event type]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types}
    * @param {AutoModTriggerMetadata} [params.trigger_metadata] - The [trigger metadata]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata}
@@ -138,9 +141,10 @@ module.exports = {
    */
   modifyRule: async (params) =>
     attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`,
-      body: params
+      body: params,
+      reason: params.reason ?? null
     }), // End of Modify Auto Moderation Rule
 
   /**
@@ -157,12 +161,14 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.auto_moderation_rule_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroyRule: async (params) =>
     attemptHandler({
-      method: 'del',
-      endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`
+      method: 'DELETE',
+      endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`,
+      reason: params.reason ?? null
     }) // End of Delete Auto Moderation Rule
 
 };

@@ -22,9 +22,11 @@ export function modify(params: {
     default_sort_order?: number | null | undefined;
     default_forum_layout?: number | undefined;
     flags?: number | undefined;
+    reason?: string | undefined
 }): Promise<Channel>;
 export function destroy(params: {
     channel_id: string;
+    reason?: string | undefined
 }): Promise<Channel>;
 export function editPermissions(params: {
     channel_id: string;
@@ -32,6 +34,7 @@ export function editPermissions(params: {
     type: 0 | 1;
     allow?: string | null | undefined;
     deny?: string | null | undefined;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -39,12 +42,14 @@ export function editPermissions(params: {
 export function deletePermission(params: {
     channel_id: string;
     overwrite_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
 }>;
 export function getInvites(params: {
     channel_id: string;
+    reason?: string | undefined
 }): Promise<ExtendedInvite[]>;
 export function inviteCreate(params: {
     channel_id: string;
@@ -59,6 +64,7 @@ export function inviteCreate(params: {
 export function pinMessage(params: {
     channel_id: string;
     message_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -66,6 +72,7 @@ export function pinMessage(params: {
 export function unpinMessage(params: {
     channel_id: string;
     message_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -125,6 +132,7 @@ export namespace messages {
     export function destroy_1(params: {
         channel_id: string;
         message_id: string;
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -133,6 +141,7 @@ export namespace messages {
     export function bulkDelete(params: {
         channel_id: string;
         messages: string[];
+        reason?: string | undefined
     }): Promise<{
         statusCode: number;
         message: string;
@@ -157,6 +166,7 @@ export namespace threads {
         auto_archive_duration?: 60 | 1440 | 4320 | 10080 | undefined;
         rate_limit_per_user?: number | undefined;
         applied_tags?: string[] | undefined;
+        reason?: string | undefined
     }): Promise<Channel>;
     function createFromMessage(params: {
         channel_id: string;
@@ -164,6 +174,7 @@ export namespace threads {
         name: string;
         auto_archive_duration?: 60 | 1440 | 4320 | 10080 | undefined;
         rate_limit_per_user?: number | undefined;
+        reason?: string | undefined
     }): Promise<Channel>;
     function createWithoutMessage(params: {
         channel_id: string;
@@ -172,6 +183,7 @@ export namespace threads {
         invitable?: boolean | undefined;
         auto_archive_duration?: 60 | 1440 | 4320 | 10080 | undefined;
         rate_limit_per_user?: number | undefined;
+        reason?: string | undefined
     }): Promise<Channel>;
     function join(params: {
         channel_id: string;

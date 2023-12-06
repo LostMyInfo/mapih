@@ -52,7 +52,8 @@ module.exports = {
   slack: {
     chat: require('./api/slack/chat'),
     conversations: require('./api/slack/conversations'),
-    views: require('./api/slack/views')
+    views: require('./api/slack/views'),
+    users: require('./api/slack/users')
   },
 
   utils: {

@@ -62,7 +62,7 @@ module.exports = {
    * @param {string} params.name - Name of the guild (2-100 characters)
    * @param {string} [params.region]
    * @param {Role[]} [params.roles] - New guild roles
-   * @param {{id: Snowflake, type: number, name: string}} [params.channels] - New guild's channels
+   * @param {PartialChannel[]} [params.channels] - New guild's channels
    * @param {string} [params.icon] - base64 1024x1024 png/jpeg image for the guild icon
    * @param {GuildVerificationLevel} [params.verification_level] - [Verification level]{@link https://discord.com/developers/docs/resources/guild#guild-object-verification-level}
    * @param {DefaultMessageNotificationLevel} [params.default_message_notifications] - Default [message notification level]{@link https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level}
@@ -74,7 +74,7 @@ module.exports = {
    * @returns {Promise<Guild>} [Guild]{@link https://discord.com/developers/docs/resources/guild#guild-object} object
    */
   create: async (params) => attemptHandler({
-    method: 'post',
+    method: 'POST',
     endpoint: 'guilds',
     body: {
       name: params.name,
@@ -119,6 +119,7 @@ module.exports = {
    * @param {Snowflake} [params.system_channel_id] - id of the channel where guild notices (welcome messages and boost events) are posted
    * @param {SystemChannelFlags} [params.system_channel_flags] - [System channel flags]{@link https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags}
    * @param {boolean} [params.premium_progress_bar_enabled] - Whether the guild's boost progress bar should be enabled
+   * @param {string} [params.reason]
    * @returns {Promise<Guild>} The updated [Guild]{@link https://discord.com/developers/docs/resources/guild#guild-object} object
    */
   update: async (params) => {
@@ -128,9 +129,10 @@ module.exports = {
     if (params.discovery_splash) params.discovery_splash = (await imageData(params.discovery_splash, 'base64string')).data;
       
     return attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `guilds/${params.guild_id}`,
-      body: params
+      body: params,
+      reason: params.reason ?? null
     });
   }, // End of Modify Guild
 
@@ -145,7 +147,7 @@ module.exports = {
    */
   destroy: async (params) =>
     attemptHandler({
-      method: 'del',
+      method: 'DELETE',
       endpoint: `guilds/${params.guild_id}`
     }), // End of Delete Guild
 
@@ -166,7 +168,7 @@ module.exports = {
    */
   retrieve: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}?with_counts=${params.with_counts || false}`
     });
 
@@ -207,7 +209,7 @@ module.exports = {
    */
   getPreview: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/preview`
     }), // End of Get Guild Preview
 
@@ -230,7 +232,7 @@ module.exports = {
    */
   retrieveBan: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`
     });
     attempt.user.created_at = retrieveDate(attempt.user.id, true);
@@ -263,7 +265,7 @@ module.exports = {
     endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint
     });
     for (const ban of attempt) {
@@ -290,14 +292,16 @@ module.exports = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
    * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   createBan: async (params) => attemptHandler({
-    method: 'put',
+    method: 'PUT',
     endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
     body: {
       delete_message_seconds: params.delete_message_seconds ?? 0
-    }
+    },
+    reason: params.reason ?? null
   }), // End of Create Guild Ban
 
   /**
@@ -315,12 +319,14 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.user_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   removeBan: async (params) =>
     attemptHandler({
-      method: 'put',
-      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`
+      method: 'PUT',
+      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
+      reason: params.reason ?? null
     }), // End of Create Guild Ban
 
   /**
@@ -334,7 +340,7 @@ module.exports = {
    */
   getInvites: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/invites`
     });
     for (let a of attempt)
@@ -361,7 +367,7 @@ module.exports = {
    */
   modifyMFAlevel: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `guilds/${params.guild_id}/mfa`,
       body: { level: params.level }
     }), // End of Modify Guild MFA Level
@@ -394,7 +400,7 @@ module.exports = {
     endpoint += `${params.include_roles ? `&include_roles=${params.include_roles}` : ''}`;
     
     return attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint,
       body: {}
     });
@@ -423,17 +429,19 @@ module.exports = {
    * @param {number} params.days - Number of days to prune (1-30) (default 7)
    * @param {boolean} params.compute_prune_count - Whether `pruned` is returned, discouraged for large guilds (default true)
    * @param {Snowflake[]} [params.include_roles=[]] - Role(s) to include
+   * @param {string} [params.reason]
    * @returns {Promise<{pruned: number}>} An object with one `pruned` key indicating the number of members that were removed in the prune operation.
    */
   beginPrune: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `guilds/${params.guild_id}/prune`,
       body: {
         days: params.days ?? 7,
         compute_prune_count: params.compute_prune_count || true,
         include_roles: params.include_roles ?? []
-      }
+      },
+      reason: params.reason ?? null
     }), // End of Begin Guild Prune
 
   /**
@@ -447,7 +455,7 @@ module.exports = {
    */
   getVoiceRegions: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/regions`
     }), // End of Get Guild Voice Regions
   
@@ -469,7 +477,7 @@ module.exports = {
    */
   getIntegrations: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/integrations`
     }), // End of Get Guild Integrations
 
@@ -489,12 +497,14 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.integration_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroyIntegration: async (params) =>
     attemptHandler({
-      method: 'del',
-      endpoint: `guilds/${params.guild_id}/integrations/${params.integration_id}`
+      method: 'DELETE',
+      endpoint: `guilds/${params.guild_id}/integrations/${params.integration_id}`,
+      reason: params.reason ?? null
     }), // End of Delete Guild Integration
 
   /**
@@ -508,7 +518,7 @@ module.exports = {
    */
   retrieveWidget: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/widget.json`
     }), // End Get Guild Widget
   
@@ -523,7 +533,7 @@ module.exports = {
    */
   retrieveWidgetSettings: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/widget`
     }), // End Get Guild Widget Settings
   
@@ -560,7 +570,7 @@ module.exports = {
    */
   retrieveWidgetImage: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/widget.png?style=${params.style ?? 'shield'}`
     }), // End Get Guild Widget Image
   
@@ -579,13 +589,15 @@ module.exports = {
    * @param {Snowflake} params.guild_id
    * @param {boolean} [params.enabled] - Whether the widget is enabled
    * @param {Snowflake} [params.channel_id] - The widget channel ID
+   * @param {string} [params.reason]
    * @returns {Promise<GuildWidget>} The updated [Guild Widget]{@link https://discord.com/developers/docs/resources/guild#get-guild-widget} object for the guild
    */
   modifyWidget: async (params) =>
     attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `guilds/${params.guild_id}/widget`,
-      body: params
+      body: params,
+      reason: params.reason ?? null
     }), // End of Modify Guild Widget
 
   /**
@@ -599,7 +611,7 @@ module.exports = {
    */
   retrieveVanityURL: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/vanity-url`
     }), // End of Get$|y Guild Vanity URL
   
@@ -614,7 +626,7 @@ module.exports = {
    */
   getWelcomeScreen: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/welcome-screen`
     }), // End of Get Guild Welcome Screen
   
@@ -633,13 +645,15 @@ module.exports = {
    * @param {boolean} [params.enabled] - Whether the welcome screen is enabled
    * @param {GuildWelcomeScreenChannel[]} [params.welcome_channels] - Channels linked in the welcome screen and their display options
    * @param {string} [params.description] - The server description to show in the welcome screen
+   * @param {string} [params.reason]
    * @returns {Promise<GuildWelcomeScreen>} The updated [Welcome Screen]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object} object
    */
   modifyWelcomeScreen: async (params) =>
     attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `guilds/${params.guild_id}/welcome-screen`,
-      body: params
+      body: params,
+      reason: params.reason ?? null
     }), // End of Modify Guild Welcome Screen
   
   /**
@@ -658,7 +672,7 @@ module.exports = {
    */
   getOnboarding: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/onboarding`
     }), // End of Get Guild Onboarding
   
@@ -705,12 +719,14 @@ module.exports = {
    * @param {Snowflake[]} params.default_channel_ids - Channel IDs that members get opted into automatically
    * @param {boolean} params.enabled - Whether onboarding is enabled in the guild
    * @param {OnboardingMode} params.mode - Current mode of onboarding
+   * @param {string} [params.reason]
    * @returns {Promise<GuildOnboarding>} The [Onboarding]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object} object for the guild.
    */
   modifyOnboarding: async (params) =>
     attemptHandler({
-      method: 'put',
-      endpoint: `guilds/${params.guild_id}/onboarding`
+      method: 'PUT',
+      endpoint: `guilds/${params.guild_id}/onboarding`,
+      reason: params.reason ?? null
     }), // End of Modify Guild Onbaording
   
   /**
@@ -728,7 +744,7 @@ module.exports = {
    */
   newMemberWelcome: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/new-member-welcome`
     }), // End of Get New Member Welcome
 
@@ -763,7 +779,7 @@ module.exports = {
      */
     getAll: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/channels`
       }), // End of Get Guild Channels
   
@@ -803,11 +819,12 @@ module.exports = {
      * @param {?SortOrderType} [params.default_sort_order] The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels - Forum/Media channel types
      * @param {?ForumLayoutType} [params.default_forum_layout] - The default forum layout view used to display posts in `GUILD_FORUM` channels
      * @param {?number} [params.default_thread_rate_limit_per_user] - The initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.
+     * @param {string} [params.reason]
      * @returns {Promise<Channel[]>} The new [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object on success.
      */
     create: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `guilds/${params.guild_id}/channels`,
         body: {
           name: params.name,
@@ -827,7 +844,8 @@ module.exports = {
           available_tags: (params.type === 14 || params.type === 15) && params.available_tags ? params.available_tags : null,
           default_forum_layout: params.type === 15 && params.default_forum_layout ? params.default_forum_layout : null,
           default_thread_rate_limit_per_user: params.default_thread_rate_limit_per_user ?? null
-        }
+        },
+        reason: params.reason ?? null
       }), // End of Create Guild Channel
   
     /**
@@ -836,26 +854,25 @@ module.exports = {
      * @example
      * await api.discord.guilds.channels.modifyPositions({
      *   guild_id: '0000000000',
-     *   id: '0000000000',
-     *   position: 3,
-     *   lock_permissions: true,
-     *   parent_id: '0000000000'
+     *   channels: [{
+     *     id: '0000000000',
+     *     position: 4,
+     *     lock_permissions: true,
+     *     parent_id: '0000000000'
+     *   }]
      * });
      * @function modifyPositions
      * @memberof module:guilds.channels#
      * @param {Object} params
      * @param {Snowflake} params.guild_id
-     * @param {Snowflake} params.id - Channel ID
-     * @param {?number} [params.position] - Sorting position of the channel
-     * @param {?boolean} [params.lock_permissions] - Syncs the permission overwrites with the new parent, if moving to a new category
-     * @param {?Snowflake} [params.parent_id] - The new parent ID for the channel that is moved
+     * @param {ModifyPositionsChannel[]} params.channels
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     modifyPositions: async (params) =>
       attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/channels`,
-        body: params
+        body: params.channels
       }) // End of Modify Guild Channel Positions
   },
 
@@ -890,7 +907,7 @@ module.exports = {
      */
     retrieve: async (params) => {
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/members/${params.user_id}`
       });
       if (!params.member_only) {
@@ -921,7 +938,7 @@ module.exports = {
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
       attempt.forEach((/** @type {Member} */ member) => {
@@ -953,7 +970,7 @@ module.exports = {
       let endpoint = `guilds/${params.guild_id}/members/search?query=${params.query}`;
       endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
       const [payload] = attempt || [];
@@ -997,9 +1014,9 @@ module.exports = {
      */
     remove: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `guilds/${params.guild_id}/members/${params.user_id}`,
-        body: { reason: params.reason ?? null }
+        reason: params.reason ?? null
       }), // End of Remove Guild Member
 
     /**
@@ -1024,13 +1041,15 @@ module.exports = {
      * @param {Snowflake} [params.channel_id] - ID of channel to move user to (if they are connected to voice) (requires `MOVE_MEMBERS`)
      * @param {ISO8601Timestamp} [params.communication_disabled_until] - When the user's [timeout]{@link https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ} will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out (requires `MODERATE_MEMBERS`)
      * @param {GuildMemberFlags} [params.flags] - [Guild member flags]{@link https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags} (requires `MODERATE_MEMBERS`)
+     * @param {string} [params.reason]
      * @returns {Promise<Member>} The updated [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} object for the specified user
      */
     update: async (params) => {
       const attempt = await attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/members/${params.user_id}`,
-        body: params
+        body: params,
+        reason: params.reason ?? null
       });
       attempt.displayName = attempt.nick ?? attempt.user.display_name ?? attempt.user.global_name ?? attempt.user.username;
       attempt.displayAvatar = avatarFromObject(attempt.user.id, attempt.user.avatar, params.guild_id, attempt.avatar);
@@ -1053,13 +1072,15 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} [params.nick] - Value to set user's nickname to (requires `CHANGE_NICKNAME`)
+     * @param {string} [params.reason]
      * @returns {Promise<Member>} The updated [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} object
      */
     updateCurrent: async (params) =>
       attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/members/@me`,
-        body: params
+        body: params,
+        reason: params.reason ?? null
       }), // End of Modify Current Member
 
     /**
@@ -1078,12 +1099,14 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {Snowflake} params.role_id
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     addRole: async (params) =>
       attemptHandler({
-        method: 'put',
-        endpoint: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`
+        method: 'PUT',
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`,
+        reason: params.reason ?? null
       }), // End of Add Guild Member Role
 
     /**
@@ -1102,12 +1125,14 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {Snowflake} params.role_id
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     removeRole: async (params) =>
       attemptHandler({
-        method: 'del',
-        endpoint: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`
+        method: 'DELETE',
+        endpoint: `guilds/${params.guild_id}/members/${params.user_id}/roles/${params.role_id}`,
+        reason: params.reason ?? null
       }), // End of Remove Guild Member Role
 
     /**
@@ -1168,6 +1193,7 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {?number} [params.duration] - Duration in seconds to set timeout. Set to `null` or omit to clear timeout.
+     * @param {string} [params.reason]
      * @returns {Promise<Member>} The updated [Guild Member]{@link https://discord.com/developers/docs/resources/guild#guild-member-object} object
      */
     timeout: async (params) => {
@@ -1178,11 +1204,12 @@ module.exports = {
       else timestamp = null;
 
       const attempt = await attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/members/${params.user_id}`,
         body: {
           communication_disabled_until: timestamp
-        }
+        },
+        reason: params.reason ?? null
       });
 
       return extendPayload(attempt/* , params*/);
@@ -1219,7 +1246,7 @@ module.exports = {
      */
     retrieve: async (params) => {
       const roles = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/roles`
       });
       const targetRole = roles.find((/** @type {Role} */ x) => x.id === params.role_id);
@@ -1246,7 +1273,7 @@ module.exports = {
     getAll: async (params) => {
   
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/roles`
       });
 
@@ -1280,11 +1307,12 @@ module.exports = {
      * @param {string} [params.icon=null] - The role's icon image (if the guild has the `ROLE_ICONS` feature)
      * @param {string} [params.unicode_emoji=null] - The role's unicode emoji as a standard emoji (if the guild has the `ROLE_ICONS` feature)
      * @param {boolean} [params.mentionable=false] - Whether the role should be mentionable
+     * @param {string} [params.reason]
      * @returns {Promise<Role>} [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} object
      */
     create: async (params) => {
       const attempt = await attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `guilds/${params.guild_id}/roles`,
         body: {
           name: params.name ?? 'new role',
@@ -1294,7 +1322,8 @@ module.exports = {
           icon: params.icon ? (await imageData(params.icon, 'base64string')).data : null,
           unicode_emoji: params.unicode_emoji ?? null,
           mentionable: params.mentionable || false
-        }
+        },
+        reason: params.reason ?? null
       });
       if (attempt.permissions > 0)
         attempt.permission_names = parsePermissions(attempt.permissions);
@@ -1325,15 +1354,17 @@ module.exports = {
      * @param {string | Buffer} [params.icon=null] - The role's icon image (if the guild has the `ROLE_ICONS` feature)
      * @param {string} [params.unicode_emoji=null] - The role's unicode emoji as a standard emoji (if the guild has the `ROLE_ICONS` feature)
      * @param {boolean} [params.mentionable=false] - Whether the role should be mentionable
+     * @param {string} [params.reason]
      * @returns {Promise<Role>} The updated [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} object
      */
     update: async (params) => {
       if (params.icon) params.icon = (await imageData(params.icon, 'base64string')).data;
 
       const attempt = await attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/roles/${params.role_id}`,
-        body: params
+        body: params,
+        reason: params.reason ?? null
       });
       if (attempt.permissions > 0)
         attempt.permission_names = parsePermissions(attempt.permissions);
@@ -1354,12 +1385,14 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.role_id
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
-        method: 'del',
-        endpoint: `guilds/${params.guild_id}/roles/${params.role_id}`
+        method: 'DELETE',
+        endpoint: `guilds/${params.guild_id}/roles/${params.role_id}`,
+        reason: params.reason ?? null
       }), // End of Delete Guild Role
 
     /**
@@ -1384,22 +1417,18 @@ module.exports = {
      * @fires guilds#role_update
      * @param {Object} params
      * @param {Snowflake} params.guild_id
-     * @param {object[]} params.roles
-     * @param {Snowflake} params.roles.id - Role ID
-     * @param {number} [params.roles.position] - Sorting position of the role
+     * @param {{id: Snowflake, position: number}[]} params.roles
+     * @param {string} [params.reason]
      * @returns {Promise<Role[]>} List of all of the guild's [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} objects
      */
-    modifyPositions: async (params) => {
-      if (!params.roles) throw new Error('Please provide an array of role objects');
-      const roles = [];
-      for (const role of params.roles)
-        roles.push({ id: role.id, position: role.position });
-      return attemptHandler({
-        method: 'patch',
+    modifyPositions: async (params) => 
+      attemptHandler({
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/roles`,
-        body: roles
-      }); // End of Modify Guild Role Positions
-    }
+        body: params.roles,
+        reason: params.reason ?? null
+      }) // End of Modify Guild Role Positions
+    
   },
 
   // ///////////////////////////////////////////////////////////////////
@@ -1430,7 +1459,7 @@ module.exports = {
      */
     retrieve: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`
       }), // End of Get Guild Emoji
 
@@ -1449,7 +1478,7 @@ module.exports = {
      */
     getAll: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/emojis`
       }), // End of List Guild Emojis
 
@@ -1472,17 +1501,19 @@ module.exports = {
      * @param {string} params.name - Name of the emoji
      * @param {string | Buffer} params.image - The URL or buffer of the image to use
      * @param {Snowflake[]} [params.roles] - Roles allowed to use this emoji
+     * @param {string} [params.reason]
      * @returns {Promise<Emoji>} [Emoji]{@link https://discord.com/developers/docs/resources/emoji#emoji-object} object
      */
     create: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `guilds/${params.guild_id}/emojis`,
         body: {
           name: params.name,
           image: params.image ? (await imageData(params.image, 'base64string')).data : null,
           roles: params.roles ?? []
-        }
+        },
+        reason: params.reason ?? null
       }), // End of Create Guild Emoji
 
     /**
@@ -1502,13 +1533,15 @@ module.exports = {
      * @param {Snowflake} params.emoji_id
      * @param {string} params.name - Name of the emoji
      * @param {Snowflake[]} [params.roles] - Roles allowed to use this emoji
+     * @param {string} [params.reason]
      * @returns {Promise<Emoji>} The updated [Emoji]{@link https://discord.com/developers/docs/resources/emoji#emoji-object} object
      */
     update: async (params) =>
       attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`,
-        body: params
+        body: params,
+        reason: params.reason
       }), // End of Modify Guild Emoji
 
     /**
@@ -1525,12 +1558,14 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.emoji_id
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
-        method: 'del',
-        endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`
+        method: 'DELETE',
+        endpoint: `guilds/${params.guild_id}/emojis/${params.emoji_id}`,
+        reason: params.reason ?? null
       }) // End of Delete Guild Emoji
   },
 
@@ -1561,7 +1596,7 @@ module.exports = {
      */
     retrieve: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `stickers/${params.sticker_id}`
       }), // End of Get Sticker
 
@@ -1576,7 +1611,7 @@ module.exports = {
      */
     nitroPacks: async () =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: 'sticker-packs'
       }), // End of List Nitro Sticker Packs
 
@@ -1596,7 +1631,7 @@ module.exports = {
      */
     getAll: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/stickers`
       }), // End of Get Sticker
 
@@ -1618,7 +1653,7 @@ module.exports = {
      */
     retrieveGuildSticker: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`
       }), // End of Get Guild Sticker
 
@@ -1641,13 +1676,15 @@ module.exports = {
      * @param {string} [params.name] - Name of the sticker (2-30 characters)
      * @param {?string} [params.description] - Description of the sticker (empty or 2-100 characters)
      * @param {string} [params.tags] - Autocomplete/suggestion tags for the sticker (max 200 characters)
+     * @param {string} [params.reason]
      * @returns {Promise<Sticker>} The updated [Sticker]{@link https://discord.com/developers/docs/resources/sticker#sticker-object} object
      */
     update: async (params) =>
       attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`,
-        body: params
+        body: params,
+        reason: params.reason ?? null
       }), // End of Modify Guild Sticker
 
     /**
@@ -1665,12 +1702,14 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.sticker_id
+     * @param {string} [params.reason]
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
-        method: 'del',
-        endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`
+        method: 'DELETE',
+        endpoint: `guilds/${params.guild_id}/stickers/${params.sticker_id}`,
+        reason: params.reason ?? null
       }), // End of Delete Guild Sticker
 
     /**
@@ -1721,7 +1760,7 @@ module.exports = {
         form.append('tags', params.tags);
 
         const response = await fetch(`https://discord.com/api/v10/guilds/${params.guild_id}/stickers`, {
-          method: 'post',
+          method: 'POST',
           body: form,
           headers: {
             'Authorization': `Bot ${token('discord')}`
@@ -1769,7 +1808,7 @@ module.exports = {
      */
     retrieve: async (params) => {
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}?with_user_count=${params.with_user_count || true}`
       });
       if (attempt.creator) {
@@ -1800,7 +1839,7 @@ module.exports = {
      */
     getAll: async (params) => {
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/scheduled-events?with_user_count=${params.with_user_count || true}`
       });
       for (const event of attempt) {
@@ -1845,7 +1884,7 @@ module.exports = {
       endpoint += `${params.before ? `&before=${params.before}` : ''}`;
       endpoint += `${params.after ? `&after=${params.after}` : ''}`;
       const attempt = await attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
       for (const event of attempt) {
@@ -1885,6 +1924,7 @@ module.exports = {
      * @param {EventEntityMetadata} [params.entity_metadata] - Required for events with `'entity_type': EXTERNAL`
      * @param {ISO8601Timestamp} params.scheduled_start_time
      * @param {ISO8601Timestamp} [params.scheduled_end_time] - Required for events with `'entity_type': EXTERNAL`
+     * @param {string} [params.reason]
      * @returns {Promise<GuildScheduledEvent>} [Guild Scheduled Event]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object} object
      */
     create: async (params) => {
@@ -1892,7 +1932,7 @@ module.exports = {
         throw new Error('channel_id is required for VOICE and STAGE events');
 
       return attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `guilds/${params.guild_id}/scheduled-events`,
         body: {
           name: params.name,
@@ -1904,7 +1944,8 @@ module.exports = {
           privacy_level: params.privacy_level ?? 2,
           scheduled_start_time: params.scheduled_start_time ?? null,
           scheduled_end_time: params.scheduled_end_time ?? null
-        }
+        },
+        reason: params.reason ?? null
       });
     }, // End of Create Guild Scheduled Event
 
@@ -1935,6 +1976,7 @@ module.exports = {
      * @param {EventEntityMetadata} [params.entity_metadata] - [Entity metadata]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-metadata} - Required for events with `'entity_type': EXTERNAL`
      * @param {ISO8601Timestamp} [params.scheduled_start_time]
      * @param {ISO8601Timestamp} [params.scheduled_end_time] - Required for events with `'entity_type': EXTERNAL`
+     * @param {string} [params.reason]
      * @returns {Promise<GuildScheduledEvent>} The modified [Guild Scheduled Event]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object} object
      */
     update: async (params) => {
@@ -1943,9 +1985,10 @@ module.exports = {
         params.channel_id = null;
 
       return attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}`,
-        body: params
+        body: params,
+        reason: params.reason ?? null
       });
     }, // End of Modify Guild Scheduled Event
 
@@ -1967,7 +2010,7 @@ module.exports = {
      */
     destroy: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `guilds/${params.guild_id}/scheduled-events/${params.guild_scheduled_event_id}`
       }) // End of Delete Guild Scheduled Event
   },
@@ -1998,7 +2041,7 @@ module.exports = {
      */
     retrieve: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/templates/${params.template_code}`
       }), // End of Get Guild Template
 
@@ -2018,7 +2061,7 @@ module.exports = {
      */
     getAll: async (params) =>
       attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: `guilds/${params.guild_id}/templates`
       }), // End of Get Guild Templates
 
@@ -2026,6 +2069,7 @@ module.exports = {
      * @summary
      * ### [Create Guild Template]{@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
      * - Requires the `MANAGE_GUILD` permission
+     * - 
      * @example
      * await api.discord.guilds.templates.create({
      *   guild_id: '0000000000',
@@ -2041,7 +2085,7 @@ module.exports = {
      */
     create: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `guilds/${params.guild_id}/templates`,
         body: {
           name: params.name,
@@ -2052,6 +2096,7 @@ module.exports = {
     /**
      * @summary
      * ### [Create Guild from Guild Template]{@link https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template}
+     * - Can be used only by bots in less than 10 guilds
      * @example
      * await api.discord.guilds.templates.createGuild({
      *   template_code: '0000000000'
@@ -2067,7 +2112,7 @@ module.exports = {
      */
     createGuild: async (params) =>
       attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: `guilds/templates/${params.template_code}`,
         body: {
           name: params.name,
@@ -2093,7 +2138,7 @@ module.exports = {
      */
     sync: async (params) =>
       attemptHandler({
-        method: 'put',
+        method: 'PUT',
         endpoint: `guilds/${params.guild_id}/templates/${params.template_code}`
       }), // End of Sync Guild Template
 
@@ -2117,7 +2162,7 @@ module.exports = {
      */
     update: async (params) =>
       attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/templates/${params.template_code}`,
         body: params
       }), // End of Modify Guild Template
@@ -2140,7 +2185,7 @@ module.exports = {
      */
     destroy: async (params) =>
       attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: `guilds/${params.guild_id}/templates/${params.template_code}`
       }) // End of Delete Guild Template
   }

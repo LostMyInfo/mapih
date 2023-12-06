@@ -101,8 +101,8 @@ type PermissionFlags = number;
  * | Bug Hunter Level 2           |
  * | Verified Bot                 |
  * | Early Verified Bot Developer |
- * | Discord Certified Moderator  |
- * | Interactions Handler         |
+ * | Moderator Programs Alumni    |
+ * | Bot HTTP Interactions        |
  * | Active Developer             |
  */
 type UserFlags = string;
@@ -1210,6 +1210,24 @@ type DMChannel = {
     flags: ChannelFlags;
     recipients: User[];
 };
+type ModifyPositionsChannel = {
+    /**
+     * - id of the channel
+     */
+    id: Snowflake;
+    /**
+     * - Sorting position of the channel
+     */
+    position?: number | undefined;
+    /**
+     * - Syncs the permission overwrites with the new parent, if moving to a new category
+     */
+    lock_permissions?: boolean | undefined;
+    /**
+     * - The new channel category
+     */
+    parent_id?: Snowflake | undefined;
+}
 type Message = {
     /**
      * - id of the message
@@ -1392,6 +1410,100 @@ type FollowedChannel = {
     channel_id: Snowflake;
     webhook_id: Snowflake;
 };
+/**
+ * | Value   | Flag                    | Description                                                |
+ * |---------|-------------------------|------------------------------------------------------------|
+ * | 1 << 0  | Verified                | Application is verified                                    |
+ * | 1 << 1  | Tag                     | Application has at least one tag set                       |
+ * | 1 << 2  | Description             | Application has a description                              |
+ * | 1 << 3  | Terms Of Service        | Application has terms of service set                       |
+ * | 1 << 4  | Privacy Policy          | Application has a privacy policy set                       |
+ * | 1 << 5  | Install Params          | Application has a custom install URL or install parameters |
+ * | 1 << 6  | Safe Name               | Application's name is safe for work                        |
+ * | 1 << 7  | Safe Description        | Application's description is safe for work                 |
+ * | 1 << 8  | Approved Commands       | Application has the message content intent                 |
+ * | 1 << 9  | Support Guild           | Application has a support guild set                        |
+ * | 1 << 10 | Safe Commands           | Application's commands are safe for work                   |
+ * | 1 << 11 | MFA                     | Application's owner has MFA enabled                        |
+ * | 1 << 12 | Safe Directory Overview | Application's directory long description is safe for work  |
+ * | 1 << 13 | Supported Locales       | Application has at least one supported locale set          |
+ * | 1 << 14 | Safe Short Description  | Application's directory short description is safe for work |
+ * | 1 << 15 | Safe Role Connections   | Application's role connections metadata is safe for work   |
+ * | 1 << 16 | Eligible                | Application is eligible for discovery                      |
+ */
+type ApplicationDiscoverabilityEligibilityFlags = number;
+/**
+ * | Value | State   | Description |
+ * |-------|---------|-------------|
+ * | 1     | None    | Application has no monetization set up
+ * | 2     | Enabled | Application has monetization set up
+ * | 3     | Blocked | Application has been blocked from monetizing
+ */
+type ApplicationMonetizationState = number;
+/**
+ * | Value | State            | Description |
+ * |-------|------------------|-------------|
+ * | 1     | Ineligible       | Application is ineligible for the application directory
+ * | 2     | Not Discoverable | Application is not listed in the application directory
+ * | 3     | Discoverable     | Application is listed in the application directory
+ * | 4     | Featureable      | Application is featureable in the application directory
+ * | 5     | Blocked          | Application has been blocked from appearing in the application directory
+ */
+type ApplicationDiscoverabilityState = number;
+/**
+ * | Value | Version   | Description                                                                            |
+ * |-------|-----------|----------------------------------------------------------------------------------------|
+ * | 1     | VERSION_1 | Only [Interaction Create](#interaction-create) events are sent as documented (default) |
+ * | 2     | VERSION_2 | A selection of chosen events are sent                                                  |
+ */
+type ApplicationInteractionsVersion = number;
+/**
+ * | Value   | Flag                        | Description                                              |
+ * |---------|-----------------------------|----------------------------------------------------------|
+ * | 1 << 0  | Verified                    | Application is verified                                  |
+ * | 1 << 1  | Has Team                    | Application is owned by a team                           |
+ * | 1 << 2  | Approved Commands           | Application has the message content intent               |
+ * | 1 << 3  | Terms Of Service            | Application has terms of service set                     |
+ * | 1 << 4  | Privacy Policy              | Application has a privacy policy set                     |
+ * | 1 << 5  | Safe Name                   | Application's name is safe for work                      |
+ * | 1 << 6  | Safe Description            | Application's description is safe for work               |
+ * | 1 << 7  | Safe Role Connections       | Application's role connections metadata is safe for work |
+ * | 1 << 9  | Not Quarantined             | Application is not quarantined                           |
+ * | 1 << 15 | Team Members Email Verified | Application's team members all have verified emails      |
+ * | 1 << 16 | Team Members MFA Enabled    | Application's team members all have MFA enabled          |
+ * | 1 << 17 | No Blocking Issues          | Application has no issues blocking monetization          |
+ * | 1 << 18 | Valid Payout Status         | Application's team has a valid payout status             |
+ */
+type ApplicationMonetizationEligibilityFlags = number;
+/**
+ * | Value | State       | Description                                         |
+ * |-------|-------------|-----------------------------------------------------|
+ * | 0     | Disabled    | Application does not have access to RPC             |
+ * | 1     | Unsubmitted | Application has not yet been applied for RPC access |
+ * | 2     | Submitted   | Application has submitted a RPC access request      |
+ * | 3     | Approved    | Application has been approved for RPC access        |
+ * | 4     | Rejected    | Application has been rejected from RPC access       |
+ */
+type RPCApplicationState = number;
+/**
+ * | Value | State     | Description                                                                           |
+ * |-------|-----------|---------------------------------------------------------------------------------------|
+ * | 1     | None      | Application does not have a commerce license                                          |
+ * | 2     | Paid      | Application has a commerce license but has not yet submitted a store approval request |
+ * | 3     | Submitted | Application has submitted a store approval request                                    |
+ * | 4     | Approved  | Application has been approved for the store                                           |
+ * | 5     | Rejected  | Application has been rejected from the store                                          |
+ */ 
+type StoreApplicationState = number;
+/**
+ * | Value | State       | Description                                           |
+ * |-------|-------------|-------------------------------------------------------|
+ * | 1     | Ineligible  | Application is ineligible for verification            |
+ * | 2     | Unsubmitted | Application has not yet been applied for verification |
+ * | 3     | Submitted   | Application has submitted a verification request      |
+ * | 4     | Succeeded   | Application has been verified                         |
+ */ 
+type ApplicationVerificationState = number;
 type Application = {
     /**
      * - The id of the app
@@ -1477,6 +1589,90 @@ type Application = {
      * - The application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration
      */
     role_connections_verification_url?: string | undefined;
+    /**
+     * - Approximate count of guilds the app has been added to
+     */
+    approximate_guild_count?: number | undefined;
+    /**
+     * - Array of redirect URIs for the app
+     */
+    redirect_urls?: string[] | undefined;
+    /**
+     * - [Interactions endpoint URL]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction} for the app
+     */
+    interactions_endpoint_url?: string | undefined;
+    /**
+     * - Partial User object for the bot user associated with the app
+     */
+    bot?: User | undefined;
+    /**
+     * - Partial object of the associated guild
+     */
+    guild?: Guild | undefined;
+    /**
+     * - Gateway events to send to the interaction endpoint
+     */
+    interactions_event_types?: string[] | undefined;
+    /**
+     * - [Interactions version](#application-interactions-version) of the application
+     */
+    interactions_version?: ApplicationInteractionsVersion | undefined;
+    /**
+     * - [Explicit content filter level]{@link https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level}
+     */
+    explicit_content_filter?: ExplicitContentFilterLevel | undefined;
+    /**
+     * - [RPC application state](#rpc-application-state) of the application
+     */
+    rpc_application_state?: RPCApplicationState | undefined;
+    /**
+     * - [Store application state](#store-application-state) of the commerce application
+     */
+    store_application_state?: StoreApplicationState | undefined;
+    /**
+     * - undocumented
+     */
+    creator_monetization_state?: number | undefined;
+    /**
+     * - [Verification state](#application-verification-state) of the application
+     */
+    verification_state?: ApplicationVerificationState | undefined;
+    /**
+     * - Whether the integration is public
+     */
+    integration_public?: boolean | undefined;
+    /**
+     * - When true, the application will only join upon completion of the full OAuth2 code grant flow
+     */
+    integration_require_code_grant?: boolean | undefined;
+    /**
+     * - [Directory discoverability state](#application-discoverability-state) of the application
+     */
+    discoverability_state?: ApplicationDiscoverabilityState | undefined;
+    /**
+     * - [Directory eligibility flags](#application-discovery-eligibility-flags) for the application
+     */
+    discovery_eligibility_flags?: ApplicationDiscoverabilityEligibilityFlags | undefined;
+    /**
+     * - [Monetization state](#application-monetization-state) of the application
+     */
+    monetization_state?: ApplicationMonetizationState | undefined;
+    /**
+     * - [Monetization eligibility flags](#application-monetization-eligibility-flags) for the application
+     */
+    monetization_eligibility_flags?: ApplicationMonetizationEligibilityFlags | undefined;
+    /**
+     * - undocumented
+     */
+    internal_guild_restriction?: number | undefined;
+    /**
+     * - Whether the bot is allowed to hook into the application's game directly
+     */
+    hook?: boolean | undefined;
+    /**
+     * - Whether the application has premium subscription set up
+     */
+    is_monetized?: boolean | undefined;
 };
 /**
  * | Name | Value |
@@ -1514,7 +1710,7 @@ type InstallParams = {
     /**
      * - The [scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes} to add the application to the server with
      */
-    scopes: string[];
+    scopes: OAuth2Scopes[];
     /**
      * - The [permissions]{@link https://discord.com/developers/docs/topics/permissions} to request for the bot role
      */
@@ -2472,34 +2668,34 @@ type MessageReference = {
 };
 /**
  * | Type | Value | Description |
- * |------|-------|-------------|
- * | Crossposted | 1 << 0 | This message has been published to subscribed channels (via Channel Following) |
- * | IsCrosspost | 1 << 1 | This message originated from a message in another channel (via Channel Following) |
- * | SuppressEmbeds | 1 << 2 | Do not include any embeds when serializing this message |
- * | SourceMessageDeleted | 1 << 3 | The source message for this crosspost has been deleted (via Channel Following) |
- * | Urgent | 1 << 4 | This message came from the urgent message system |
- * | HasThread | 1 << 5 | This message has an associated thread, which shares its id |
- * | Ephemeral | 1 << 6 | This message is only visible to the user who invoked the Interaction |
- * | Loading | 1 << 7 | This message is an Interaction Response and the bot is "thinking" |
- * | FailedToMentionSomeRolesInThread | 1 << 8 | This message failed to mention some roles and add their members to the thread |
+ * |----------------------------------|--------|-----------------------------------------------------------------------------------|
+ * | Crossposted                      | 1 << 0 | This message has been published to subscribed channels (via Channel Following)    |
+ * | IsCrosspost                      | 1 << 1 | This message originated from a message in another channel (via Channel Following) |
+ * | SuppressEmbeds                   | 1 << 2 | Do not include any embeds when serializing this message                           |
+ * | SourceMessageDeleted             | 1 << 3 | The source message for this crosspost has been deleted (via Channel Following)    |
+ * | Urgent                           | 1 << 4 | This message came from the urgent message system                                  |
+ * | HasThread                        | 1 << 5 | This message has an associated thread, which shares its id                        |
+ * | Ephemeral                        | 1 << 6 | This message is only visible to the user who invoked the Interaction              |
+ * | Loading                          | 1 << 7 | This message is an Interaction Response and the bot is "thinking"                 |
+ * | FailedToMentionSomeRolesInThread | 1 << 8 | This message failed to mention some roles and add their members to the thread     |
  */
 type MessageFlags = number;
 /**
- * | Type | Value | Description |
- * |------|-------|-------------|
- * | Guild Text          | 0 | A text channel within a guild |
- * | DM                  | 1 | A direct message between users |
- * | Guild Voice         | 2 | A voice channel within a server |
- * | Group DM            | 3 | A direct message between multiple users |
- * | Guild Category      | 4 | An organizational category that contains up to 50 channels |
- * | Guild Announcement  | 5 | A channel that users can follow and crosspost into their own server |
- * | Announcement Thread | 10 | A temporary sub-channel within a `GUILD_ANNOUNCEMENT` channel |
- * | Public Thread       | 11 | A temporary sub-channel within a `GUILD_TEXT` or `GUILD_FORUM` channel |
- * | Private Thread      | 12 | A temporary sub-channel within a `GUILD_TEXT` channel that is only viewable by those invited and those with the `MANAGE_THREADS` permission |
- * | Guild Stage Voice   | 13 | A voice channel for hosting events with an audience |
- * | Guild Directory     | 14 | The channel in a hub containing the listed servers |
- * | Guild Forum         | 15 | Channel that can only contain threads |
- * | Guild Media         | 16 | Channel that can only contain media threads |
+ * | Type                | Value | Description |
+ * |---------------------|-------|---------------------------------------------------------------------------------------------------------------------------------------------|
+ * | Guild Text          | 0     | A text channel within a guild |
+ * | DM                  | 1     | A direct message between users |
+ * | Guild Voice         | 2     | A voice channel within a server |
+ * | Group DM            | 3     | A direct message between multiple users |
+ * | Guild Category      | 4     | An organizational category that contains up to 50 channels |
+ * | Guild Announcement  | 5     | A channel that users can follow and crosspost into their own server |
+ * | Announcement Thread | 10    | A temporary sub-channel within a `GUILD_ANNOUNCEMENT` channel |
+ * | Public Thread       | 11    | A temporary sub-channel within a `GUILD_TEXT` or `GUILD_FORUM` channel |
+ * | Private Thread      | 12    | A temporary sub-channel within a `GUILD_TEXT` channel that is only viewable by those invited and those with the `MANAGE_THREADS` permission |
+ * | Guild Stage Voice   | 13    | A voice channel for hosting events with an audience |
+ * | Guild Directory     | 14    | The channel in a hub containing the listed servers |
+ * | Guild Forum         | 15    | Channel that can only contain threads |
+ * | Guild Media         | 16    | Channel that can only contain media threads |
  */
 type ChannelType = number;
 /**
@@ -2536,6 +2732,10 @@ type ChannelType = number;
  * | Stage Speaker | 29 |
  * | Stage Topic | 31 |
  * | Guild Application Premium Subscription | 32 |
+ * | Guild Incident Alert Mode Enabled | 36 |
+ * | Guild Incident Alert Mode Disabled | 37 |
+ * | Guild Incident Report Raid | 38 |
+ * | Guild Incident Report False Alarm | 39 |
  */
 type MessageType = number;
 /**

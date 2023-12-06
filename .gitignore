@@ -3,3 +3,5 @@ tsconfig.json
 node_modules
 test.js
 .env
+config.json
+docs/guilds.md

@@ -1,6 +1,8 @@
 // @ts-check
 'use-strict';
 
+const { SlackErrorCodes, Messages } = require('./ErrorMessages');
+
 class ResponseError extends Error {
   
   /**
@@ -12,10 +14,11 @@ class ResponseError extends Error {
     super();
 
     this.type = type;
-    this.status = response.status;
-    this.statusText = response.statusText;
+    if (response.status !== 200) this.status = response.status;
+    if (response.statusText !== 'OK') this.statusText = response.statusText;
     
     if (type === 'discord_error') {
+      if (!res) return;
       this.message = res.message;
       /** @type {number} */
       if (res.code !== 0) this.code = res.code;
@@ -26,7 +29,21 @@ class ResponseError extends Error {
         this.details = DiscordError(res);
 
     } else if (type === 'slack_error') {
-      // ...
+      if (!res) return;
+      this.message = res.error;
+      // console.log('slack error');
+      // console.log('res', res);
+      if (SlackError(res)) {
+        this.details = SlackError(res);
+        /*
+        const props = SlackError(res);
+        console.log('props', props);
+        if (!props && !Object.keys(props)?.length) return;
+        for (const [k, v] of Object.entries(props))
+          // console.log('k:', k);
+          this[k] = v;
+        */
+      }
     }
   }
   
@@ -41,10 +58,28 @@ class ResponseError extends Error {
 };
 
 /**
+ * Format the message for an error.
+ * @param {string} code The error code
+ * @param {Array<*>} args Arguments to pass for util format or as function args
+ * @returns {string} Formatted string
+ * @ignore
+ */
+function message(code, args) {
+  console.log('code in message():', code);
+  if (!(code in SlackErrorCodes)) throw new Error('Error code must be a valid Discord ErrorCode');
+  const msg = Messages[code].method;
+  if (!msg) throw new Error(`No message associated with error code: ${code}.`);
+  if (typeof msg === 'function') return msg(...args);
+  if (!args?.length) return msg;
+  args.unshift(msg);
+  return String(...args);
+}
+
+/**
  * @param {DiscordError} err 
  */
 function DiscordError(err) {
-  console.log(JSON.stringify(err, null, 2))
+  // ('error from discordError', JSON.stringify(err, null, 2));
   /**
    * @type {{ [s: string]: string|number|boolean; }}
    */
@@ -63,7 +98,7 @@ function DiscordError(err) {
   const isIndex = (key) => /\d/.test(key);
   
   /** @type {(k: DiscordErrorErrors) => boolean} */ 
-  const has = (v) => v?.['_errors']?.[0]?.['message'] || Object.entries(v)?.[0]?.[1]?.['_errors']?.[0]?.['message'];
+  const has = (v) => v && (v?.['_errors']?.[0]?.['message'] || Object.entries(v)?.[0]?.[1]?.['_errors']?.[0]?.['message']);
 
   /**
    * @param {string} k 
@@ -91,12 +126,12 @@ function DiscordError(err) {
                   if (isObj(value3)) 
                     for (const [key4, value4] of entries(value3)) {
                       if (check(key4, value4))
-                        errinfo[`${key1}.${key2}[${key3}].${key4}`] = value4?.['_errors']?.[0]?.['message']
+                        errinfo[`${key1}.${key2}[${key3}].${key4}`] = value4?.['_errors']?.[0]?.['message'];
                         
                       if (isObj(value4)) 
                         for (const [key5, value5] of entries(value4)) {
                           if (check(key5, value5))
-                            errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}`] = value5?.['_errors']?.[0]?.['message']
+                            errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}`] = value5?.['_errors']?.[0]?.['message'];
                             
                           // deep components
                           if (isObj(value5)) 
@@ -104,7 +139,7 @@ function DiscordError(err) {
                               if (isObj(value6))
                                 for (const [key7, value7] of entries(value6))
                                   if (check(key7, value7))
-                                    errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}[${key6}].${key7}`] = value7?.['_errors']?.[0]?.['message']
+                                    errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}[${key6}].${key7}`] = value7?.['_errors']?.[0]?.['message'];
                         }
                     }
                 }
@@ -116,31 +151,46 @@ function DiscordError(err) {
   return err.errors ? errinfo : undefined;
 }
 
+/**
+ * 
+ * @param {DiscordError} err 
+ * @returns 
+ */
 function SlackError(err) {
-  console.log('err in parseSlackError:\n', err);
+  // console.log('err in parseSlackError:\n', err);
   const errs = {};
-  if (!err.errors && !err.response_metadata) {
-    return { message: err.error };
+  if (err.needed) errs['missing_scope'] = err.needed;
+  if (!err.errors && !err.response_metadata && !err.warnings) {
+    return err.needed ? errs : null; // { message: err.error };
   }
-  for (const e of err.errors ?? err.response_metadata?.messages) {
-    // const match = e.match(/^.*(?=\s\[)|(?<=:\/).*(?=\])/gmi);
-    const match = e.match(/^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
-    const specificProp = e.match(/(?<=:\s)(\w+)(?!\[)/gi)?.[0];
-    // const specificProp = e.match(/:\s(\w+)(?!\[)/i)?.[1];
-    const [message] = match;
-    let [, path] = match,
-      newPath = '';
-    path = path.split('/');
-    const prop = path[0];
-    errs[prop] = errs[prop] || [];
+  
 
-    for (const p of path) {
+  for (const e of err.errors ?? err.response_metadata?.messages) {
+    // console.log('e of err.errors:', e);
+    const match = e.match(/(?:(?<=]\s)).*|^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
+    // const match = e.match(/^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
+    // console.log('match', match);
+    const specificProp = e.match(/(?<=:\s)(\w+)(?!\[)/gi)?.[0];
+    // console.log('specific prop:', specificProp);
+    // const specificProp = e.match(/:\s(\w+)(?!\[)/i)?.[1];
+    if (!match) return e;
+    const [message, path] = match;
+    let newPath = '';
+    // path = path.split('/');
+    // const prop = path[0];
+    // errs[prop] = errs[prop] || [];
+    // console.log('prop:', prop);
+    
+    for (const p of path.split('/')) {
       newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
     }
-
-    path = path.slice(2).join('.');
+    
+    // path = path.slice(2).join('.');
     newPath = newPath.slice(1);
-
+    // console.log('newPath:', newPath);
+    // console.log('path:', path);
+    errs[newPath] = message;
+    /*
     for (const block of blocks) {
       // const propname = ``
       if (specificProp) {
@@ -151,8 +201,9 @@ function SlackError(err) {
       }
       console.log(errs);
     }
+    */
   }
-  console.log('final errs', errs);
+  // console.log('final errs', errs);
   return errs;
 }
 
@@ -181,14 +232,18 @@ function get(obj, path, defaultValue = undefined) {
     : result;
 }
 
-
 /**
  * @typedef {Object} DiscordError
- * @property {number} code
  * @property {string} message
+ * @property {boolean} [ok]
+ * @property {string} [error]
+ * @property {{messages: Array<string>}} [response_metadata]
+ * @property {number} [code]
  * @property {boolean} [global]
  * @property {number} [retry_after]
- * @property {DiscordErrorErrors} [errors]
+ * @property {DiscordErrorErrors} [errors],
+ * @property {string} [needed]
+ * @property {Array<string>} [warnings]
  */
 
 /**

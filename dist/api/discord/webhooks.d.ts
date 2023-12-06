@@ -36,6 +36,7 @@ export function modify(params: {
     channel_id?: string | undefined;
     name?: string | undefined;
     avatar?: string | Buffer | undefined;
+    reason?: string | undefined
 }): Promise<Webhook>;
 export function modifyWithToken(params: {
     webhook_id: string;
@@ -45,6 +46,7 @@ export function modifyWithToken(params: {
 }): Promise<Omit<Webhook, "channel_id">>;
 export function destroy(params: {
     webhook_id: string;
+    reason?: string | undefined
 }): Promise<{
     statusCode: number;
     message: string;
@@ -69,6 +71,7 @@ export function execute(params: {
     allowed_mentions?: AllowedMentions | undefined;
     flags?: number | undefined;
     thread_name?: string | undefined;
+    applied_tags?: string | undefined;
     thread_id?: string | undefined;
     wait?: boolean | undefined;
 }): Promise<{

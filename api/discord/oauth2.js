@@ -158,7 +158,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
       ? '/api/oauth2/token' : '/api/users/@me';
     if (grant_type === 'revokeToken') path += '/revoke';
 
-    const method = grant_type.includes('Token') ? 'post' : 'get';
+    const method = grant_type.includes('Token') ? 'POST' : 'GET';
     const types = {
       getToken: 'authorization_code',
       refreshToken: 'refresh_token',
@@ -201,7 +201,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
       body
     };
 
-    if (method === 'post')
+    if (method === 'POST')
       responseBody.statusCode = 200;
 
     return https(responseBody);

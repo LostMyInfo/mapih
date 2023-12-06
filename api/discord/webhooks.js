@@ -31,7 +31,7 @@ module.exports = {
    */
   retrieve: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `webhooks/${params.webhook_id}`
     });
     attempt.typeName = WebhookType[attempt.type];
@@ -62,7 +62,7 @@ module.exports = {
    */
   retrieveWithToken: async (params) =>
     attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`
     }), // End of Get Webhook with Token
     
@@ -81,7 +81,7 @@ module.exports = {
    */
   retrieveChannel: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `channels/${params.channel_id}/webhooks`
     });
     for (const webhook of attempt) {
@@ -111,7 +111,7 @@ module.exports = {
    */
   retrieveGuild: async (params) => {
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint: `guilds/${params.guild_id}/webhooks`
     });
     for (const webhook of attempt) {
@@ -149,7 +149,7 @@ module.exports = {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
     endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint
     });
     return extendPayload(attempt/* , params*/);
@@ -177,7 +177,7 @@ module.exports = {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
     endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     return attemptHandler({
-      method: 'del',
+      method: 'DELETE',
       endpoint
     });
   }, // End of Delete Webhook Message
@@ -202,7 +202,7 @@ module.exports = {
    */
   create: async (params) =>
     attemptHandler({
-      method: 'post',
+      method: 'POST',
       endpoint: `channels/${params.channel_id}/webhooks`,
       body: {
         name: params.name,
@@ -228,14 +228,16 @@ module.exports = {
    * @param {Snowflake} [params.channel_id] - The new channel id this webhook should be moved to
    * @param {string} [params.name]
    * @param {string | Buffer} [params.avatar]
+   * @param {string} [params.reason]
    * @returns {Promise<Webhook>} The updated [Webhook]{@link https://discord.com/developers/docs/resources/webhook#webhook-object} object
    */
   modify: async (params) => {
     if (params.avatar) params.avatar = (await imageData(params.avatar, 'base64string')).data;
     return attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `webhooks/${params.webhook_id}`,
-      body: params
+      body: params,
+      reason: params.reason ?? null
     });
   }, // End of Modify Webhook
 
@@ -262,7 +264,7 @@ module.exports = {
   modifyWithToken: async (params) => {
     if (params.avatar) params.avatar = (await imageData(params.avatar, 'base64string')).data;
     return attemptHandler({
-      method: 'patch',
+      method: 'PATCH',
       endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`,
       body: params
     });
@@ -279,12 +281,14 @@ module.exports = {
    * @function destroy
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
+   * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
-      method: 'del',
-      endpoint: `webhooks/${params.webhook_id}`
+      method: 'DELETE',
+      endpoint: `webhooks/${params.webhook_id}`,
+      reason: params.reason ?? null
     }), // End of Delete Webhook
 
   /**
@@ -304,7 +308,7 @@ module.exports = {
    */
   destroyWithToken: async (params) =>
     attemptHandler({
-      method: 'del',
+      method: 'DELETE',
       endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`
     }), // End of Delete Webhook with Token
 
@@ -342,6 +346,7 @@ module.exports = {
    * @param {Component} [params.components] - Requires an application-owned webhook
    * @param {AllowedMentions} [params.allowed_mentions]
    * @param {MessageFlags} [params.flags]
+   * @param {Snowflake[]} [params.applied_tags] - Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) 
    * @param {string} [params.thread_name]
    * Name of thread to create
    * 
@@ -361,10 +366,10 @@ module.exports = {
     endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     endpoint += `${params.wait ? `&wait=${params.wait}` : false}`;
     if (params.attachments && params.attachments?.length)
-      return sendAttachment(params, endpoint, 'post');
+      return sendAttachment(params, endpoint, 'POST');
     else {
       return attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint,
         body: {
           username: params.username ?? null,
@@ -375,7 +380,8 @@ module.exports = {
           tts: params.tts || false,
           allowed_mentions: params.allowed_mentions ?? null,
           flags: params.flags ?? null,
-          thread_name: params.thread_name ?? null
+          thread_name: params.thread_name ?? null,
+          applied_tags: params.applied_tags ?? null
         }
       });
     }
@@ -419,10 +425,10 @@ module.exports = {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
     endpoint += `${params.thread_id ? `&thread_id=${params.thread_id}` : ''}`;
     if (params.attachments && params.attachments?.length)
-      return sendAttachment(params, endpoint, 'patch');
+      return sendAttachment(params, endpoint, 'PATCH');
     else {
       return attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint,
         body: params
       });

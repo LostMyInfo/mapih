@@ -82,8 +82,8 @@
  * | Bug Hunter Level 2           |
  * | Verified Bot                 |
  * | Early Verified Bot Developer |
- * | Discord Certified Moderator  |
- * | Interactions Handler         |
+ * | Moderator Programs Alumni    |
+ * | Bot HTTP Interactions        |
  * | Active Developer             |
  */
 
@@ -615,6 +615,15 @@
  */
 
 /**
+ * @summary Modify Positions Partial Channel
+ * @typedef {Object} ModifyPositionsChannel
+ * @property {Snowflake} id
+ * @property {?number} [position] - Sorting position of the channel
+ * @property {?boolean} [lock_permissions] - Syncs the permission overwrites with the new parent, if moving to a new category
+ * @property {?Snowflake} [parent_id] - The new channel category
+ */
+    
+/**
  * @summary [Message]{@link https://discord.com/developers/docs/resources/channel#message-object}
  * @typedef {Object} Message
  * @property {Snowflake} id - id of the message
@@ -704,6 +713,108 @@
  */
 
 /**
+ * @typedef {number} ApplicationDiscoverabilityEligibilityFlags
+ * | Value   | Flag                    | Description                                                |
+ * |---------|-------------------------|------------------------------------------------------------|
+ * | 1 << 0  | Verified                | Application is verified                                    |
+ * | 1 << 1  | Tag                     | Application has at least one tag set                       |
+ * | 1 << 2  | Description             | Application has a description                              |
+ * | 1 << 3  | Terms Of Service        | Application has terms of service set                       |
+ * | 1 << 4  | Privacy Policy          | Application has a privacy policy set                       |
+ * | 1 << 5  | Install Params          | Application has a custom install URL or install parameters |
+ * | 1 << 6  | Safe Name               | Application's name is safe for work                        |
+ * | 1 << 7  | Safe Description        | Application's description is safe for work                 |
+ * | 1 << 8  | Approved Commands       | Application has the message content intent                 |
+ * | 1 << 9  | Support Guild           | Application has a support guild set                        |
+ * | 1 << 10 | Safe Commands           | Application's commands are safe for work                   |
+ * | 1 << 11 | MFA                     | Application's owner has MFA enabled                        |
+ * | 1 << 12 | Safe Directory Overview | Application's directory long description is safe for work  |
+ * | 1 << 13 | Supported Locales       | Application has at least one supported locale set          |
+ * | 1 << 14 | Safe Short Description  | Application's directory short description is safe for work |
+ * | 1 << 15 | Safe Role Connections   | Application's role connections metadata is safe for work   |
+ * | 1 << 16 | Eligible                | Application is eligible for discovery                      |
+ */
+
+/**
+ * @typedef {number} ApplicationMonetizationState
+ * | Value | State   | Description |
+ * |-------|---------|-------------|
+ * | 1     | None    | Application has no monetization set up
+ * | 2     | Enabled | Application has monetization set up
+ * | 3     | Blocked | Application has been blocked from monetizing
+ */
+
+/**
+ * @typedef {number} ApplicationDiscoverabilityState
+ * | Value | State            | Description |
+ * |-------|------------------|-------------|
+ * | 1     | Ineligible       | Application is ineligible for the application directory
+ * | 2     | Not Discoverable | Application is not listed in the application directory
+ * | 3     | Discoverable     | Application is listed in the application directory
+ * | 4     | Featureable      | Application is featureable in the application directory
+ * | 5     | Blocked          | Application has been blocked from appearing in the application directory
+ */
+
+/**
+ * @typedef {number} ApplicationInteractionsVersion
+ * | Value | Version   | Description                                                                            |
+ * |-------|-----------|----------------------------------------------------------------------------------------|
+ * | 1     | VERSION_1 | Only [Interaction Create](#interaction-create) events are sent as documented (default) |
+ * | 2     | VERSION_2 | A selection of chosen events are sent                                                  |
+ */
+
+/**
+ * @typedef {number} ApplicationMonetizationEligibilityFlags
+ * | Value   | Flag                        | Description                                              |
+ * |---------|-----------------------------|----------------------------------------------------------|
+ * | 1 << 0  | Verified                    | Application is verified                                  |
+ * | 1 << 1  | Has Team                    | Application is owned by a team                           |
+ * | 1 << 2  | Approved Commands           | Application has the message content intent               |
+ * | 1 << 3  | Terms Of Service            | Application has terms of service set                     |
+ * | 1 << 4  | Privacy Policy              | Application has a privacy policy set                     |
+ * | 1 << 5  | Safe Name                   | Application's name is safe for work                      |
+ * | 1 << 6  | Safe Description            | Application's description is safe for work               |
+ * | 1 << 7  | Safe Role Connections       | Application's role connections metadata is safe for work |
+ * | 1 << 9  | Not Quarantined             | Application is not quarantined                           |
+ * | 1 << 15 | Team Members Email Verified | Application's team members all have verified emails      |
+ * | 1 << 16 | Team Members MFA Enabled    | Application's team members all have MFA enabled          |
+ * | 1 << 17 | No Blocking Issues          | Application has no issues blocking monetization          |
+ * | 1 << 18 | Valid Payout Status         | Application's team has a valid payout status             |
+ */
+
+/**
+ * @typedef {number} RPCApplicationState
+ * | Value | State       | Description                                         |
+ * |-------|-------------|-----------------------------------------------------|
+ * | 0     | Disabled    | Application does not have access to RPC             |
+ * | 1     | Unsubmitted | Application has not yet been applied for RPC access |
+ * | 2     | Submitted   | Application has submitted a RPC access request      |
+ * | 3     | Approved    | Application has been approved for RPC access        |
+ * | 4     | Rejected    | Application has been rejected from RPC access       |
+ */
+
+/**
+ * @typedef {number} ApplicationStoreApplicationState
+ * | Value | State     | Description                                                                           |
+ * |-------|-----------|---------------------------------------------------------------------------------------|
+ * | 1     | None      | Application does not have a commerce license                                          |
+ * | 2     | Paid      | Application has a commerce license but has not yet submitted a store approval request |
+ * | 3     | Submitted | Application has submitted a store approval request                                    |
+ * | 4     | Approved  | Application has been approved for the store                                           |
+ * | 5     | Rejected  | Application has been rejected from the store                                          |
+ */
+
+/**
+ * @typedef {number} ApplicationVerificationState
+ * | Value | State       | Description                                           |
+ * |-------|-------------|-------------------------------------------------------|
+ * | 1     | Ineligible  | Application is ineligible for verification            |
+ * | 2     | Unsubmitted | Application has not yet been applied for verification |
+ * | 3     | Submitted   | Application has submitted a verification request      |
+ * | 4     | Succeeded   | Application has been verified                         |
+ */ 
+
+/**
  * @summary [Application]{@link https://discord.com/developers/docs/resources/application#application-object}
  * @typedef {Object} Application
  * @property {Snowflake} id - The id of the app
@@ -711,6 +822,7 @@
  * @property {?string} icon - The icon hash of the app
  * @property {string} description - The description of the app
  * @property {string[]} [rpc_origins] - An array of rpc origin urls, if rpc is enabled
+ * @property {User} [bot] - Partial User object for the bot user associated with the app
  * @property {boolean} bot_public - When false, only app owner can join the app's bot to guilds
  * @property {boolean} bot_require_code_grant - When true, the app's bot will only join upon completion of the full OAuth2 code grant flow
  * @property {string} [terms_of_service_url] - The url of the app's terms of service
@@ -719,6 +831,8 @@
  * @property {string} verify_key - The hex encoded key for verification in interactions and the GameSDK's [GetTicket]{@link https://discord.com/developers/docs/game-sdk/applications#getticket}
  * @property {?Team} team - If the application belongs to a team, this will be a list of members of that team
  * @property {Snowflake} [guild_id] - If this application is a game sold on Discord, this field will be the guild to which it has been linked
+ * @property {Guild} [guild] - Partial object of the associated guild
+ * @property {number} [approximate_guild_count] - Approximate count of guilds the app has been added to
  * @property {Snowflake} [primary_sku_id] - If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists
  * @property {string} [slug] - If this application is a game sold on Discord, this field will be the URL slug that links to the store page
  * @property {string} [cover_image] - The application's default rich presence invite [cover image hash]{@link https://discord.com/developers/docs/reference#image-formatting}
@@ -727,6 +841,24 @@
  * @property {InstallParams} [install_params] - Settings for the application's default in-app authorization link, if enabled
  * @property {string} [custom_install_url] - The application's default custom authorization link, if enabled
  * @property {string} [role_connections_verification_url] - The application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration
+ * @property {string[]} [redirect_urls] - Array of redirect URLs for the app
+ * @property {string} [interactions_endpoint_url] - [Interactions endpoint URL]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction} for the app
+ * @property {Array<string>} interactions_event_types - Gateway events to send to the interaction endpoint
+ * @property {ApplicationInteractionsVersion} interactions_version - Interactions version of the application
+ * @property {ExplicitContentFilterLevel} explicit_content_filter - [Explicit content filter level]{@link https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level}
+ * @property {RPCApplicationState} rpc_application_state - RPC application state of the application
+ * @property {ApplicationStoreApplicationState} store_application_state - Store application state of the commerce application
+ * @property {number} creator_monetization_state
+ * @property {ApplicationVerificationState} verification_state - Verification state of the application
+ * @property {boolean} integration_public
+ * @property {boolean} integration_require_code_grant
+ * @property {ApplicationDiscoverabilityState} discoverability_state - Discoverability state of the application
+ * @property {ApplicationDiscoverabilityEligibilityFlags} discovery_eligibility_flags - Discoverability eligibility flags for the application
+ * @property {ApplicationMonetizationState} monetization_state - Monetization state of the application
+ * @property {ApplicationMonetizationEligibilityFlags} monetization_eligibility_flags - Monetization eligibility flags for the application
+ * @property {number} internal_guild_restriction
+ * @property {boolean} hook - Whether the bot is allowed to hook into the application's game directly
+ * @property {boolean} is_monetized - Whether the application has premium subscription set up
  */
 
 /**
@@ -760,7 +892,7 @@
 /**
  * @summary [Install Params]{@link https://discord.com/developers/docs/resources/application#install-params-object}
  * @typedef {Object} InstallParams
- * @property {string[]} scopes - The [scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes} to add the application to the server with
+ * @property {OAuth2Scopes[]} scopes - The [scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes} to add the application to the server with
  * @property {string} permissions - The [permissions]{@link https://discord.com/developers/docs/topics/permissions} to request for the bot role
  */
 
@@ -1495,6 +1627,10 @@
  * | Stage Speaker | 29 |
  * | Stage Topic | 31 |
  * | Guild Application Premium Subscription | 32 |
+ * | Guild Incident Alert Mode Enabled | 36 |
+ * | Guild Incident Alert Mode Disabled | 37 |
+ * | Guild Incident Report Raid | 38 |
+ * | Guild Incident Report False Alarm | 39 |
  */
 /**
  * @summary [Component Types]{@link https://discord.com/developers/docs/interactions/message-components#component-object-component-types}

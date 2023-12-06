@@ -37,7 +37,7 @@ module.exports = {
     endpoint += `${params.guild_scheduled_event_id ? `&guild_scheduled_event_id=${params.guild_scheduled_event_id}` : ''}`;
     
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint
     });
 
@@ -55,12 +55,14 @@ module.exports = {
    * @function revoke
    * @param {Object} params
    * @param {string} params.invite_code
+   * @param {string} [params.reason]
    * @returns {Promise<ExtendedInvite>} An [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-object} object for the given code
    */
   revoke: async (params) => {
     const attempt = await attemptHandler({
-      method: 'del',
-      endpoint: `invites/${params.invite_code}`
+      method: 'DELETE',
+      endpoint: `invites/${params.invite_code}`,
+      reason: params.reason ?? null
     });
     return extendPayload(attempt);
   }

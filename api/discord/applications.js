@@ -1,5 +1,7 @@
 // @ts-check
-const { attemptHandler } = require('../resources/functions');
+'use-strict';
+
+const { attemptHandler, getAppId, buildQueryString, imageData } = require('../resources/functions');
 
 // Applications
 // https://discord.com/developers/docs/interactions/application-commands/
@@ -12,22 +14,85 @@ module.exports = {
 
   /**
    * @summary
+   * ### [Get Current Application]{@link https://discord.com/developers/docs/resources/application#get-current-application}
+   * @example
+   * await api.discord.applications.getMe();
+   * @memberof module:applications#
+   * @function getMe
+   * @returns {Promise<Application>} The [Application]{@link https://discord.com/developers/docs/resources/application#application-object} object associated with the requesting bot user.
+   */
+  getMe: async () =>
+    attemptHandler({
+      method: 'GET',
+      endpoint: 'applications/@me'
+    }), // End of Get Current Application
+  
+  /**
+   * @summary
+   * ### [Edit Current Application]{@link https://discord.com/developers/docs/resources/application#edit-current-application}
+   * Edit properties of the app associated with the requesting bot user.
+   * Only properties that are passed will be updated.
+   * *Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.*
+   * @example
+   * await api.discord.applications.getMe({
+   *   description: 'new description',
+   *   icon: 'https://url_to_image.png' // or buffer,
+   *   install_params: {
+   *     scopes: [
+   *       'identify',
+   *       'bot',
+   *       'applications.commands'
+   *     ],
+   *     permissions: '8'
+   *   }
+   * });
+   * @memberof module:applications#
+   * @function updateMe
+   * @param {Object} params
+   * @param {string} [params.description] - Description of the app
+   * @param {string} [params.custom_install_url] - Default custom authorization URL for the app, if enabled
+   * @param {string} [params.interactions_endpoint_url] - [Interactions endpoint URL]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction} for the app
+   * @param {string} [params.role_connections_verification_url] - Role connection verification URL for the app
+   * @param {InstallParams} [params.install_params] - Settings for the app's default in-app authorization link, if enabled
+   * @param {number} [params.flags] - App's public [flags]{@link https://discord.com/developers/docs/resources/application#application-object-application-flags}
+   * @param {string|Buffer} [params.icon] - Icon for the app 
+   * @param {string|Buffer} [params.cover_image] - Default rich presence invite cover image for the app
+   * @param {string[]} [params.tags] - List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags
+   * @returns {Promise<Application>} The updated [Application]{@link https://discord.com/developers/docs/resources/application#application-object} object on success.
+   */
+  updateMe: async (params) => {
+    if (params.icon) params.icon = (await imageData(params.icon, 'base64string')).data;
+    if (params.cover_image) params.cover_image = (await imageData(params.cover_image, 'base64string')).data;
+    
+    return attemptHandler({
+      method: 'PATCH',
+      endpoint: 'applications/@me',
+      body: params
+    }); // End of Update Current Application
+  },
+  /**
+   * @summary
    * ### [Get Application Role Connection Metadata Records]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records}
    * @example
+   * await api.discord.applications.appRoleConnectionMeta();
+   * // or
    * await api.discord.applications.appRoleConnectionMeta({
    *   application_id: '0000000000000'
    * });
    * @memberof module:applications#
    * @function appRoleConnectionMeta
-   * @param {Object} params
-   * @param {Snowflake} params.application_id
+   * @param {Object} [params]
+   * @param {Snowflake} [params.application_id]
    * @returns {Promise<ApplicationRoleConnectionMetadata[]>} A list of [Application Role Connection Metadata]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object} objects for the given application.
    */
-  appRoleConnectionMeta: async (params) =>
-    attemptHandler({
-      method: 'get',
-      endpoint: `applications/${params.application_id}/role-connections/metadata`
-    }), // End of Get Application Role Connection Metadata Records
+  appRoleConnectionMeta: async (params) => {
+    const application_id = params?.application_id ?? await getAppId();
+    
+    return attemptHandler({
+      method: 'GET',
+      endpoint: `applications/${application_id}/role-connections/metadata`
+    }); // End of Get Application Role Connection Metadata Records
+  },
 
   /**
    * @summary
@@ -38,15 +103,17 @@ module.exports = {
    * });
    * @memberof module:applications#
    * @function updateAppRoleConnectionMeta
-   * @param {Object} params
-   * @param {Snowflake} params.application_id
+   * @param {Object} [params]
+   * @param {Snowflake} [params.application_id]
    * @returns {Promise<ApplicationRoleConnectionMetadata[]>} A list of updated [Application Role Connection Metadata]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object} objects for the given application.
    */
-  updateAppRoleConnectionMeta: async (params) =>
-    attemptHandler({
-      method: 'put',
-      endpoint: `applications/${params.application_id}/role-connections/metadata`
-    }), // End of Update Application Role Connection Metadata Records
+  updateAppRoleConnectionMeta: async (params) => {
+    const application_id = params?.application_id ?? await getAppId();
+    return attemptHandler({
+      method: 'PUT',
+      endpoint: `applications/${application_id}/role-connections/metadata`
+    }); // End of Update Application Role Connection Metadata Records
+  },
 
   
   /**
@@ -70,17 +137,18 @@ module.exports = {
      * @memberof module:applications.commands#
      * @function retrieve
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.command_id
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
      * @returns {Promise<ApplicationCommand>} [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} object
      */
     retrieve: async (params) => {
-      const paths = [`applications/${params.application_id}`, `commands/${params.command_id}`];
+      const application_id = params?.application_id ?? await getAppId();
+      const paths = [`applications/${application_id}`, `commands/${params.command_id}`];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
 
       return attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint: paths.join('/')
       });
     }, // End of Get Guild Command && Get Global Command
@@ -97,24 +165,22 @@ module.exports = {
      * });
      * @memberof module:applications.commands#
      * @function getAll
-     * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Object} [params]
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
      * @param {boolean} [params.with_localizations=false] - Whether to include full localization dictionaries (`name_localizations` and `description_localizations`) in the returned objects, instead of the `name_localized` and `description_localized` fields.
      * @returns {Promise<ApplicationCommand[]>} An array of [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} objects
      */
     getAll: async (params) => {
-      const paths = [`applications/${params.application_id}`, 'commands' /* `commands/?with_localizations=${params.with_localizations || false}`*/];
-      params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
-      if (params.with_localizations) paths.push(`/?with_localizations=${params.with_localizations || false}`);
-      console.log('paths.join()', paths.join('/'));
-
-      const attempt = await attemptHandler({
-        method: 'get',
+      const application_id = params?.application_id ?? await getAppId();
+      const paths = [`applications/${application_id}`, 'commands' /* `commands/?with_localizations=${params.with_localizations || false}`*/];
+      params && params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
+      if (params && params.with_localizations) paths.push(`/?with_localizations=${params.with_localizations || false}`);
+      
+      return attemptHandler({
+        method: 'GET',
         endpoint: paths.join('/')
       });
-      // console.log('attempt in applications');
-      return attempt;
     }, // End of Get Guild Commands && Get Global Commands
 
     /**
@@ -149,7 +215,7 @@ module.exports = {
      * @memberof module:applications.commands#
      * @function create
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {string} params.name - [Name of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming}, 1-32 characters
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
      * @param {LocalizationMap | null} [params.name_localizations] - Localization dictionary for the name field.
@@ -171,7 +237,8 @@ module.exports = {
      * @returns {Promise<ApplicationCommand>} [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} object
      */
     create: async (params) => {
-      const paths = [`applications/${params.application_id}`, 'commands'];
+      const application_id = params?.application_id ?? await getAppId();
+      const paths = [`applications/${application_id}`, 'commands'];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
       
       const body = {
@@ -191,7 +258,7 @@ module.exports = {
       }
 
       return attemptHandler({
-        method: 'post',
+        method: 'POST',
         endpoint: paths.join('/'),
         body
       });
@@ -230,7 +297,7 @@ module.exports = {
      * @memberof module:applications.commands#
      * @function modify
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.command_id
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
      * @param {string} [params.name] - [Name of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming}, 1-32 characters
@@ -249,7 +316,8 @@ module.exports = {
      * @returns {Promise<ApplicationCommand>} [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} object
      */
     modify: async (params) => {
-      const paths = [`applications/${params.application_id}`, `commands/${params.command_id}`];
+      const application_id = params?.application_id ?? await getAppId();
+      const paths = [`applications/${application_id}`, `commands/${params.command_id}`];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
 
       const { guild_id, dm_permission, ...body } = params;
@@ -257,7 +325,7 @@ module.exports = {
       if (!guild_id) body.dm_permission = params.dm_permission || true;
 
       return attemptHandler({
-        method: 'patch',
+        method: 'PATCH',
         endpoint: paths.join('/'),
         body
       });
@@ -277,17 +345,18 @@ module.exports = {
      * @memberof module:applications.commands#
      * @function destroy
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.command_id
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
      * @returns {Promise<{statusCode: number, message: string}>}
      */
     destroy: async (params) => {
-      const paths = [`applications/${params.application_id}`, `commands/${params.command_id}`];
+      const application_id = params?.application_id ?? await getAppId();
+      const paths = [`applications/${application_id}`, `commands/${params.command_id}`];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
 
       return attemptHandler({
-        method: 'del',
+        method: 'DELETE',
         endpoint: paths.join('/')
       });
     }, // End of Delete Application Command
@@ -309,20 +378,21 @@ module.exports = {
      * });
      * @memberof module:applications.commands#
      * @function bulkOverwrite
-     * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Object} [params]
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
      * @param {ApplicationCommand[]} [params.application_commands] 
      * @returns {Promise<ApplicationCommand[]>} A list of [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} objects
      */
     bulkOverwrite: async (params) => {
-      const paths = [`applications/${params.application_id}`, 'commands'];
-      params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
+      const application_id = params?.application_id ?? await getAppId();
+      const paths = [`applications/${application_id}`, 'commands'];
+      params && params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
       
       return attemptHandler({
-        method: 'put',
+        method: 'PUT',
         endpoint: paths.join('/'),
-        body: params.application_commands || []
+        body: params?.application_commands || []
       });
     }, // End of Bulk Overwrite Application Commands
 
@@ -338,17 +408,18 @@ module.exports = {
      * @memberof module:commands#
      * @function retrievePermissions
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.command_id 
      * @returns {Promise<GuildApplicationCommandPermissions>} [Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure} object
      */
-    retrievePermissions: async (params) =>
-      attemptHandler({
-        method: 'get',
-        endpoint: `applications/${params.application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`
-      }), // End of Get Application Command Permissions
-
+    retrievePermissions: async (params) => {
+      const application_id = params?.application_id ?? await getAppId();
+      return attemptHandler({
+        method: 'GET',
+        endpoint: `applications/${application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`
+      }); // End of Get Application Command Permissions
+    },
     /**
      * @summary
      * ### [Get Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
@@ -360,16 +431,17 @@ module.exports = {
      * @memberof module:commands#
      * @function getAllPermissions
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.guild_id
      * @returns {Promise<GuildApplicationCommandPermissions>} [Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure} object
      */
-    getAllPermissions: async (params) =>
-      attemptHandler({
-        method: 'get',
-        endpoint: `applications/${params.application_id}/guilds/${params.guild_id}/commands/permissions`
-      }), // End of Get Guild Application Command Permissions
-
+    getAllPermissions: async (params) => {
+      const application_id = params?.application_id ?? await getAppId();
+      return attemptHandler({
+        method: 'GET',
+        endpoint: `applications/${application_id}/guilds/${params.guild_id}/commands/permissions`
+      }); // End of Get Guild Application Command Permissions
+    },
     /**
      * @summary
      * ### [Edit Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions}
@@ -385,7 +457,7 @@ module.exports = {
      * @memberof module:commands#
      * @function modifyPermissions
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.command_id
      * @param {GuildApplicationCommandPermissions[]} params.permissions
@@ -397,15 +469,16 @@ module.exports = {
      * }]
      * @returns {Promise<GuildApplicationCommandPermissions>} [Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure} object
      */
-    modifyPermissions: async (params) =>
-      attemptHandler({
-        method: 'put',
-        endpoint: `applications/${params.application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`,
+    modifyPermissions: async (params) => {
+      const application_id = params?.application_id ?? await getAppId();
+      return attemptHandler({
+        method: 'PUT',
+        endpoint: `applications/${application_id}/guilds/${params.guild_id}/commands/${params.command_id}/permissions`,
         body: {
           permissions: params.permissions
         }
-      }) // End of Delete Global Application Command
-
+      }); // End of Delete Global Application Command
+    }
   }, // End of applications.commands
 
   /**
@@ -429,7 +502,7 @@ module.exports = {
      * @memberof module:applications.entitlements#
      * @function getAll
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} [params.user_id] - User ID to look up entitlements for
      * @param {Snowflake} params.sku_ids - Optional list of SKU IDs to check entitlements for (comma-delimited set of snowflakes)
      * @param {Snowflake} [params.guild_id] - Guild ID to look up entitlements for
@@ -440,20 +513,19 @@ module.exports = {
      * @returns {Promise<Entitlement[]>} All [Entitlements]{@link https://discord.com/developers/docs/monetization/entitlements#list-entitlements} for a given application
      */
     getAll: async (params) => {
-      let endpoint = `applications/${params.application_id}/entitlements?`;
-      const queryParams = [];
-
-      if (params.user_id) queryParams.push(`user_id=${params.user_id}`);
-      if (params.sku_ids) queryParams.push(`sku_ids=${params.sku_ids}`);
-      if (params.guild_id) queryParams.push(`guild_id=${params.guild_id}`);
-      if (params.before) queryParams.push(`before=${params.before}`);
-      if (params.after) queryParams.push(`after=${params.after}`);
-      if (params.limit) queryParams.push(`limit=${params.limit}`);
-      if (params.exclude_ended) queryParams.push(`exclude_ended=${params.exclude_ended}`);
-      endpoint += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
-
+      const application_id = params?.application_id ?? await getAppId();
+      const endpoint = buildQueryString(`applications/${application_id}/entitlements`, {
+        sku_ids: params.sku_ids,
+        exclude_ended: params.exclude_ended,
+        limit: params.limit,
+        user_id: params.user_id,
+        guild_id: params.guild_id,
+        before: params.before,
+        after: params.after
+      });
+      
       return attemptHandler({
-        method: 'get',
+        method: 'GET',
         endpoint
       });
     }, // End of List Entitlements
@@ -475,7 +547,7 @@ module.exports = {
      * @memberof module:applications.entitlements#
      * @function create
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.sku_id - ID of the SKU to grant the entitlement to
      * @param {Snowflake} params.owner_id - ID of the guild or user to grant the entitlement to
      * @param {number} params.owner_type
@@ -483,13 +555,14 @@ module.exports = {
      * - `2` for user subsctripion
      * @returns {Promise<PartialEntitlement>} [Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure} object
      */
-    create: async (params) =>
-      attemptHandler({
-        method: 'post',
-        endpoint: `applications/${params.application_id}/entitlements`,
+    create: async (params) => {
+      const application_id = params?.application_id ?? await getAppId();
+      return attemptHandler({
+        method: 'POST',
+        endpoint: `applications/${application_id}/entitlements`,
         body: params
-      }), // End of Create Test Entitlement
-    
+      }); // End of Create Test Entitlement
+    },
     /**
      * @summary
      * ### [Delete Test Entitlement]{@link https://discord.com/developers/docs/monetization/entitlements#delete-test-entitlement}
@@ -501,16 +574,17 @@ module.exports = {
      * @memberof module:applications.entitlements#
      * @function destroy
      * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.entitlement_id
      * @returns {Promise<{statusCode: number, message: string}>} 204 on success
      */
-    destroy: async (params) =>
-      attemptHandler({
-        method: 'del',
-        endpoint: `applications/${params.application_id}/entitlements/${params.entitlement_id}`
-      }) // End of Delete Test Entitlement
-
+    destroy: async (params) => {
+      const application_id = params?.application_id ?? await getAppId();
+      return attemptHandler({
+        method: 'DELETE',
+        endpoint: `applications/${application_id}/entitlements/${params.entitlement_id}`
+      }); // End of Delete Test Entitlement
+    }
   }, // End of applications.entitlements
 
 
@@ -533,16 +607,17 @@ module.exports = {
      * });
      * @memberof module:commands#
      * @function appRoleConnectionMeta
-     * @param {Object} params
-     * @param {Snowflake} params.application_id
+     * @param {Object} [params]
+     * @param {Snowflake} [params.application_id]
      * @returns {Promise<SKU[]>} All [SKUs]{@link https://discord.com/developers/docs/monetization/skus#list-skus} for a given application.
      */
-    getAll: async (params) => 
-      attemptHandler({
-        method: 'get',
-        endpoint: `applications/${params.application_id}/skus`
-      }) // End of List SKUs
-    
+    getAll: async (params) => {
+      const application_id = params?.application_id ?? await getAppId();
+      return attemptHandler({
+        method: 'GET',
+        endpoint: `applications/${application_id}/skus`
+      }); // End of List SKUs
+    }
   } // End of applications.SKUs
 
 };

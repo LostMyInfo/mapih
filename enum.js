@@ -5,6 +5,7 @@
  * @type {{[x: string]: number}}
  */
 const APP_FLAGS = {
+  APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE: 1 << 6, // = 64  Indicates if an app uses the Auto Moderation API
   GATEWAY_PRESENCE: 1 << 12, // = 4096	Intent required for bots in 100 or more servers to receive presence_update events
   GATEWAY_PRESENCE_LIMITED: 1 << 13, // = 8192	Intent required for bots in under 100 servers to receive presence_update events, found in Bot Settings
   GATEWAY_GUILD_MEMBERS: 1 << 14, // = 16384	Intent required for bots in 100 or more servers to receive member-related events like guild_member_add. See list of member-related events under GUILD_MEMBERS

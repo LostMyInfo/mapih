@@ -1,3 +1,15 @@
+export function getMe(): Promise<Application>;
+export function updateMe(params: {
+    description: string | undefined;
+    custom_install_url: string | undefined;
+    interactions_endpoint_url: string | undefined;
+    role_connections_verification_url: string | undefined;
+    install_params: InstallParams | undefined;
+    flags: number | undefined;
+    icon: string | Buffer | undefined;
+    cover_image: string | Buffer | undefined;
+    tags: string[] | undefined;
+}): Promise<Application>;
 export function appRoleConnectionMeta(params: {
     application_id: string;
 }): Promise<ApplicationRoleConnectionMetadata[]>;
@@ -6,17 +18,17 @@ export function updateAppRoleConnectionMeta(params: {
 }): Promise<ApplicationRoleConnectionMetadata[]>;
 export namespace commands {
     function retrieve(params: {
-        application_id: string;
+        application_id: string | undefined;
         command_id: string;
         guild_id?: string | undefined;
     }): Promise<ApplicationCommand>;
     function getAll(params: {
-        application_id: string;
+        application_id: string | undefined;
         guild_id?: string | undefined;
         with_localizations?: boolean | undefined;
     }): Promise<ApplicationCommand[]>;
     function create(params: {
-        application_id: string;
+        application_id: string | undefined;
         name: string;
         guild_id?: string | undefined;
         name_localizations?: any;
@@ -29,7 +41,7 @@ export namespace commands {
         options?: ApplicationCommandOption[] | undefined;
     }): Promise<ApplicationCommand>;
     function modify(params: {
-        application_id: string;
+        application_id: string | undefined;
         command_id: string;
         guild_id?: string | undefined;
         name?: string | undefined;
@@ -42,7 +54,7 @@ export namespace commands {
         options?: ApplicationCommandOption[] | undefined;
     }): Promise<ApplicationCommand>;
     function destroy(params: {
-        application_id: string;
+        application_id: string | undefined;
         command_id: string;
         guild_id?: string | undefined;
     }): Promise<{
@@ -50,21 +62,21 @@ export namespace commands {
         message: string;
     }>;
     function bulkOverwrite(params: {
-        application_id: string;
+        application_id: string | undefined;
         guild_id?: string | undefined;
         application_commands?: ApplicationCommand[] | undefined;
     }): Promise<ApplicationCommand[]>;
     function retrievePermissions(params: {
-        application_id: string;
+        application_id: string | undefined;
         guild_id: string;
         command_id: string;
     }): Promise<GuildApplicationCommandPermissions>;
     function getAllPermissions(params: {
-        application_id: string;
+        application_id: string | undefined;
         guild_id: string;
     }): Promise<GuildApplicationCommandPermissions>;
     function modifyPermissions(params: {
-        application_id: string;
+        application_id: string | undefined;
         guild_id: string;
         command_id: string;
         permissions: GuildApplicationCommandPermissions[];
@@ -72,7 +84,7 @@ export namespace commands {
 }
 export namespace entitlements {
     export function getAll_1(params: {
-        application_id: string;
+        application_id: string | undefined;
         user_id?: string | undefined;
         sku_ids: string;
         guild_id?: string | undefined;
@@ -83,14 +95,14 @@ export namespace entitlements {
     }): Promise<Entitlement[]>;
     export { getAll_1 as getAll };
     export function create_1(params: {
-        application_id: string;
+        application_id: string | undefined;
         sku_id: string;
         owner_id: string;
         owner_type: number;
     }): Promise<PartialEntitlement>;
     export { create_1 as create };
     export function destroy_1(params: {
-        application_id: string;
+        application_id: string | undefined;
         entitlement_id: string;
     }): Promise<{
         statusCode: number;
@@ -100,7 +112,7 @@ export namespace entitlements {
 }
 export namespace SKUs {
     export function getAll_2(params: {
-        application_id: string;
+        application_id: string | undefined;
     }): Promise<SKU[]>;
     export { getAll_2 as getAll };
 }

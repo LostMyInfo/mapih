@@ -1,18 +1,30 @@
 # Mapih
+#### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers and utilities.
+---
+## Authentication
 
-Mapih is a collection of Discord Api handlers as well as other useful utilities.
+Choose one of the following methods to authenticate:
 
-This package uses your bot token. You must pass it via the process environment.  
-ie: process.env.token  
+#### Option 1: Using Environment Variables
 
-Docs coming soon
+Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slackToken` for Slack).
 
-```js
-const api = require('mapih');
+#### Option 2: Using Initialization Function
 
+```javascript
+const mapih = require('mapih');
+
+mapih.initialize({
+  discord: 'bot_token_here',
+  slack: 'slack_auth_token_here' // optional
+});
+```
+---
+## Basic usage
+```javascript
 (async() => {
 
-  await api.discord.channels.messages.create({
+  await mapih.discord.channels.messages.create({
     channel_id: '774133713733812275',
     content: 'hello'
   });

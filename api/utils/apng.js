@@ -128,13 +128,13 @@ function framesFromApng(input, resolveWithObject = false) {
 async function sharpFromApng(input, options = {}, resolveWithObject = false) {
 
   const apng = decodeApng(input);
-  console.log('apng', apng);
+  // console.log('apng', apng);
   const gifBuffer = encodeGif(apng.frames, {
     width: apng.width,
     height: apng.height,
     ...options
   });
-  console.log('gifBuffer', gifBuffer);
+  // console.log('gifBuffer', gifBuffer);
 
   const image = sharp(gifBuffer, {
     animated: true,

@@ -2,7 +2,7 @@
 'use strict';
 
 const { AuditLogEvents, channelType } = require('../../enum');
-const { attemptHandler, retrieveDate, getBadges } = require('../resources/functions');
+const { attemptHandler, retrieveDate, getBadges, buildQueryString } = require('../resources/functions');
 
 /**
  * @file API endpoint for retrieving Guild Audit Logs
@@ -35,29 +35,19 @@ module.exports = {
    * @returns {Promise<AuditLog>} [Audit Log]{@link https://discord.com/developers/docs/resources/audit-log#audit-log-object} object
    */
   retrieve: async (params) => {
-    let endpoint = `guilds/${params.guild_id}/audit-logs?`;
-    const queryParams = [];
-
-    if (params.limit) queryParams.push(`limit=${params.limit}`);
-    if (params.action_type) queryParams.push(`action_type=${params.action_type}`);
-    if (params.user_id) queryParams.push(`user_id=${params.user_id}`);
-    if (params.before) queryParams.push(`before=${params.before}`);
-    if (params.after) queryParams.push(`after=${params.after}`);
-
-    endpoint += queryParams.length > 0 ? `&${queryParams.join('&')}` : '';
-
-    /*
-    let endpoint = `guilds/${params.guild_id}/audit-logs?`;
-    endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
-    endpoint += `${params.action_type ? `&action_type=${params.action_type}` : ''}`;
-    endpoint += `${params.user_id ? `&user_id=${params.user_id}` : ''}`;
-    endpoint += `${params.before ? `&before=${params.before}` : ''}`;
-    endpoint += `${params.after ? `&after=${params.after}` : ''}`;
-    */
+    const endpoint = buildQueryString(`guilds/${params.guild_id}/audit-logs`, {
+      limit: params.limit,
+      action_type: params.action_type,
+      user_id: params.user_id,
+      before: params.before,
+      after: params.after
+    });
+    
     const attempt = await attemptHandler({
-      method: 'get',
+      method: 'GET',
       endpoint
     });
+    
     if (attempt.audit_log_entries.length)
       attempt.audit_log_entries.forEach((/** @type {AuditLogEntry} */ log) => {
         log.action_name = AuditLogEvents[log.action_type]?.name;
