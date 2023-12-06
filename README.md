@@ -1,5 +1,5 @@
 # Mapih
-###### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers and utilities.
+##### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers and utilities.
 ---
 ## Authentication
 
