@@ -1,11 +1,16 @@
 # Mapih
-
-Mapih is a comprehensive collection of Discord and Slack (in progress) API endpoint handlers as well as other useful utilities.
+**Comprehensive collection of Discord and Slack (in progress) API endpoint handlers and utilities.**
 ---
-## Authenticating
-##### Option 1
-Place a variable in your `.env` file named `token` with your bot's token. (`slackToken` for slack API key).
-##### Option 2
+## Authentication
+
+Choose one of the following methods to authenticate:
+
+### Option 1: Using Environment Variables
+
+Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slackToken` for Slack).
+
+### Option 2: Using Initialization Function
+
 ```javascript
 const mapih = require('mapih');
 
