@@ -227,10 +227,10 @@ mapih.initialize({
 
 ## Table of Contents
 - [Applications](#applications)
-  - [getMe](#applications-getMe)
-  - [updateMe](#applications-updateMe)
-  - [appRoleConnectionMeta](#applications-appRoleConnectionMeta)
-  - [updateAppRoleConnectionMeta](#applications-updateAppRoleConnectionMeta)
+  - [getMe](#get-current-application)
+  - [updateMe](#edit-current-application)
+  - [appRoleConnectionMeta](#get-application-role-connection-metadata-records)
+  - [updateAppRoleConnectionMeta](#update-application-role-connection-metadata-records)
   - [commands](#applications-commands)
     - [retrieve](#applications-commands-retrieve)
     - [getAll](#applications-commands-getAll)
@@ -1813,12 +1813,12 @@ await api.discord.guilds.templates.sync({
 # Applications
 **All Discord API endpoints relating to applications, commands, entitlements and SKUs**
 
-| Method                                            | Description                                                                |
-|---------------------------------------------------|----------------------------------------------------------------------------|
-| [`getMe`](#get-current-application)               | Get inforation on the current application                                  |
-| [`updateMe`](#edit-current-application)           | Edit properties of the app associated with the requesting bot user         |
-| [`appRoleConnectionMeta`](#update-existing-guild) | Get the applications role connection metadata information                  |
-| [`updateAppRoleConnectionMeta`](#delete-guild)    | Updates the application role connection metadata for the given application |
+| Method                                                                                | Description                                                                |
+|---------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| [`getMe`](#get-current-application)                                                   | Get inforation on the current application                                  |
+| [`updateMe`](#edit-current-application)                                               | Edit properties of the app associated with the requesting bot user         |
+| [`appRoleConnectionMeta`](#get-application-role-connection-metadata-records)          | Get the applications role connection metadata information                  |
+| [`updateAppRoleConnectionMeta`](#update-application-role-connection-metadata-records) | Updates the application role connection metadata for the given application |
 
 ### [Get Current Application](https://discord.com/developers/docs/resources/application#get-current-application)
 
@@ -2189,7 +2189,7 @@ await api.discord.applications.entitlements.retrieve({
 
 #### Parameters
 | Field           | Type      | Description                                               |
-|-----------------|-----------------------------------------------------------------------|
+|-----------------|-----------|-----------------------------------------------------------|
 | application_id? | snowflake | the id of the application                                 |
 | sku_id          | string    | ID of the SKU to grant the entitlement to                 |
 | owner_id        | string    | ID of the guild or user to grant the entitlement to       |
@@ -2210,7 +2210,7 @@ await api.discord.applications.entitlements.create({
 
 #### Parameters
 | Field           | Type      | Description               |
-|-----------------|---------------------------------------|
+|-----------------|-----------|---------------------------|
 | application_id? | snowflake | the id of the application |
 
 **Example:**
