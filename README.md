@@ -1587,6 +1587,7 @@ await api.discord.guilds.events.getAll({
 | with_member?             | boolean   | include guild member data if it exists        | false   |
 | before? *                | snowflake | consider only users before given user id      | null    |
 | after? *                 | snowflake | consider only users after given user id       | null    |
+
 \* Provide a user id to `before` and `after` for pagination. Users will always be returned in ascending order by `user_id`. If both `before` and `after` are provided, only `before` is respected. Fetching users in-between `before` and `after` is not supported.
 
 **Example:**
@@ -1614,8 +1615,7 @@ await api.discord.guilds.events.getUsers({
 | entity_type            | [event entity type](#guild-scheduled-event-entity-types)   | The entity type of the scheduled event                |
 | image?                 | url/buffer                                                 | The cover image of the scheduled event                |
 
-\* Optional for events with `'entity_type': EXTERNAL`
-
+\* Optional for events with `'entity_type': EXTERNAL`  
 \*\* Required for events with `'entity_type': EXTERNAL`
 
 
@@ -1846,7 +1846,8 @@ await api.discord.applications.getMe();
 | icon                              | url/buffer                                      | Icon for the app                                            |
 | cover_image                       | url/buffer                                      | Default rich presence invite cover image for the app        |
 | interactions_endpoint_url \*\*    | string                                          | Interactions endpoint URL for the app   |
-| tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |  
+| tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |
+
 \* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
 
 **Example:**
