@@ -1846,7 +1846,7 @@ await api.discord.applications.getMe();
 | icon                              | url/buffer                                      | Icon for the app                                            |
 | cover_image                       | url/buffer                                      | Default rich presence invite cover image for the app        |
 | interactions_endpoint_url \*\*    | string                                          | Interactions endpoint URL for the app   |
-| tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |
+| tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |  
 \* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
 
 **Example:**
