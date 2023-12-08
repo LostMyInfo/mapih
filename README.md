@@ -231,6 +231,10 @@ mapih.initialize({
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; • [getMe](#get-current-application)  
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; • [getMe](#get-current-application)  
 
+#### **• [Applications](#applications)**
+ - [getMe](#get-current-application)  
+  - [getMe](#get-current-application)  
+
 ## Table of Contents
 - [Applications](#applications)
   - [getMe](#get-current-application)
