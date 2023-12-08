@@ -225,8 +225,10 @@ mapih.initialize({
 </details>
 -->
 
-### [Applications](#applications)  
-  • [getMe](#get-current-application)  
+### [Applications](#applications)
+    • [getMe](#get-current-application)  
+    • [getMe](#get-current-application)  
+
 
 ## Table of Contents
 - [Applications](#applications)
