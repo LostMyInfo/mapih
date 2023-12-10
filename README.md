@@ -16,15 +16,12 @@
 #### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers  
 ---
 ## Authentication
-
-Choose one of the following methods to authenticate:
+Choose **one** of the following methods to authenticate:
 
 #### Option 1: Using Environment Variables
-
 Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slackToken` for Slack).
 
 #### Option 2: Using Initialization Function
-
 ```javascript
 const mapih = require('mapih');
 
@@ -46,201 +43,14 @@ mapih.initialize({
 })();
 ```
 ---
+
+
 ## Table of Contents
-<!--
 - [Applications](#applications)
   - [getMe](#applications-getMe)
   - [updateMe](#applications-updateMe)
   - [appRoleConnectionMeta](#applications-appRoleConnectionMeta)
   - [updateAppRoleConnectionMeta](#applications-updateAppRoleConnectionMeta)
-  - <details>
-    <summary>commands</summary>
-
-    - [retrieve](#applications-commands-retrieve)
-    - [getAll](#applications-commands-getAll)
-    - [create](#applications-commands-create)
-    - [modify](#applications-commands-modify)
-    - [destroy](#applications-commands-destroy)
-    - [bulkOverwrite](#applications-commands-bulkOverwrite)
-    - [retrievePermissions](#applications-commands-retrievePermissions)
-    - [getAllPermissions](#applications-commands-getAllPermissions)
-    - [modifyPermissions](#applications-commands-modifyPermissions)
-  </details>
-
-  - <details>
-    <summary>entitlements</summary>
-
-    - [getAll](#applications-entitlements-getAll)
-    - [create](#applications-entitlements-create)
-    - [destroy](#applications-entitlements-destroy)
-  </details>
-
-  - <details>
-    <summary>skus</summary>
-
-    - [getAll](#applications-entitlements-getAll)
-    - [create](#applications-entitlements-create)
-    - [destroy](#applications-entitlements-destroy)
-  </details>
--->
-
-<!------------------>
-<!-- APPLICATIONS -->
-<!------------------>
-<details>
-  <summary>Applications</summary>
-  
-  &nbsp; &nbsp; • [getMe](#applications-getMe)  
-  &nbsp; &nbsp; • [updateMe](#applications-updateMe)  
-  &nbsp; &nbsp; • [appRoleConnectionMeta](#applications-appRoleConnectionMeta)  
-  &nbsp; &nbsp; • [updateAppRoleConnectionMeta](#applications-updateAppRoleConnectionMeta)
-
-  <details>
-    <summary>Commands</summary>
-
-  &nbsp; &nbsp; • [retrieve](#applications-commands-retrieve)  
-  &nbsp; &nbsp; • [getAll](#applications-commands-getAll)  
-  &nbsp; &nbsp; • [create](#applications-commands-create)  
-  &nbsp; &nbsp; • [modify](#applications-commands-modify)  
-  &nbsp; &nbsp; • [destroy](#applications-commands-destroy)  
-  &nbsp; &nbsp; • [bulkOverwrite](#applications-commands-bulkOverwrite)  
-  &nbsp; &nbsp; • [retrievePermissions](#applications-commands-retrievePermissions)  
-  &nbsp; &nbsp; • [getAllPermissions](#applications-commands-getAllPermissions)  
-  &nbsp; &nbsp; • [modifyPermissions](#applications-commands-modifyPermissions)  
-  </details>
-
-  <details>
-    <summary>Entitlements</summary>
-
-  &nbsp; &nbsp; • [retrieve](#applications-entitlements-getAll)  
-  &nbsp; &nbsp; • [getAll](#applications-entitlements-create)  
-  &nbsp; &nbsp; • [create](#applications-entitlements-destroy)
-  </details>
-
-  <details>
-    <summary>SKUs</summary>
-
-  &nbsp; &nbsp; • [retrieve](#applications-skus-getAll)
-  </details>
-
-</details>
-
-<!--------------->
-<!-- AUDIT LOG -->
-<!--------------->
-<details>
-  <summary>Audit Log</summary>
-  
-  &nbsp; &nbsp; • [retrieve](#auditlog-retrieve)
-</details>
-
-<!--------------------->
-<!-- AUTO MODERATION -->
-<!--------------------->
-<details>
-  <summary>Auto Moderation</summary>
-  
-  &nbsp; &nbsp; • [retrieveRule](#auto-moderation-retrieveRule)  
-  &nbsp; &nbsp; • [getAllRules](#auto-moderation-getAllRules)  
-  &nbsp; &nbsp; • [createRule](#auto-moderation-createRule)  
-  &nbsp; &nbsp; • [updateRule](#auto-moderation-updateRule)  
-  &nbsp; &nbsp; • [destroyRule](#auto-moderation-destroyRule)
-</details>
-
-<!-------------->
-<!-- CHANNELS -->
-<!-------------->
-<details>
-  <summary>Channels</summary>
-  
-  &nbsp; &nbsp; • [getMe](#applications-getMe)  
-  &nbsp; &nbsp; • [updateMe](#applications-updateMe)  
-  &nbsp; &nbsp; • [appRoleConnectionMeta](#applications-appRoleConnectionMeta)  
-  &nbsp; &nbsp; • [updateAppRoleConnectionMeta](#applications-updateAppRoleConnectionMeta)
-
-  <details>
-    <summary>Messages</summary>
-
-  &nbsp; &nbsp; • [retrieve](#applications-commands-retrieve)  
-  &nbsp; &nbsp; • [getAll](#applications-commands-getAll)  
-  &nbsp; &nbsp; • [create](#applications-commands-create)  
-  &nbsp; &nbsp; • [modify](#applications-commands-modify)  
-  &nbsp; &nbsp; • [destroy](#applications-commands-destroy)  
-  &nbsp; &nbsp; • [bulkOverwrite](#applications-commands-bulkOverwrite)  
-  &nbsp; &nbsp; • [retrievePermissions](#applications-commands-retrievePermissions)  
-  &nbsp; &nbsp; • [getAllPermissions](#applications-commands-getAllPermissions)  
-  &nbsp; &nbsp; • [modifyPermissions](#applications-commands-modifyPermissions)  
-  </details>
-
-  <details>
-    <summary>Threads</summary>
-
-  &nbsp; &nbsp; • [retrieve](#applications-entitlements-getAll)  
-  &nbsp; &nbsp; • [getAll](#applications-entitlements-create)  
-  &nbsp; &nbsp; • [create](#applications-entitlements-destroy)
-  </details>
-
-  <details>
-    <summary>Reactions</summary>
-    
-  &nbsp; &nbsp; • [retrieve](#applications-skus-getAll)
-  </details>
-
-</details>
-<!--
-<details>
-  <summary>Applications</summary>
-
-  &nbsp; [getMe](#applications-getMe)  
-  [updateMe](#applications-updateMe)  
-  [appRoleConnectionMeta](#applications-appRoleConnectionMeta)  
-  - [updateAppRoleConnectionMeta](#applications-updateAppRoleConnectionMeta)  
-    <details>
-    <summary>commands</summary>
-
-    - [retrieve](#applications-commands-retrieve)  
-    - [getAll](#applications-commands-getAll)
-    - [create](#applications-commands-create)
-    - [modify](#applications-commands-modify)
-    - [destroy](#applications-commands-destroy)
-    - [bulkOverwrite](#applications-commands-bulkOverwrite)
-    - [retrievePermissions](#applications-commands-retrievePermissions)
-    - [getAllPermissions](#applications-commands-getAllPermissions)
-    - [modifyPermissions](#applications-commands-modifyPermissions)
-  </details>
-
-  - <details>
-    <summary>commands</summary>
-
-    - [retrieve](#applications-commands-retrieve)
-    - [getAll](#applications-commands-getAll)
-    - [create](#applications-commands-create)
-    - [modify](#applications-commands-modify)
-    - [destroy](#applications-commands-destroy)
-    - [bulkOverwrite](#applications-commands-bulkOverwrite)
-    - [retrievePermissions](#applications-commands-retrievePermissions)
-    - [getAllPermissions](#applications-commands-getAllPermissions)
-    - [modifyPermissions](#applications-commands-modifyPermissions)
-  </details>
-</details>
--->
-
-#### **• [Applications](#applications)**
-&nbsp; &nbsp; &nbsp; &nbsp; • [getMe](#get-current-application)  
-&nbsp; &nbsp; &nbsp; &nbsp; • [getMe](#get-current-application)  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; • [getMe](#get-current-application)  
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; • [getMe](#get-current-application)  
-
-#### **• [Applications](#applications)**
- - [getMe](#get-current-application)  
-  - [getMe](#get-current-application)  
-
-## Table of Contents
-- [Applications](#applications)
-  - [getMe](#get-current-application)
-  - [updateMe](#edit-current-application)
-  - [appRoleConnectionMeta](#get-application-role-connection-metadata-records)
-  - [updateAppRoleConnectionMeta](#update-application-role-connection-metadata-records)
   - [commands](#applications-commands)
     - [retrieve](#applications-commands-retrieve)
     - [getAll](#applications-commands-getAll)
@@ -269,8 +79,8 @@ mapih.initialize({
   - [retrieve](#channel-retrieve)
   - [modify](#channel-modify)
   - [destroy](#channel-destroy)
-  - [editPermissions](#channel-editPermissions)
-  - [deletePermission](#channel-deletePermission)
+  - [updatePermissions](#channel-updatePermissions)
+  - [deletePermissions](#channel-deletePermissions)
   - [getinvites](#channel-getinvites)
   - [inviteCreate](#channel-inviteCreate)
   - [typingCreate](#channel-typingCreate)
@@ -320,7 +130,7 @@ mapih.initialize({
   - [createBan](#create-guild-ban)
   - [destroyBan](#remove-guild-ban)
   - [getInvites](#get-guild-invites)
-  - [modifyMFAlevel](#modify-guild-mfa-level)
+  - [updateMFAlevel](#modify-guild-mfa-level)
   - [getPruneCount](#get-guild-prune-count)
   - [beginPrune](#begin-guild-prune)
   - [getVoiceRegions](#get-guild-voice-regions)
@@ -339,7 +149,7 @@ mapih.initialize({
   - [channels](#guild-channels)
     - [getAll](#get-guild-channels)
     - [create](#create-guild-channel)
-    - [modifyPositions](#modify-guild-channel-positions)
+    - [updatePositions](#modify-guild-channel-positions)
   - [members](#guild-members)
     - [retrieve](#get-guild-member)
     - [getAll](#list-guild-members)
@@ -357,11 +167,36 @@ mapih.initialize({
     - [create](#create-guild-role)
     - [update](#modify-guild-role)
     - [destroy](#delete-guild-role)
-    - [modifyPositions](#modify-guild-role-positions)
+    - [updatePositions](#modify-guild-role-positions)
   - [emojis](#guild-emojis)
+    - [retrieve](#get-guild-emoji)
+    - [getAll](#list-guild-emojis)
+    - [create](#create-guild-emoji)
+    - [update](#modify-guild-emoji)
+    - [destroy](#delete-guild-emoji)
   - [stickers](#guild-stickers)
+    - [retrieve](#get-sticker)
+    - [nitroPacks](#list-nitro-sticker-packs)
+    - [getAll](#list-guild-stickers)
+    - [retrieveGuildSticker](#get-guild-sticker)
+    - [create](#create-guild-sticker)
+    - [update](#modify-guild-sticker)
+    - [destroy](#delete-guild-sticker)
   - [events](#guild-events)
+    - [retrieve](#get-guild-scheduled-event)
+    - [getAll](#list-scheduled-events-for-guild)
+    - [getUsers](#get-guild-scheduled-event-users)
+    - [create](#create-guild-scheduled-event)
+    - [update](#modify-guild-scheduled-event)
+    - [destroy](#delete-guild-scheduled-event)
   - [templates](#guild-templates)
+    - [retrieve](#get-guild-template)
+    - [getAll](#get-guild-templates)
+    - [create](#create-guild-template)
+    - [createGuild](#create-guild-from-guild-template)
+    - [sync](#sync-guild-template)
+    - [update](#modify-guild-template)
+    - [destroy](#delete-guild-template)
 - [Interactions](#interactions)
   - [callback](#interaction-callbacks)
   - [followup](#interaction-followups)
@@ -380,29 +215,29 @@ mapih.initialize({
 | Method                                                 | Description                                                      |
 |--------------------------------------------------------|------------------------------------------------------------------|
 | [`retrieve`](#get-guild)                               | Get information about a guild                                    |
-| [`create`](#create-guild)                            | Create a new guild                                               |
+| [`create`](#create-guild)                              | Create a new guild                                               |
 | [`update`](#update-existing-guild)                     | Modify a guild's settings                                        |
-| [`destroy`](#delete-guild)                           | Delete a guild                                                   |
+| [`destroy`](#delete-guild)                               Delete a guild                                                   |
 | [`getPreview`](#get-guild-preview)                     | Get the guild's preview                                          |
 | [`retrieveBan`](#get-guild-ban)                        | Get guild ban with given id                                      |
 | [`getAllBans`](#get-guild-bans)                        | Get all guild bans                                               |
 | [`createBan`](#create-guild-ban)                       | Create a new guild ban                                           |
-| [`destroyBan`](#remove-guild-ban)                       | Delete a guild ban                                               |
+| [`destroyBan`](#remove-guild-ban)                      | Delete a guild ban                                               |
 | [`getInvites`](#get-guild-invites)                     | Get all guild invites                                            |
-| [`modifyMFAlevel`](#modify-guild-mfa-level)            | Modify the guild's MFA level                                     |
+| [`updateMFAlevel`](#modify-guild-mfa-level)            | Modify the guild's MFA level                                     |
 | [`getPruneCount`](#get-guild-prune-count)              | Get number of members that would be removed in a prune operation |
 | [`beginPrune`](#begin-guild-prune)                     | Begin a prune operation                                          |
 | [`getVoiceRegions`](#get-guild-voice-regions)          | Get all voice regions for the guild                              |
-| [`getAllIntegrations`](#get-guild-integrations)           | Get all guild integrations                                       |
+| [`getAllIntegrations`](#get-guild-integrations)        | Get all guild integrations                                       |
 | [`destroyIntegration`](#delete-guild-integrations)     | Delete a guild integration                                       |
 | [`retrieveWidget`](#get-guild-widget)                  | Get the guild's widget                                           |
 | [`retrieveWidgetSettings`](#get-guild-widget-settings) | Get the guild's widget settings                                  |
 | [`retrieveWidgetImage`](#get-guild-widget-image)       | Get the guild's widget image                                     |
 | [`updateWidget`](#modify-guild-widget)                 | Modify the guild's widget                                        |
 | [`retrieveVanityURL`](#get-guild-vanity-url)           | Get the guild's vanity url                                       |
-| [`retrieveWelcomeScreen`](#get-guild-welcome-screen)        | Get the guild's welcome screen                                   |
+| [`retrieveWelcomeScreen`](#get-guild-welcome-screen)   | Get the guild's welcome screen                                   |
 | [`updateWelcomeScreen`](#modify-guild-welcome-screen)  | Modify the guild's welcome screen                                |
-| [`retrieveOnboarding`](#get-guild-onboarding)               | Get the guild's onboarding                                       |
+| [`retrieveOnboarding`](#get-guild-onboarding)          | Get the guild's onboarding                                       |
 | [`updateOnboarding`](#modify-guild-onboarding)         | Modify the guild's onboarding                                    |
 | [`newMemberWelcome`](#new-member-welcome)              | * undocumented                                                   |
 
@@ -414,7 +249,7 @@ mapih.initialize({
 | guild_id     | snowflake | the id of the guild                    |
 | with_counts? | boolean   | Approcimate member and presence counts |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieve({
   guild_id: '0000000000'
@@ -422,24 +257,24 @@ await api.discord.guilds.retrieve({
 ```
 
 ### [Create Guild](https://discord.com/developers/docs/resources/guild#create-guild)
-***This endpoint can be used only by bots in less than 10 servers.***
+**This endpoint can be used only by bots in less than 10 servers.**
 
 #### Parameters
-| Field                          | Type                                        | Description                                                          |
-|--------------------------------|---------------------------------------------|----------------------------------------------------------------------|
-| name                           | string                                      | Name of the guild (2-100 characters) |
-| icon?                          | string/buffer                               | Guild icon (url to image or image buffer) |
-| roles?                         | [Role](#role-object)[]                      | An array of role objects |
-| channels?                      | [PartialChannel](#partial-channel-object)[] | An array of partial channel objects |
-| verification_level?            | number                                      | The guild's [verification level](#verification-level) |
-| default_message_notifications? | number                                      | Default [message notification level](#default-message-notification-level) |
-| explicit_content_filter?       | number                                      | [Explicit content filter level](#explicit-content-filter) |
-| afk_channel_id?                | snowflake                                   | ID for afk channel |
-| afk_timeout?                   | number                                      | afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600 |
-| system_channel_id?             | snowflake                                   | The id of the channel where guild notices such as welcome messages and boost events are posted |
-| system_channel_flags?          | number                                      | [System channel flags](#system-channel-flags) |
+| Field                          | Type                                                       | Description                                                               |
+|--------------------------------|---------------------------------------------|------------------------------------------------------------------------------------------|
+| name                           | string                                                     | Name of the guild (2-100 characters)                                      |
+| icon?                          | string/buffer                                              | Guild icon (url to image or image buffer)                                 |
+| roles?                         | array of [Role](#role-object) objects                      | Roles to add to the guild                                                 |
+| channels?                      | array of [PartialChannel](#partial-channel-object) objects | Channels to add to the guild                                              |
+| verification_level?            | number                                                     | The guild's [verification level](#verification-level)                     |
+| default_message_notifications? | number                                                     | Default [message notification level](#default-message-notification-level) |
+| explicit_content_filter?       | number                                                     | [Explicit content filter level](#explicit-content-filter)                 |
+| afk_channel_id?                | snowflake                                                  | ID for afk channel |
+| afk_timeout?                   | number                                                     | afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600           |
+| system_channel_id?             | snowflake                                                  | The id of the channel where guild notices such as welcome messages and boost events are posted |
+| system_channel_flags?          | number                                                     | [System channel flags](#system-channel-flags) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.create({
   name: "Eric's Server",
@@ -472,27 +307,27 @@ await api.discord.guilds.create({
 ### [Modify Guild](https://discord.com/developers/docs/resources/guild#modify-guild)
 
 #### Parameters
-| Field                         | Type       | Description |
-|-------------------------------|------------|-------------|
-| name                          | string     | Name of the guild (2-100 characters) |
-| description                   | string     | |
-| owner_id                      | snowflake  | User ID to transfer server ownership to |
-| icon                          | url/buffer | An array of partial channel objects |
-| splash                        | url/buffer | |
-| discovery_splash              | url/buffer | |
-| banner                        | url/buffer | |
-| verification_level            | number     | The guild's [verification level](#guild-verification-level) |
-| default_message_notifications | number     | Default [message notification level](#guild-default-message-notification-level) |
-| explicit_content_filter       | number     | [Explicit content filter level](#guild-explicit-content-filter) |
-| afk_channel_id                | snowflake  | ID for afk channel |
-| afk_timeout                   | number     | afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600 |
+| Field                         | Type       | Description                                                                                    |
+|-------------------------------|------------|------------------------------------------------------------------------------------------------|
+| name                          | string     | Name of the guild (2-100 characters)                                                           |
+| description                   | string     |                                                                                                |
+| owner_id                      | snowflake  | User id to transfer server ownership to                                                        |
+| icon                          | url/buffer |                                                                                                |
+| splash                        | url/buffer |                                                                                                |
+| discovery_splash              | url/buffer |                                                                                                |
+| banner                        | url/buffer |                                                                                                |
+| verification_level            | number     | The guild's [verification level](#guild-verification-level)                                    |
+| default_message_notifications | number     | Default [message notification level](#guild-default-message-notification-level)                |
+| explicit_content_filter       | number     | [Explicit content filter level](#guild-explicit-content-filter)                                |
+| afk_channel_id                | snowflake  | id for afk channel                                                                             |
+| afk_timeout                   | number     | afk timeout in seconds, can be set to: 60, 300, 900, 1800, 3600                                |
 | system_channel_id             | snowflake  | The id of the channel where guild notices such as welcome messages and boost events are posted |
-| system_channel_flags          | number     | [System channel flags](#system-channel-flags) |
-| rules_channel_id              | snowflake  | |
-| system_updates_channel_id     | snowflake  | |
-| premium_progress_bar_enabled  | number     | |
+| system_channel_flags          | number     | [System channel flags](#system-channel-flags)                                                  |
+| rules_channel_id              | snowflake  |                                                                                                |
+| system_updates_channel_id     | snowflake  |                                                                                                |
+| premium_progress_bar_enabled  | number     |                                                                                                |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.update({
   name: "Eric's New Server",
@@ -505,9 +340,9 @@ await api.discord.guilds.update({
 #### Parameters
 | Field    | Type      | Description          |
 |----------|-----------|----------------------|
-| guild_id | snowflake | the id of the guild |
+| guild_id | snowflake | the id of the guild  |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.destroy({
   guild_id: '0000000000'
@@ -522,7 +357,7 @@ await api.discord.guilds.destroy({
 |----------|-----------|----------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.getPreview({
   guild_id: '0000000000'
@@ -536,10 +371,10 @@ await api.discord.guilds.getPreview({
 #### Parameters
 | Field    | Type      | Description                                |
 |----------|-----------|--------------------------------------------|
-| guild_id | snowflake | the id of the guild                       |
+| guild_id | snowflake | the id of the guild                        |
 | user_id  | snowflake | The ID of the user the ban was created for |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveBan({
   guild_id: '0000000000',
@@ -552,12 +387,12 @@ await api.discord.guilds.retrieveBan({
 #### Parameters
 | Field    | Type      | Description                                                   |
 |----------|-----------|---------------------------------------------------------------|
-| guild_id | snowflake | the id of the guild                                          |
+| guild_id | snowflake | the id of the guild                                           |
 | limit?   | number    | Number of users to return (up to maximum 1000) (default 1000) |
 | before?  | snowflake | Consider only users before given user ID                      |
 | after?   | snowflake | Consider only users after given user ID                       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.getAllBans({
   guild_id: '0000000000',
@@ -572,12 +407,12 @@ await api.discord.guilds.getAllBans({
 #### Parameters
 | Field                   | Type      | Description                                                                                |
 |-------------------------|-----------|--------------------------------------------------------------------------------------------|
-| guild_id                | snowflake | the id of the guild                                                                       |
+| guild_id                | snowflake | the id of the guild                                                                        |
 | user_id                 | snowflake | User ID of the user to ban                                                                 |
 | delete_message_seconds? | snowflake | Number of seconds to delete the banned user's messages for, between 0 and 604800 (7 days). |
-| reason?                 | string    | Reason for the ban |
+| reason?                 | string    | Reason for the ban                                                                         |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.createBan({
   guild_id: '0000000000',
@@ -593,11 +428,11 @@ await api.discord.guilds.createBan({
 #### Parameters
 | Field    | Type      | Description                  |
 |----------|-----------|------------------------------|
-| guild_id | snowflake | the id of the guild         |
+| guild_id | snowflake | the id of the guild          |
 | user_id  | snowflake | User ID of the user to unban |
 | reason?  | string    | Reason                       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.destroyBan({
   guild_id: '0000000000',
@@ -612,12 +447,12 @@ await api.discord.guilds.destroyBan({
 #### Parameters
 | Field    | Type      | Description             |
 |----------|-----------|-------------------------|
-| guild_id | snowflake | the id of the guild    |
+| guild_id | snowflake | the id of the guild     |
 | level    | number    | [MFA level](#mfa-level) |
 
-**Example:**
+#### Example
 ```javascript
-await api.discord.guilds.modifyMFAlevel({
+await api.discord.guilds.updateMFAlevel({
   guild_id: '0000000000',
   level: 0
 });
@@ -635,7 +470,7 @@ await api.discord.guilds.modifyMFAlevel({
 | days           | number    | Number of days to count prune for (1-30) (Default 7) |
 | include_roles? | string[]  | An array of role IDs to include                      |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.getPruneCount({
   guild_id: '0000000000',
@@ -655,13 +490,13 @@ await api.discord.guilds.getPruneCount({
 #### Parameters
 | Field               | Type        | Description                                                               |
 |---------------------|-------------|---------------------------------------------------------------------------|
-| guild_id            | snowflake   | the id of the guild                                                      |
+| guild_id            | snowflake   | the id of the guild                                                       |
 | days                | number      | Number of days to count prune for (1-30) (default 7)                      |
 | compute_prune_count | boolean     | Whether `pruned` is returned, discouraged for large guilds (default true) |
 | include_roles?      | snowflake[] | An array of role IDs to include                                           |
 | reason?             | string      | Reason                                                                    |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.beginPrune({
   guild_id: '0000000000',
@@ -676,11 +511,11 @@ await api.discord.guilds.beginPrune({
 ### [Get Guild Voice Regions](https://discord.com/developers/docs/resources/guild#get-guild-voice-regions)
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.getVoiceRegions({
   guild_id: '0000000000'
@@ -692,11 +527,11 @@ await api.discord.guilds.getVoiceRegions({
 **If a guild has more integrations, they cannot be accessed.**
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.getAllIntegrations({
   guild_id: '0000000000'
@@ -709,10 +544,10 @@ await api.discord.guilds.getAllIntegrations({
 #### Parameters
 | Field          | Type      | Description                         |
 |----------------|-----------|-------------------------------------|
-| guild_id       | snowflake | the id of the guild                |
+| guild_id       | snowflake | the id of the guild                 |
 | integration_id | snowflake | The ID of the integration to delete |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.destroyIntegration({
   guild_id: '0000000000'
@@ -722,11 +557,11 @@ await api.discord.guilds.destroyIntegration({
 ### [Get Guild Widget](https://discord.com/developers/docs/resources/guild#get-guild-widget)
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveWidget({
   guild_id: '0000000000'
@@ -736,11 +571,11 @@ await api.discord.guilds.retrieveWidget({
 ### [Get Guild Widget Settings](https://discord.com/developers/docs/resources/guild#get-guild-widget-settings)
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveWidgetSettings({
   guild_id: '0000000000'
@@ -761,10 +596,10 @@ await api.discord.guilds.retrieveWidgetSettings({
 #### Parameters
 | Field    | Type      | Description              |
 |----------|-----------|--------------------------|
-| guild_id | snowflake | the id of the guild     |
+| guild_id | snowflake | the id of the guild      |
 | style    | string    | Widget style (see above) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveWidgetImage({
   guild_id: '0000000000',
@@ -777,11 +612,11 @@ await api.discord.guilds.retrieveWidgetImage({
 #### Parameters
 | Field       | Type      | Description                   |
 |-------------|-----------|-------------------------------|
-| guild_id    | snowflake | the id of the guild          |
+| guild_id    | snowflake | the id of the guild           |
 | channel_id? | snowflake | temp                          |
 | enabled?    | boolean   | Whether the widget is enabled |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.updateWidget({
   guild_id: '0000000000',
@@ -792,11 +627,11 @@ await api.discord.guilds.updateWidget({
 ### [Get Guild Vanity URL](https://discord.com/developers/docs/resources/guild#get-guild-vanity-url)
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveVanityURL({
   guild_id: '0000000000'
@@ -806,11 +641,11 @@ await api.discord.guilds.retrieveVanityURL({
 ### [Get Guild Welcome Screen](https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen)
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveWelcomeScreen({
   guild_id: '0000000000'
@@ -822,12 +657,12 @@ await api.discord.guilds.retrieveWelcomeScreen({
 #### Parameters
 | Field             | Type                                                                      | Description                                          |
 |-------------------|---------------------------------------------------------------------------|------------------------------------------------------|
-| guild_id          | snowflake                                                                 | the id of the guild                                 |
+| guild_id          | snowflake                                                                 | the id of the guild                                  |
 | description?      | string                                                                    | The server description to show in the welcome screen |
 | enabled?          | boolean                                                                   | Whether the welcome screen is enabled.               |
 | welcome_channels? | array of [welcome screen channel](#welcome-screen-channel-object) objects | Channels shown in the welcome screen, up to 5        |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.updateWelcomeScreen({
   guild_id: '0000000000',
@@ -838,11 +673,11 @@ await api.discord.guilds.updateWelcomeScreen({
 ### [Get Guild Onboarding](https://discord.com/developers/docs/resources/guild#get-guild-onboarding)
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.retrieveOnboarding({
   guild_id: '0000000000',
@@ -852,18 +687,18 @@ await api.discord.guilds.retrieveOnboarding({
 
 ### [Modify Guild Onboarding](https://discord.com/developers/docs/resources/guild#modify-guild-onboarding)
 **Requires the `MANAGE_GUILD` and `MANAGE_ROLES` permissions.**  
-> Onboarding enforces constraints when enabled. These constraints are that there must be at least 7 Default Channels and at least 5 of them must allow sending messages to the @everyone role. The mode field modifies what is considered when enforcing these constraints.
+> **Onboarding enforces constraints when enabled. These constraints are that there must be at least 7 Default Channels and at least 5 of them must allow sending messages to the @everyone role. The mode field modifies what is considered when enforcing these constraints.**
 
 #### Parameters
 | Field               | Type                                                               | Description                                                |
 |---------------------|--------------------------------------------------------------------|------------------------------------------------------------|
-| guild_id            | snowflake                                                          | the id of the guild                                       |
+| guild_id            | snowflake                                                          | the id of the guild                                        |
 | prompts             | array of [onboarding prompt](#onboarding-prompt-structure) objects | Prompts shown during onboarding and in customize commutity |
 | default_channel_ids | array of snowflakes                                                | Channel IDs that members get opted into automatically      |
 | enabled             | boolean                                                            | Whether onboarding is enabled in the guild                 |
 | mode                | [onboarding mode](#onboarding-mode)                                | Current mode of onboarding                                 |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.updateOnboarding({
   guild_id: '0000000000',
@@ -894,8 +729,6 @@ await api.discord.guilds.updateOnboarding({
 });
 ```
 
-placeholder for new member welcome
-
 ---
 
 ## Guild Channels
@@ -904,17 +737,17 @@ placeholder for new member welcome
 |------------------------------------------------------|-----------------------------------|
 | [`getAll`](#get-guild-channels)                      | Retrieve all channels in a guild. |
 | [`create`](#create-guild-channel)                    | Create a new guild channel.       | 
-| [`modifyPositions`](#modify-guild-channel-positions) | Modify the positions of channels. |
+| [`updatePositions`](#modify-guild-channel-positions) | Modify the positions of channels. |
 
 ### [Get Guild Channels](https://discord.com/developers/docs/resources/guild#get-guild-channels)
 ##### Does not include threads
 
 #### Parameters
-| Field    | Type      | Description          |
-|----------|-----------|----------------------|
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.channels.getAll({
   guild_id: '0000000000'
@@ -922,17 +755,13 @@ await api.discord.guilds.channels.getAll({
 ```
 
 ### [Create Guild Channel](https://discord.com/developers/docs/resources/guild#create-guild-channel)
-Requires the `MANAGE_CHANNELS` permission.  
-If setting permission overwrites, only permissions your bot has in the guild can be allowed/denied.  
-Setting `MANAGE_ROLES` permission in channels is only possible for guild administrators.
-
-> All parameters to this endpoint are optional and nullable excluding `name`
+**All parameters to this endpoint are optional and nullable excluding `name`**
 
 #### Parameters
 | Field                              | Type                                                    | Description                                                                                                                                                                     | Channel Type                                   |
-|------------------------------------|--------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+|------------------------------------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
 | name                               | string                                                  | channel name (1-100 characters)                                                                                                                                                 | All                                            |
-| type                               | number                                                  | the [type of channel](#channel-types)                                                                                                     | All                                            |
+| type                               | number                                                  | the [type of channel](#channel-types)                                                                                                                                           | All                                            |
 | topic                              | string                                                  | channel topic (0-1024 characters)                                                                                                                                               | Text, Announcement, Forum, Media               |
 | bitrate                            | number                                                  | the bitrate (in bits) of the voice or stage channel; min 8000                                                                                                                   | Voice, Stage                                   |
 | user_limit                         | number                                                  | the user limit of the voice channel                                                                                                                                             | Voice, Stage                                   |
@@ -941,16 +770,16 @@ Setting `MANAGE_ROLES` permission in channels is only possible for guild adminis
 | permission_overwrites              | array of partial [overwrite](#overwrite-object) objects | the channel's permission overwrites                                                                                                                                             | All                                            |
 | parent_id                          | snowflake                                               | id of the parent category for a channel                                                                                                                                         | Text, Voice, Announcement, Stage, Forum, Media |
 | nsfw                               | boolean                                                 | whether the channel is nsfw                                                                                                                                                     | Text, Voice, Announcement, Stage, Forum        |
-| rtc_region                         | string                                                  | channel [voice region](#voice-region-object) id of the voice or stage channel, automatic when set to null                                                  | Voice, Stage                                   |
-| video_quality_mode                 | number                                                  | the camera [video quality mode](#video-quality-modes) of the voice channel | Voice, Stage |
+| rtc_region                         | string                                                  | channel [voice region](#voice-region-object) id of the voice or stage channel, automatic when set to null                                                                       | Voice, Stage                                   |
+| video_quality_mode                 | number                                                  | the camera [video quality mode](#video-quality-modes) of the voice channel                                                                                                      | Voice, Stage                                   |
 | default_auto_archive_duration      | number                                                  | the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity         | Text, Announcement, Forum, Media               |
 | default_reaction_emoji             | [default reaction](#default-reaction-object) object     | emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                              | Forum, Media                                   |
 | available_tags                     | array of [tag](#forum-tag-object) objects               | set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                      | Forum, Media                                   |
-| default_sort_order                 | number                                                  | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels                          | Forum, Media                                   |
-| default_forum_layout               | number                                                  | the [default forum layout view](#forum-layout-types) used to display posts in `GUILD_FORUM` channels                                      | Forum                                          |
+| default_sort_order                 | number                                                  | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels                                                                | Forum, Media                                   |
+| default_forum_layout               | number                                                  | the [default forum layout view](#forum-layout-types) used to display posts in `GUILD_FORUM` channels                                                                            | Forum                                          |
 | default_thread_rate_limit_per_user | number                                                  | the initial `rate_limit_per_user` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.                   | Text, Announcement, Forum, Media               |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.channels.create({
   guild_id: '0000000000',
@@ -962,8 +791,7 @@ await api.discord.guilds.channels.create({
 ```
 
 ### [Modify Guild Channel Positions](https://discord.com/developers/docs/resources/guild#get-guild-onboarding)
-
-> Only channels to be modified are required
+**> Only channels to be modified are required**
 
 #### Parameters
 | Field             | Type       | Description                                                                      |
@@ -973,9 +801,9 @@ await api.discord.guilds.channels.create({
 | lock_permissions? | ?boolean   | syncs the permission overwrites with the new parent, if moving to a new category |
 | parent_id?        | ?snowflake | the new parent ID for the channel that is moved                                  |
 
-**Example:**
+#### Example
 ```javascript
-await api.discord.guilds.channels.modifyPositions({
+await api.discord.guilds.channels.updatePositions({
   guild_id: '0000000000',
   channels: [{
     id: '0000000000',
@@ -1010,7 +838,7 @@ await api.discord.guilds.channels.modifyPositions({
 | guild_id | snowflake | the id of the guild |
 | user_id  | snowflake | The ID of the user   |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.retrieve({
   guild_id: '0000000000',
@@ -1027,7 +855,7 @@ await api.discord.guilds.members.retrieve({
 | limit    | number    | Max number of members to return (1-1000) (default 1) |
 | after    | snowflake | The highest user id in the previous page (default 0) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.getAll({
   guild_id: '0000000000',
@@ -1044,7 +872,7 @@ await api.discord.guilds.members.getAll({
 | query    | string    | Query string to match username(s) and nickname(s) against |
 | limit    | number    | Max number of members to return (1-1000) (default 1)      |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.search({
   guild_id: '0000000000',
@@ -1062,7 +890,7 @@ await api.discord.guilds.members.search({
 | user_id  | snowflake | The ID of the user to remove |
 | reason?  | string    | Reason for kick              |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.remove({
   guild_id: '0000000000',
@@ -1072,14 +900,14 @@ await api.discord.guilds.members.remove({
 ```
 
 ### [Modify Guild Member](https://discord.com/developers/docs/resources/guild#modify-guild-member)
-If the channel_id is set to null, this will force the target user to be disconnected from voice.
+**If the channel_id is set to null, this will force the target user to be disconnected from voice.**
 
-> All parameters to this endpoint are optional and nullable.
+> **All parameters to this endpoint are optional and nullable.**
 
 #### Parameters
 | Field                        | Type                | Description                                                       | Permission       |
 |------------------------------|---------------------|-------------------------------------------------------------------|------------------|
-| guild_id                     | snowflake           | the id of the guild                                              |                  |
+| guild_id                     | snowflake           | the id of the guild                                               |                  |
 | role_id                      | snowflake           | the id of the role                                                |                  |
 | nick                         | string              | value to set user's nickname to                                   | MANAGE_NICKNAMES |
 | roles                        | array of snowflakes | array of role ids the member is assigned                          | MANAGE_ROLES     |
@@ -1089,7 +917,7 @@ If the channel_id is set to null, this will force the target user to be disconne
 | communication_disabled_until | ISO8601 timestamp   | when the user's timeout will expire (up to 28 days in the future) | MODERATE_MEMBERS |
 | flags                        | number              | [guild member flags](#guild-member-flags)                         | MODERATE_MEMBERS |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.update({
   guild_id: '0000000000',
@@ -1105,7 +933,7 @@ await api.discord.guilds.members.update({
 | guild_id | snowflake | the id of the guild            |
 | nick?    | string    | Value to set user's nickname to |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.updateCurrent({
   guild_id: '0000000000',
@@ -1118,11 +946,11 @@ await api.discord.guilds.members.updateCurrent({
 #### Parameters
 | Field    | Type      | Description                                   |
 |----------|-----------|-----------------------------------------------|
-| guild_id | snowflake | the id of the guild                          |
+| guild_id | snowflake | the id of the guild                           |
 | user_id  | snowflake | The user ID of the user to assign the role to |
 | role_id  | snowflake | The role ID of the role to give the user      |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.addRole({
   guild_id: '0000000000',
@@ -1136,11 +964,11 @@ await api.discord.guilds.members.addRole({
 #### Parameters
 | Field    | Type      | Description                                     |
 |----------|-----------|-------------------------------------------------|
-| guild_id | snowflake | the id of the guild                            |
+| guild_id | snowflake | the id of the guild                             |
 | user_id  | snowflake | The user ID of the user to remove the role from |
 | role_id  | snowflake | The role ID of the role to remove from the user |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.members.removeRole({
   guild_id: '0000000000',
@@ -1157,7 +985,7 @@ await api.discord.guilds.members.removeRole({
 | array of role IDs     | Roles of a member |
 | array of role objects | Roles of a guild  |
 
-**Example:**
+#### Example
 ```javascript
 const x = params.member.roles;
 const y = params.guild.roles;
@@ -1165,7 +993,7 @@ const permNames = getPermissionNames(x, y);
 ```
 
 ### Timeout Guild Member
-Sets/adjusts/clears a member's timeout
+**Sets/adjusts/clears a member's timeout**
 
 #### Parameters
 | Field    | Type      | Description                                                                 |
@@ -1175,7 +1003,7 @@ Sets/adjusts/clears a member's timeout
 | duration | number    | Duration in seconds to set timeout. Set to `null` or omit to clear timeout. |
 | reason?  | string    | Reason                                                                      |
 
-**Example:**
+#### Example
 ```javascript
 // timeout a member for 5 minutes
 await api.discord.guilds.members.timeout({
@@ -1210,7 +1038,7 @@ await api.discord.guilds.members.timeout({
 | guild_id | snowflake | the id of the guild  |
 | role_id  | snowflake | the id of the role   |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.roles.retrieve({
   guild_id: '0000000000',
@@ -1225,7 +1053,7 @@ await api.discord.guilds.roles.retrieve({
 |----------|-----------|----------------------|
 | guild_id | snowflake | the id of the guild  |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.roles.getAll({
   guild_id: '0000000000'
@@ -1247,7 +1075,7 @@ await api.discord.guilds.roles.getAll({
 | unicode_emoji | ?string    | the role's unicode emoji as a standard emoji (if guild has the `ROLE_ICONS` feature) | null       |
 | mentionable   | boolean    | whether the role should be mentionable                                               | false      |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.roles.create({
   guild_id: '0000000000',
@@ -1259,7 +1087,7 @@ await api.discord.guilds.roles.create({
 ```
 
 ### [Modify Guild Role](ttps://discord.com/developers/docs/resources/guild#modify-guild-role)
-> All parameters to this endpoint are optional and nullable.
+> **All parameters to this endpoint are optional and nullable.**
 
 #### Parameters
 | Field         | Type       | Description                                                                          |
@@ -1274,7 +1102,7 @@ await api.discord.guilds.roles.create({
 | unicode_emoji | ?string    | the role's unicode emoji as a standard emoji (if guild has the `ROLE_ICONS` feature) |
 | mentionable   | boolean    | whether the role should be mentionable                                               |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.roles.update({
   guild_id: '0000000000',
@@ -1295,7 +1123,7 @@ await api.discord.guilds.roles.update({
 | role_id  | snowflake | the id of the role  |
 | reason?  | string    | reason              |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.roles.destroy({
   guild_id: '0000000000',
@@ -1311,7 +1139,7 @@ await api.discord.guilds.roles.destroy({
 | guild_id | snowflake                        | the id of the guild                                 |
 | roles    | array of partial channel objects | the ids and new positions of the channels to modify |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.roles.retrieve({
   guild_id: '0000000000',
@@ -1341,7 +1169,7 @@ await api.discord.guilds.roles.retrieve({
 | guild_id | snowflake | the id of the guild |
 | emoji_id | snowflake | The id of the emoji |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.emojis.retrieve({
   guild_id: '0000000000',
@@ -1356,7 +1184,7 @@ await api.discord.guilds.emojis.retrieve({
 |----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.emojis.getAll({
   guild_id: '0000000000'
@@ -1373,7 +1201,7 @@ await api.discord.guilds.emojis.getAll({
 | image    | url/buffer          | the 128x128 emoji image         |
 | roles    | array of snowflakes | roles allowed to use this emoji |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.emojis.create({
   guild_id: '0000000000',
@@ -1392,7 +1220,7 @@ await api.discord.guilds.emojis.create({
 | name     | string              | name of the emoji               |
 | roles    | array of snowflakes | roles allowed to use this emoji |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.emojis.update({
   guild_id: '0000000000',
@@ -1409,7 +1237,7 @@ await api.discord.guilds.emojis.update({
 | guild_id | snowflake | the id of the guild |
 | emoji_id | snowflake | The id of the emoji |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.emojis.destroy({
   guild_id: '0000000000',
@@ -1437,7 +1265,7 @@ await api.discord.guilds.emojis.destroy({
 |------------|-----------|-----------------------|
 | sticker_id | snowflake | The id of the sticker |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.retrieve({
   sticker_id: '0000000000'
@@ -1452,7 +1280,7 @@ await api.discord.guilds.stickers.retrieve({
 | guild_id   | snowflake | the id of the guild   |
 | sticker_id | snowflake | The id of the sticker |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.retrieveGuild({
   guild_id: '0000000000',
@@ -1462,7 +1290,7 @@ await api.discord.guilds.stickers.retrieveGuild({
 
 ### [List Sticker Packs](https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs)
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.retrieve();
 ```
@@ -1474,7 +1302,7 @@ await api.discord.guilds.stickers.retrieve();
 |------------|-----------|-----------------------|
 | guild_id   | snowflake | the id of the guild   |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.getAll({
   guild_id: '0000000000'
@@ -1482,7 +1310,8 @@ await api.discord.guilds.stickers.getAll({
 ```
 
 ### [Create Guild Sticker](https://discord.com/developers/docs/resources/sticker#create-guild-sticker)
-> This endpoint may take time. It goes through multiple functions before returning the sticker.
+> **This endpoint may take time. It goes through multiple functions before returning the sticker.**
+> 
 #### Parameters
 | Field       | Type       | Description                                                       |
 |-------------|------------|-------------------------------------------------------------------|
@@ -1492,7 +1321,7 @@ await api.discord.guilds.stickers.getAll({
 | tags        | string     | autocomplete/suggestion tags for the sticker (max 200 characters) |
 | file        | url/buffer | the sticker file to upload                                        |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.create({
   guild_id: '0000000000',
@@ -1513,7 +1342,7 @@ await api.discord.guilds.stickers.create({
 | description | string     | description of the sticker (empty or 2-100 characters)            |
 | tags        | string     | autocomplete/suggestion tags for the sticker (max 200 characters) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.update({
   guild_id: '0000000000',
@@ -1531,7 +1360,7 @@ await api.discord.guilds.stickers.update({
 | guild_id   | snowflake  | the id of the guild   |
 | sticker_id | string     | the id of the sticker |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.stickers.destroy({
   guild_id: '0000000000',
@@ -1561,7 +1390,7 @@ await api.discord.guilds.stickers.destroy({
 | guild_scheduled_event_id | snowflake | the id of the event                              |
 | with_user_count?         | boolean   | include number of users subscribed to each event |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.events.retrieve({
   guild_id: '0000000000',
@@ -1578,7 +1407,7 @@ await api.discord.guilds.events.retrieve({
 | guild_id         | snowflake | the id of the guild                              |
 | with_user_count? | boolean   | include number of users subscribed to each event |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.events.getAll({
   guild_id: '0000000000',
@@ -1598,9 +1427,10 @@ await api.discord.guilds.events.getAll({
 | before? *                | snowflake | consider only users before given user id      | null    |
 | after? *                 | snowflake | consider only users after given user id       | null    |
 
-\* Provide a user id to `before` and `after` for pagination. Users will always be returned in ascending order by `user_id`. If both `before` and `after` are provided, only `before` is respected. Fetching users in-between `before` and `after` is not supported.
+**\* Provide a user id to `before` and `after` for pagination. Users will always be returned in ascending order by `user_id`.**  
+**If both `before` and `after` are provided, only `before` is respected. Fetching users in-between `before` and `after` is not supported.**
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.events.getUsers({
   guild_id: '0000000000',
@@ -1625,11 +1455,10 @@ await api.discord.guilds.events.getUsers({
 | entity_type            | [event entity type](#guild-scheduled-event-entity-types)   | The entity type of the scheduled event                |
 | image?                 | url/buffer                                                 | The cover image of the scheduled event                |
 
-\* Optional for events with `'entity_type': EXTERNAL`  
-\*\* Required for events with `'entity_type': EXTERNAL`
+**\* Optional for events with `'entity_type': EXTERNAL`**  
+**\*\* Required for events with `'entity_type': EXTERNAL`**
 
-
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.events.create({
   guild_id: '0000000000',
@@ -1658,13 +1487,13 @@ await api.discord.guilds.events.create({
 | status?               | [event status](#guild-scheduled-event-status)              | The status of the scheduled event                     |
 | image?                | url/buffer                                                 | The cover image of the scheduled event                |
 
-\* If updating `entity_type` to `EXTERNAL`:
+**\* If updating `entity_type` to `EXTERNAL`:**
 
 - `channel_id` is required and [must be set to null](#field-requirements-by-entity-type)
 - `entity_metadata` with a `location` field must be provided
 - `scheduled_end_time` must be provided
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.events.update({
   guild_id: '0000000000',
@@ -1681,7 +1510,7 @@ await api.discord.guilds.events.update({
 |------------------|-----------|---------------------|
 | guild_id         | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.events.destroy({
   guild_id: '0000000000'
@@ -1709,7 +1538,7 @@ await api.discord.guilds.events.destroy({
 |---------------|-----------|---------------------|
 | template_code | snowflake | the template's code |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.retrieve({
   template_code: '0000000000'
@@ -1723,7 +1552,7 @@ await api.discord.guilds.templates.retrieve({
 |----------|-----------|--------------|
 | guild_id | snowflake | the guild id |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.getAll({
   guild_id: '0000000000'
@@ -1739,7 +1568,7 @@ await api.discord.guilds.templates.getAll({
 | name         | string    | name of the template (1-100 characters)         |
 | description? | ?string   | description for the template (0-120 characters) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.create({
   guild_id: '0000000000',
@@ -1757,7 +1586,7 @@ await api.discord.guilds.templates.create({
 | name?         | string    | name of the template (1-100 characters)         |
 | description?  | ?string   | description for the template (0-120 characters) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.update({
   guild_id: '0000000000',
@@ -1774,7 +1603,7 @@ await api.discord.guilds.templates.update({
 | guild_id      | snowflake | the guild id        |
 | template_code | snowflake | the template's code |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.destroy({
   guild_id: '0000000000',
@@ -1783,7 +1612,7 @@ await api.discord.guilds.templates.destroy({
 ```
 
 ### [Create Guild Fom Guild Template](https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template)
-> This endpoint can be used only by bots in less than 10 guilds.
+> **This endpoint can be used only by bots in less than 10 guilds.**
 
 #### Parameters
 | Field         | Type       | Description                                     |
@@ -1793,7 +1622,7 @@ await api.discord.guilds.templates.destroy({
 | name          | string     | name of the template (1-100 characters)         |
 | icon?         | url/buffer | image url or image buffer for the guild's icon  |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.createGuild({
   template_code: '0000000000',
@@ -1810,7 +1639,7 @@ await api.discord.guilds.templates.createGuild({
 | guild_id      | snowflake | the guild id        |
 | template_code | snowflake | the template's code |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.guilds.templates.sync({
   guild_id: '0000000000',
@@ -1820,15 +1649,1662 @@ await api.discord.guilds.templates.sync({
 
 ---
 
+# Channels
+**All functions relating to Discord Channels**
+
+| Method                                                      | Description                                    |
+|-------------------------------------------------------------|------------------------------------------------|
+| [`retrieve`](#get-channel)                                  | Get information about a channel in a guild     |
+| [`update`](#modify-channel)                                 | update a channel in a guild                    |
+| [`destroy`](#delete-channel)                                | Delete a channel in a guild                    |
+| [`editPermissions`](#edit-channel-permissions)              | Update the permissions of a channel in a guild |
+| [`deletePermissions`](#delete-channel-permissions)           | Delete a channels permissions                 |
+| [`getInvites`](#get-channel-invites)                        | Get all invites for a channel                  |
+| [`inviteCreate`](#create-channel-invite)                    | Create a new channel invite                    |
+| [`typingCreate`](#trigger-typing-indicator)                 | Trigger the typing indicator in a channel      |
+| [`followAnnouncementChannel`](#follow-announcement-channel) | Follow an announcement channel                 |
+| [`groupDMadd`](#group-dm-add-recipient)                     | Add a user to a group DM                       |
+| [`groupDMremove`](#group-dm-remove-recipient)               | Remove a user from a group DM.                 |
+
+### [Get Channel](https://discord.com/developers/docs/resources/channel#get-channel)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.retrieve({
+  channel_id: '0000000000'
+});
+```
+
+### [Modify Channel](https://discord.com/developers/docs/resources/channel#modify-channel)
+
+#### Parameters
+| Field                               | Type                                                     | Description                                                                                                                                                                                                                                     | Channel Type                                   |
+|-------------------------------------|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+| channel_id                          | snowflake | the id of the channel                        |                                                                                                                                                                                                                                                 |                                                |
+| name                                | string                                                   | 1-100 character channel name                                                                                                                                                                                                                    | All                                            |
+| type                                | number                                                   | the [type of channel](#channel-types); only conversion between text and announcement is supported and only in guilds with the "NEWS" feature                                                                                                    | Text, Announcement                             |
+| position                            | ?number                                                  | the position of the channel in the left-hand listing                                                                                                                                                                                            | All                                            |
+| topic                               | ?string                                                  | 0-1024 character channel topic (0-4096 characters for `GUILD_FORUM` and `GUILD_MEDIA` channels)                                                                                                                                                 | Text, Announcement, Forum, Media               |
+| nsfw                                | ?boolean                                                 | whether the channel is nsfw                                                                                                                                                                                                                     | Text, Voice, Announcement, Stage, Forum, Media |
+| rate_limit_per_user                 | ?number                                                  | amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected                                                                 | Text, Voice, Stage, Forum, Media               |
+| bitrate\*                           | ?number                                                  | the bitrate (in bits) of the voice or stage channel; min 8000                                                                                                                                                                                   | Voice, Stage                                   |
+| user_limit                          | ?number                                                  | the user limit of the voice or stage channel, max 99 for voice channels and 10,000 for stage channels (0 refers to no limit)                                                                                                                    | Voice, Stage                                   |
+| permission_overwrites\*\*           | ?array of partial [overwrite](#overwrite-object) objects | channel or category-specific permissions                                                                                                                                                                                                        | All                                            |
+| parent_id                           | ?snowflake                                               | id of the new parent category for a channel                                                                                                                                                                                                     | Text, Voice, Announcement, Stage, Forum, Media |
+| rtc_region                          | ?string                                                  | channel [voice region](#voice-region-object) id, automatic when set to null                                                                                                                                                                     | Voice, Stage                                   |
+| video_quality_mode                  | ?number                                                  | the camera [video quality mode](#video-quality-modes) of the voice channel                                                                                                                                                                      | Voice, Stage                                   |
+| default_auto_archive_duration       | ?number                                                  | the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity                                                                         | Text, Announcement, Forum, Media               |
+| flags?                              | number                                                   | [channel flags](#channel-flags) combined as a bitfield. Currently only `REQUIRE_TAG` (`1 << 4`) is supported by `GUILD_FORUM` and `GUILD_MEDIA` channels. `HIDE_MEDIA_DOWNLOAD_OPTIONS` (`1 << 15`) is supported only by `GUILD_MEDIA` channels | Forum, Media                                   |
+| available_tags?                     | array of [tag](#forum-tag-object) objects                | the set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel; limited to 20                                                                                                                                                   | Forum, Media                                   |
+| default_reaction_emoji?             | ?[default reaction](#default-reaction-object) object     | the emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                                                          | Forum, Media                                   |
+| default_thread_rate_limit_per_user? | number                                                   | the initial `rate_limit_per_user` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.                                                                                   | Text, Forum, Media                             |
+| default_sort_order?                 | ?number                                                  | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels                                                                                                                                | Forum, Media                                   |
+| default_forum_layout?               | number                                                   | the [default forum layout type](#forum-layout-types) used to display posts in `GUILD_FORUM` channels                                                                                                                                            | Forum                                          |
+
+**\* For voice channels, normal servers can set bitrate up to 96000, servers with Boost level 1 can set up to 128000, servers with Boost level 2 can set up to 256000, and servers with Boost level 3 or the `VIP_REGIONS` [guild feature](#guild-features) can set up to 384000. For stage channels, bitrate can be set up to 64000.**  
+**\*\* In each overwrite object, the `allow` and `deny` keys can be omitted or set to `null`, which both default to `"0"`.**
+
+#### Parameters (Thread)
+**When setting `archived` to `false`, when `locked` is also `false`, only the `SEND_MESSAGES` permission is required.**  
+**Otherwise, requires the `MANAGE_THREADS` permission.**
+
+| Field                 | Type                | Description                                                                                                                                                                                        |
+|-----------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                  | string              | 1-100 character channel name                                                                                                                                                                       |
+| archived              | boolean             | whether the thread is archived                                                                                                                                                                     |
+| auto_archive_duration | number              | the thread will stop showing in the channel list after `auto_archive_duration` minutes of inactivity, can be set to: 60, 1440, 4320, 10080                                                         |
+| locked                | boolean             | whether the thread is locked; when a thread is locked, only users with MANAGE_THREADS can unarchive it                                                                                             |
+| invitable             | boolean             | whether non-moderators can add other non-moderators to a thread; only available on private threads                                                                                                 |
+| rate_limit_per_user   | ?number             | amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages`, `manage_thread`, or `manage_channel`, are unaffected  |
+| flags?                | number              | [channel flags](#channel-flags); `PINNED` can only be set for threads in forum and media channels                                                                                                  |
+| applied_tags?         | array of snowflakes | the IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel; limited to 5                                                                          |
+
+#### Example
+```javascript
+await api.discord.channels.update({
+  channel_id: '0000000000',
+  name: 'new-name'
+});
+```
+
+### [Delete Channel](https://discord.com/developers/docs/resources/channel#deleteclose-channel)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.destroy({
+  channel_id: '0000000000'
+});
+```
+
+### [Edit Channel Permissions](https://discord.com/developers/docs/resources/channel#edit-channel-permissions)
+
+#### Parameters
+| Field      | Type      | Description                                                     |
+|------------|-----------|-----------------------------------------------------------------|
+| channel_id | snowflake | the id of the channel                                           |
+| allow?     | string?   | the bitwise value of all allowed permissions (default `"0"`)    |
+| deny?      | string?   | the bitwise value of all disallowed permissions (default `"0"`) |
+| type       | number    | 0 for a role or 1 for a member                                  |
+
+#### Example
+```javascript
+await api.discord.channels.editPermissions({
+  channel_id: '0000000000',
+  overwrite_id: '0000000000',
+  type: 1, // member
+  allow: '1024'
+});
+```
+
+### [Delete Channel Permissions](https://discord.com/developers/docs/resources/channel#delete-channel-permissions)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.deletePermissions({
+  channel_id: '0000000000'
+});
+```
+
+### [Get Channel Invites](https://discord.com/developers/docs/resources/channel#get-channel-invites)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.getInvites({
+  channel_id: '0000000000'
+});
+```
+
+### [Create Channel Invite](https://discord.com/developers/docs/resources/channel#create-channel-invite)
+
+#### Parameters
+| Field      | Type              | Description                                          |
+|------------|-------------------|------------------------------------------------------|
+| channel_id | snowflake         | the id of the channel                                |
+| uses       | number            | number of times this invite has been used            |
+| max_uses   | number            | max number of times this invite can be used          |
+| max_age    | number            | duration (in seconds) after which the invite expires |
+| temporary  | boolean           | whether this invite only grants temporary membership |
+| created_at | ISO8601 timestamp | when this invite was created                         |
+
+#### Example
+```javascript
+await api.discord.channels.inviteCreate({
+  channel_id: '0000000000',
+  max_age: 7200,
+  max_uses: 1
+});
+```
+
+### [Trigger Typing Indicator](https://discord.com/developers/docs/resources/channel#trigger-typing-indicator)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.typingCreate({
+  channel_id: '0000000000'
+});
+```
+
+### [Follow Announcement Channel](https://discord.com/developers/docs/resources/channel#follow-announcement-channel)
+
+#### Parameters
+| Field              | Type      | Description                                    |
+|--------------------|-----------|------------------------------------------------|
+| channel_id         | snowflake | the id of the channel to send announcements to |
+| webhook_channel_id | snowflake | the id of the target channel                   |
+
+#### Example
+```javascript
+await api.discord.channels.followAnnouncementChannel({
+  channel_id: '0000000000',
+  webhook_channel_id: '0000000000'
+});
+```
+
+### [Group DM Add Recipient](https://discord.com/developers/docs/resources/channel#group-dm-add-recipient)
+
+#### Parameters
+| Field        | Type      | Description                                                           |
+|--------------|-----------|-----------------------------------------------------------------------|
+| channel_id   | snowflake | the id of the channel to send announcements to                        |
+| user_id      | snowflake | the id of the channel to send announcements to                        |
+| access_token | string    | access token of a user that has granted your app the `gdm.join` scope |
+| nick         | string    | nickname of the user being added                                      |
+
+#### Example
+```javascript
+await api.discord.channels.groupDMadd({
+  channel_id: '0000000000',
+  user_id: '0000000000',
+  access_token: 'abcdef123456',
+  nick: 'userNickname'
+});
+```
+
+### [Group DM Remove Recipient](https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient)
+
+#### Parameters
+| Field      | Type      | Description                                    |
+|------------|-----------|------------------------------------------------|
+| channel_id | snowflake | the id of the channel to send announcements to |
+| user_id    | snowflake | the id of the user to remove                   |
+
+#### Example
+```javascript
+await api.discord.channels.groupDMremove({
+  channel_id: '0000000000',
+  user_id: '0000000000'
+});
+```
+
+---
+
+## Channel Messages
+
+| Method                                | Description                          |
+|---------------------------------------|--------------------------------------|
+| [`retrieve`](#get-channel-message)    | Retrieve a message with given id     |
+| [`getAll`](#get-channel-messages)     | Get all messages in a channel        |
+| [`create`](#create-message)           | Create a new message                 |
+| [`update`](#edit-message)             | Update a message                     |
+| [`destroy`](#delete-message)          | Delete a message                     |
+| [`bulkDelete`](#bulk-delete-messages) | Delete multiple messages at a time   |
+| [`crosspost`](#crosspost-message)     | Crosspost a message                  |
+| [`pin`](#pin-message)                 | Pin a message                        |
+| [`unpin`](#unpin-message)             | Unpin a message                      |
+| [`getPinned`](#get-pinned-messages)   | Get all pinned messages in a channel |
+
+### [Get Channel Message](https://discord.com/developers/docs/resources/channel#get-channel-message)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+| message_id | snowflake | the id of the message |
+
+#### Example
+```javascript
+await api.discord.channels.messages.retrieve({
+  channel_id: '0000000000',
+  message_id: '0000000000'
+});
+```
+
+### [Get Channel Messages](https://discord.com/developers/docs/resources/channel#get-channel-messages)
+
+#### Parameters
+
+| Field      | Type      | Description                                           |
+|------------|-----------|-------------------------------------------------------|
+| channel_id | snowflake | the id of the channel                                 |
+| around?    | snowflake | Get messages around this message ID                   |
+| before?    | snowflake | Get messages before this message ID                   |
+| after?     | snowflake | Get messages after this message ID                    |
+| limit?     | number    | Max number of messages to return (1-100) (default 50) |
+
+> **The `before`, `after`, and `around` parameters are mutually exclusive, only one may be passed at a time.**  
+
+#### Example
+```javascript
+await api.discord.channels.messages.getAll({
+  channel_id: '0000000000',
+  limit: 50
+});
+```
+
+### [Create Message](https://discord.com/developers/docs/resources/channel#create-message)
+**To create a message as a reply to another message, apps can include a [message_reference](#message-reference-object) with a `message_id`.**  
+**The `channel_id` and `guild_id` in the `message_reference` are optional, but will be validated if provided.**
+
+#### Parameters
+| Field              | Type                                                      | Description                                                                                      |
+|--------------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| channel_id         | snowflake                                                 | Channel id of the channel to send the message to                                                 |
+| content?\*         | string                                                    | Message contents (up to 2000 characters)                                                         |
+| tts?               | boolean                                                   | `true` if this is a TTS message                                                                  |
+| embeds?\*          | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)                                                   |
+| allowed_mentions?  | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                                                                 |
+| message_reference? | [message reference](#message-reference-object)            | Include to make your message a reply                                                             |
+| components?\*      | array of [message component](#component-object) objects   | Components to include with the message                                                           |
+| sticker_ids?\*     | array of snowflakes                                       | IDs of up to 3 [stickers](#sticker-object) in the server to send in the message                  |
+| attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
+| flags?             | number                                                    | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
+
+**\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Example
+```javascript
+await api.discord.channels.messages.create({
+  channel_id: '0000000000',
+  content: 'sup'
+});
+```  
+#### Example
+```javascript
+await api.discord.channels.messages.create({
+  channel_id: '0000000000',
+  content: '',
+  embeds: [{
+    title: 'embed title',
+    description: 'embed description'
+  }],
+  components: [{
+    type: 1,
+    components: [{
+      type: 2, // button
+      style: 1,
+      label: 'buttonLabel',
+      custom_id: 'asdfghjkl'
+    }]
+  }]
+});
+```  
+#### Example
+```javascript
+await api.discord.channels.messages.create({
+  channel_id: '0000000000',
+  content: 'this will surprese all mentions',
+  allowed_mentions: {
+    parse: []
+  }
+});
+```
+
+### [Edit Message](https://discord.com/developers/docs/resources/channel#edit-message)
+
+#### Parameters
+| Field              | Type                                                      | Description                                                                                      |
+|--------------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| channel_id         | snowflake                                                 | the id of the channel the message is in                                                          |
+| message_id         | snowflake                                                 | the id of the message to edit                                                                    |
+| content?           | string                                                    | Message contents (up to 2000 characters)                                                         |
+| embeds?            | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)                                                   |
+| allowed_mentions?  | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                                                                 |
+| message_reference? | [message reference](#message-reference-object)            | Include to make your message a reply                                                             |
+| components?        | array of [message component](#component-object) objects   | Components to include with the message                                                           |
+| attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
+| flags?             | number                                                    | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
+
+**When the content field is edited, the mentions array in the message object will be reconstructed from scratch based on the new content.**  
+**The allowed_mentions field of the edit request controls how this happens.**  
+**If there is no explicit allowed_mentions in the edit request, the content will be parsed with default allowances, that is, without regard to whether or not an allowed_mentions was present in the request that originally created the message.**  
+**The attachments array must contain all attachments that should be present after edit, including retained and new attachments.**  
+
+#### Example
+```javascript
+await api.discord.channels.messages.update({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  content: 'new message'
+});
+```  
+
+### [Delete Message](https://discord.com/developers/docs/resources/channel#delete-message)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+| message_id | snowflake | the id of the message |
+
+#### Example
+```javascript
+await api.discord.channels.messages.destroy({
+  channel_id: '0000000000',
+  message_id: '0000000000'
+});
+```
+
+### [Bulk Delete Messages](https://discord.com/developers/docs/resources/channel#bulk-delete-messages)
+**Any message IDs given that do not exist or are invalid will count towards the minimum and maximum message count (currently 2 and 100 respectively).**  
+**This endpoint will not delete messages older than 2 weeks.**  
+
+#### Parameters
+| Field      | Type                | Description                               |
+|------------|---------------------|-------------------------------------------|
+| channel_id | snowflake           | the id of the channel                     |
+| messages   | array of snowflakes | an array of message ids to delete (2-100) |
+
+#### Example
+```javascript
+await api.discord.channels.messages.destroy({
+  channel_id: '0000000000',
+  messages: [ 
+    '0000000000',
+    '0000000000'
+  ]
+});
+```
+
+### [Crosspost Message](https://discord.com/developers/docs/resources/channel#crosspost-message)
+
+#### Parameters
+| Field      | Type      | Description                                |
+|------------|-----------|--------------------------------------------|
+| channel_id | snowflake | the id of the channel                      |
+| message_id | snowflake | the message id of the message to crosspost |
+
+#### Example
+```javascript
+await api.discord.channels.messages.crosspost({
+  channel_id: '0000000000',
+  message_id: '0000000000'
+});
+```
+
+### [Pin Message](https://discord.com/developers/docs/resources/channel#pin-message)
+
+#### Parameters
+| Field      | Type      | Description                          |
+|------------|-----------|--------------------------------------|
+| channel_id | snowflake | the id of the channel                |
+| message_id | snowflake | the message id of the message to pin |
+
+#### Example
+```javascript
+await api.discord.channels.messages.pin({
+  channel_id: '0000000000',
+  message_id: '0000000000'
+});
+```
+
+### [Unpin Message](https://discord.com/developers/docs/resources/channel#unpin-message)
+
+#### Parameters
+| Field      | Type      | Description                            |
+|------------|-----------|----------------------------------------|
+| channel_id | snowflake | the id of the channel                  |
+| message_id | snowflake | the message id of the message to unpin |
+
+#### Example
+```javascript
+await api.discord.channels.messages.unpin({
+  channel_id: '0000000000',
+  message_id: '0000000000'
+});
+```
+
+### [Get Pinned Messages](https://discord.com/developers/docs/resources/channel#get-pinned-messages)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.messages.getPinned({
+  channel_id: '0000000000'
+});
+```
+---
+
+## Channel Threads
+**All functions relating to Discord Threads**
+
+| Method                                                                 | Description                                                  |
+|------------------------------------------------------------------------|--------------------------------------------------------------|
+| [`forumThreadCreate`](#start-thread-in-forum-channel)                  | Create a thread in a forum channel                           |
+| [`createFromMessage`](#start-thread-from-message)                      | Create a thread from an existing message                     |
+| [`createWithoutMessage`](#start-thread-without-message)                | Create a thread that is not connected to an existing message |
+| [`join`](#join-thread)                                                 | Add current user to a thread                                 |
+| [`leave`](#leave-thread)                                               | Removes current user from a thread                           |
+| [`addMember`](#add-thread-member)                                      | Adds another member to a thread                              |
+| [`removeMember`](#remove-thread-member)                                | Removes another member from a thread                         |
+| [`retrieveMember`](#get-thread-member)                                 | Retrieve information of a thread member                      |
+| [`getAllMembers`](#list-thread-members)                                | Get all members in a thread                                  |
+| [`getAllPublicArchived`](#list-public-archived-threads)                | Retrieve threads in a channel that are public                |
+| [`getAllPrivateArchived`](#list-private-archived-threads)              | Retrieve private archived threads in a channel               |
+| [`getAllJoinedPrivateArchived`](#list-joined-private-archived-threads) | Retrieve private archived threads that the user has joined   |
+
+### [Start Thread in Forum Channel](https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel)
+
+#### Parameters
+| Field                    | Type                                                                                | Description                                                                                                         |
+|--------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| channel_id               | snowflake                                                                           | the id of the channel                                                                                               |
+| name                     | string                                                                              | 1-100 character channel name                                                                                        |
+| auto_archive_duration?\* | integer                                                                             | duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 |
+| rate_limit_per_user?     | ?integer                                                                            | amount of seconds a user has to wait before sending another message (0-21600)                                       |
+| message                  | [forum thread message params](#forum-and-media-thread-message-params-object) object | contents of the first message in the forum/media thread                                                             |
+| applied_tags?            | array of snowflakes                                                                 | the IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel         |
+
+#### Example
+```javascript
+await api.discord.channels.threads.forumThreadCreate({
+  channel_id: '0000000000',
+  name: 'thread name',
+  message: {
+    content: 'new message',
+    embeds: [{
+      title: 'example',
+      description: 'example'
+    }]
+  },
+  auto_archive_duration: 4320
+});
+```
+
+### [Start Thread from Message](https://discord.com/developers/docs/resources/channel#start-thread-from-message)
+**When called on a `GUILD_TEXT` channel, creates a `PUBLIC_THREAD`.**  
+**When called on a `GUILD_ANNOUNCEMENT` channel, creates an `ANNOUNCEMENT_THREAD`.**  
+**Does not work on a `GUILD_FORUM` channel.**  
+**The ID of the created thread will be the same as the ID of the source message, and as such a message can only have a single thread created from it.**  
+
+#### Parameters
+| Field                    | Type       | Description                                                                                                         |
+|--------------------------|------------|---------------------------------------------------------------------------------------------------------------------|
+| channel_id               | snowflake  | the id of the channel                                                                                               |
+| message_id               | snowflake  | the id of the message to create the thread from                                                                     |
+| name                     | string     | 1-100 character channel name                                                                                        |
+| auto_archive_duration?   | number     | duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 |
+| rate_limit_per_user?     | ?number    | amount of seconds a user has to wait before sending another message (0-21600)                                       |
+
+#### Example
+```javascript
+await api.discord.channels.threads.createFromMessage({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  name: 'thread name',
+  auto_archive_duration: 10080
+});
+```
+
+### [Start Thread without Message](https://discord.com/developers/docs/resources/channel#start-thread-without-message)
+
+#### Parameters
+| Field                    | Type       | Description                                                                                                         |
+|--------------------------|------------|---------------------------------------------------------------------------------------------------------------------|
+| channel_id               | snowflake  | the id of the channel                                                                                               |
+| name                     | string     | 1-100 character channel name                                                                                        |
+| type? \*                 | number     | the [type of thread](#channel-types) to create                                                                      |
+| invitable? \*            | boolean    | whether non-moderators can add other non-moderators to a thread; only available when creating a private thread      |
+| rate_limit_per_user?     | ?number    | amount of seconds a user has to wait before sending another message (0-21600)                                       |
+
+**\* `type` currently defaults to `PRIVATE_THREAD` in order to match the behavior when thread documentation was first published.**
+
+#### Example
+```javascript
+await api.discord.channels.threads.createWithoutMessage({
+  channel_id: '0000000000',
+  type: 11, // PUBLIC_THREAD
+  name: 'thread name',
+  auto_archive_duration: 10080,
+  invitable: true
+});
+```
+
+### [Join Thread](https://discord.com/developers/docs/resources/channel#join-thread)
+
+#### Parameters
+| Field                    | Type      | Description           |
+|--------------------------|-----------|-----------------------|
+| channel_id               | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.threads.join({
+  channel_id: '0000000000'
+});
+```
+
+### [Leave Thread](https://discord.com/developers/docs/resources/channel#leave-thread)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.channels.threads.leave({
+  channel_id: '0000000000'
+});
+```
+
+### [Add Thread Member](https://discord.com/developers/docs/resources/channel#add-thread-member)
+
+#### Parameters
+| Field      | Type      | Description               |
+|------------|-----------|---------------------------|
+| channel_id | snowflake | the id of the channel     |
+| user_id    | snowflake | the id of the user to add |
+
+#### Example
+```javascript
+await api.discord.channels.threads.addMember({
+  channel_id: '0000000000',
+  user_id: '0000000000'
+});
+```
+
+### [Remove Thread Member](https://discord.com/developers/docs/resources/channel#remove-thread-member)
+
+#### Parameters
+| Field      | Type      | Description               |
+|------------|-----------|---------------------------|
+| channel_id | snowflake | the id of the channel     |
+| user_id    | snowflake | the id of the user to add |
+
+#### Example
+```javascript
+await api.discord.channels.threads.removeMember({
+  channel_id: '0000000000',
+  user_id: '0000000000'
+});
+```
+
+### [Get Thread Member](https://discord.com/developers/docs/resources/channel#get-thread-member)
+
+#### Parameters
+| Field        | Type      | Description                              |
+|--------------|-----------|------------------------------------------|
+| channel_id   | snowflake | the id of the channel                    |
+| user_id      | snowflake | the id of the user to add                |
+| with_member? | boolean   | whether to include a guild member object |
+
+#### Example
+```javascript
+await api.discord.channels.threads.retrieveMember({
+  channel_id: '0000000000',
+  user_id: '0000000000',
+  with_member: true
+});
+```
+
+### [List Thread Members](https://discord.com/developers/docs/resources/channel#list-thread-members)
+
+#### Parameters
+| Field        | Type      | Description                                                      |
+|--------------|-----------|------------------------------------------------------------------|
+| channel_id   | snowflake | the id of the channel                                            |
+| user_id      | snowflake | the id of the user to add                                        |
+| with_member? | boolean   | whether to include a guild member object                         |
+| after?       | snowflake | Get thread members after this user ID                            |
+| limit?       | integer   | Max number of thread members to return (1-100). Defaults to 100. |
+
+#### Example
+```javascript
+await api.discord.channels.threads.getAllMembers({
+  channel_id: '0000000000',
+  with_member: true
+});
+```
+
+### [List Public Archived Threads](https://discord.com/developers/docs/resources/channel#list-public-archived-threads)
+**When called on a `GUILD_TEXT` channel, returns threads of type `PUBLIC_THREAD`.**  
+**When called on a `GUILD_ANNOUNCEMENT` channel, returns threads of type `ANNOUNCEMENT_THREAD`.**  
+**Threads are ordered by `archive_timestamp`, in descending order.**  
+
+#### Parameters
+| Field      | Type              | Description                                    |
+|------------|-------------------|------------------------------------------------|
+| channel_id | snowflake         | the id of the channel                          |
+| before?    | ISO8601 timestamp | returns threads archived before this timestamp |
+| limit?     | integer           | optional maximum number of threads to return   |
+
+#### Example
+```javascript
+await api.discord.channels.threads.getAllPublicArchived({
+  channel_id: '0000000000',
+  limit: 10
+});
+```
+
+### [List Private Archived Threads](https://discord.com/developers/docs/resources/channel#list-private-archived-threads)
+
+#### Parameters
+| Field      | Type              | Description                                    |
+|------------|-------------------|------------------------------------------------|
+| channel_id | snowflake         | the id of the channel                          |
+| before?    | ISO8601 timestamp | returns threads archived before this timestamp |
+| limit?     | integer           | optional maximum number of threads to return   |
+
+#### Example
+```javascript
+await api.discord.channels.threads.getAllPrivateArchived({
+  channel_id: '0000000000'
+});
+```
+
+### [List Joined Private Archived Threads](https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads)
+
+#### Parameters
+| Field      | Type              | Description                                    |
+|------------|-------------------|------------------------------------------------|
+| channel_id | snowflake         | the id of the channel                          |
+| before?    | ISO8601 timestamp | returns threads archived before this timestamp |
+| limit?     | integer           | optional maximum number of threads to return   |
+
+#### Example
+```javascript
+await api.discord.channels.threads.getAllJoinedPrivateArchived({
+  channel_id: '0000000000'
+});
+```
+---
+
+## Channel Reactions
+
+| Method                                              | Description                                                 |
+|-----------------------------------------------------|-------------------------------------------------------------|
+| [`create`](#create-reaction)                        | Create a reaction for the message                           |
+| [`deleteOwn`](#delete-own-reaction)                 | Delete a reaction the current user has made for the message |
+| [`deleteUser`](#delete-user-reactions)              | Deletes another user's reaction                             |
+| [`deleteAll`](#delete-all-reactions)                | Deletes all reactions on a message                          |
+| [`deleteAllEmoji`](#delete-all-reactions-for-emoji) | Deletes all the reactions for a given emoji on a message    |
+| [`getUsers`](#get-reactions)                        | Get a list of users that reacted with this emoji            |
+
+### [Create Reaction](https://discord.com/developers/docs/resources/channel#create-reaction)
+
+#### Parameters
+| Field      | Type      | Description             |
+|------------------------|-------------------------|
+| channel_id | snowflake | the id of the channel   |
+| message_id | snowflake | the id of the message   |
+| emoji      | string    | the emoji to react with |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.create({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  emoji: 'name:id'
+});
+```
+
+### [Delete Own Reaction](https://discord.com/developers/docs/resources/channel#delete-own-reaction)
+
+#### Parameters
+| Field      | Type      | Description             |
+|------------------------|-------------------------|
+| channel_id | snowflake | the id of the channel   |
+| message_id | snowflake | the id of the message   |
+| emoji      | string    | the emoji to react with |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.deleteOwn({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  emoji: 'name:id'
+});
+```
+
+### [Delete User Reaction](https://discord.com/developers/docs/resources/channel#delete-user-reaction)
+
+#### Parameters
+| Field      | Type      | Description                             |
+|------------------------|-----------------------------------------|
+| channel_id | snowflake | the id of the channel                   |
+| message_id | snowflake | the id of the message                   |
+| user_id    | snowflake | the id the user the reaction belongs to |
+| emoji      | string    | the emoji to react with                 |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.deleteUser({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  user_id: '0000000000',
+  emoji: 'name:id'
+});
+```
+
+### [Delete All Reactions](https://discord.com/developers/docs/resources/channel#delete-all-reactions)
+
+#### Parameters
+| Field      | Type      | Description             |
+|------------------------|-------------------------|
+| channel_id | snowflake | the id of the channel   |
+| message_id | snowflake | the id of the message   |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.deleteAll({
+  channel_id: '0000000000',
+  message_id: '0000000000'
+});
+```
+
+### [Delete All Reactions for Emoji](https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji)
+
+#### Parameters
+| Field      | Type      | Description             |
+|------------------------|-------------------------|
+| channel_id | snowflake | the id of the channel   |
+| message_id | snowflake | the id of the message   |
+| emoji      | string    | the emoji to delete     |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.deleteAllEmoji({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  emoji: ':name:id'
+});
+```
+
+### [Get Reactions](https://discord.com/developers/docs/resources/channel#get-reactions)
+
+#### Parameters
+| Field      | Type      | Description                                        |
+|------------------------|----------------------------------------------------|
+| channel_id | snowflake | the id of the channel                              |
+| message_id | snowflake | the id of the message                              |
+| emoji      | string    | the emoji to get users for                         |
+| after?     | snowflake | Get users after this user ID                       |
+| limit?     | integer   | Max number of users to return (1-100) (default 25) |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.getUsers({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  emoji: ':name:id',
+  limit: 50
+});
+```
+---
+
+# Users
+**All functions relating to Discord Users**
+
+### Endpoints
+| Method                                                                | Description                                                         |
+|-----------------------------------------------------------------------|---------------------------------------------------------------------|
+| [`retrieve`](#get-user)                                               | Get user object for given user id                                   |
+| [`currentUser`](#get-current-user)                                    | Get user object of requester's account                              |
+| [`myGuilds`](#get-current-user-guilds)                                | Get a list of partial guild objects the current user is a member of |
+| [`currentMember`](#get-current-user-guild-member)                     | Get guild member object for the current user                        |
+| [`updateCurrent`](#modify-current-user)                               | Modify the requester's user account settings                        |
+| [`connections`](#get-user-connections)                                | Get a list of the user's connections                                |
+| [`appRoleConnection`](#get-user-application-role-connection)          | Get user's application role connection object                       |
+| [`updateAppRoleConnection`](#update-user-application-role-connection) | Updates the user's application role connection                      |
+| [`createDM`](#create-dm)                                              | Create a new DM channel with a user                                 |
+| [`createGroupDM`](#create-group-dm)                                   | Create a new group DM channel with multiple users                   |
+| [`leaveGuild`](#leave-guild)                                          | Leave a guild                                                       |
+
+### [Get User](https://discord.com/developers/docs/resources/user#get-user)
+
+#### Parameters
+| Field   | Type      | Description        |
+|---------|-----------|--------------------|
+| user_id | snowflake | the id of the user |
+
+#### Example
+```javascript
+await api.discord.users.retrieve({
+  user_id: '0000000000'
+});
+```
+
+### [Get Current User](https://discord.com/developers/docs/resources/user#get-current-user)
+
+#### Example
+```javascript
+await api.discord.users.currentUser();
+```
+
+### [Get Current User Guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds)
+
+#### Parameters
+| Field       | Type      | Description                                                |
+|-------------|-----------|------------------------------------------------------------|
+| before      | snowflake | get guilds before this guild ID                            |
+| after       | snowflake | get guilds after this guild ID                             |
+| limit       | integer   | max number of guilds to return (1-200) (default 200)       |
+| with_counts | boolean   | include approximate member and presence counts in response |
+
+#### Example
+```javascript
+await api.discord.users.myGuilds();
+```
+
+### [Get Current User](https://discord.com/developers/docs/resources/user#get-current-user)
+
+#### Example
+```javascript
+await api.discord.users.currentUser();
+```
+
+### [Get Current User Guild Member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member)
+
+#### Parameters
+| Field    | Type      | Description                                |
+|----------|-----------|--------------------------------------------|
+| guild_id | snowflake | id of the guild to get member object from  |
+
+#### Example
+```javascript
+await api.discord.users.currentMember({
+  guild_id: '0000000000',
+});
+```
+
+### [Modify Current User](https://discord.com/developers/docs/resources/user#modify-current-user)
+> **All parameters to this endpoint are optional.**  
+
+| Field    | Type       | Description                           |
+|----------|------------|---------------------------------------|
+| username | string     | user's username                       |
+| avatar   | url/buffer | if passed, modifies the user's avatar |
+
+#### Example
+```javascript
+await api.discord.users.updateCurrent({
+  username: 'new username',
+  avatar: 'https://imageURL.png'
+});
+```
+
+### [Get User Connections](https://discord.com/developers/docs/resources/user#get-user-connections)
+
+#### Example
+```javascript
+await api.discord.users.connections();
+```
+
+### [Get User Application Role Connection](https://discord.com/developers/docs/resources/user#get-user-application-role-connection)
+
+#### Parameters
+| Field           | Type      | Description          |
+|-----------------|-----------|----------------------|
+| application_id? | snowflake | bot's application id |
+
+#### Example
+```javascript
+await api.discord.users.appRoleConnection();
+```
+
+### [Update User Application Role Connection](https://discord.com/developers/docs/resources/user#update-user-application-role-connection)
+> **Requires an OAuth2 access token with `role_connections.write` scope for the application specified in the path.**
+
+#### Parameters
+| Field              | Type   | Description                                                                                                                                                                                                  |
+|--------------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| platform_name?     | string | the vanity name of the platform a bot has connected (max 50 characters)                                                                                                                                      |
+| platform_username? | string | the username on the platform a bot has connected (max 100 characters)                                                                                                                                        |
+| metadata?          | object | object mapping [application role connection metadata](#application-role-connection-metadata-object) keys to their `string`-ified value (max 100 characters) for the user on the platform a bot has connected |
+
+#### Example
+```javascript
+await api.discord.users.updateAppRoleConnection({
+  platform_name: 'OnSocket',
+  platform_username: 'goodsie'
+});
+```
+
+### [Create DM](https://discord.com/developers/docs/resources/user#create-dm)
+
+#### Parameters
+| Field              | Type                                                      | Description                                                                                      |
+|--------------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| recipient_id       | snowflake                                                 | the recipient to open a DM channel with                                                          |
+| content?\*         | string                                                    | Message contents (up to 2000 characters)                                                         |
+| tts?               | boolean                                                   | `true` if this is a TTS message                                                                  |
+| embeds?\*          | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)                                                   |
+| allowed_mentions?  | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                                                                 |
+| message_reference? | [message reference](#message-reference-object)            | Include to make your message a reply                                                             |
+| components?\*      | array of [message component](#component-object) objects   | Components to include with the message                                                           |
+| sticker_ids?\*     | array of snowflakes                                       | IDs of up to 3 [stickers](#sticker-object) in the server to send in the message                  |
+| attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
+| flags?             | integer                                                   | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
+
+**\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Example
+```javascript
+await api.discord.users.createDM({
+  recipient_id: '0000000000',
+  content: '<super cool message here>'
+});
+```
+
+### [Create Group DM](https://discord.com/developers/docs/resources/user#create-group-dm)
+
+#### Parameters
+| Field              | Type                                                      | Description                                                                                      |
+|--------------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| access_tokens      | array of strings                                          | access tokens of users that have granted your app the `gdm.join` scope                           |
+| nicks              | dict                                                      | a dictionary of user ids to their respective nicknames                                           |
+| content?\*         | string                                                    | Message contents (up to 2000 characters)                                                         |
+| tts?               | boolean                                                   | `true` if this is a TTS message                                                                  |
+| embeds?\*          | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)                                                   |
+| allowed_mentions?  | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                                                                 |
+| message_reference? | [message reference](#message-reference-object)            | Include to make your message a reply                                                             |
+| components?\*      | array of [message component](#component-object) objects   | Components to include with the message                                                           |
+| sticker_ids?\*     | array of snowflakes                                       | IDs of up to 3 [stickers](#sticker-object) in the server to send in the message                  |
+| attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
+| flags?             | integer                                                   | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
+
+**\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Example
+```javascript
+await api.discord.users.createGroupDM({
+  access_tokens: [
+    '0000000000',
+    '0000000000'  
+  ],
+  nicks: {
+    'user_id': 'nickname'
+  },
+  content: 'boo',
+});
+```
+
+### [Leave Guild](https://discord.com/developers/docs/resources/user#leave-guild)
+
+#### Parameters
+| Field    | Type      | Description                  |
+|----------|-----------|------------------------------|
+| guild_id | snowflake | the id of the guild to leave |
+
+#### Example
+```javascript
+await api.discord.users.leaveGuild({
+  guild_id: '0000000000'
+});
+```
+
+---
+
+# Interactions
+
+#### Namespaces
+| Namespace                          |
+| [Callback](#interactions-callback) |
+| [Followup](#interactions-followup) |
+
+## Interactions Callback
+
+#### Endpoints
+| Method                                                     | Description                                                   |
+|------------------------------------------------------------|---------------------------------------------------------------|
+| [`reply`](#create-interaction-response)                    | Create a response to an Interaction                           |
+| [`defer`](#defer-interaction-response)                     | Send "thinking" state and edit response later                 |
+| [`get_original`](#get-original-interaction-response)       | Get the initial Interaction response                          |
+| [`update_original`](#edit-original-interaction-response)   | Edit the initial Interaction response                         |
+| [`delete_original`](#delete-original-interaction-response) | Delete the initial Interaction response                       |
+| [`component_defer`](#component-defer)\*                    | Acknowledge an interaction and edit response later            |
+| [`component_update`](#component-update)\*                  | Edit the message the component was attached to                |
+| [`autocomplete_reply`](#autocomplete-reply)                | Respond to an autocomplete interaction with suggested choices |
+| [`modal_reply`](#modal-reply)\*\*                          | Respond to an interaction with a popup modal                  |
+| [`upgrade`](#premium-required)\*\*\*                       | Respond to an interaction with an upgrade button              |
+
+**\* Only valid for component-based interactions.**  
+**\*\* Not available for `MODAL_SUBMIT` and `PING` interactions.**  
+**\*\*\* Only available for apps with monetization enabled.**
+
+
+### [Create Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response)
+
+#### Parameters
+| Field             | Type                                                      | Description                                            |
+|-------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| params            | object                                                    | The interaction payload                                |
+| ephemeral?        | boolean                                                   | Whether the message should be visible to only the user |
+| content?\*        | string                                                    | Message contents (up to 2000 characters)               |
+| tts?              | boolean                                                   | `true` if this is a TTS message                        |
+| embeds?\*         | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)         |
+| allowed_mentions? | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                       |
+| components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
+| attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
+
+**\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Example
+```javascript
+await api.discord.interactions.callback.reply(params, {
+  ephemeral: true,
+  content: 'This will respond to an interaction immediately'
+});
+```
+
+### Defer Interaction Response
+
+#### Parameters
+| Field      | Type    | Description                                            |
+|------------|---------|--------------------------------------------------------|
+| params     | object  | The interaction payload                                |
+| ephemeral? | boolean | Whether the message should be visible to only the user |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.defer(params, {
+  ephemeral: true
+});
+```
+
+#### Example
+```javascript
+await api.discord.interactions.callback.defer(params)
+```
+
+### [Get Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response)
+
+#### Parameters
+| Field  | Type   | Description             |
+|--------|--------|-------------------------|
+| params | object | The interaction payload |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.get_original(params);
+```
+
+### [Edit Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response)
+
+#### Parameters
+| Field             | Type                                                      | Description                                            |
+|-------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| params            | object                                                    | The interaction payload                                |
+| content?\*        | string                                                    | Message contents (up to 2000 characters)               |
+| embeds?\*         | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)         |
+| allowed_mentions? | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                       |
+| components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
+| attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.update_original(params, {
+  content: 'This will update the original interaction response'
+});
+```
+
+### [Delete Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response)
+
+#### Parameters
+| Field  | Type   | Description             |
+|--------|--------|-------------------------|
+| params | object | The interaction payload |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.delete_original(params);
+```
+
+### Component Defer
+
+#### Parameters
+| Field      | Type    | Description             |
+|------------|---------|-------------------------|
+| params     | object  | The interaction payload |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.component_defer(params);
+```
+
+### Component Update
+
+#### Parameters
+| Field             | Type                                                      | Description                                            |
+|-------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| params            | object                                                    | The interaction payload                                |
+| content?\*        | string                                                    | Message contents (up to 2000 characters)               |
+| embeds?\*         | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)         |
+| allowed_mentions? | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                       |
+| components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
+| attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.component_update(params, {
+  content: 'new stuff!'
+});
+```
+
+### Autocomplete Reply
+
+#### Parameters
+| Field   | Type                                                   | Description                              |
+|---------|--------------------------------------------------------|------------------------------------------|
+| params  | object                                                 | The interaction payload                  |
+| choices | array of [choices](#application-command-option-choice) | Autocomplete Choices (max of 25 choices) |
+
+#### Example
+```javascript
+await api.discord.interactions.callback.autocomplete_reply(params, {
+  choices: [
+    {
+      name: 'this might be wrong',
+      value: 'let me know'
+    }
+  ]
+});
+```
+
+### Modal Reply
+
+#### Parameters
+| Field      | Type                | Description                                                      |
+|------------|---------------------|------------------------------------------------------------------|
+| custom_id  | string              | a developer-defined identifier for the modal, max 100 characters |
+| title      | string              | the title of the popup modal, max 45 characters                  |
+| components | array of components | between 1 and 5 (inclusive) components that make up the modal    |
+
+#### Example
+```javascript
+await callback.modal_reply(params, {
+  custom_id: 'modal_id',
+  title: 'Title goes here',
+  components: [
+    {
+      type: 4,
+      custom_id: 'id_1',
+      label: 'this is a label',
+      style: 1, // short
+      placeholder: 'this is a placeholder',
+      required: true
+    },
+    {
+      type: 4,
+      custom_id: 'id_2',
+      label: 'This is another label',
+      style: 1, // paragraph
+      value: 'this is a pre-filled value',
+      required: false
+    }
+  ]
+});
+```
+
+## Interactions Followup
+
+#### Endpoints
+| Method                               | Description                                   |
+|--------------------------------------|-----------------------------------------------|
+| [`retrieve`](#get-followup-message)  | Get a followupmessage for an interaction      |
+| [`create`](#create-followup-message) | Create a followup message for an interaction  |
+| [`update`](#edit-followup-message)   | Edit a followup message for an interaction    |
+| [`destroy`](#delete-followup-message) | Delete a followup message for an interaction |
+
+### [Get Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message)
+
+#### Parameters
+| Field      | Type      | Description                               |
+|------------|-----------|-------------------------------------------|
+| params     | object    | The interaction payload                   |
+| message_id | snowflake | The message id of the message to retrieve |
+
+#### Example
+```javascript
+await api.discord.interactions.followup.retrieve(params, {
+  message_id: '0000000000'  
+});
+```
+
+### [Create Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message)
+
+#### Parameters
+| Field             | Type                                                      | Description                                            |
+|-------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| params            | object                                                    | The interaction payload                                |
+| ephemeral?        | boolean                                                   | Whether the message should be visible to only the user |
+| content?\*        | string                                                    | Message contents (up to 2000 characters)               |
+| embeds?\*         | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)         |
+| allowed_mentions? | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                       |
+| components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
+| attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
+
+**\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Example
+```javascript
+await api.discord.interactions.followup.create(params, {
+  ephemeral: true,
+  content: 'followup message',
+  embeds: [{
+     title: 'hello',
+     description: 'this is a description'
+  }]
+});
+```
+
+### [Edit Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message)
+
+#### Parameters
+| Field             | Type                                                      | Description                                            |
+|-------------------|-----------------------------------------------------------|--------------------------------------------------------|
+| params            | object                                                    | The interaction payload                                |
+| message_id        | snowflake                                                 | The id of the message to update                        |
+| content?\*        | string                                                    | Message contents (up to 2000 characters)               |
+| embeds?\*         | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)         |
+| allowed_mentions? | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                       |
+| components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
+| attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
+
+**\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Example
+```javascript
+await api.discord.interactions.followup.update(params, {
+  message_id: '0000000000',
+  content: 'followup message',
+  embeds: [{
+     title: 'hello',
+     description: 'this is a description'
+  }]
+});
+```
+
+### [Delete Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message)
+
+#### Parameters
+| Field      | Type      | Description                               |
+|------------|-----------|-------------------------------------------|
+| params     | object    | The interaction payload                   |
+| message_id | snowflake | The message id of the message to retrieve |
+
+#### Example
+```javascript
+await api.discord.interactions.followup.destroy(params, {
+  message_id: '0000000000'  
+});
+```
+
+---
+
+# Webhooks
+**All functions relating to Discord Webhooks**
+
+### Methods
+
+| Method                                           | Description                                                 |
+|--------------------------------------------------|-------------------------------------------------------------|
+| [`retrieve`](#get-webhook)                       | Get information about a webhook                             |
+| [`retrieveWithToken`](#get-webhook-with-token)   | Get information about a webhook using its token             |
+| [`retrieveChannel`](#get-channel-webhooks)       | Get all channel webhooks                                    |
+| [`retrieveGuild`](#get-guild-webhooks)           | Get all guild webhooks                                      |
+| [`retrieveMessage`](#get-webhook-message)        | Get a previously-sent webhook message from the same token   |
+| [`destroyMessage`](#delete-webhook-message)      | Deletes a message that was created by the webhook           |
+| [`create`](#create-webhook)                      | Creates a new webhook                                       |
+| [`update`](#modify-webhook)                      | Updates an existing webhook                                 |
+| [`updateWithToken`](#modify-webhook-with-token)  | Follow an announcement channel                              |
+| [`destroy`](#delete-webhook)                     | Delete a webhook permanently                                |
+| [`destroyWithToken`](#delete-webhook-with-token) | Delete a webhook permanently using its token                |
+| [`execute`](#execute-webhook)                    | Executes a webhook                                          |
+| [`updateMessage`](#edit-webhook-message)         | Edits a previously-sent webhook message from the same token |
+
+### [Get Webhook](https://discord.com/developers/docs/resources/webhook#get-webhook)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| webhook_id | snowflake | the id of the webhook |
+
+#### Example
+```javascript
+await api.discord.webhooks.retrieve({
+  webhook_id: '0000000000'
+});
+```
+
+### [Get Webhook With Token](https://discord.com/developers/docs/resources/webhook#get-webhook-with-token)
+> **This call does not require authentication and returns no user in the webhook object.**
+
+#### Parameters
+| Field         | Type      | Description           |
+|---------------|-----------|-----------------------|
+| webhook_id    | snowflake | the id of the webhook |
+| webhook_token | string    | the webhook's token   |
+
+#### Example
+```javascript
+await api.discord.webhooks.retrieveWithToken({
+  webhook_id: '0000000000',
+  webhook_token: 'abcdef123456'
+});
+```
+
+### [Get Channel Webhooks](https://discord.com/developers/docs/resources/webhook#get-channel-webhooks)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| channel_id | snowflake | the id of the channel |
+
+#### Example
+```javascript
+await api.discord.webhooks.retrieveChannel({
+  webhook_id: '0000000000'
+});
+```
+
+### [Get Guild Webhooks](https://discord.com/developers/docs/resources/webhook#get-guild-webhooks)
+
+#### Parameters
+| Field    | Type      | Description         |
+|----------|-----------|---------------------|
+| guild_id | snowflake | the id of the guild |
+
+#### Example
+```javascript
+await api.discord.webhooks.retrieveGuild({
+  guild_id: '0000000000'
+});
+```
+
+### [Get Webhook Message](https://discord.com/developers/docs/resources/webhook#get-webhook-message)
+
+#### Parameters
+| Field         | Type      | Description                        |
+|---------------|-----------|------------------------------------|
+| webhook_id    | snowflake | the id of the webhook              |
+| webhook_token | snowflake | the webhook's token                |
+| message_id    | snowflake | the id of the message              |
+| thread_id     | snowflake | id of the thread the message is in |
+
+#### Example
+```javascript
+await api.discord.webhooks.retrieveMessage({
+  webhook_id: '0000000000',
+  webhook_token: 'abcdef123456',
+  message_id: '0000000000'
+});
+```
+
+### [Edit Webhook Message](https://discord.com/developers/docs/resources/webhook#edit-webhook-message)
+
+#### Parameters
+| Field              | Type                                                      | Description                                      |
+|--------------------|-----------------------------------------------------------|--------------------------------------------------|
+| webhook_id         | snowflake                                                 | the id of the webhook                            |
+| webhook_token      | snowflake                                                 | the webhook's token                              |
+| message_id         | snowflake                                                 | the id of the message                            |
+| thread_id          | snowflake                                                 | id of the thread the message is in               |
+| content?           | string                                                    | Message contents (up to 2000 characters)         |
+| embeds?            | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)   |
+| allowed_mentions?  | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                 |
+| components?        | array of [message component](#component-object) objects   | Components to include with the message           |
+| attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description |
+
+#### Example
+```javascript
+await api.discord.webhooks.updateMessage({
+  webhook_id: '0000000000',
+  webhook_token: 'abcdef123456',
+  message_id: '0000000000',
+  content: 'hello'
+});
+```
+
+### [Delete Webhook Message](https://discord.com/developers/docs/resources/webhook#delete-webhook-message)
+
+#### Parameters
+| Field         | Type      | Description                        |
+|---------------|-----------|------------------------------------|
+| webhook_id    | snowflake | the id of the webhook              |
+| webhook_token | snowflake | the webhook's token                |
+| message_id    | snowflake | the id of the message              |
+| thread_id     | snowflake | id of the thread the message is in |
+
+#### Example
+```javascript
+await api.discord.webhooks.destroyMessage({
+  webhook_id: '0000000000',
+  webhook_token: 'abcdef123456',
+  message_id: '0000000000'
+});
+```
+
+### [Create Webhook](https://discord.com/developers/docs/resources/webhook#create-webhook)
+
+#### Parameters
+| Field      | Type        | Description                                         |
+|------------|-------------|-----------------------------------------------------|
+| channel_id? | snowflake   | the channel id of the channel to create webhook for |
+| name?       | string      | name of the webhook (1-80 characters)               |
+| avatar?     | ?url/buffer | image for the default webhook avatar                |
+
+#### Example
+```javascript
+await api.discord.webhooks.create({
+  channel_id: '0000000000',
+  name: 'myNewWebhook'
+});
+```
+
+### [Modify Webhook](https://discord.com/developers/docs/resources/webhook#modify-webhook)
+
+#### Parameters
+| Field      | Type        | Description                                         |
+|------------|-------------|-----------------------------------------------------|
+| webhook_id | snowflake   | the webhook id of the webhook to edit               |
+| channel_id | snowflake   | the channel id of the channel to create webhook for |
+| name       | string      | name of the webhook (1-80 characters)               |
+| avatar?    | ?url/buffer | image for the default webhook avatar                |
+
+#### Example
+```javascript
+await api.discord.webhooks.update({
+  webhook_id: '0000000000',
+  channel_id: '0000000000',
+  name: 'myNewNewWebhook'
+});
+```
+
+### [Modify Webhook With Token](https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token)
+
+#### Parameters
+| Field         | Type        | Description                                         |
+|---------------|-------------|-----------------------------------------------------|
+| webhook_id    | snowflake   | the webhook id of the webhook to edit               |
+| webhook_token | string      | the token of the webhook to edit                    |
+| name?         | string      | name of the webhook (1-80 characters)               |
+| avatar?       | ?url/buffer | image for the default webhook avatar                |
+
+#### Example
+```javascript
+await api.discord.webhooks.updateWithToken({
+  webhook_id: '0000000000',
+  webhook_token: 'abcd1234',
+  name: 'myNewNewWebhook'
+});
+```
+
+### [Delete Webhook](https://discord.com/developers/docs/resources/webhook#delete-webhook)
+
+#### Parameters
+| Field      | Type      | Description           |
+|------------|-----------|-----------------------|
+| webhook_id | snowflake | the id of the webhook |
+
+#### Example
+```javascript
+await api.discord.webhooks.destroy({
+  webhook_id: '0000000000'
+});
+```
+
+### [Delete Webhook With Token](https://discord.com/developers/docs/resources/webhook#get-webhook-with-token)
+
+#### Parameters
+| Field         | Type      | Description           |
+|---------------|-----------|-----------------------|
+| webhook_id    | snowflake | the id of the webhook |
+| webhook_token | string    | the webhook's token   |
+
+#### Example
+```javascript
+await api.discord.webhooks.destroyWithToken({
+  webhook_id: '0000000000',
+  webhook_token: 'abcdef123456'
+});
+```
+
+### [Execute Webhook](https://discord.com/developers/docs/resources/webhook#execute-webhook)
+
+#### Parameters
+| Field            | Type                                                      | Description                                                                                           |
+|------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| webhook_id       | snowflake                                                 | the id of the webhook                                                                                 |
+| webhook_token    | snowflake                                                 | the webhook's token                                                                                   |
+| username         | string                                                    | override the default username of the webhook                                                          |
+| avatar_url       | string                                                    | override the default avatar of the webhook                                                            |
+| thread_id        | snowflake                                                 | id of the thread the message is in                                                                    |
+| content          | string                                                    | Message contents (up to 2000 characters)                                                              |
+| embeds           | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)                                                        |
+| allowed_mentions | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                                                                      |
+| components       | array of [message component](#component-object) objects   | Components to include with the message                                                                |
+| attachments      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description                                                      |
+| thread_name      | string                                                    | name of thread to create (requires the webhook channel to be a forum or media channel)                |
+| applied_tags     | array of snowflakes                                       | array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) |
+| wait             | boolean                                                   | Waits for server confirmation of message send before response, and returns the created message body   |
+
+#### Example
+```javascript
+await api.discord.webhooks.execute({
+  webhook_id: '0000000000',
+  webhook_token: 'abcdef123456',
+  content: 'message contents here',
+  username: 'webhook usernrame',
+  avatar_url: 'https://imgurl.png',
+  embeds: [{
+    title: 'example',
+    description: 'example'
+  }]
+});
+```
+---
+
+# Invites
+**All functions relating to Discord Invites**
+
+| Method                     | Description                             |
+|----------------------------|-----------------------------------------|
+| [`retrieve`](#get-invite)  | Get information about a specific invite |
+| [`revoke`](#delete-invite) | Revoke an invite                        |
+
+### [Get Invite](https://discord.com/developers/docs/resources/invite#get-invite)
+
+#### Parameters
+| Field                     | Type      | Description                                                 |
+|---------------------------|-----------|-------------------------------------------------------------|
+| invite_code               | string    | the invite's code                                           |
+| with_counts?              | boolean   | whether the invite should contain approximate member counts |
+| with_expiration?          | boolean   | whether the invite should contain the expiration date       |
+| guild_scheduled_event_id? | snowflake | the guild scheduled event to include with the invite        |
+
+#### Example
+```javascript
+await api.discord.invites.retrieve({
+  invite_code: '0vCdhLbwjZZTWZLD',
+  with_counts: true,
+  with_expiration: true
+});
+```
+
+### [Delete Invite](https://discord.com/developers/docs/resources/invite#delete-invite)
+
+#### Parameters
+| Field       | Type   | Description       |
+| invite_code | string | the invite's code |
+
+#### Example
+```javascript
+await api.discord.invites.revoke({
+  invite_code: '0vCdhLbwjZZTWZLD'
+});
+```
+
+---
+
 # Applications
 **All Discord API endpoints relating to applications, commands, entitlements and SKUs**
 
-| Method                                                                                | Description                                                                |
-|---------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| [`getMe`](#get-current-application)                                                   | Get inforation on the current application                                  |
-| [`updateMe`](#edit-current-application)                                               | Edit properties of the app associated with the requesting bot user         |
-| [`appRoleConnectionMeta`](#get-application-role-connection-metadata-records)          | Get the applications role connection metadata information                  |
-| [`updateAppRoleConnectionMeta`](#update-application-role-connection-metadata-records) | Updates the application role connection metadata for the given application |
+| Method                                            | Description                                                                |
+|---------------------------------------------------|----------------------------------------------------------------------------|
+| [`getMe`](#get-current-application)               | Get inforation on the current application                                  |
+| [`updateMe`](#edit-current-application)           | Edit properties of the app associated with the requesting bot user         |
+| [`appRoleConnectionMeta`](#update-existing-guild) | Get the applications role connection metadata information                  |
+| [`updateAppRoleConnectionMeta`](#delete-guild)    | Updates the application role connection metadata for the given application |
 
 ### [Get Current Application](https://discord.com/developers/docs/resources/application#get-current-application)
 
@@ -1837,7 +3313,7 @@ await api.discord.guilds.templates.sync({
 |-----------------|-----------|---------------------------|
 | application_id? | snowflake | the id of the application |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.getMe();
 ```
@@ -1845,22 +3321,22 @@ await api.discord.applications.getMe();
 ### [Edit Current Application](https://discord.com/developers/docs/resources/application#edit-current-application)
 
 #### Parameters
-| Field                             | Type                                            | Description                                                 |
-|-----------------------------------|-------------------------------------------------|-------------------------------------------------------------|
-| application_id?                   | snowflake                                       | the id of the application                                   |
-| custom_install_url                | string                                          | Default custom authorization URL for the app, if enabled    |
-| description                       | string                                          | Description of the app                                      |
-| role_connections_verification_url | string                                          | Role connection verification URL for the app                |
+| Field                             | Type                                            | Description                                                          |
+|-----------------------------------|-------------------------------------------------|----------------------------------------------------------------------|
+| application_id?                   | snowflake                                       | the id of the application                                            |
+| custom_install_url                | string                                          | Default custom authorization URL for the app, if enabled             |
+| description                       | string                                          | Description of the app                                               |
+| role_connections_verification_url | string                                          | Role connection verification URL for the app                         |
 | install_params                    | [install params](#install-params-object) object | Settings for the app's default in-app authorization link, if enabled |
-| flags \*                          | number                                          | App's public [flags](#application-flags)                    |
-| icon                              | url/buffer                                      | Icon for the app                                            |
-| cover_image                       | url/buffer                                      | Default rich presence invite cover image for the app        |
-| interactions_endpoint_url \*\*    | string                                          | Interactions endpoint URL for the app   |
+| flags \*                          | number                                          | App's public [flags](#application-flags)                             |
+| icon                              | url/buffer                                      | Icon for the app                                                     |
+| cover_image                       | url/buffer                                      | Default rich presence invite cover image for the app                 |
+| interactions_endpoint_url \*\*    | string                                          | Interactions endpoint URL for the app                                |
 | tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |
 
-\* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
+**\* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.**
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.updateMe({
   description: 'new description',
@@ -1883,7 +3359,7 @@ await api.discord.applications.updateMe({
 |-----------------|-----------|---------------------------|
 | application_id? | snowflake | the id of the application |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.appRoleConnectionMeta();
 ```
@@ -1895,7 +3371,7 @@ await api.discord.applications.appRoleConnectionMeta();
 |-----------------|-----------|---------------------------|
 | application_id? | snowflake | the id of the application |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.updateAppRoleConnectionMeta();
 ```
@@ -1916,7 +3392,7 @@ await api.discord.applications.updateAppRoleConnectionMeta();
 | [`modifyPermissions`](#edit-application-command-permissions)      | Update a guild's application command        |
 
 ### [Get Application Command](https://discord.com/developers/docs/interactions/application-commands#get-global-application-command)
-**This is to be used for both global and guild commands.**
+**This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -1926,7 +3402,7 @@ await api.discord.applications.updateAppRoleConnectionMeta();
 | application_id? | snowflake | the id of the application |
 | guild_id?       | snowflake | the id of the guild       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.retrieve({
   command_id: '0000000000',
@@ -1935,7 +3411,7 @@ await api.discord.applications.commands.retrieve({
 ```
 
 ### [Get Application Commands](https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands)
-**This is to be used for both global and guild commands.**
+**This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -1943,12 +3419,13 @@ await api.discord.applications.commands.retrieve({
 |---------------------|-----------|---------------------------|
 | application_id?     | snowflake | the id of the application |
 | guild_id?           | snowflake | the id of the guild       |
-| with_localizations? | boolean | Whether to include full localization dictionaries (`name_localizations` and `description_localizations`) in the returned objects, instead of the `name_localized` and `description_localized` fields. |
+| with_localizations? | boolean   | Whether to include full localization dictionaries (`name_localizations` and `description_localizations`) in the returned objects, instead of the `name_localized` and `description_localized` fields. |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.getAll();
 ```
+#### Example
 ```javascript
 await api.discord.applications.commands.getAll({
   guild_id: '0000000000'
@@ -1956,7 +3433,7 @@ await api.discord.applications.commands.getAll({
 ```
 
 ### [Get Application Command](https://discord.com/developers/docs/interactions/application-commands#get-global-application-command)
-**This is to be used for both global and guild commands.**
+**This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -1966,7 +3443,7 @@ await api.discord.applications.commands.getAll({
 | application_id? | snowflake | the id of the application |
 | guild_id?       | snowflake | the id of the guild       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.retrieve({
   command_id: '0000000000',
@@ -1975,7 +3452,7 @@ await api.discord.applications.commands.retrieve({
 ```
 
 ### [Create Application Command](https://discord.com/developers/docs/interactions/application-commands#create-global-application-command)
-**This is to be used for both global and guild commands.**
+**This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -1993,7 +3470,7 @@ await api.discord.applications.commands.retrieve({
 | type?                       | one of [application command type](#application-command-types)                | Type of command, defaults `1` if not set |
 | nsfw?                       | boolean                                                                      | Indicates whether the command is age-restricted |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.create({
   name: 'slashcommand',
@@ -2020,7 +3497,7 @@ await api.discord.applications.commands.create({
 ```
 
 ### [Edit Application Command](https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command)
-**This is to be used for both global and guild commands.**
+**This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -2037,7 +3514,7 @@ await api.discord.applications.commands.create({
 | dm_permission?              | ?boolean                                                                     | Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. |
 | nsfw?                       | boolean                                                                      | Indicates whether the command is age-restricted |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.update({
   name: 'slashcommand',
@@ -2064,7 +3541,7 @@ await api.discord.applications.commands.update({
 ```
 
 ### [Delete Application Command](https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command)
-**This is to be used for both global and guild commands.**
+**This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -2074,7 +3551,7 @@ await api.discord.applications.commands.update({
 | application_id? | snowflake | the id of the application |
 | guild_id?       | snowflake | the id of the guild       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.destroy({
   command_id: '0000000000',
@@ -2083,8 +3560,8 @@ await api.discord.applications.commands.destroy({
 ```
 
 ### [Bulk Overwrite Application Command](https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-command)
-**This is to be used for both global and guild commands.**
-**Provide a guild_id field if using for a guild command.**
+**This is to be used for both global and guild commands.**  
+**Provide a guild_id field if using for a guild command.**  
 **Takes a list of application commands, overwriting the existing global command list for this application.**
 
 #### Parameters
@@ -2094,7 +3571,7 @@ await api.discord.applications.commands.destroy({
 | guild_id?       | snowflake                                                    | the id of the guild                              |
 | commands        | array of [application commands](#application-command-object) | Commands to overwrite the existing commands with |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.bulkOverwrite({
   command_id: '0000000000',
@@ -2113,7 +3590,7 @@ await api.discord.applications.commands.bulkOverwrite({
 | application_id? | snowflake | the id of the application |
 | guild_id        | snowflake | the id of the guild       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.retrievePermissions({
   command_id: '0000000000',
@@ -2130,7 +3607,7 @@ await api.discord.applications.commands.retrievePermissions({
 | application_id? | snowflake | the id of the application |
 | guild_id        | snowflake | the id of the guild       |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.getAllPermissions({
   guild_id: '0000000000'
@@ -2147,7 +3624,7 @@ await api.discord.applications.commands.getAllPermissions({
 | guild_id        | snowflake                                                                              | the id of the guild       |
 | permissions     | array of [application command permissions](#application-command-permissions-structure) | Permissions for the command in the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.commands.modifyPermissions({
   guild_id: '0000000000',
@@ -2182,7 +3659,7 @@ await api.discord.applications.commands.modifyPermissions({
 | guild_id?       | snowflake                         | Guild ID to look up entitlements for                 |
 | exclude_ended?  | boolean                           | Whether or not ended entitlements should be omitted  |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.entitlements.retrieve({
   user_id: '0000000000',
@@ -2200,13 +3677,13 @@ await api.discord.applications.entitlements.retrieve({
 
 #### Parameters
 | Field           | Type      | Description                                               |
-|-----------------|-----------|-----------------------------------------------------------|
+|-----------------|------------------------------|----------------------------------------|
 | application_id? | snowflake | the id of the application                                 |
 | sku_id          | string    | ID of the SKU to grant the entitlement to                 |
 | owner_id        | string    | ID of the guild or user to grant the entitlement to       |
 | owner_type      | number    | `1` for a guild subscription, `2` for a user subscription |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.entitlements.create({
   sku_id: '0000000000',
@@ -2224,7 +3701,7 @@ await api.discord.applications.entitlements.create({
 |-----------------|-----------|---------------------------|
 | application_id? | snowflake | the id of the application |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.entitlements.delete()
 ```
@@ -2242,7 +3719,7 @@ await api.discord.applications.entitlements.delete()
 |-----------------|-----------|---------------------------|
 | application_id? | snowflake | the id of the application |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.applications.SKUs.getAll();
 ```
@@ -2271,7 +3748,7 @@ await api.discord.applications.SKUs.getAll();
 | after?       | snowflake | Entries with ID greater than a specific audit log entry ID         |
 | limit?       | number    | Maximum number of entries (between 1-100) to return, defaults to 50|
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.auditlog.retrieve({
   guild_id: '0000000000',
@@ -2300,7 +3777,7 @@ await api.discord.auditlog.retrieve({
 | guild_id                | snowflake | the id of the guild        |
 | auto_moderation_rule_id | snowflake | the id of the automod rule |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.automod.retrieveRule({
   auto_moderation_rule_id: '0000000000',
@@ -2315,7 +3792,7 @@ await api.discord.automod.retrieveRule({
 |----------|-----------|---------------------|
 | guild_id | snowflake | the id of the guild |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.automod.getAll({
   guild_id: '0000000000'
@@ -2337,7 +3814,7 @@ await api.discord.automod.getAll({
 | exempt_roles?       | array of snowflakes                                       | the role ids that should not be affected by the rule (Max 20) |
 | exempt_channels?    | array of snowflakes                                       | the channel ids that should not be affected by the rule (Max 50) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.automod.createRule({
   guild_id: '0000000000',
@@ -2368,7 +3845,7 @@ await api.discord.automod.createRule({
 | exempt_roles?       | array of snowflakes                                       | the role ids that should not be affected by the rule (Max 20) |
 | exempt_channels?    | array of snowflakes                                       | the channel ids that should not be affected by the rule (Max 50) |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.automod.updateRule({
   guild_id: '0000000000',
@@ -2395,7 +3872,7 @@ await api.discord.automod.updateRule({
 | guild_id                | snowflake | the id of the guild        |
 | auto_moderation_rule_id | snowflake | the id of the automod rule |
 
-**Example:**
+#### Example
 ```javascript
 await api.discord.automod.destroyRule({
   auto_moderation_rule_id: '0000000000',
@@ -2405,112 +3882,182 @@ await api.discord.automod.destroyRule({
 
 ---
 
+# Stage Instange
+**A _Stage Instance_ holds information about a live stage.**
+
+### Endpoints
+| Method                              | Description                                                 |
+|-------------------------------------|-------------------------------------------------------------|
+| [`retrieve`](#get-stage-instance)   | Gets the stage instance associated with the Stage channel   |
+| [`create`](#create-stage-instance)  | Creates a new Stage instance associated to a Stage channel  |
+| [`update`](#modify-stage-instance)  | Updates fields of an existing Stage instance                |
+| [`destroy`](#delete-stage-instance) | Deletes the Stage instance                                  |
+
+### [Get Stage Instance](https://discord.com/developers/docs/resources/stage-instance#get-stage-instance)
+
+#### Parameters
+| Field      | Type      | Description                                         |
+|------------|-----------|-----------------------------------------------------|
+| channel_id | snowflake | the id of the channel that the stage instance is in |
+
+#### Example
+```javascript
+await api.discord.stageInstance.retrieve({
+  channel_id: '0000000000'
+});
+```
+
+### [Create Stage Instance](https://discord.com/developers/docs/resources/stage-instance#create-stage-instance)
+
+#### Parameters
+| Field                       | Type      | Description                                                                    |
+|-----------------------------|-----------|--------------------------------------------------------------------------------|
+| channel_id                  | snowflake | The id of the Stage channel                                                    |
+| topic                       | string    | The topic of the Stage instance (1-120 characters)                             |
+| privacy_level?              | integer   | The [privacy level](#privacy-level) of the Stage instance (default GUILD_ONLY) |
+| send_start_notification? \* | boolean   | Notify @everyone that a Stage instance has started                             |
+| guild_scheduled_event_id?   | snowflake | The guild scheduled event associated with this Stage instance                  |
+
+**\* The stage moderator must have the `MENTION_EVERYONE` permission for this notification to be sent.**
+
+#### Example
+```javascript
+await api.discord.stageInstance.create({
+  channel_id: '0000000000',
+  topic: 'My super cool stage',
+  send_start_notification: true
+});
+```
+
+### [Modify Stage Instance](https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance)
+
+#### Parameters
+| Field          | Type      | Description                                                                    |
+|----------------|-----------|--------------------------------------------------------------------------------|
+| channel_id     | snowflake | The id of the Stage channel                                                    |
+| topic?         | string    | The topic of the Stage instance (1-120 characters)                             |
+| privacy_level? | integer   | The [privacy level](#privacy-level) of the Stage instance (default GUILD_ONLY) |
+
+#### Example
+```javascript
+await api.discord.stageInstance.update({
+  channel_id: '0000000000',
+  topic: 'My super duper cool stage',
+});
+```
+
+### [Delete Stage Instance](https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance)
+
+#### Parameters
+| Field      | Type      | Description                                         |
+|------------|-----------|-----------------------------------------------------|
+| channel_id | snowflake | the id of the channel that the stage instance is in |
+
+#### Example
+```javascript
+await api.discord.stageInstance.destroy({
+  channel_id: '0000000000'
+});
+```
+
+---
+
 # Objects and Types
 
 #### Default Message Notification Level
-
 | Key           | Value | Description                                                                        |
 |---------------|-------|------------------------------------------------------------------------------------|
-| ALL_MESSAGES  | 0     | members will receive notifications for all messages by default                     |
-| ONLY_MENTIONS | 1     | members will receive notifications only for messages that @mention them by default |
+| All Messages  | 0     | members will receive notifications for all messages by default                     |
+| Only Mentions | 1     | members will receive notifications only for messages that @mention them by default |
 
 #### Explicit Content Filter Level
-
-| Level                 | Integer | Description                                                 |
-|-----------------------|---------|-------------------------------------------------------------|
-| DISABLED              | 0       | media content will not be scanned                           |
-| MEMBERS_WITHOUT_ROLES | 1       | media content sent by members without roles will be scanned |
-| ALL_MEMBERS           | 2       | media content sent by all members will be scanned           |
+| Level                  | Integer | Description                                                 |
+|------------------------|---------|-------------------------------------------------------------|
+| Disabled               | 0       | media content will not be scanned                           |
+| Members Without Roles  | 1       | media content sent by members without roles will be scanned |
+| All Members            | 2       | media content sent by all members will be scanned           |
 
 #### MFA Level
-
 | Level    | Integer | Description                                             |
 |----------|---------|---------------------------------------------------------|
-| NONE     | 0       | guild has no MFA/2FA requirement for moderation actions |
-| ELEVATED | 1       | guild has a 2FA requirement for moderation actions      |
+| None     | 0       | guild has no MFA/2FA requirement for moderation actions |
+| Elevated | 1       | guild has a 2FA requirement for moderation actions      |
 
 #### Verification Level
-
 | Level     | Integer | Description                                               |
 |-----------|---------|-----------------------------------------------------------|
-| NONE      | 0       | unrestricted                                              |
-| LOW       | 1       | must have verified email on account                       |
-| MEDIUM    | 2       | must be registered on Discord for longer than 5 minutes   |
-| HIGH      | 3       | must be a member of the server for longer than 10 minutes |
-| VERY_HIGH | 4       | must have a verified phone number                         |
+| None      | 0       | unrestricted                                              |
+| Low       | 1       | must have verified email on account                       |
+| Medium    | 2       | must be registered on Discord for longer than 5 minutes   |
+| High      | 3       | must be a member of the server for longer than 10 minutes |
+| Very High | 4       | must have a verified phone number                         |
 
 #### Guild NSFW Level
-
 | Level          | Value |
 |----------------|-------|
-| DEFAULT        | 0     |
-| EXPLICIT       | 1     |
-| SAFE           | 2     |
-| AGE_RESTRICTED | 3     |
+| Default        | 0     |
+| Explicit       | 1     |
+| Safe           | 2     |
+| Age Restricted | 3     |
 
 #### Premium Tier
-
 | Level  | Integer | Description                                   |
 |--------|---------|-----------------------------------------------|
-| NONE   | 0       | guild has not unlocked any Server Boost perks |
-| TIER_1 | 1       | guild has unlocked Server Boost level 1 perks |
-| TIER_2 | 2       | guild has unlocked Server Boost level 2 perks |
-| TIER_3 | 3       | guild has unlocked Server Boost level 3 perks |
+| None   | 0       | guild has not unlocked any Server Boost perks |
+| Tier 1 | 1       | guild has unlocked Server Boost level 1 perks |
+| Tier 2 | 2       | guild has unlocked Server Boost level 2 perks |
+| Tier 3 | 3       | guild has unlocked Server Boost level 3 perks |
 
 #### System Channel Flags
-
-| Flag                                                     | Value  | Description                                                   |
-|----------------------------------------------------------|--------|---------------------------------------------------------------|
-| SUPPRESS_JOIN_NOTIFICATIONS                              | 1 << 0 | Suppress member join notifications                            |
-| SUPPRESS_PREMIUM_SUBSCRIPTIONS                           | 1 << 1 | Suppress server boost notifications                           |
-| SUPPRESS_GUILD_REMINDER_NOTIFICATIONS                    | 1 << 2 | Suppress server setup tips                                    |
-| SUPPRESS_JOIN_NOTIFICATION_REPLIES                       | 1 << 3 | Hide member join sticker reply buttons                        |
-| SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS        | 1 << 4 | Suppress role subscription purchase and renewal notifications |
-| SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES | 1 << 5 | Hide role subscription sticker reply buttons                  |
+| Flag                                                      | Value  | Description                                                   |
+|-----------------------------------------------------------|--------|---------------------------------------------------------------|
+| Suppress Join Notifications                               | 1 << 0 | Suppress member join notifications                            |
+| Suppress Premium Subscriptions                            | 1 << 1 | Suppress server boost notifications                           |
+| Suppress Guild Reminder Notifications                     | 1 << 2 | Suppress server setup tips                                    |
+| Suppress Join Notification Replies                        | 1 << 3 | Hide member join sticker reply buttons                        |
+| Suppress Role Subscription Purchase Notifications         | 1 << 4 | Suppress role subscription purchase and renewal notifications |
+| Suppress Role Subscription Purchase Notification Replies  | 1 << 5 | Hide role subscription sticker reply buttons                  |
 
 #### Guild Features
-
-| Feature                                   | Description                                                                                          |
-|-------------------------------------------|------------------------------------------------------------------------------------------------------|
-| ANIMATED_BANNER                           | guild has access to set an animated guild banner image                                               |
-| ANIMATED_ICON                             | guild has access to set an animated guild icon                                                       |
-| APPLICATION_COMMAND_PERMISSIONS_V2        | guild is using the old permissions configuration behavior                                            |
-| AUTO_MODERATION                           | guild has set up auto moderation rules                                                               |
-| BANNER                                    | guild has access to set a guild banner image                                                         |
-| COMMUNITY                                 | guild can enable welcome screen, screening, stage channels, discovery, and receive community updates |
-| CREATOR_MONETIZABLE_PROVISIONAL           | guild has enabled monetization                                                                       |
-| CREATOR_STORE_PAGE                        | guild has enabled the role subscription promo page                                                   |
-| DEVELOPER_SUPPORT_SERVER                  | guild has been set as a support server on the App Directory                                          |
-| DISCOVERABLE                              | guild is able to be discovered in the directory                                                      |
-| FEATURABLE                                | guild is able to be featured in the directory                                                        |
-| INVITES_DISABLED                          | guild has paused invites, preventing new users from joining                                          |
-| INVITE_SPLASH                             | guild has access to set an invite splash background                                                  |
-| MEMBER_VERIFICATION_GATE_ENABLED          | guild has enabled [Membership Screening](#membership-screening-object)                               |
-| MORE_STICKERS                             | guild has increased custom sticker slots                                                             |
-| NEWS                                      | guild has access to create announcement channels                                                     |
-| PARTNERED                                 | guild is partnered                                                                                   |
-| PREVIEW_ENABLED                           | guild can be previewed before joining via Membership Screening or the directory                      |
-| RAID_ALERTS_DISABLED                      | guild has disabled alerts for join raids in the configured safety alerts channel                     |
-| ROLE_ICONS                                | guild is able to set role icons                                                                      |
-| ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE | guild has role subscriptions that can be purchased                                                   |
-| ROLE_SUBSCRIPTIONS_ENABLED                | guild has enabled role subscriptions                                                                 |
-| TICKETED_EVENTS_ENABLED                   | guild has enabled ticketed events                                                                    |
-| VANITY_URL                                | guild has access to set a vanity URL                                                                 |
-| VERIFIED                                  | guild is verified                                                                                    |
-| VIP_REGIONS                               | guild has access to set 384kbps bitrate in voice (previously VIP voice servers)                      |
-| WELCOME_SCREEN_ENABLED                    | guild has enabled the welcome screen                                                                 |
+| Feature                              -     | Description                                                                                          |
+|--------------------------------------------|------------------------------------------------------------------------------------------------------|
+| Animated Banner                            | guild has access to set an animated guild banner image                                               |
+| Animated Icon                              | guild has access to set an animated guild icon                                                       |
+| Application Command Permissions V2         | guild is using the old permissions configuration behavior                                            |
+| Auto Moderation                            | guild has set up auto moderation rules                                                               |
+| Banner                                     | guild has access to set a guild banner image                                                         |
+| Community                                  | guild can enable welcome screen, screening, stage channels, discovery, and receive community updates |
+| Creator Monetizable Provisional            | guild has enabled monetization                                                                       |
+| Creator Store Page                         | guild has enabled the role subscription promo page                                                   |
+| Developer Support Server                   | guild has been set as a support server on the App Directory                                          |
+| Discoverable                               | guild is able to be discovered in the directory                                                      |
+| Featurable                                 | guild is able to be featured in the directory                                                        |
+| Invites Disabled                           | guild has paused invites, preventing new users from joining                                          |
+| Invite Splash                              | guild has access to set an invite splash background                                                  |
+| Member Verification Gate Enabled           | guild has enabled [Membership Screening](#membership-screening-object)                               |
+| More Stickers                              | guild has increased custom sticker slots                                                             |
+| News                                       | guild has access to create announcement channels                                                     |
+| Partnered                                  | guild is partnered                                                                                   |
+| Preview Enabled                            | guild can be previewed before joining via Membership Screening or the directory                      |
+| Raid Alerts Disabled                       | guild has disabled alerts for join raids in the configured safety alerts channel                     |
+| Role Icons                                 | guild is able to set role icons                                                                      |
+| Role Subscriptions Available For Purchase  | guild has role subscriptions that can be purchased                                                   |
+| Role Subscriptions Enabled                 | guild has enabled role subscriptions                                                                 |
+| Ticketed Events Enabled                    | guild has enabled ticketed events                                                                    |
+| Vanity Url                                 | guild has access to set a vanity URL                                                                 |
+| Verified                                   | guild is verified                                                                                    |
+| Vip Regions                                | guild has access to set 384kbps bitrate in voice (previously VIP voice servers)                      |
+| Welcome Screen Enabled                     | guild has enabled the welcome screen                                                                 |
 
 #### Mutable Guild Features
-
-| Features             | Required Permissions | Effects                                                   |
-|----------------------|----------------------|-----------------------------------------------------------|
-| COMMUNITY            | Administrator        | Enables Community Features in the guild                   |
-| DISCOVERABLE         | Administrator*       | Enables discovery in the guild, making it publicly listed |
-| INVITES_DISABLED     | Manage Guild         | Pauses all invites/access to the server                   |
-| RAID_ALERTS_DISABLED | Manage Guild         | Disables alerts for join raids                            |
+| Features              | Required Permissions | Effects                                                   |
+|-----------------------|----------------------|-----------------------------------------------------------|
+| Community             | Administrator        | Enables Community Features in the guild                   |
+| Discoverable          | Administrator*       | Enables discovery in the guild, making it publicly listed |
+| Invites Disabled      | Manage Guild         | Pauses all invites/access to the server                   |
+| Raid Alerts Disabled  | Manage Guild         | Disables alerts for join raids                            |
 
 #### Guild Preview Structure
-
 | Field                      | Type                                              | Description                                        |
 |----------------------------|---------------------------------------------------|----------------------------------------------------|
 | id                         | snowflake                                         | guild id                                           |
@@ -2526,14 +4073,12 @@ await api.discord.automod.destroyRule({
 | stickers                   | array of [sticker](#sticker-object) objects       | custom guild stickers                              |
 
 #### Guild Widget Settings Structure
-
 | Field      | Type       | Description                   |
 |------------|------------|-------------------------------|
 | enabled    | boolean    | whether the widget is enabled |
 | channel_id | ?snowflake | the widget channel id         |
 
 #### Guild Widget Structure
-
 | Field          | Type                                                | Description                                                          |
 |----------------|-----------------------------------------------------|----------------------------------------------------------------------|
 | id             | snowflake                                           | guild id                                                             |
@@ -2543,40 +4088,36 @@ await api.discord.automod.destroyRule({
 | members        | array of partial [user](#user-object) objects       | special widget user objects that includes users presence (Limit 100) |
 | presence_count | number                                              | number of online members in this guild                               |
 
-#### Guild Member Object
+### Guild Member Object
+| Field                         | Type                        | Description                                                                                                   |
+|-------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------|
+| user?                         | [user](#user-object) object | the user this guild member represents                                                                         |
+| nick?                         | ?string                     | this user's guild nickname                                                                                    |
+| avatar?                       | ?string                     | the member's guild avatar hash                                                                                |
+| roles                         | array of snowflakes         | array of [role](#role-object) object ids                                                                      |
+| joined_at                     | ISO8601 timestamp           | when the user joined the guild                                                                                |
+| premium_since?                | ?ISO8601 timestamp          | when the user started boosting the guild                                                                      |
+| deaf                          | boolean                     | whether the user is deafened in voice channels                                                                |
+| mute                          | boolean                     | whether the user is muted in voice channels                                                                   |
+| flags                         | number                      | [guild member flags](#guild-member-flags) represented as a bit set, defaults to `0`                           |
+| pending?                      | boolean                     | whether the user has passed the guild's [Membership Screening](#membership-screening-object) requirements     |
+| permissions?                  | string                      | total permissions of the member in the channel, including overwrites, returned when in the interaction object |
+| communication_disabled_until? | ?ISO8601 timestamp          | when the user's timeout will expire and the user will be able to communicate in the guild again               |
 
-| Field                         | Type                        | Description                                                                           |
-|-------------------------------|-----------------------------|---------------------------------------------------------------------------------------|
-| user?                         | [user](#user-object) object | the user this guild member represents                                                 |
-| nick?                         | ?string                     | this user's guild nickname                                                            |
-| avatar?                       | ?string                     | the member's guild avatar hash                                                        |
-| roles                         | array of snowflakes         | array of [role](#role-object) object ids                                              |
-| joined_at                     | ISO8601 timestamp           | when the user joined the guild                                                        |
-| premium_since?                | ?ISO8601 timestamp          | when the user started boosting the guild                                              |
-| deaf                          | boolean                     | whether the user is deafened in voice channels                                        |
-| mute                          | boolean                     | whether the user is muted in voice channels                                           |
-| flags                         | number                      | [guild member flags](#guild-member-flags) represented as a bit set, defaults to `0`   |
-| pending?                      | boolean                     | whether the user has passed the guild's [Membership Screening](#membership-screening-object) requirements |
-| permissions?                  | string                      | total permissions of the member in the channel, including overwrites, returned when in the interaction object                      |
-| communication_disabled_until? | ?ISO8601 timestamp          | when the user's timeout will expire and the user will be able to communicate in the guild again                                 |
-
-
-> The field `user` won't be included in the member object attached to `MESSAGE_CREATE` and `MESSAGE_UPDATE` gateway events.
-> In `GUILD_` events, `pending` will always be included as true or false. In non `GUILD_` events which can only be triggered by non-`pending` users, `pending` will not be included.
+**The field `user` won't be included in the member object attached to `MESSAGE_CREATE` and `MESSAGE_UPDATE` gateway events.**  
+**In `GUILD_` events, `pending` will always be included as true or false. In non `GUILD_` events which can only be triggered by non-`pending` users, `pending` will not be included.**
 
 #### Guild Member Flags
+| Flag                   | Value  | Description                                           | Editable |
+|------------------------|--------|-------------------------------------------------------|----------|
+| Did Rejoin             | 1 << 0 | Member has left and rejoined the guild                | false    |
+| Completed Onboarding   | 1 << 1 | Member has completed onboarding                       | false    |
+| Bypasses Verification  | 1 << 2 | Member is exempt from guild verification requirements | true     |
+| Started Onboarding     | 1 << 3 | Member has started onboarding                         | false    |
 
-| Flag                  | Value  | Description                                           | Editable |
-|-----------------------|--------|-------------------------------------------------------|----------|
-| DID_REJOIN            | 1 << 0 | Member has left and rejoined the guild                | false    |
-| COMPLETED_ONBOARDING  | 1 << 1 | Member has completed onboarding                       | false    |
-| BYPASSES_VERIFICATION | 1 << 2 | Member is exempt from guild verification requirements | true     |
-| STARTED_ONBOARDING    | 1 << 3 | Member has started onboarding                         | false    |
+**BYPASSES_VERIFICATION allows a member who does not meet verification requirements to participate in a server.**
 
-> BYPASSES_VERIFICATION allows a member who does not meet verification requirements to participate in a server.
-
-#### Integration Object
-
+### Integration Object
 | Field                | Type                                                         | Description                                                           |
 |----------------------|--------------------------------------------------------------|-----------------------------------------------------------------------|
 | id                   | snowflake                                                    | integration id                                                        |
@@ -2597,21 +4138,18 @@ await api.discord.automod.destroyRule({
 | scopes?              | array of [OAuth2 scopes](#oauth2-scopes)                     | the scopes the application has been authorized for                    |
 
 #### Integration Expire Behaviors
-
 | Value | Name        |
 |-------|-------------|
 | 0     | Remove role |
 | 1     | Kick        |
 
 #### Integration Account Object
-
 | Field | Type   | Description         |
 |-------|--------|---------------------|
 | id    | string | id of the account   |
 | name  | string | name of the account |
 
 #### Integration Application Object
-
 | Field       | Type                        | Description                              |
 |-------------|-----------------------------|------------------------------------------|
 | id          | snowflake                   | the id of the app                        |
@@ -2620,15 +4158,13 @@ await api.discord.automod.destroyRule({
 | description | string                      | the description of the app               |
 | bot?        | [user](#user-object) object | the bot associated with this application |
 
-#### Ban Object
-
+### Ban Object
 | Field  | Type                        | Description            |
 |--------|-----------------------------|------------------------|
 | reason | ?string                     | the reason for the ban |
 | user   | [user](#user-object) object | the banned user        |
 
-#### Example Ban
-
+##### Example Ban
 ```json
 {
   "reason": "mentioning lostmyinfo",
@@ -2642,14 +4178,12 @@ await api.discord.automod.destroyRule({
 ```
 
 #### Welcome Screen Object
-
 | Field            | Type                                                                      | Description                                        |
 |------------------|---------------------------------------------------------------------------|----------------------------------------------------|
 | description      | ?string                                                                   | the server description shown in the welcome screen |
 | welcome_channels | array of [welcome screen channel](#welcome-screen-channel-object) objects | the channels shown in the welcome screen, up to 5  |
 
 #### Welcome Screen Channel Object
-
 | Field       | Type       | Description                                                                               |
 |-------------|------------|-------------------------------------------------------------------------------------------|
 | channel_id  | snowflake  | the channel's id                                                                          |
@@ -2658,7 +4192,6 @@ await api.discord.automod.destroyRule({
 | emoji_name  | ?string    | the emoji name if custom, the unicode character if standard, or `null` if no emoji is set |
 
 #### Guild Onboarding Object
-
 | Field               | Type                                                               | Description                                                |
 |---------------------|--------------------------------------------------------------------|------------------------------------------------------------|
 | guild_id            | snowflake                                                          | ID of the guild this onboarding is part of                 |
@@ -2668,7 +4201,6 @@ await api.discord.automod.destroyRule({
 | mode                | [onboarding mode](#onboarding-mode)                                | Current mode of onboarding                                 |
 
 #### Onboarding Prompt Structure
-
 | Field         | Type                                                       | Description                                                                      |
 |---------------|------------------------------------------------------------|----------------------------------------------------------------------------------|
 | id            | snowflake                                                  | ID of the prompt                                                                 |
@@ -2680,7 +4212,6 @@ await api.discord.automod.destroyRule({
 | in_onboarding | boolean                                                    | Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab |
 
 #### Prompt Option Structure
-
 | Field           | Type                          | Description                                                       |
 |-----------------|-------------------------------|-------------------------------------------------------------------|
 | id              | snowflake                     | ID of the prompt option                                           |
@@ -2693,26 +4224,23 @@ await api.discord.automod.destroyRule({
 | title           | string                        | Title of the option                                               |
 | description     | ?string                       | Description of the option                                         |
 
-> When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+**When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.**
 
 #### Onboarding Mode
-
-Defines the criteria used to satisfy Onboarding constraints that are required for enabling.
+**Defines the criteria used to satisfy Onboarding constraints that are required for enabling.**
 
 | Name                | Value | Description                                               |
 |---------------------|-------|-----------------------------------------------------------|
-| ONBOARDING_DEFAULT  | 0     | Counts only Default Channels towards constraints          |
-| ONBOARDING_ADVANCED | 1     | Counts Default Channels and Questions towards constraints |
+| Onboarding Default   | 0     | Counts only Default Channels towards constraints          |
+| Onboarding Advanced  | 1     | Counts Default Channels and Questions towards constraints |
 
 #### Prompt Types
-
 | Name            | Value |
 |-----------------|-------|
-| MULTIPLE_CHOICE | 0     |
-| DROPDOWN        | 1     |
+| Multiple Choice | 0     |
+| Dropdown        | 1     |
 
-#### Example Guild Onboarding
-
+##### Example Guild Onboarding
 ```json
 {
     "guild_id": "960007075288915998",
@@ -2769,8 +4297,136 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 }
 ```
 
-#### Emoji Object
+### User Object
+| Field              | Type      | Description                                                                             |
+|--------------------|-----------|-----------------------------------------------------------------------------------------|
+| id                 | snowflake | the user's id                                                                           |
+| username           | string    | the user's username, not unique across the platform                                     |
+| discriminator      | string    | the user's Discord-tag                                                                  |
+| global_name        | ?string   | the user's display name, if it is set. For bots, this is the application name           |
+| avatar             | ?string   | the user's avatar hash                                                                  |
+| bot?               | boolean   | whether the user belongs to an OAuth2 application                                       |
+| system?            | boolean   | whether the user is an Official Discord System user (part of the urgent message system) |
+| mfa_enabled?       | boolean   | whether the user has two factor enabled on their account                                | 
+| banner?            | ?string   | the user's banner hash                                                                  |
+| accent_color?      | ?integer  | the user's banner color encoded as an integer representation of hexadecimal color code  |
+| locale?            | string    | the user's chosen language option                                                       |
+| verified?          | boolean   | whether the email on this account has been verified                                     |
+| email?             | ?string   | the user's email                                                                        |
+| flags?             | integer   | the [flags](#user-flags) on a user's account                                            |
+| premium_type?      | integer   | the [type of Nitro subscription](#premium-types) on a user's account                    |
+| public_flags?      | integer   | the public [flags](#user-flags) on a user's account                                     |
+| avatar_decoration? | ?string   | the user's avatar decoration hash                                                       |
 
+#### User Flags
+| Value   | Name                     | Description                                                            |
+|---------|--------------------------|------------------------------------------------------------------------|
+| 1 << 0  | Staff                    | Discord Employee                                                       |
+| 1 << 1  | Partner                  | Partnered Server Owner                                                 |
+| 1 << 2  | Hypesquad                | HypeSquad Events Member                                                |
+| 1 << 3  | Bug Hunter Level 1       | Bug Hunter Level 1                                                     |
+| 1 << 6  | Hypesquad Online House 1 | House Bravery Member                                                   |
+| 1 << 7  | Hypesquad Online House 2 | House Brilliance Member                                                |
+| 1 << 8  | Hypesquad Online House 3 | House Balance Member                                                   |
+| 1 << 9  | Premium Early Supporter  | Early Nitro Supporter                                                  |
+| 1 << 10 | Team Pseudo User         | User is a team                                                         |
+| 1 << 14 | Bug Hunter Level 2       | Bug Hunter Level 2                                                     |
+| 1 << 16 | Verified Bot             | Verified Bot                                                           |
+| 1 << 17 | Verified Developer       | Early Verified Bot Developer                                           |
+| 1 << 18 | Certified Moderator      | Moderator Programs Alumni                                              |
+| 1 << 19 | Bot Http Interactions    | Bot uses only HTTP interactions and is shown in the online member list |
+| 1 << 22 | Active Developer         | User is an Active Developer                                            |
+
+#### Premium Types
+**Premium types denote the level of premium a user has.**
+
+| Value | Name          |
+|-------|---------------|
+| 0     | None          |
+| 1     | Nitro Classic |
+| 2     | Nitro         |
+| 3     | Nitro Basic   |
+
+### Connection Object
+**The connection object that the user has attached.**
+
+| Field         | Type    | Description                                                                     |
+|---------------|---------|---------------------------------------------------------------------------------|
+| id            | string  | id of the connection account                                                    |
+| name          | string  | the username of the connection account                                          |
+| type          | string  | the [service](#object-services) of this connection                              |
+| revoked?      | boolean | whether the connection is revoked                                               |
+| integrations? | array   | an array of partial [server integrations](#integration-object)                  |
+| verified      | boolean | whether the connection is verified                                              |
+| friend_sync   | boolean | whether friend sync is enabled for this connection                              |
+| show_activity | boolean | whether activities related to this connection will be shown in presence updates |
+| two_way_link  | boolean | whether this connection has a corresponding third party OAuth2 token            |
+| visibility    | integer | [visibility](#visibility-types) of this connection                              |
+
+#### Services
+| Value           | Name                |
+|-----------------|---------------------|
+| battlenet       | Battle.net          |
+| ebay            | eBay                |
+| epicgames       | Epic Games          |
+| facebook        | Facebook            |
+| github          | GitHub              |
+| instagram       | Instagram           |
+| leagueoflegends | League of Legends   |
+| paypal          | PayPal              |
+| playstation     | PlayStation Network |
+| reddit          | Reddit              |
+| riotgames       | Riot Games          |
+| spotify         | Spotify             |
+| skype *         | Skype               |
+| steam           | Steam               |
+| tiktok          | TikTok              |
+| twitch          | Twitch              |
+| twitter         | X (Twitter)         |
+| xbox            | Xbox                |
+| youtube         | YouTube             |
+
+##### \* Service can no longer be added by users
+
+#### Visibility Types
+| Value | Name     | Description                                      |
+|-------|----------|--------------------------------------------------|
+| 0     | None     | invisible to everyone except the user themselves |
+| 1     | Everyone | visible to everyone                              |
+
+### Application Role Connection Object
+**The role connection object that an application has attached to a user.**
+
+| Field             | Type    | Description                                                                                                                                                                                                  |
+|-------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| platform_name     | ?string | the vanity name of the platform a bot has connected (max 50 characters)                                                                                                                                      |
+| platform_username | ?string | the username on the platform a bot has connected (max 100 characters)                                                                                                                                        |
+| metadata          | object  | object mapping [application role connection metadata](#application-role-connection-metadata-object) keys to their `string`-ified value (max 100 characters) for the user on the platform a bot has connected |
+
+#### Application Role Connection Metadata Object
+| Field                      | Type                                                                                | Description                                                                                      |
+|----------------------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| type                       | [ApplicationRoleConnectionMetadataType](#application-role-connection-metadata-type) | type of metadata value                                                                           |
+| key                        | string                                                                              | dictionary key for the metadata field (must be `a-z`, `0-9`, or `_` characters; 1-50 characters) |
+| name                       | string                                                                              | name of the metadata field (1-100 characters)                                                    |
+| name_localizations?        | dictionary with keys in available locales                                           | translations of the name                                                                         |
+| description                | string                                                                              | description of the metadata field (1-200 characters)                                             |
+| description_localizations? | dictionary with keys in available locales                                           | translations of the description                                                                  |
+
+#### Application Role Connection Metadata Type
+| Type                           | Value | Description                                                                                                                            |
+|--------------------------------|-------|----------------------------------------------------------------------------------------------------------------------------------------|
+| INTEGER_LESS_THAN_OR_EQUAL     | 1     | the metadata value (`integer`) is less than or equal to the guild's configured value (`integer`)                                       |
+| INTEGER_GREATER_THAN_OR_EQUAL  | 2     | the metadata value (`integer`) is greater than or equal to the guild's configured value (`integer`)                                    |
+| INTEGER_EQUAL                  | 3     | the metadata value (`integer`) is equal to the guild's configured value (`integer`)                                                    |
+| INTEGER_NOT_EQUAL              | 4     | the metadata value (`integer`) is not equal to the guild's configured value (`integer`)                                                |
+| DATETIME_LESS_THAN_OR_EQUAL    | 5     | the metadata value (`ISO8601 string`) is less than or equal to the guild's configured value (`integer`; `days before current date`)    |
+| DATETIME_GREATER_THAN_OR_EQUAL | 6     | the metadata value (`ISO8601 string`) is greater than or equal to the guild's configured value (`integer`; `days before current date`) |
+| BOOLEAN_EQUAL                  | 7     | the metadata value (`integer`) is equal to the guild's configured value (`integer`; `1`)                                               |
+| BOOLEAN_NOT_EQUAL              | 8     | the metadata value (`integer`) is not equal to the guild's configured value (`integer`; `1`)                                           |
+
+
+### Emoji Object
 | Field           | Type                                                 | Description                                                               |
 |-----------------|----------------------------------------------------- |---------------------------------------------------------------------------|
 | id              | ?snowflake                                           | emoji id                                                                  |
@@ -2783,7 +4439,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 | available?      | boolean                                              | whether this emoji can be used, may be false due to loss of Server Boosts |
 
 ##### Emoji Example
-
 ```json
 {
   "id": "41771983429993937",
@@ -2803,7 +4458,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 ```
 
 ##### Standard Emoji Example
-
 ```json
 {
   "id": null,
@@ -2812,7 +4466,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 ```
 
 ##### Custom Emoji Examples
-
 ```json
 {
   "id": "41771983429993937",
@@ -2828,8 +4481,7 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 }
 ```
 
-#### Sticker Structure
-
+### Sticker Object
 | Field       | Type                        | Description                                                                       |
 |-------------|-------------------------------------------------|---------------------------------------------------------------|
 | id          | snowflake                   | id of the sticker                                                                 |
@@ -2845,14 +4497,12 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 | sort_value? | number                     | the standard sticker's sort order within its pack                                 |
 
 #### Sticker Types
-
 | Type     | Value | Description                                           |
 |----------|-------|-------------------------------------------------------|
-| STANDARD | 1     | an official sticker in a pack                         |
-| GUILD    | 2     | a sticker uploaded to a guild for the guild's members |
+| Standard | 1     | an official sticker in a pack                         |
+| Guild    | 2     | a sticker uploaded to a guild for the guild's members |
 
 #### Sticker Format Types
-
 | Type   | Value |
 |--------|-------|
 | PNG    | 1     |
@@ -2861,7 +4511,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 | GIF    | 4     |
 
 ##### Example Sticker
-
 ```json
 {
   "id": "749054660769218631",
@@ -2877,7 +4526,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 ```
 
 #### Sticker Item Object
-
 | Field       | Type      | Description                                     |
 |-------------|-----------|-------------------------------------------------|
 | id          | snowflake | id of the sticker                               |
@@ -2885,7 +4533,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 | format_type | number   | [type of sticker format](#sticker-format-types) |
 
 #### Sticker Pack Object
-
 | Field             | Type                                        | Description                                                   |
 |-------------------|---------------------------------------------|---------------------------------------------------------------|
 | id                | snowflake                                   | id of the sticker pack                                        |
@@ -2897,7 +4544,6 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 | banner_asset_id?  | snowflake                                   | id of the sticker pack's banner image                         |
 
 ##### Example Sticker Pack
-
 ```json
 {
   "id": "847199849233514549",
@@ -2910,8 +4556,45 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 }
 ```
 
-#### Guild Scheduled Event Object
+### Role Object
+**Roles represent a set of permissions attached to a group of users.**  
+**Roles have names, colors, and can be "pinned" to the side bar, causing their members to be listed separately. Roles can have separate permission profiles for the global context (guild) and channel context.**  
+**The `@everyone` role has the same ID as the guild it belongs to.**
 
+| Field          | Type                                     | Description                                      |
+|----------------|------------------------------------------|--------------------------------------------------|
+| id             | snowflake                                | role id                                          |
+| name           | string                                   | role name                                        |
+| color          | integer                                  | integer representation of hexadecimal color code |
+| hoist          | boolean                                  | if this role is pinned in the user listing       |
+| icon?          | ?string                                  | role icon hash                                   |
+| unicode_emoji? | ?string                                  | role unicode emoji                               |
+| position       | integer                                  | position of this role                            |
+| permissions    | string                                   | permission bit set                               |
+| managed        | boolean                                  | whether this role is managed by an integration   |
+| mentionable    | boolean                                  | whether this role is mentionable                 |
+| tags?          | [role tags](#role-tags-structure) object | the tags this role has                           |
+| flags          | integer                                  | [role flags](#role-flags) combined as a bitfield |
+
+#### Role Tags Structure
+**Tags with type `null` represent booleans.**  
+**They will be present and set to `null` if they are "true", and will be not present if they are "false".**
+
+| Field                    | Type      | Description                                        |
+|--------------------------|-----------|----------------------------------------------------|
+| bot_id?                  | snowflake | the id of the bot this role belongs to             |
+| integration_id?          | snowflake | the id of the integration this role belongs to     |
+| premium_subscriber?      | null      | whether this is the guild's Booster role           |
+| subscription_listing_id? | snowflake | the id of this role's subscription sku and listing |
+| available_for_purchase?  | null      | whether this role is available for purchase        |
+| guild_connections?       | null      | whether this role is a guild's linked role         |
+
+#### Role Flags
+| Flag      | Value  | Description                                                                         |
+|-----------|--------|-------------------------------------------------------------------------------------|
+| IN_PROMPT | 1 << 0 | role can be selected by members in an [onboarding](#guild-onboarding-object) prompt |
+
+### Guild Scheduled Event Object
 | Field                 | Type                                                        | Description                                                                                          |
 |-----------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
 | id                   | snowflake                                                    | The ID of the scheduled event                                                                        |
@@ -2930,61 +4613,59 @@ Defines the criteria used to satisfy Onboarding constraints that are required fo
 | creator?             | [user](#user-object) object                                  | The user who created the scheduled event                                                             |
 | user_count?          | number                                                      | The number of users subscribed to the scheduled event                                                |
 | image?               | ?string                                                      | The cover image hash of the scheduled event                                                          |
-\* `creator_id` will be null and `creator` will not be included for events created before October 25th, 2021, when the concept of `creator_id` was introduced and tracked.
+
+**\* `creator_id` will be null and `creator` will not be included for events created before October 25th, 2021, when the concept of `creator_id` was introduced and tracked.**
 
 #### Guild Scheduled Event Privacy Level
-
 | Level      | Value | Description                                             |
 |------------|-------|---------------------------------------------------------|
-| GUILD_ONLY | 2     | the scheduled event is only accessible to guild members |
+| Guild Only | 2     | the scheduled event is only accessible to guild members |
 
 #### Guild Scheduled Event Entity Types
-
 | Type           | Value |
 |----------------|-------|
-| STAGE_INSTANCE | 1     |
-| VOICE          | 2     |
-| EXTERNAL       | 3     |
+| Stage Instance | 1     |
+| Voice          | 2     |
+| External       | 3     |
 
 #### Field Requirements By Entity Type
 
-The following table shows field requirements based on current entity type.
-
-`value` : This field is required to be a non-null value  
+**The following table shows field requirements based on current entity type.**  
+`value`    : This field is required to be a non-null value  
 `null`     : This field is required to be null  
 `-`        : No strict requirements  
 
 | Entity Type    | channel_id | entity_metadata | scheduled_end_time |
 |----------------|------------|-----------------|--------------------|
-| STAGE_INSTANCE | value      | null            | -                  |
-| VOICE          | value      | null            | -                  |
-| EXTERNAL       | null       | value *         | value              |  
-\* `entity_metadata` with a non-null `location` must be provided
+| Stage Instance | value      | null            | -                  |
+| Voice          | value      | null            | -                  |
+| External       | null       | value *         | value              |
+
+**\* `entity_metadata` with a non-null `location` must be provided**
 
 
 #### Guild Scheduled Event Status
-
 | Type        | Value |
 |-------------|-------|
-| SCHEDULED   | 1     |
-| ACTIVE      | 2     |
-| COMPLETED * | 3     |
-| CANCELED  * | 4     |  
-\* Once `status` is set to `COMPLETED` or `CANCELED`, the `status` can no longer be updated
+| Scheduled   | 1     |
+| Active      | 2     |
+| Completed\* | 3     |
+| Canceled\*  | 4     |
+
+**\* Once `status` is set to `COMPLETED` or `CANCELED`, the `status` can no longer be updated**
 
 #### Valid Guild Scheduled Event Status Transitions
-
 SCHEDULED --> ACTIVE  
 ACTIVE --------> COMPLETED  
 SCHEDULED --> CANCELED
 
 
 #### Guild Scheduled Event Entity Metadata
+| Field       | Type   | Description                              |
+|-------------|--------|------------------------------------------|
+| location?\* | string | location of the event (1-100 characters) |
 
-| Field       | Type   | Description                             |
-|-------------|--------|-----------------------------------------|
-| location?* | string | location of the event (1-100 characters) |  
-\* required for events with `'entity_type': EXTERNAL`
+**\* required for events with `'entity_type': EXTERNAL`**
 
 #### Guild Scheduled Event User Object
 | Field                    | Type                                 | Description                                                                       |
@@ -2993,14 +4674,13 @@ SCHEDULED --> CANCELED
 | user                     | [user](#user-object)                 | user which subscribed to an event                                                 |
 | member?                  | [guild member](#guild-member-object) | guild member data for this user for the guild which this event belongs to, if any |
 
-#### Guild Template Object
-
+### Guild Template Object
 | Field                   | Type                                  | Description                                            |
 |-------------------------|---------------------------------------|--------------------------------------------------------|
 | code                    | string                                | the template code (unique ID)                          |
 | name                    | string                                | template name                                          |
 | description             | ?string                               | the description for the template                       |
-| usage_count             | number                               | number of times this template has been used            |
+| usage_count             | number                                | number of times this template has been used            |
 | creator_id              | snowflake                             | the ID of the user who created the template            |
 | creator                 | [user](#user-object) object           | the user who created the template                      |
 | created_at              | ISO8601 timestamp                     | when this template was created                         |
@@ -3010,7 +4690,6 @@ SCHEDULED --> CANCELED
 | is_dirty                | ?boolean                              | whether the template has unsynced changes              |
 
 ##### Example Guild Template Object
-
 ```json
 {
   "code": "hgM48av5Q69A",
@@ -3084,132 +4763,917 @@ SCHEDULED --> CANCELED
 }
 ```
 
-#### Channel Object
+### Channel Object
+| Field                               | Type                                                 | Description                                                                                                                                                                                                     |
+|-------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id                                  | snowflake                                            | the id of this channel                                                                                                                                                                                          |
+| type                                | integer                                              | the [type of channel](#channel-types)                                                                                                                                                                           |
+| guild_id?                           | snowflake                                            | the id of the guild (may be missing for some channel objects received over gateway guild dispatches)                                                                                                            |
+| position?                           | integer                                              | sorting position of the channel                                                                                                                                                                                 |
+| permission_overwrites?              | array of [overwrite](#overwrite-object) objects      | explicit permission overwrites for members and roles                                                                                                                                                            |
+| name?                               | ?string                                              | the name of the channel (1-100 characters)                                                                                                                                                                      |
+| topic?                              | ?string                                              | the channel topic (0-4096 characters for `GUILD_FORUM` and `GUILD_MEDIA` channels, 0-1024 characters for all others)                                                                                            |
+| nsfw?                               | boolean                                              | whether the channel is nsfw                                                                                                                                                                                     |
+| last_message_id?                    | ?snowflake                                           | the id of the last message sent in this channel (or thread for `GUILD_FORUM` or `GUILD_MEDIA` channels) (may not point to an existing or valid message or thread)                                               |
+| bitrate?                            | integer                                              | the bitrate (in bits) of the voice channel                                                                                                                                                                      |
+| user_limit?                         | integer                                              | the user limit of the voice channel                                                                                                                                                                             |
+| rate_limit_per_user?\*              | integer                                              | amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected                                 |
+| recipients?                         | array of [user](#user-object) objects                | the recipients of the DM                                                                                                                                                                                        |
+| icon?                               | ?string                                              | icon hash of the group DM                                                                                                                                                                                       |
+| owner_id?                           | snowflake                                            | id of the creator of the group DM or thread                                                                                                                                                                     |
+| application_id?                     | snowflake                                            | application id of the group DM creator if it is bot-created                                                                                                                                                     |
+| managed?                            | boolean                                              | for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope                                                                                                         |
+| parent_id?                          | ?snowflake                                           | for guild channels: id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created                                   |
+| last_pin_timestamp?                 | ?ISO8601 timestamp                                   | when the last pinned message was pinned. This may be `null` in events such as `GUILD_CREATE` when a message is not pinned.                                                                                      |
+| rtc_region?                         | ?string                                              | [voice region](#voice-region-object) id for the voice channel, automatic when set to null                                                                                                                       |
+| video_quality_mode?                 | integer                                              | the camera [video quality mode](#video-quality-modes) of the voice channel, 1 when not present                                                                                                                  |
+| message_count?\*\*                  | integer                                              | number of messages (not including the initial message or deleted messages) in a thread.                                                                                                                         |
+| member_count?                       | integer                                              | an approximate count of users in a thread, stops counting at 50                                                                                                                                                 |
+| thread_metadata?                    | [thread metadata](#thread-metadata-object) object    | thread-specific fields not needed by other channels                                                                                                                                                             |
+| member?                             | [thread member](#thread-member-object) object        | thread member object for the current user, if they have joined the thread, only included on certain API endpoints                                                                                               |
+| default_auto_archive_duration?      | integer                                              | default duration, copied onto newly created threads, in minutes, threads will stop showing in the channel list after the specified period of inactivity, can be set to: 60, 1440, 4320, 10080                   |
+| permissions?                        | string                                               | computed permissions for the invoking user in the channel, including overwrites, only included when part of the `resolved` data received on a slash command interaction.                                        |
+| flags?                              | integer                                              | [channel flags](#channel-flags) combined as bitfield                                                                                                                                                            |
+| total_message_sent?                 | integer                                              | number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted                                                      |
+| available_tags?                     | array of [tag](#forum-tag-object) objects            | the set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                                                  |
+| applied_tags?                       | array of snowflakes                                  | the IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                     |
+| default_reaction_emoji?             | ?[default reaction](#default-reaction-object) object | the emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                          |
+| default_thread_rate_limit_per_user? | integer                                              | the initial `rate_limit_per_user` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.                                                   |
+| default_sort_order?                 | ?integer                                             | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to `null`, which indicates a preferred sort order hasn't been set by a channel admin |
+| default_forum_layout?               | integer                                              | the [default forum layout view](#forum-layout-types) used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin                        |
 
-| Field                               | Type                                                                        | Description                                                                                                                                                                                                                                                                                                   |
-|-------------------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id                                  | snowflake                                                                   | the id of this channel                                                                                                                                                                                                                                                                                        |
-| type                                | integer                                                                     | the [type of channel](#channel-types)                                                                                                                                                                                                                                   |
-| guild_id?                           | snowflake                                                                   | the id of the guild (may be missing for some channel objects received over gateway guild dispatches)                                                                                                                                                                                                          |
-| position?                           | integer                                                                     | sorting position of the channel                                                                                                                                                                                                                                                                               |
-| permission_overwrites?              | array of [overwrite](#overwrite-object) objects      | explicit permission overwrites for members and roles                                                                                                                                                                                                                                                          |
-| name?                               | ?string                                                                     | the name of the channel (1-100 characters)                                                                                                                                                                                                                                                                    |
-| topic?                              | ?string                                                                     | the channel topic (0-4096 characters for `GUILD_FORUM` and `GUILD_MEDIA` channels, 0-1024 characters for all others)                                                                                                                                                                                          |
-| nsfw?                               | boolean                                                                     | whether the channel is nsfw                                                                                                                                                                                                                                                                                   |
-| last_message_id?                    | ?snowflake                                                                  | the id of the last message sent in this channel (or thread for `GUILD_FORUM` or `GUILD_MEDIA` channels) (may not point to an existing or valid message or thread)                                                                                                                                             |
-| bitrate?                            | integer                                                                     | the bitrate (in bits) of the voice channel                                                                                                                                                                                                                                                                    |
-| user_limit?                         | integer                                                                     | the user limit of the voice channel                                                                                                                                                                                                                                                                           |
-| rate_limit_per_user?\*              | integer                                                                     | amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected                                                                                                                               |
-| recipients?                         | array of [user](#user-object) objects                   | the recipients of the DM                                                                                                                                                                                                                                                                                      |
-| icon?                               | ?string                                                                     | icon hash of the group DM                                                                                                                                                                                                                                                                                     |
-| owner_id?                           | snowflake                                                                   | id of the creator of the group DM or thread                                                                                                                                                                                                                                                                   |
-| application_id?                     | snowflake                                                                   | application id of the group DM creator if it is bot-created                                                                                                                                                                                                                                                   |
-| managed?                            | boolean                                                                     | for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope                                                                                                                                                                                                       |
-| parent_id?                          | ?snowflake                                                                  | for guild channels: id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created                                                                                                                                 |
-| last_pin_timestamp?                 | ?ISO8601 timestamp                                                          | when the last pinned message was pinned. This may be `null` in events such as `GUILD_CREATE` when a message is not pinned.                                                                                                                                                                                    |
-| rtc_region?                         | ?string                                                                     | [voice region](#voice-region-object) id for the voice channel, automatic when set to null                                                                                                                                                                                                |
-| video_quality_mode?                 | integer                                                                     | the camera [video quality mode](#video-quality-modes) of the voice channel, 1 when not present                                                                                                                                                                          |
-| message_count?\*\*                  | integer                                                                     | number of messages (not including the initial message or deleted messages) in a thread.                                                                                                                                                                                                                       |
-| member_count?                       | integer                                                                     | an approximate count of users in a thread, stops counting at 50                                                                                                                                                                                                                                               |
-| thread_metadata?                    | [thread metadata](#thread-metadata-object) object  | thread-specific fields not needed by other channels                                                                                                                                                                                                                                                           |
-| member?                             | [thread member](#thread-member-object) object      | thread member object for the current user, if they have joined the thread, only included on certain API endpoints                                                                                                                                                                                             |
-| default_auto_archive_duration?      | integer                                                                     | default duration, copied onto newly created threads, in minutes, threads will stop showing in the channel list after the specified period of inactivity, can be set to: 60, 1440, 4320, 10080                                                                                                                 |
-| permissions?                        | string                                                                      | computed permissions for the invoking user in the channel, including overwrites, only included when part of the `resolved` data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately |
-| flags?                              | integer                                                                     | [channel flags](#channel-flags) combined as bitfield                                                                                                                                                                       |
-| total_message_sent?                 | integer                                                                     | number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted                                                                                                                                                    |
-| available_tags?                     | array of [tag](#forum-tag-object) objects            | the set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                                                                                                                                                |
-| applied_tags?                       | array of snowflakes                                                         | the IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                                                                                                                   |
-| default_reaction_emoji?             | ?[default reaction](#default-reaction-object) object | the emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel                                                                                                                                                                                                        |
-| default_thread_rate_limit_per_user? | integer                                                                     | the initial `rate_limit_per_user` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.                                                                                                                                                 |
-| default_sort_order?                 | ?integer                                                                    | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to `null`, which indicates a preferred sort order hasn't been set by a channel admin                                                         |
-| default_forum_layout?               | integer                                                                     | the [default forum layout view](#forum-layout-types) used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin                                                                                |  
-\* `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.  
-\*\* For threads created before July 1, 2022, the message count is inaccurate when it's greater than 50.
+**\* `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.**  
+**\*\* For threads created before July 1, 2022, the message count is inaccurate when it's greater than 50.**
 
 #### Channel Types
+| Type                | ID | Description                                                                                                                             |
+|---------------------|----|-----------------------------------------------------------------------------------------------------------------------------------------|
+| Guild Text           | 0  | a text channel within a server                                                                                                          |
+| Dm                   | 1  | a direct message between users                                                                                                          |
+| Guild Voice          | 2  | a voice channel within a server                                                                                                         |
+| Group Dm             | 3  | a direct message between multiple users                                                                                                 |
+| Guild Category       | 4  | an organizational category that contains up to 50 channels                                                                              |
+| Guild Announcement   | 5  | a channel that users can follow and crosspost into their own server (formerly news channels)                                            |
+| Announcement Thread  | 10 | a temporary sub-channel within a GUILD_ANNOUNCEMENT channel                                                                             |
+| Public Thread        | 11 | a temporary sub-channel within a GUILD_TEXT or GUILD_FORUM channel                                                                      |
+| Private Thread       | 12 | a temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission |
+| Guild Stage Voice    | 13 | a voice channel for hosting events with an audience                                                                                     |
+| Guild Directory      | 14 | the channel in a hub containing the listed servers                                                                                      |
+| Guild Forum          | 15 | Channel that can only contain threads                                                                                                   |
+| Guild Media          | 16 | Channel that can only contain threads, similar to `GUILD_FORUM` channels                                                                |
 
-| Type                | ID | Description                                                                                                       |
-|---------------------|----|-------------------------------------------------------------------------------------------------------------------|
-| GUILD_TEXT          | 0  | a text channel within a server                                                                                    |
-| DM                  | 1  | a direct message between users                                                                                    |
-| GUILD_VOICE         | 2  | a voice channel within a server                                                                                   |
-| GROUP_DM            | 3  | a direct message between multiple users                                                                           |
-| GUILD_CATEGORY      | 4  | an organizational category that contains up to 50 channels                                                        |
-| GUILD_ANNOUNCEMENT  | 5  | a channel that users can follow and crosspost into their own server (formerly news channels)                      |
-| ANNOUNCEMENT_THREAD | 10 | a temporary sub-channel within a GUILD_ANNOUNCEMENT channel                                                       |
-| PUBLIC_THREAD       | 11 | a temporary sub-channel within a GUILD_TEXT or GUILD_FORUM channel                                                |
-| PRIVATE_THREAD      | 12 | a temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission |
-| GUILD_STAGE_VOICE   | 13 | a voice channel for hosting events with an audience                                                               |
-| GUILD_DIRECTORY     | 14 | the channel in a hub containing the listed servers                                                                |
-| GUILD_FORUM         | 15 | Channel that can only contain threads                                                                             |
-| GUILD_MEDIA         | 16 | Channel that can only contain threads, similar to `GUILD_FORUM` channels                                          |
+**\* The `GUILD_MEDIA` channel type is still in active development. Avoid implementing any features that are not documented here, since they are subject to change without notice!**
 
-\* The `GUILD_MEDIA` channel type is still in active development. Avoid implementing any features that are not documented here, since they are subject to change without notice!
+#### Partial Channel Object
+| Field       | Type      | Description                                          |
+|-------------|-----------|------------------------------------------------------|
+| id          | snowflake | id of the channel                                    |
+| type        | integer   | the [type of channel](#channel-object-channel-types) |
+| name        | string    | the name of the channel                              |
+| permissions | string    | permission bit set                                   |
 
-###### Video Quality Modes
-
+#### Video Quality Modes
 | Mode | Value | Description                                         |
 |------|-------|-----------------------------------------------------|
-| AUTO | 1     | Discord chooses the quality for optimal performance |
-| FULL | 2     | 720p                                                |
+| Auto | 1     | Discord chooses the quality for optimal performance |
+| Full | 2     | 720p                                                |
 
-###### Channel Flags
-
-| Flag                        | Value   | Description                                                                              |
-|-----------------------------|---------|------------------------------------------------------------------------------------------|
-| PINNED                      | 1 << 1  | this thread is pinned to the top of its parent `GUILD_FORUM` or `GUILD_MEDIA` channel    |
-| REQUIRE_TAG                 | 1 << 4  | whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel. Tags are specified in the `applied_tags` field. |
-| HIDE_MEDIA_DOWNLOAD_OPTIONS | 1 << 15 | when set hides the embedded media download options. Available only for media channels    |
+#### Channel Flags
+| Flag                        | Value   | Description                                                                                                                                                     |
+|-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Pinned                      | 1 << 1  | this thread is pinned to the top of its parent `GUILD_FORUM` or `GUILD_MEDIA` channel                                                                           |
+| Require Tag                 | 1 << 4  | whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel. Tags are specified in the `applied_tags` field. |
+| Hide Media Download Options | 1 << 15 | when set hides the embedded media download options. Available only for media channels                                                                           |
 
 #### Sort Order Types
-
 | Flag            | Value | Description                                                    |
 |-----------------|-------|----------------------------------------------------------------|
-| LATEST_ACTIVITY | 0     | Sort forum posts by activity                                   |
-| CREATION_DATE   | 1     | Sort forum posts by creation time (from most recent to oldest) |
+| Latest Activity  | 0     | Sort forum posts by activity                                   |
+| Creation Date    | 1     | Sort forum posts by creation time (from most recent to oldest) |
 
 #### Forum Layout Types
-
 | Flag         | Value | Description                               |
 |--------------|-------|-------------------------------------------|
-| NOT_SET      | 0     | No default has been set for forum channel |
-| LIST_VIEW    | 1     | Display posts as a list                   |
-| GALLERY_VIEW | 2     | Display posts as a collection of tiles    |
+| Not Set      | 0     | No default has been set for forum channel |
+| List View    | 1     | Display posts as a list                   |
+| Gallery View | 2     | Display posts as a collection of tiles    |
 
+##### Example Guild Announcement Channel
+```json
+{
+  "id": "41771983423143937",
+  "guild_id": "41771983423143937",
+  "name": "important-news",
+  "type": 5,
+  "position": 6,
+  "permission_overwrites": [],
+  "nsfw": true,
+  "topic": "Rumors about Half Life 3",
+  "last_message_id": "155117677105512449",
+  "parent_id": "399942396007890945",
+  "default_auto_archive_duration": 60
+}
+```
+
+##### Example Guild Voice Channel
+```json
+{
+  "id": "155101607195836416",
+  "last_message_id": "174629835082649376",
+  "type": 2,
+  "name": "ROCKET CHEESE",
+  "position": 5,
+  "parent_id": null,
+  "bitrate": 64000,
+  "user_limit": 0,
+  "rtc_region": null,
+  "guild_id": "41771983423143937",
+  "permission_overwrites": [],
+  "rate_limit_per_user": 0,
+  "nsfw": false,
+}
+```
+
+##### Example DM Channel
+```json
+{
+  "last_message_id": "3343820033257021450",
+  "type": 1,
+  "id": "319674150115610528",
+  "recipients": [
+    {
+      "username": "test",
+      "discriminator": "9999",
+      "id": "82198898841029460",
+      "avatar": "33ecab261d4681afa4d85a04691c4a01"
+    }
+  ]
+}
+```
+
+##### Example Group DM Channel
+```json
+{
+  "name": "Some test channel",
+  "icon": null,
+  "recipients": [
+    {
+      "username": "test",
+      "discriminator": "9999",
+      "id": "82198898841029460",
+      "avatar": "33ecab261d4681afa4d85a04691c4a01"
+    },
+    {
+      "username": "test2",
+      "discriminator": "9999",
+      "id": "82198810841029460",
+      "avatar": "33ecab261d4681afa4d85a10691c4a01"
+    }
+  ],
+  "last_message_id": "3343820033257021450",
+  "type": 3,
+  "id": "319674150115710528",
+  "owner_id": "82198810841029460"
+}
+```
+
+##### Example Channel Category
+```json
+{
+  "permission_overwrites": [],
+  "name": "Test",
+  "parent_id": null,
+  "nsfw": false,
+  "position": 0,
+  "guild_id": "290926798629997250",
+  "type": 4,
+  "id": "399942396007890945"
+}
+```
+
+##### Example Thread Channel
+```json
+{
+  "id": "41771983423143937",
+  "guild_id": "41771983423143937",
+  "parent_id": "41771983423143937",
+  "owner_id": "41771983423143937",
+  "name": "don't buy dota-2",
+  "type": 11,
+  "last_message_id": "155117677105512449",
+  "message_count": 1,
+  "member_count": 5,
+  "rate_limit_per_user": 2,
+  "thread_metadata": {
+    "archived": false,
+    "auto_archive_duration": 1440,
+    "archive_timestamp": "2021-04-12T23:40:39.855793+00:00",
+    "locked": false
+  },
+  "total_message_sent": 1
+}
+```
+
+### Message Object
+| Field                       | Type                                                            | Description                                                                                           |
+|-----------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| id                          | snowflake                                                       | id of the message                                                                                     |
+| channel_id                  | snowflake                                                       | id of the channel the message was sent in                                                             |
+| author\*                    | [user](#user-object) object                                     | the author of this message                                                                            |
+| content\*\*                 | string                                                          | contents of the message                                                                               |
+| timestamp                   | ISO8601 timestamp                                               | when this message was sent                                                                            |
+| edited_timestamp            | ?ISO8601 timestamp                                              | when this message was edited (or null if never)                                                       |
+| tts                         | boolean                                                         | whether this was a TTS message                                                                        |
+| mention_everyone            | boolean                                                         | whether this message mentions everyone                                                                |
+| mentions                    | array of [user](#user-object) objects                           | users specifically mentioned in the message                                                           |
+| mention_roles               | array of [role](#role-object) object ids                        | roles specifically mentioned in this message                                                          |
+| mention_channels?\*\*\*     | array of [channel mention](#channel-mention-object) objects     | channels specifically mentioned in this message                                                       |
+| attachments\*\*             | array of [attachment](#attachment-object) objects               | any attached files                                                                                    |
+| embeds\*\*                  | array of [embed](#embed-object) objects                         | any embedded content                                                                                  |
+| reactions?                  | array of [reaction](#reaction-object) objects                   | reactions to the message                                                                              |
+| nonce?                      | integer or string                                               | used for validating a message was sent                                                                |
+| pinned                      | boolean                                                         | whether this message is pinned                                                                        |
+| webhook_id?                 | snowflake                                                       | if the message is generated by a webhook, this is the webhook's id                                    |
+| type                        | integer                                                         | [type of message](#message-types)                                                                     |
+| activity?                   | [message activity](#message-activity-structure) object          | sent with Rich Presence-related chat embeds                                                           |
+| application?                | partial [application](#application-object) object               | sent with Rich Presence-related chat embeds                                                           |
+| application_id?             | snowflake                                                       | if the message is an Interaction or application-owned webhook, this is the id of the application      |
+| message_reference?          | [message reference](#message-reference-structure) object        | data showing the source of a crosspost, channel follow add, pin, or reply message                     |
+| flags?                      | integer                                                         | [message flags](#message-flags) combined as a bitfield                                                |
+| referenced_message?\*\*\*\* | ?[message object](#message-object)                              | the message associated with the message_reference                                                     |
+| interaction?                | [message interaction object](#message-interaction-structure)    | sent if the message is a response to an Interaction                                                   |
+| thread?                     | [channel](#channel-object) object                               | the thread that was started from this message, includes [thread member](#thread-member-object) object |
+| components?\*\*             | array of [message components](#component-object)                | sent if the message contains components like buttons, action rows, or other interactive components    |
+| sticker_items?              | array of [message sticker item objects](#sticker-item-object)   | sent if the message contains stickers                                                                 |
+| position?                   | integer                                                         | A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread |
+| role_subscription_data?     | [role subscription data](#role-subscription-data-object) object | data of the role subscription purchase or renewal that prompted this ROLE_SUBSCRIPTION_PURCHASE message          |
+| resolved?                   | [resolved](#resolved-data-structure) data                       | data for users, members, channels, and roles in the message's [auto-populated select menus](#select-menu-object) |
+
+
+\* **The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the `webhook_id` on the message object.**  
+\*\* **An app will receive empty values in the `content`, `embeds`, `attachments`, and `components` fields if they have not configured (or been approved for) the `MESSAGE_CONTENT` privileged intent (`1 << 15`).**  
+\*\*\* **Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.**  
+\*\*\*\* **This field is only returned for messages with a `type` of `19` (REPLY) or `21` (THREAD_STARTER_MESSAGE). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.**
+
+#### Forum and Media Thread Message Params Object
+| Field             | Type                                                      | Description                                                                                      |
+|-------------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| content?\*        | string                                                    | Message contents (up to 2000 characters)                                                         |
+| embeds?\*         | array of [embed](#embed-object) objects                   | Up to 10 `rich` embeds (up to 6000 characters)                                                   |
+| allowed_mentions? | [allowed mention object](#allowed-mentions-object)        | Allowed mentions for the message                                                                 |
+| components?\*     | array of [message component](#component-object) objects   | Components to include with the message                                                           |
+| sticker_ids?\*    | array of snowflakes                                       | IDs of up to 3 [stickers](#sticker-object) in the server to send in the message                  |
+| attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with `filename` and `description`                                             |
+| flags?            | integer                                                   | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
+
+\* **At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.**
+
+#### Message Types
+| Type                                         | Value | Deletable |
+|----------------------------------------------|-------|-----------|
+| Default                                      | 0     | true      |
+| Recipient Add                                | 1     | false     |
+| Recipient Remove                             | 2     | false     |
+| Call                                         | 3     | false     |
+| Channel Name Change                          | 4     | false     |
+| Channel Icon Change                          | 5     | false     |
+| Channel Pinned Message                       | 6     | true      |
+| User Join                                    | 7     | true      |
+| Guild Boost                                  | 8     | true      |
+| Guild Boost Tier 1                           | 9     | true      |
+| Guild Boost Tier 2                           | 10    | true      |
+| Guild Boost Tier 3                           | 11    | true      |
+| Channel Follow Add                           | 12    | true      |
+| Guild Discovery Disqualified                 | 14    | false     |
+| Guild Discovery Requalified                  | 15    | false     |
+| Guild Discovery Grace Period Initial Warning | 16    | false     |
+| Guild Discovery Grace Period Final Warning   | 17    | false     |
+| Thread Created                               | 18    | true      |
+| Reply                                        | 19    | true      |
+| Chat Input Command                           | 20    | true      |
+| Thread Starter Message                       | 21    | false     |
+| Guild Invite Reminder                        | 22    | true      |
+| Context Menu Command                         | 23    | true      |
+| Auto Moderation Action                       | 24    | true\*     |
+| Role Subscription Purchase                   | 25    | true      |
+| Interaction Premium Upsell                   | 26    | true      |
+| Stage Start                                  | 27    | true      |
+| Stage End                                    | 28    | true      |
+| Stage Speaker                                | 29    | true      |
+| Stage Topic                                  | 31    | true      |
+| Guild Application Premium Subscription       | 32    | false     |
+
+**\* Can only be deleted by members with `MANAGE_MESSAGES` permission**
+
+#### Message Activity Structure
+| Field     | Type    | Description                                         |
+|-----------|---------|-----------------------------------------------------|
+| type      | integer | [type of message activity](#message-activity-types) |
+| party_id? | string  | party_id from a Rich Presence event                 |
+
+#### Message Activity Types
+| Type         | Value |
+|--------------|-------|
+| Join         | 1     |
+| Spectate     | 2     |
+| Listen       | 3     |
+| Join Request | 5     |
+
+#### Message Flags
+| Flag                                   | Value   | Description                                                                       |
+|----------------------------------------|---------|-----------------------------------------------------------------------------------|
+| Crossposted                            | 1 << 0  | this message has been published to subscribed channels (via Channel Following)    |
+| Is Crosspost                           | 1 << 1  | this message originated from a message in another channel (via Channel Following) |
+| Suppress Embeds                        | 1 << 2  | do not include any embeds when serializing this message                           |
+| Source Message Deleted                 | 1 << 3  | the source message for this crosspost has been deleted (via Channel Following)    |
+| Urgent                                 | 1 << 4  | this message came from the urgent message system                                  |
+| Has Thread                             | 1 << 5  | this message has an associated thread, with the same id as the message            |
+| Ephemeral                              | 1 << 6  | this message is only visible to the user who invoked the Interaction              |
+| Loading                                | 1 << 7  | this message is an Interaction Response and the bot is "thinking"                 |
+| Failed To Mention Some Roles In Thread | 1 << 8  | this message failed to mention some roles and add their members to the thread     |
+| Suppress Notifications                 | 1 << 12 | this message will not trigger push and desktop notifications                      |
+| Is Voice Message                       | 1 << 13 | this message is a voice message                                                   |
+
+### Message Reference Object
+| Field               | Type      | Description                                                                                                                             |
+|---------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| message_id?         | snowflake | id of the originating message                                                                                                           |
+| channel_id? \*      | snowflake | id of the originating message's channel                                                                                                 |
+| guild_id?           | snowflake | id of the originating message's guild                                                                                                   |
+| fail_if_not_exists? | boolean   | when sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true |
+
+**\* `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.**
+
+#### Followed Channel Structure
+| Field      | Type      | Description               |
+|------------|-----------|---------------------------|
+| channel_id | snowflake | source channel id         |
+| webhook_id | snowflake | created target webhook id |
+
+### Reaction Object
+| Field         | Type                                  | Description                                                                      |
+|---------------|---------------------------------------|----------------------------------------------------------------------------------|
+| count         | integer                               | Total number of times this emoji has been used to react (including super reacts) |
+| count_details | object                                | [Reaction count details object](#reaction-count-details-object)                  |
+| me            | boolean                               | Whether the current user reacted using this emoji                                |
+| me_burst      | boolean                               | Whether the current user super-reacted using this emoji                          |
+| emoji         | partial [emoji](#emoji-object) object | emoji information                                                                |
+| burst_colors  | array                                 | HEX colors used for super reaction                                               |
+
+#### Reaction Count Details Object
+| Field  | Type    | Description               |
+|--------|---------|---------------------------|
+| burst  | integer | Count of super reactions  |
+| normal | integer | Count of normal reactions |
+
+#### Overwrite Object
+| Field | Type      | Description                   |
+|-------|-----------|-------------------------------|
+| id    | snowflake | role or user id               |
+| type  | int       | either 0 (role) or 1 (member) |
+| allow | string    | permission bit set            |
+| deny  | string    | permission bit set            |
+
+#### Thread Metadata Object
+| Field                 | Type               | Description                                                                                                                                |
+|-----------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| archived              | boolean            | whether the thread is archived                                                                                                             |
+| auto_archive_duration | integer            | the thread will stop showing in the channel list after `auto_archive_duration` minutes of inactivity, can be set to: 60, 1440, 4320, 10080 |
+| archive_timestamp     | ISO8601 timestamp  | timestamp when the thread's archive status was last changed, used for calculating recent activity                                          |
+| locked                | boolean            | whether the thread is locked; when a thread is locked, only users with MANAGE_THREADS can unarchive it                                     |
+| invitable?            | boolean            | whether non-moderators can add other non-moderators to a thread; only available on private threads                                         |
+| create_timestamp?     | ?ISO8601 timestamp | timestamp when the thread was created; only populated for threads created after 2022-01-09                                                 |
+
+#### Thread Member Object
+| Field          | Type                                        | Description                                                     |
+|----------------|---------------------------------------------|-----------------------------------------------------------------|
+| id? \*         | snowflake                                   | ID of the thread                                                |
+| user_id? \*    | snowflake                                   | ID of the user                                                  |
+| join_timestamp | ISO8601 timestamp                           | Time the user last joined the thread                            |
+| flags          | integer                                     | Any user-thread settings, currently only used for notifications |
+| member? \*\*   | [guild member](#guild-member-object) object | Additional information about the user                           |
+
+**\* These fields are omitted on the member sent within each thread in the GUILD_CREATE event.**  
+**\*\* The `member` field is only present when `with_member` is set to `true` when calling [List Thread Members](#list-thread-members) or [Get Thread Member](#get-thread-member).**
+
+#### Default Reaction Object
+| Field      | Type       | Description                        |
+|------------|------------|------------------------------------|
+| emoji_id   | ?snowflake | the id of a guild's custom emoji   |
+| emoji_name | ?string    | the unicode character of the emoji |
+
+#### Forum Tag Object
+| Field      | Type       | Description                                                                                                    |
+|------------|------------|----------------------------------------------------------------------------------------------------------------|
+| id         | snowflake  | the id of the tag                                                                                              |
+| name       | string     | the name of the tag (0-20 characters)                                                                          |
+| moderated  | boolean    | whether this tag can only be added to or removed from threads by a member with the `MANAGE_THREADS` permission |
+| emoji_id   | ?snowflake | the id of a guild's custom emoji \*                                                                            |
+| emoji_name | ?string    | the unicode character of the emoji \*                                                                          |
+
+**\* At most one of `emoji_id` and `emoji_name` may be set to a non-null value.**
+
+### Embed Object
+| Field        | Type                                                   | Description                                                      |
+|--------------|--------------------------------------------------------|------------------------------------------------------------------|
+| title?       | string                                                 | title of embed                                                   |
+| type?        | string                                                 | [type of embed](#embed-types) (always "rich" for webhook embeds) |
+| description? | string                                                 | description of embed                                             |
+| url?         | string                                                 | url of embed                                                     |
+| timestamp?   | ISO8601 timestamp                                      | timestamp of embed content                                       |
+| color?       | number                                                 | color code of the embed                                          |
+| footer?      | [embed footer](#embed-footer-structure) object         | footer information                                               |
+| image?       | [embed image](#embed-image-structure) object           | image information                                                |
+| thumbnail?   | [embed thumbnail](#embed-thumbnail-structure) object   | thumbnail information                                            |
+| video?       | [embed video](#embed-video-structure) object           | video information                                                |
+| provider?    | [embed provider](#embed-provider-structure) object     | provider information                                             |
+| author?      | [embed author](#embed-author-structure) object         | author information                                               |
+| fields?      | array of [embed field](#embed-field-structure) objects | fields information                                               |
+
+#### Embed Thumbnail Structure
+| Field      | Type    | Description                                                     |
+|------------|---------|-----------------------------------------------------------------|
+| url        | string  | source url of thumbnail (only supports http(s) and attachments) |
+| proxy_url? | string  | a proxied url of the thumbnail                                  |
+| height?    | integer | height of thumbnail                                             |
+| width?     | integer | width of thumbnail                                              |
+
+#### Embed Video Structure
+| Field      | Type    | Description                |
+|------------|---------|----------------------------|
+| url?       | string  | source url of video        |
+| proxy_url? | string  | a proxied url of the video |
+| height?    | integer | height of video            |
+| width?     | integer | width of video             |
+
+#### Embed Image Structure
+| Field      | Type    | Description                                                 |
+|------------|---------|-------------------------------------------------------------|
+| url        | string  | source url of image (only supports http(s) and attachments) |
+| proxy_url? | string  | a proxied url of the image                                  |
+| height?    | integer | height of image                                             |
+| width?     | integer | width of image                                              |
+
+#### Embed Provider Structure
+| Field | Type   | Description      |
+|-------|--------|------------------|
+| name? | string | name of provider |
+| url?  | string | url of provider  |
+
+#### Embed Author Structure
+| Field           | Type   | Description                                                |
+|-----------------|--------|------------------------------------------------------------|
+| name            | string | name of author                                             |
+| url?            | string | url of author (only supports http(s))                      |
+| icon_url?       | string | url of author icon (only supports http(s) and attachments) |
+| proxy_icon_url? | string | a proxied url of author icon                               |
+
+#### Embed Footer Structure
+| Field           | Type   | Description                                                |
+|-----------------|--------|------------------------------------------------------------|
+| text            | string | footer text                                                |
+| icon_url?       | string | url of footer icon (only supports http(s) and attachments) |
+| proxy_icon_url? | string | a proxied url of footer icon                               |
+
+#### Embed Field Structure
+| Field   | Type    | Description                                     |
+|---------|---------|-------------------------------------------------|
+| name    | string  | name of the field                               |
+| value   | string  | value of the field                              |
+| inline? | boolean | whether or not this field should display inline |
+
+##### Embed Limits
+| Field                                  | Limit                                            |
+|----------------------------------------|--------------------------------------------------|
+| title                                  | 256 characters                                   |
+| description                            | 4096 characters                                  |
+| fields                                 | Up to 25 [field](#embed-field-structure) objects |
+| [field.name](#embed-field-structure)   | 256 characters                                   |
+| [field.value](#embed-field-structure)  | 1024 characters                                  |
+| [footer.text](#embed-footer-structure) | 2048 characters                                  |
+| [author.name](#embed-author-structure) | 256 characters                                   |
+
+**Additionally, the combined sum of characters in all `title`, `description`, `field.name`, `field.value`, `footer.text`, and `author.name` fields across all embeds attached to a message must not exceed 6000 characters.**  
+**Violating any of these constraints will result in a `Bad Request` response.**  
+**Embeds are deduplicated by URL. If a message contains multiple embeds with the same URL, only the first is shown.**
+
+#### Attachment Object
+| Field          | Type      | Description                                                                             |
+|----------------|-----------|-----------------------------------------------------------------------------------------|
+| id             | snowflake | attachment id                                                                           |
+| filename       | string    | name of file attached                                                                   |
+| description?   | string    | description for the file (max 1024 characters)                                          |
+| content_type?  | string    | the attachment's media type                                                             |
+| size           | number    | size of file in bytes                                                                   |
+| url            | string    | source url of file                                                                      |
+| proxy_url      | string    | a proxied url of file                                                                   |
+| height?        | ?number   | height of file (if image)                                                               |
+| width?         | ?number   | width of file (if image)                                                                |
+| ephemeral? \*  | boolean   | whether this attachment is ephemeral                                                    |
+| duration_secs? | float     | the duration of the audio file (currently for voice messages)                           |
+| waveform?      | string    | base64 encoded bytearray representing a sampled waveform (currently for voice messages) |
+| flags?         | number    | [attachment flags](#attachment-flags) combined as a bitfield                            |
+
+**\* Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.**
+
+#### Attachment Flags
+| Flag     | Value  | Description                                                       |
+|----------|--------|-------------------------------------------------------------------|
+| Is Remix | 1 << 2 | this attachment has been edited using the remix feature on mobile |
+
+### Channel Mention Object
+| Field    | Type      | Description                                                                 |
+|----------|-----------|-----------------------------------------------------------------------------|
+| id       | snowflake | id of the channel                                                           |
+| guild_id | snowflake | id of the guild containing the channel                                      |
+| type     | integer   | the [type of channel](#channel-object-channel-types)                        |
+| name     | string    | the name of the channel                                                     |
+
+### Allowed Mentions Object
+| Field        | Type                           | Description                                                                                |
+|--------------|--------------------------------|--------------------------------------------------------------------------------------------|
+| parse        | array of allowed mention types | An array of [allowed mention types](#allowed-mention-types) to parse from the content.     |
+| roles        | list of snowflakes             | Array of role_ids to mention (Max size of 100)                                             |
+| users        | list of snowflakes             | Array of user_ids to mention (Max size of 100)                                             |
+| replied_user | boolean                        | For replies, whether to mention the author of the message being replied to (default false) |
+
+#### Allowed Mention Types
+| Type              | Value      | Description                           |
+|-------------------|------------|---------------------------------------|
+| Role Mentions     | "roles"    | Controls role mentions                |
+| User Mentions     | "users"    | Controls user mentions                |
+| Everyone Mentions | "everyone" | Controls @everyone and @here mentions |
+
+#### Allowed Mentions Reference
+**If `allowed_mentions` is _not_ passed in (i.e. the key does not exist), the mentions will be parsed via the content. This corresponds with existing behavior.**
+
+**In the example below we would ping @here (and also @role124 and @user123)**  
+```json
+{
+  "content": "@here Hi there from <@123>, cc <@&124>"
+}
+```
+
+**To suppress all mentions in a message use:**
+
+```json
+{
+  "content": "@everyone hi there, <@&123>",
+  "allowed_mentions": {
+    "parse": []
+  }
+}
+```
+
+**This will suppress _all_ mentions in the message (no @everyone or user mention).**
+
+**The `parse` field is mutually exclusive with the other fields.**  
+**In the example below, we would ping users `123` and role `124`, but _not_ @everyone.**  
+> **Note that passing a `Falsy` value ([], null) into the "users" field does not trigger a validation error.**
+
+```json
+{
+  "content": "@everyone <@123> <@&124>",
+  "allowed_mentions": {
+    "parse": ["users", "roles"],
+    "users": []
+  }
+}
+```
+
+**In the next example, we would ping @everyone, (and also users `123` and `124` if they suppressed @everyone mentions), but we would not ping any roles.**
+
+```json
+{
+  "content": "@everyone <@123> <@124> <@125> <@&200>",
+  "allowed_mentions": {
+    "parse": ["everyone"],
+    "users": ["123", "124"]
+  }
+}
+```
+
+### Message Components
+
+#### Component Object
+| Type | Name               | Description                                       |
+|------|--------------------|---------------------------------------------------|
+| 1    | Action Row         | Container for other components                    |
+| 2    | Button             | Button object                                     |
+| 3    | String Select      | Select menu for picking from defined text options |
+| 4    | Text Input         | Text input object                                 |
+| 5    | User Select        | Select menu for users                             |
+| 6    | Role Select        | Select menu for roles                             |
+| 7    | Mentionable Select | Select menu for mentionables (users *and* roles)  |
+| 8    | Channel Select     | Select menu for channels                          |
+
+#### Button Object
+| Field      | Type                           | Description                                                     |
+|------------|--------------------------------|-----------------------------------------------------------------|
+| type       | integer                        | `2` for a button                                                |
+| style      | integer                        | A [button style](#button-styles)                                |
+| label?     | string                         | Text that appears on the button; max 80 characters              |
+| emoji?     | partial [emoji](#emoji-object) | `name`, `id`, and `animated`                                    |
+| custom_id? | string                         | Developer-defined identifier for the button; max 100 characters |
+| url?       | string                         | URL for link-style buttons                                      |
+| disabled?  | boolean                        | Whether the button is disabled (defaults to `false`)            |
+
+#### Button Styles
+| Name      | Value | Color                    | Required Field |
+|-----------|-------|--------------------------|----------------|
+| Primary   | 1     | blurple                  | `custom_id`    |
+| Secondary | 2     | grey                     | `custom_id`    |
+| Success   | 3     | green                    | `custom_id`    |
+| Danger    | 4     | red                      | `custom_id`    |
+| Link      | 5     | grey, navigates to a URL | `url`          |
+
+#### Select Menu Object
+| Field                 | Type                                                              | Description                                                                                                                                              |
+|-----------------------|-------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| type                  | integer                                                           | [Type](#component-types) of select menu component (text: `3`, user: `5`, role: `6`, mentionable: `7`, channels: `8`)                                     |
+| custom_id             | string                                                            | ID for the select menu; max 100 characters                                                                                                               |
+| options?\*            | array of [select options](#select-option-structure)               | Specified choices in a select menu (only required and available for string selects (type `3`)); max 25                                                   |
+| channel_types?\*\*    | array of [channel types](#channel-types)                          | List of channel types to include in the channel select component (type `8`)                                                                              |
+| placeholder?          | string                                                            | Placeholder text if nothing is selected; max 150 characters                                                                                              |
+| default_values?\*\*\* | array of [default value objects](#select-default-value-structure) | List of default values for auto-populated select menu components; number of default values must be in the range defined by `min_values` and `max_values` |
+| min_values?           | integer                                                           | Minimum number of items that must be chosen (defaults to 1); min 0, max 25                                                                               |
+| max_values?           | integer                                                           | Maximum number of items that can be chosen (defaults to 1); max 25                                                                                       |
+| disabled?             | boolean                                                           | Whether select menu is disabled (defaults to `false`)                                                                                                    |
+
+\* **`options` is required for string select menus (component type `3`), and unavailable for all other select menu components.**  
+\*\* **`channel_types` can only be used for channel select menu components.**  
+\*\*\* **`default_values` is only available for auto-populated select menu components, which include user (`5`), role (`6`), mentionable (`7`), and channel (`8`) [components](#component-types).**
+
+#### Select Option Structure
+| Field        | Type                                  | Description                                              |
+|--------------|---------------------------------------|----------------------------------------------------------|
+| label        | string                                | User-facing name of the option; max 100 characters       |
+| value        | string                                | Dev-defined value of the option; max 100 characters      |
+| description? | string                                | Additional description of the option; max 100 characters |
+| emoji?       | partial [emoji](#emoji-object) object | `id`, `name`, and `animated`                             |
+| default?     | boolean                               | Will show this option as selected by default             |
+
+#### Select Default Value Structure
+| Field | Type      | Description                                                                   |
+|-------|-----------|-------------------------------------------------------------------------------|
+| id    | snowflake | ID of a user, role, or channel                                                |
+| type  | string    | Type of value that `id` represents. Either `"user"`, `"role"`, or `"channel"` |
+
+#### Text Input Object
+| Field        | Type    | Description                                                          |
+|--------------|---------|----------------------------------------------------------------------|
+| type         | integer | `4` for a text input                                                 |
+| custom_id    | string  | Developer-defined identifier for the input; max 100 characters       |
+| style        | integer | The [Text Input Style](#text-input-styles)                           |
+| label        | string  | Label for this component; max 45 characters                          |
+| min_length?  | integer | Minimum input length for a text input; min 0, max 4000               |
+| max_length?  | integer | Maximum input length for a text input; min 1, max 4000               |
+| required?    | boolean | Whether this component is required to be filled (defaults to `true`) |
+| value?       | string  | Pre-filled value for this component; max 4000 characters             |
+| placeholder? | string  | Custom placeholder text if the input is empty; max 100 characters    |
+
+#### Text Input Styles
+| Name      | Value | Description       |
+|-----------|-------|-------------------|
+| Short     | 1     | Single-line input |
+| Paragraph | 2     | Multi-line input  |
+
+### Webhook Object
+| Field              | Type                                      | Description                                                                                      |
+|--------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|
+| id                 | snowflake                                 | the id of the webhook                                                                            |
+| type               | integer                                   | the [type](#webhook-types) of the webhook                                                        |
+| guild_id?          | ?snowflake                                | the guild id this webhook is for, if any                                                         |
+| channel_id         | ?snowflake                                | the channel id this webhook is for, if any                                                       |
+| user?              | [user](#user-object) object               | the user this webhook was created by (not returned when getting a webhook by token)              |
+| name               | ?string                                   | the default name of the webhook                                                                  |
+| avatar             | ?string                                   | the default user avatar hash of the webhook                                                      |
+| token?             | string                                    | the secure token of the webhook (returned for Incoming Webhooks)                                 |
+| application_id     | ?snowflake                                | the bot/OAuth2 application that created this webhook                                             |
+| source_guild? \*   | partial [guild](#guild-object) object     | the guild of the channel that this webhook is following (returned for Channel Follower Webhooks) |
+| source_channel? \* | partial [channel](#channel-object) object | the channel that this webhook is following (returned for Channel Follower Webhooks)              |
+| url?               | string                                    | the url used for executing the webhook (returned by the webhooks OAuth2 flow)                    |
+
+**\* These fields will be absent if the webhook creator has since lost access to the guild where the followed channel resides**
+
+#### Webhook Types
+| Value | Name             | Description                                                                                                    |
+|-------|------------------|----------------------------------------------------------------------------------------------------------------|
+| 1     | Incoming         | Incoming Webhooks can post messages to channels with a generated token                                         |
+| 2     | Channel Follower | Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels |
+| 3     | Application      | Application webhooks are webhooks used with Interactions                                                       |
+
+### Interaction Object
+| Field            | Type                                                | Description                                                                                                    |
+|------------------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| id               | snowflake                                           | ID of the interaction                                                                                          |
+| application_id   | snowflake                                           | ID of the application this interaction is for                                                                  |
+| type             | [interaction type](#interaction-type)               | Type of interaction                                                                                            |
+| data?\*          | [interaction data](#interaction-data)               | Interaction data payload                                                                                       |
+| guild_id?        | snowflake                                           | Guild that the interaction was sent from                                                                       |
+| channel?         | [partial channel](#channel-object) object           | Channel that the interaction was sent from                                                                     |
+| channel_id?      | snowflake                                           | Channel that the interaction was sent from                                                                     |
+| member?\*\*      | [guild member](#guild-member-object) object         | Guild member data for the invoking user, including permissions                                                 |
+| user?            | [user](#user-object) object                         | User object for the invoking user, if invoked in a DM                                                          |
+| token            | string                                              | Continuation token for responding to the interaction                                                           |
+| version          | integer                                             | Read-only property, always `1`                                                                                 |
+| message?         | [message](#message-object) object                   | For components, the message they were attached to                                                              |
+| app_permissions? | string                                              | Bitwise set of permissions the app or bot has within the channel the interaction was sent from                 |
+| locale?\*\*\*    | string                                              | Selected language of the invoking user                                                                         |
+| guild_locale?    | string                                              | [Guild's preferred locale](#guild-object), if invoked in a guild                                               |
+| entitlements     | array of [entitlement](#entitlement-object) objects | For monetized apps, any entitlements for the invoking user, representing access to premium [SKUs](#sku-object) |
+
+**\* This is always present on application command, message component, and modal submit interaction types.**  
+**\*\* `member` is sent when the interaction is invoked in a guild, and `user` is sent when invoked in a DM**  
+**\*\*\* This is available on all interaction types except PING**
+
+#### Interaction Type
+| Name                             | Value |
+|----------------------------------|-------|
+| Ping                             | 1     |
+| Application Command              | 2     |
+| Message Component                | 3     |
+| Application Command Autocomplete | 4     |
+| Modal Submit                     | 5     |
+
+### Interaction Data
+
+#### Application Command Data Structure
+| Field      | Type                                                                                       | Description                                                                     |
+|------------|--------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| id         | snowflake                                                                                  | the [`ID`](#application-command-structure) of the invoked command               |
+| name       | string                                                                                     | the [`name`](#application-command-structure) of the invoked command             |
+| type       | integer                                                                                    | the [`type`](#application-command-structure) of the invoked command             |
+| resolved?  | [resolved data](#resolved-data-structure)                                                  | converted users + roles + channels + attachments                                |
+| options?\* | array of [application command interaction data option](#interaction-data-option-structure) | the params + values from the user                                               |
+| guild_id?  | snowflake                                                                                  | the id of the guild the command is registered to                                |
+| target_id? | snowflake                                                                                  | id of the user or message targeted by a [user](#user-commands) or [message](#message-commands) command |
+
+**\* This [can be partial](#autocomplete) when in response to `APPLICATION_COMMAND_AUTOCOMPLETE`**
+
+#### Message Component Data Structure
+| Field          | Type                                                      | Description                                                                |
+|----------------|-----------------------------------------------------------|----------------------------------------------------------------------------|
+| custom_id      | string                                                    | the [`custom_id`](#custom-id) of the component                             |
+| component_type | integer                                                   | the [type](#component-object-component-types) of the component             |
+| values?\*      | array of [select option values](#select-option-structure) | values the user selected in a [select menu](#select-menu-object) component |
+| resolved?      | [resolved data](#resolved-data-structure)                 | resolved entities from selected options                                    |
+
+**\* This is always present for select menu components**
+
+#### Modal Submit Data Structure
+| Field      | Type                                               | Description                                |
+|------------|----------------------------------------------------|--------------------------------------------|
+| custom_id  | string                                             | the [`custom_id`](#custom-id) of the modal |
+| components | array of [message components](#message-components) | the values submitted by the user           |
+
+#### Resolved Data Structure
+| Field         | Type                                                                | Description                         |
+|---------------|---------------------------------------------------------------------|-------------------------------------|
+| users?        | Map of Snowflakes to [user](#user-object) objects                   | the ids and User objects            |
+| members?\*    | Map of Snowflakes to [partial member](#guild-member-object) objects | the ids and partial Member objects  |
+| roles?        | Map of Snowflakes to [role](#role-object) objects                   | the ids and Role objects            |
+| channels?\*\* | Map of Snowflakes to [partial channel](#channel-object) objects     | the ids and partial Channel objects |
+| messages?     | Map of Snowflakes to [partial messages](#message-object) objects    | the ids and partial Message objects |
+| attachments?  | Map of Snowflakes to [attachment](#attachment-object) objects       | the ids and attachment objects      |
+
+**\* Partial `Member` objects are missing `user`, `deaf` and `mute` fields**  
+**\*\* Partial `Channel` objects only have `id`, `name`, `type` and `permissions` fields. Threads will also have `thread_metadata` and `parent_id` fields.**
+
+#### Application Command Interaction Data Option Structure
+| Field    |  Type                                                                                      | Description                                                                  |
+|----------|--------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| name     | string                                                                                     | Name of the parameter                                                        |
+| type     | integer                                                                                    | Value of [application command option type](#application-command-option-type) |
+| value?   | string, integer, double, or boolean                                                        | Value of the option resulting from user input                                |
+| options? | array of [application command interaction data option](#interaction-data-option-structure) | Present if this option is a group or subcommand                              |
+| focused? | boolean                                                                                    | `true` if this option is the currently focused option for autocomplete       |
+
+#### Message Interaction Structure
+| Field   | Type                                          | Description                                                                                                    |
+|---------|-----------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| id      | snowflake                                     | ID of the interaction                                                                                          |
+| type    | [interaction type](#interaction-type)         | Type of interaction                                                                                            |
+| name    | string                                        | Name of the [application command](#application-command-structure), including subcommands and subcommand groups |
+| user    | [user object](#user-object)                   | User who invoked the interaction                                                                               |
+| member? | [partial member](#guild-member-object) object | Member who invoked the interaction in the guild                                                                |
+
+#### Interaction Response Structure
+| Field | Type                                                              | Description                  |
+|-------|-------------------------------------------------------------------|------------------------------|
+| type  | [interaction callback type](#interaction-callback-type)           | the type of response         |
+| data? | [interaction callback data](#interaction-callback-data-structure) | an optional response message |
+
+#### Interaction Callback Type
+| Name                                    | Value | Description                                                                                                   |
+|-----------------------------------------|-------|---------------------------------------------------------------------------------------------------------------|
+| Pong                                    | 1     | ACK a `Ping`                                                                                                  |
+| Channel Message With Source             | 4     | respond to an interaction with a message                                                                      |
+| Deferred Channel Message With Source    | 5     | ACK an interaction and edit a response later, the user sees a loading state                                   |
+| Deferred Update Message\*               | 6     | for components, ACK an interaction and edit the original message later; the user does not see a loading state |
+| Update Message\*                        | 7     | for components, edit the message the component was attached to                                                |
+| Application Command Autocomplete Result | 8     | respond to an autocomplete interaction with suggested choices                                                 |
+| Modal\*\*                               | 9     | respond to an interaction with a popup modal                                                                  |
+| Premium Required\*\*\*                  | 10    | respond to an interaction with an upgrade button, only available for apps with monetization enabled           |
+
+**\* Only valid for component-based interactions.**  
+**\*\* Not available for `MODAL_SUBMIT` and `PING` interactions.**  
+**\*\*\* Not available for `APPLICATION_COMMAND_AUTOCOMPLETE` and `PING` interactions.**
+
+#### Interaction Callback Data Structure
+
+#### Messages
+| Field             | Type                                                                | Description                                                                                                |
+|-------------------|---------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| tts?              | boolean                                                             | is the response TTS                                                                                        |
+| content?          | string                                                              | message content                                                                                            |
+| embeds?           | array of [embeds](#embed-object)                                    | supports up to 10 embeds                                                                                   |
+| allowed_mentions? | [allowed mentions](#allowed-mentions-object) | [allowed mentions](#allowed-mentions-object) object                                                        |
+| flags?            | integer                                                             | [message flags](#message-flags) combined as a bitfield (only `SUPPRESS_EMBEDS` and `EPHEMERAL` can be set) |
+| components?       | array of [components](#message-components)                          | message components                                                                                         |
+| attachments? \*   | array of partial [attachment](#attachment-object) objects           | attachment objects with filename and description                                                           |
+
+#### Autocomplete
+| Field   | Type                                                            | Description                              |
+|---------|------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| choices | array of [choices](#application-command-option-choice-structure) | autocomplete choices (max of 25 choices) |
+
+#### Modal
+| Field      | Type                                                          | Description                                                      |
+|------------|---------------------------------------------------------------|------------------------------------------------------------------|
+| custom_id  | string                                                        | a developer-defined identifier for the modal, max 100 characters |
+| title      | string                                                        | the title of the popup modal, max 45 characters                  |
+| components | array of [components](#message-components) | between 1 and 5 (inclusive) components that make up the modal    |
+
+### Invite Object
+| Field                       | Type                                                          | Description                                                                                                                                    |
+|-----------------------------|---------------------------------------------------------------|-------------------------------------------------------------------------------|
+| code                        | string                                                        | the invite code (unique ID)                       |
+| guild?                      | partial [guild](#guild-object) object                         | the guild this invite is for                  |
+| channel                     | ?partial [channel](#channel-object) object                    | the channel this invite is for                      |
+| inviter?                    | [user](#user-object) object                                   | the user who created the invite           |
+| target_type?                | number                                                        | the [type of target](#invite-target-types) for this voice channel invite    |
+| target_user?                | [user](#user-object) object                                   | the user whose stream to display for this voice channel stream invite   |
+| target_application?         | partial [application](#application-object) object             | the embedded application to open for this voice channel embedded application invite |
+| approximate_presence_count? | number                                                        | approximate count of online members, when `with_counts` is `true` |
+| approximate_member_count?   | number                                                        | approximate count of total members, when `with_counts` is `true` |
+| expires_at?                 | ?ISO8601 timestamp                                            | the expiration date of this invite, when `with_expiration` is `true` |
+| guild_scheduled_event?      | [guild scheduled event](#guild-scheduled-event-object) object | guild scheduled event data, only included if `guild_scheduled_event_id` contains a valid guild scheduled event id                        |
+
+#### Invite Target Types
+| Type                 | Value |
+|----------------------|-------|
+| STREAM               | 1     |
+| EMBEDDED_APPLICATION | 2     |
+
+#### Invite Metadata Object
+| Field      | Type              | Description                                          |
+|------------|-------------------|------------------------------------------------------|
+| uses       | number            | number of times this invite has been used            |
+| max_uses   | number            | max number of times this invite can be used          |
+| max_age    | number            | duration (in seconds) after which the invite expires |
+| temporary  | boolean           | whether this invite only grants temporary membership |
+| created_at | ISO8601 timestamp | when this invite was created                         |
+
+#### Role Subscription Data Object
+| Field                        | Type      | Description                                                           |
+|------------------------------|-----------|-----------------------------------------------------------------------|
+| role_subscription_listing_id | snowflake | the id of the sku and listing that the user is subscribed to          |
+| tier_name                    | string    | the name of the tier that the user is subscribed to                   |
+| total_months_subscribed      | integer   | the cumulative number of months that the user has been subscribed for |
+| is_renewal                   | boolean   | whether this notification is for a renewal rather than a new purchase |
 
 #### Application Object
-
-| Field                              | Type                                            | Description                                                                                                           |
-|------------------------------------|----------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| id                                 | snowflake                                       | ID of the app                                         |
-| name                               | string                                          | Name of the app                                       |
-| icon                               | ?string                                         | Icon hash of the app                                  |
-| description                        | string                                          | Description of the app                                |
-| rpc_origins?                       | array of strings                                | List of RPC origin URLs, if RPC is enabled            |
-| bot_public                         | boolean                                         | When `false`, only the app owner can add the app to guilds |
-| bot_require_code_grant             | boolean                                         | When `true`, the app's bot will only join upon completion of the full OAuth2 code grant flow |
-| bot?                               | partial [user](#user-object) object             | Partial user object for the bot user associated with the app |
-| terms_of_service_url?              | string                                          | URL of the app's Terms of Service                     |
-| privacy_policy_url?                | string                                          | URL of the app's Privacy Policy                       |
-| owner?                             | partial [user](#user-object) object             | Partial user object for the owner of the app          |
-| verify_key                         | string                                          | Hex encoded key for verification in interactions and the GameSDK's GetTicket |
-| team                               | ?[team](#team-object) object                    | If the app belongs to a team, this will be a list of the members of that team |
-| guild_id?                          | snowflake                                       | Guild associated with the app. For example, a developer support server. |
-| guild?                             | partial [guild](#guild-object) object           | Partial object of the associated guild                |
+| Field                              | Type                                            | Description                                                                                                   |
+|------------------------------------|-------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| id                                 | snowflake                                       | ID of the app                                                                                                 |
+| name                               | string                                          | Name of the app                                                                                               |
+| icon                               | ?string                                         | Icon hash of the app                                                                                          |
+| description                        | string                                          | Description of the app                                                                                        |
+| rpc_origins?                       | array of strings                                | List of RPC origin URLs, if RPC is enabled                                                                    |
+| bot_public                         | boolean                                         | When `false`, only the app owner can add the app to guilds                                                    |
+| bot_require_code_grant             | boolean                                         | When `true`, the app's bot will only join upon completion of the full OAuth2 code grant flow                  |
+| bot?                               | partial [user](#user-object) object             | Partial user object for the bot user associated with the app                                                  |
+| terms_of_service_url?              | string                                          | URL of the app's Terms of Service                                                                             |
+| privacy_policy_url?                | string                                          | URL of the app's Privacy Policy                                                                               |
+| owner?                             | partial [user](#user-object) object             | Partial user object for the owner of the app                                                                  |
+| verify_key                         | string                                          | Hex encoded key for verification in interactions and the GameSDK's GetTicket                                  |
+| team                               | ?[team](#team-object) object                    | If the app belongs to a team, this will be a list of the members of that team                                 |
+| guild_id?                          | snowflake                                       | Guild associated with the app. For example, a developer support server.                                       |
+| guild?                             | partial [guild](#guild-object) object           | Partial object of the associated guild                                                                        |
 | primary_sku_id?                    | snowflake                                       | If this app is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists |
-| slug?                              | string                                          | If this app is a game sold on Discord, this field will be the URL slug that links to the store page |
-| cover_image?                       | string                                          | App's default rich presence invite cover image hash   |
-| flags?                             | number                                          | App's public [flags](#application-flags)              |
-| approximate_guild_count?           | number                                          | Approximate count of guilds the app has been added to |
-| redirect_uris?                     | array of strings                                | Array of redirect URIs for the app                    |
-| interactions_endpoint_url?         | string                                          | Interactions endpoint URL for the app                 |
-| role_connections_verification_url? | string                                          | Role connection verification URL for the app          |
-| tags?                              | array of strings                                | List of tags describing the content and functionality of the app. Max of 5 tags |
-| install_params?                    | [install params](#install-params-object) object | Settings for the app's default in-app authorization link, if enabled |
-| custom_install_url?                | string                                          | Default custom authorization URL for the app, if enabled |
+| slug?                              | string                                          | If this app is a game sold on Discord, this field will be the URL slug that links to the store page           |
+| cover_image?                       | string                                          | App's default rich presence invite cover image hash                                                           |
+| flags?                             | number                                          | App's public [flags](#application-flags)                                                                      |
+| approximate_guild_count?           | number                                          | Approximate count of guilds the app has been added to                                                         |
+| redirect_uris?                     | array of strings                                | Array of redirect URIs for the app                                                                            |
+| interactions_endpoint_url?         | string                                          | Interactions endpoint URL for the app                                                                         |
+| role_connections_verification_url? | string                                          | Role connection verification URL for the app                                                                  |
+| tags?                              | array of strings                                | List of tags describing the content and functionality of the app. Max of 5 tags                               |
+| install_params?                    | [install params](#install-params-object) object | Settings for the app's default in-app authorization link, if enabled                                          |
+| custom_install_url?                | string                                          | Default custom authorization URL for the app, if enabled                                                      |
 
-###### Example Application Object
-
+##### Example Application Object
 ```json
 {
   "bot_public": true,
@@ -3252,22 +5716,20 @@ SCHEDULED --> CANCELED
 ```
 
 #### Application Flags
+| Value   | Name                                          | Description                                                                                                                                                |
+|---------|-----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1 << 6  | Application Auto Moderation Rule Create Badge | Indicates if an app uses the Auto Moderation API                                                                                                           |
+| 1 << 12 | Gateway Presence                              | Intent required for bots in **100 or more servers** to receive `presence_update` events                                                                    |
+| 1 << 13 | Gateway Presence Limited                      | Intent required for bots in under 100 servers to receive `presence_update` events, found on the **Bot** page in your app's settings                        |
+| 1 << 14 | Gateway Guild Members                         | Intent required for bots in **100 or more servers** to receive member-related events like `guild_member_add`.                                              |
+| 1 << 15 | Gateway Guild Members Limited                 | Intent required for bots in under 100 servers to receive member-related events like `guild_member_add`, found on the **Bot** page in your app's settings.  |
+| 1 << 16 | Verification Pending Guild Limit              | Indicates unusual growth of an app that prevents verification                                                                                              |
+| 1 << 17 | Embedded                                      | Indicates if an app is embedded within the Discord client (currently unavailable publicly)                                                                 |
+| 1 << 18 | Gateway Message Content                       | Intent required for bots in **100 or more servers** to receive message content                                                                             |
+| 1 << 19 | Gateway Message Content Limited               | Intent required for bots in under 100 servers to receive message content, found on the **Bot** page in your app's settings                                 |
+| 1 << 23 | Application Command Badge                     | Indicates if an app has registered global application commands                                                                                             |
 
-| Value   | Name                                          | Description                                                              |
-|---------|-----------------------------------------------|----------------------------------------------------------------------------------------|
-| 1 << 6  | APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE | Indicates if an app uses the Auto Moderation API       |
-| 1 << 12 | GATEWAY_PRESENCE                              | Intent required for bots in **100 or more servers** to receive `presence_update` events |
-| 1 << 13 | GATEWAY_PRESENCE_LIMITED                      | Intent required for bots in under 100 servers to receive `presence_update` events, found on the **Bot** page in your app's settings |
-| 1 << 14 | GATEWAY_GUILD_MEMBERS                         | Intent required for bots in **100 or more servers** to receive member-related events like `guild_member_add`. See the list of member-related events under `GUILD_MEMBERS` |
-| 1 << 15 | GATEWAY_GUILD_MEMBERS_LIMITED                 | Intent required for bots in under 100 servers to receive member-related events like `guild_member_add`, found on the **Bot** page in your app's settings. See the list of member-related events under `GUILD_MEMBERS` |
-| 1 << 16 | VERIFICATION_PENDING_GUILD_LIMIT              | Indicates unusual growth of an app that prevents verification  |
-| 1 << 17 | EMBEDDED                                      | Indicates if an app is embedded within the Discord client (currently unavailable publicly) |
-| 1 << 18 | GATEWAY_MESSAGE_CONTENT                       | Intent required for bots in **100 or more servers** to receive message content        |
-| 1 << 19 | GATEWAY_MESSAGE_CONTENT_LIMITED               | Intent required for bots in under 100 servers to receive message content, found on the **Bot** page in your app's settings |
-| 1 << 23 | APPLICATION_COMMAND_BADGE                     | Indicates if an app has registered global application commands  |
-
-#### Install Params Object
-
+### Install Params Object
 | Field       | Type             | Description                                                        |
 |-------------|------------------|--------------------------------------------------------------------|
 | scopes      | array of strings | [Scopes](#oauth2-scopes) to add the application to the server with |
@@ -3305,103 +5767,96 @@ SCHEDULED --> CANCELED
 | voice                                    | allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval                                                                          |
 | webhook.incoming                         | this generates a webhook that is returned in the oauth token response for authorization code grants                                                                                     |
 
-#### Application Command Object
+### Application Command Object
+| Field                      | Type                                                                         | Description                                                                                             | Valid Types |
+|----------------------------|----------------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------|-------------|
+| id                         | snowflake                                                                    | Unique ID of command                                                                                    | all         |
+| type?                      | number                                                                       | [Type of command](#application-command-types), defaults to `1`                                          | all         |
+| application_id             | snowflake                                                                    | ID of the parent application                                                                            | all         |
+| guild_id?                  | snowflake                                                                    | Guild ID of the command, if not global                                                                  | all         |
+| name                       | string                                                                       | Name of command, 1-32 characters                                                                        | all         |
+| name_localizations?        | ?dictionary with keys in available locales                                   | Localization dictionary for `name` field. Values follow the same restrictions as `name`                 | all         |
+| description                | string                                                                       | Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands | all         |
+| description_localizations? | ?dictionary with keys in available locales                                   | Localization dictionary for `description` field. Values follow the same restrictions as `description`   | all         |
+| options?                   | array of [application command option](#application-command-option-structure) | Parameters for the command, max of 25                                                                   | CHAT_INPUT  |
+| default_member_permissions | ?string                                                                      | Set of permissions represented as a bit set                                                             | all         |
+| dm_permission?             | boolean                                                                      | Indicates whether the command is available in DMs with the app, only for globally-scoped commands       | all         |
+| nsfw?                      | boolean                                                                      | Indicates whether the command is age-restricted, defaults to `false`                                    | all         |
+| version                    | snowflake                                                                    | Autoincrementing version identifier updated during substantial record changes                           | all         |
 
-| Field                      | Type                                                                                  | Description                                                                                               | Valid Types |
-|----------------------------|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|-------------|
-| id                         | snowflake                                                                             | Unique ID of command                                                                                      | all         |
-| type?                      | number                                                                                | [Type of command](#application-command-types), defaults to `1`                                            | all         |
-| application_id             | snowflake                                                                             | ID of the parent application                                                                              | all         |
-| guild_id?                  | snowflake                                                                             | Guild ID of the command, if not global                                                                    | all         |
-| name                       | string                                                                                | Name of command, 1-32 characters                                                                          | all         |
-| name_localizations?        | ?dictionary with keys in available locales                                             | Localization dictionary for `name` field. Values follow the same restrictions as `name`                   | all         |
-| description                | string                                                                                | Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands   | all         |
-| description_localizations? | ?dictionary with keys in available locales                                             | Localization dictionary for `description` field. Values follow the same restrictions as `description`      | all         |
-| options?                   | array of [application command option](#application-command-option-structure)           | Parameters for the command, max of 25                                                                      | CHAT_INPUT  |
-| default_member_permissions | ?string                                                                                | Set of permissions represented as a bit set                                                                | all         |
-| dm_permission?             | boolean                                                                                | Indicates whether the command is available in DMs with the app, only for globally-scoped commands         | all         |
-| default_permission?        | ?boolean                                                                               | Not recommended for use as field will soon be deprecated. Indicates whether the command is enabled by default when the app is added to a guild, defaults to `true` | all         |
-| nsfw?                      | boolean                                                                                | Indicates whether the command is age-restricted, defaults to `false`                                       | all         |
-| version                    | snowflake                                                                              | Autoincrementing version identifier updated during substantial record changes                              | all         |
-
-> `default_permission` will soon be deprecated. You can instead set `default_member_permissions` to `"0"` to disable the command for everyone except admins by default, and/or set `dm_permission` to `false` to disable globally-scoped commands inside of DMs with your app
+> **Set `default_member_permissions` to `"0"` to disable the command for everyone except admins by default, and/or set `dm_permission` to `false` to disable globally-scoped commands inside of DMs with your app**
 
 #### Application Command Types
-
 | Name       | Type | Description                                                               |
 |------------|------|---------------------------------------------------------------------------|
-| CHAT_INPUT | 1    | Slash commands; a text-based command that shows up when a user types `/`  |
-| USER       | 2    | A UI-based command that shows up when you right click or tap on a user    |
-| MESSAGE    | 3    | A UI-based command that shows up when you right click or tap on a message |
+| Chat Input | 1    | Slash commands; a text-based command that shows up when a user types `/`  |
+| User       | 2    | A UI-based command that shows up when you right click or tap on a user    |
+| Message    | 3    | A UI-based command that shows up when you right click or tap on a message |
 
 
 #### Application Command Option Structure
-> Required `options` must be listed before optional options
+**Required `options` must be listed before optional options**
 
-| Field                      | Type                                                                                       | Description        |
-|----------------------------|--------------------------------------------------------------------------------------------|--------------------|
-| type                       | one of [application command option type](#application-command-option-type)                 | Type of option     |
-| name                       | string                                                                                                                                                       | 1-32 character name |
-| name_localizations?        | ?dictionary with keys in available locales                                                 | Localization dictionary for the `name` field. Values follow the same restrictions as `name` |
-| description                | string                                                                                                                                                       | 1-100 character description                                                                                          |
-| description_localizations? | ?dictionary with keys in available locales                                                    | Localization dictionary for the `description` field. Values follow the same restrictions as `description`            |
-| required?                  | boolean                                        | If the parameter is required or optional--default `false` |
-| choices?                   | array of [application command option choice](#application-command-option-choice-structure) | Choices for `STRING`, `INTEGER`, and `NUMBER` types for the user to pick from, max 25 |
-| options?                   | array of [application command option](#application-command-option-structure)               | If the option is a subcommand or subcommand group type, these nested options will be the parameters  |
-| channel_types?             | array of [channel types](#channel-types)       | If the option is a channel type, the channels shown will be restricted to these types                                |
-| min_value?                 | number for `INTEGER` options, double for `NUMBER` options                    | If the option is an `INTEGER` or `NUMBER` type, the minimum value permitted                                          |
-| max_value?                 | number for `INTEGER` options, double for `NUMBER` options                   | If the option is an `INTEGER` or `NUMBER` type, the maximum value permitted |
-| min_length?                | number        | For option type `STRING`, the minimum allowed length (minimum of `0`, maximum of `6000`) |
-| max_length?                | number       | For option type `STRING`, the maximum allowed length (minimum of `1`, maximum of `6000`) |
-| autocomplete? \*           | boolean       | If autocomplete interactions are enabled for this `STRING`, `INTEGER`, or `NUMBER` type option |
+| Field                      | Type                                                                                       | Description                                                                                               |
+|----------------------------|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| type                       | one of [application command option type](#application-command-option-type)                 | Type of option                                                                                            |
+| name                       | string                                                                                     | 1-32 character name                                                                                       |
+| name_localizations?        | ?dictionary with keys in available locales                                                 | Localization dictionary for the `name` field. Values follow the same restrictions as `name`               |
+| description                | string                                                                                     | 1-100 character description                                                                               |
+| description_localizations? | ?dictionary with keys in available locales                                                 | Localization dictionary for the `description` field. Values follow the same restrictions as `description` |
+| required?                  | boolean                                                                                    | If the parameter is required or optional--default `false`                                                 |
+| choices?                   | array of [application command option choice](#application-command-option-choice-structure) | Choices for `STRING`, `INTEGER`, and `NUMBER` types for the user to pick from, max 25                     |
+| options?                   | array of [application command option](#application-command-option-structure)               | If the option is a subcommand or subcommand group type, these nested options will be the parameters       |
+| channel_types?             | array of [channel types](#channel-types)                                                   | If the option is a channel type, the channels shown will be restricted to these types                     |
+| min_value?                 | number for `INTEGER` options, double for `NUMBER` options                                  | If the option is an `INTEGER` or `NUMBER` type, the minimum value permitted                               |
+| max_value?                 | number for `INTEGER` options, double for `NUMBER` options                                  | If the option is an `INTEGER` or `NUMBER` type, the maximum value permitted                               |
+| min_length?                | number                                                                                     | For option type `STRING`, the minimum allowed length (minimum of `0`, maximum of `6000`)                  |
+| max_length?                | number                                                                                     | For option type `STRING`, the maximum allowed length (minimum of `1`, maximum of `6000`)                  |
+| autocomplete? \*           | boolean                                                                                    | If autocomplete interactions are enabled for this `STRING`, `INTEGER`, or `NUMBER` type option            |
 
-\* `autocomplete` may not be set to true if `choices` are present.  
-> Options using `autocomplete` are not confined to only use choices given by the application.
+**\* `autocomplete` may not be set to true if `choices` are present.**  
+**Options using `autocomplete` are not confined to only use choices given by the application.**
 
 #### Application Command Option Type
-
-| Name              | Value | Note                                                           |
-|-------------------|-------|----------------------------------------------------------------|
-| SUB_COMMAND       | 1     |                                                                |
-| SUB_COMMAND_GROUP | 2     |                                                                |
-| STRING            | 3     |                                                                |
-| INTEGER           | 4     | Any integer between -2^53 and 2^53                             |
-| BOOLEAN           | 5     |                                                                |
-| USER              | 6     |                                                                |
-| CHANNEL           | 7     | Includes all channel types + categories                        |
-| ROLE              | 8     |                                                                |
-| MENTIONABLE       | 9     | Includes users and roles                                       |
-| NUMBER            | 10    | Any double between -2^53 and 2^53                              |
-| ATTACHMENT        | 11    | [attachment](#attachment-object) object |
+| Name              | Value | Note                                    |
+|-------------------|-------|-----------------------------------------|
+| Sub Command       | 1     |                                         |
+| Sub Command Group | 2     |                                         |
+| String            | 3     |                                         |
+| Integer           | 4     | Any integer between -2^53 and 2^53      |
+| Boolean           | 5     |                                         |
+| User              | 6     |                                         |
+| Channel           | 7     | Includes all channel types + categories |
+| Role              | 8     |                                         |
+| Mentionable       | 9     | Includes users and roles                |
+| Number            | 10    | Any double between -2^53 and 2^53       |
+| Attachment        | 11    | [attachment](#attachment-object) object |
 
 #### Application Command Option Choice Structure
+**If you specify `choices` for an option, they are the *only* valid values for a user to pick**
 
-If you specify `choices` for an option, they are the **only** valid values for a user to pick
-
-| Field               | Type                                                                  | Description                                                                                 |
-|---------------------|-----------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| name                | string                                                                | 1-100 character choice name                                                                 |
+| Field               | Type                                       | Description                                                                                 |
+|---------------------|--------------------------------------------|---------------------------------------------------------------------------------------------|
+| name                | string                                     | 1-100 character choice name                                                                 |
 | name_localizations? | ?dictionary with keys in available locales | Localization dictionary for the `name` field. Values follow the same restrictions as `name` |
-| value               | string, integer, or double \*                                         | Value for the choice, up to 100 characters if string                                        |
+| value               | string, integer, or double \*              | Value for the choice, up to 100 characters if string                                        |
 
-\* Type of `value` depends on the [option type](#application-command-option-type) that the choice belongs to.
+**\* Type of `value` depends on the [option type](#application-command-option-type) that the choice belongs to.**
 
-#### Application Command Permissions Object
+### Application Command Permissions Object
+**Returned when fetching the permissions for an app's command(s) in a guild.**
 
-Returned when fetching the permissions for an app's command(s) in a guild.
-
-| Field          | Type                                                                                                                                                                 | Description                                          |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| id             | snowflake                                                                                                                                                            | ID of the command or the application ID              |
-| application_id | snowflake                                                                                                                                                            | ID of the application the command belongs to         |
-| guild_id       | snowflake                                                                                                                                                            | ID of the guild                                      |
+| Field          | Type                                                                                   | Description                                          |
+|----------------|----------------------------------------------------------------------------------------|------------------------------------------------------|
+| id             | snowflake                                                                              | ID of the command or the application ID              |
+| application_id | snowflake                                                                              | ID of the application the command belongs to         |
+| guild_id       | snowflake                                                                              | ID of the guild                                      |
 | permissions    | array of [application command permissions](#application-command-permissions-structure) | Permissions for the command in the guild, max of 100 |
 
-When the `id` field is the application ID instead of a command ID, the permissions apply to all commands that do not contain explicit overwrites.
+**When the `id` field is the application ID instead of a command ID, the permissions apply to all commands that do not contain explicit overwrites.**
 
 #### Application Command Permissions Structure
-
-Application command permissions allow you to enable or disable commands for specific users, roles, or channels within a guild.
+**Application command permissions allow you to enable or disable commands for specific users, roles, or channels within a guild.**
 
 | Field      | Type                                                                        | Description                                      |
 |------------|-----------------------------------------------------------------------------|--------------------------------------------------|
@@ -3410,8 +5865,7 @@ Application command permissions allow you to enable or disable commands for spec
 | permission | boolean                                                                     | `true` to allow, `false`, to disallow            |
 
 #### Application Command Permissions Constants
-
-The following constants can be used in the `id` field for command permissions payloads.
+**The following constants can be used in the `id` field for command permissions payloads.**
 
 | Permission   | Value          | Type      | Description             |
 |--------------|----------------|-----------|-------------------------|
@@ -3419,15 +5873,13 @@ The following constants can be used in the `id` field for command permissions pa
 | All Channels | `guild_id - 1` | snowflake | All channels in a guild |
 
 #### Application Command Permission Type
-
 | Name    | Value |
 |---------|-------|
-| ROLE    | 1     |
-| USER    | 2     |
-| CHANNEL | 3     |
+| Role    | 1     |
+| User    | 2     |
+| Channel | 3     |
 
-#### Entitlement Object
-
+### Entitlement Object
 | Field          | Type              | Description                                                                                 |
 |----------------|-------------------|---------------------------------------------------------------------------------------------|
 | id             | snowflake         | ID of the entitlement                                                                       |
@@ -3441,7 +5893,6 @@ The following constants can be used in the `id` field for command permissions pa
 | guild_id?      | snowflake         | ID of the guild that is granted access to the entitlement's sku                             |
 
 ##### Entitlement Example
-
 ```json
 {
     "id": "1019653849998299136",
@@ -3461,13 +5912,11 @@ The following constants can be used in the `id` field for command permissions pa
 ```
 
 #### Entitlement Types
-
 | Type                     | Value | Description                                      |
 |--------------------------|-------|--------------------------------------------------|
-| APPLICATION_SUBSCRIPTION | 8     | Entitlement was purchased as an app subscription |
+| Application Subscription | 8     | Entitlement was purchased as an app subscription |
 
-#### SKU Object
-
+### SKU Object
 | Field          | Type      | Description                                       |
 |----------------|-----------|---------------------------------------------------|
 | id             | snowflake | ID of SKU                                         |
@@ -3478,7 +5927,6 @@ The following constants can be used in the `id` field for command permissions pa
 | flags          | number    | [SKU flags](#sku-flags) combined as a bitfield    |
 
 ##### SKU Example
-
 ```json
 {
     "id": "1088510058284990888",
@@ -3498,33 +5946,32 @@ The following constants can be used in the `id` field for command permissions pa
 ```
 
 #### SKU Types
-
-For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type:6`. For any current implementations, you will want to use the SKU defined by `type: 5`. A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.
+**For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type:6`.**  
+**For any current implementations, you will want to use the SKU defined by `type: 5`.**  
+**A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.**
 
 | Type               | Value | Description                                              |
 |--------------------|-------|----------------------------------------------------------|
-| SUBSCRIPTION       | 5     | Represents a recurring subscription                      |
-| SUBSCRIPTION_GROUP | 6     | System-generated group for each SUBSCRIPTION SKU created |
+| Subscription       | 5     | Represents a recurring subscription                      |
+| Subscription Group | 6     | System-generated group for each SUBSCRIPTION SKU created |
 
 #### SKU Flags
-
-For subscriptions, there are two types of access levels you can offer to users:
+**For subscriptions, there are two types of access levels you can offer to users:**
 
 -   **Guild Subscriptions**: A subscription purchased by a user and applied to a single server. Everyone in that server gets your premium benefits.
 -   **User Subscriptions**: A subscription purchased by a user for themselves. They get access to your premium benefits in every server.
 
-The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
+**The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.**
 
 | Type               | Value  | Description                                                                                                               |
 |--------------------|--------|---------------------------------------------------------------------------------------------------------------------------|
-| AVAILABLE          | 1 << 2 | SKU is available for purchase                                                                                             |
-| GUILD_SUBSCRIPTION | 1 << 7 | Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. |
-| USER_SUBSCRIPTION  | 1 << 8 | Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server.                   |
+| Available          | 1 << 2 | SKU is available for purchase                                                                                             |
+| Guild Subscription | 1 << 7 | Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. |
+| User Subscription  | 1 << 8 | Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server.                   |
 
-#### Audit Log Object
-
-| Field                  | Type                                                                    | Description                             |
-|------------------------|-------------------------------------------------------------------------|-----------------------------------------|
+### Audit Log Object
+| Field                  | Type                                                                    | Description                                                 |
+|------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------|
 | application_commands   | array of [application commands](#application-command-object) objects    | List of application commands referenced in the audit log    |
 | audit_log_entries      | array of [audit log entry](#audit-log-entry-object) objects             | List of audit log entries, sorted from most to least recent |
 | auto_moderation_rules  | array of [auto moderation rule](#auto-moderation-rule-object) objects   | List of auto moderation rules referenced in the audit log   |
@@ -3532,11 +5979,11 @@ The `flags` field can be used to differentiate user and server subscriptions wit
 | integrations           | array of partial [integration](#integration-object) objects             | List of partial integration objects                         |
 | threads                | array of thread-specific [channel](#channel-object) objects             | List of threads referenced in the audit log\*               |
 | users                  | array of [user](#user-object) objects                                   | List of users referenced in the audit log                   |
-| webhooks               | array of [webhook](#webhook-object) objects                             | List of webhooks referenced in the audit log                |  
-\* Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
+| webhooks               | array of [webhook](#webhook-object) objects                             | List of webhooks referenced in the audit log                |
+
+**\* Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.**
 
 ###### Example Partial Integration Object
-
 ```json
 {
   "id": "33590653072239123",
@@ -3551,7 +5998,6 @@ The `flags` field can be used to differentiate user and server subscriptions wit
 ```
 
 ### Audit Log Entry Object
-
 | Field       | Type                                                          | Description                                           |
 |-------------|---------------------------------------------------------------|-------------------------------------------------------|
 | target_id   | ?string                                                       | ID of the affected entity (webhook, user, role, etc.) |
@@ -3562,82 +6008,79 @@ The `flags` field can be used to differentiate user and server subscriptions wit
 | options?    | [optional audit entry info](#optional-audit-entry-info)       | Additional info for certain event types               |
 | reason?     | string                                                        | Reason for the change (1-512 characters)              |
 
-> For `APPLICATION_COMMAND_PERMISSION_UPDATE` events, the `target_id` is the command ID or the app ID since the `changes` array represents the entire `permissions` property on the [guild permissions](#guild-application-command-permissions-structure) object.
+**For `APPLICATION_COMMAND_PERMISSION_UPDATE` events, the `target_id` is the command ID or the app ID since the `changes` array represents the entire `permissions` property on the [guild permissions](#application-command-permissions-structure) object.**
 
-#### Audit Log Events
+### Audit Log Events
+**The table below lists audit log events and values (the `action_type` field) that your app may receive.**
 
-The table below lists audit log events and values (the `action_type` field) that your app may receive.
-
-The **Object Changed** column notes which object's values may be included in the entry. Though there are exceptions, possible keys in the `changes` array typically correspond to the object's fields. The descriptions and types for those fields can be found in the linked documentation for the object.
+**The *Object Changed* column notes which object's values may be included in the entry.**  
+**Though there are exceptions, possible keys in the `changes` array typically correspond to the object's fields.**  
+**The descriptions and types for those fields can be found in the linked documentation for the object.**
 
 **If no object is noted, there won't be a `changes` array in the entry, though other fields like the `target_id` still exist and many have fields in the [`options` array](#optional-audit-entry-info).**
 
-> info
-> You should assume that your app may run into any field for the changed object, though none are guaranteed to be present. In most cases only a subset of the object's fields will be in the `changes` array.
+| Event                                       | Value | Description                                               | Object Changed                                                            |
+|---------------------------------------------|-------|-----------------------------------------------------------|---------------------------------------------------------------------------|
+| Guild Update                                | 1     | Server settings were updated                              | [Guild](#guild-object)                                                    |
+| Channel Create                              | 10    | Channel was created                                       | [Channel](#channel-object)                                                |
+| Channel Update                              | 11    | Channel settings were updated                             | [Channel](#channel-object)                                                |
+| Channel Delete                              | 12    | Channel was deleted                                       | [Channel](#channel-object)                                                |
+| Channel Overwrite Create                    | 13    | Permission overwrite was added to a channel               | [Channel Overwrite](#overwrite-object)                                    |
+| Channel Overwrite Update                    | 14    | Permission overwrite was updated for a channel            | [Channel Overwrite](#overwrite-object)                                    |
+| Channel Overwrite Delete                    | 15    | Permission overwrite was deleted from a channel           | [Channel Overwrite](#overwrite-object)                                    |
+| Member Kick                                 | 20    | Member was removed from server                            |                                                                           |
+| Member Prune                                | 21    | Members were pruned from server                           |                                                                           |
+| Member Ban Add                              | 22    | Member was banned from server                             |                                                                           |
+| Member Ban Remove                           | 23    | Server ban was lifted for a member                        |                                                                           |
+| Member Update                               | 24    | Member was updated in server                              | [Member](#guild-member-object)                                            |
+| Member Role Update                          | 25    | Member was added or removed from a role                   | [Partial Role](#role-object)\*                                            |
+| Member Move                                 | 26    | Member was moved to a different voice channel             |                                                                           |
+| Member Disconnect                           | 27    | Member was disconnected from a voice channel              |                                                                           |
+| Bot Add                                     | 28    | Bot user was added to server                              |                                                                           |
+| Role Create                                 | 30    | Role was created                                          | [Role](#role-object)                                                      |
+| Role Update                                 | 31    | Role was edited                                           | [Role](#role-object)                                                      |
+| Role Delete                                 | 32    | Role was deleted                                          | [Role](#role-object)                                                      |
+| Invite Create                               | 40    | Server invite was created                                 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object)\* |
+| Invite Update                               | 41    | Server invite was updated                                 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object)\* |
+| Invite Delete                               | 42    | Server invite was deleted                                 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object)\* |
+| Webhook Create                              | 50    | Webhook was created                                       | [Webhook](#webhook-object)\*                                              |
+| Webhook Update                              | 51    | Webhook properties or channel were updated                | [Webhook](#webhook-object)\*                                              |
+| Webhook Delete                              | 52    | Webhook was deleted                                       | [Webhook](#webhook-object)\*                                              |
+| Emoji Create                                | 60    | Emoji was created                                         | [Emoji](#emoji-object)                                                    |
+| Emoji Update                                | 61    | Emoji name was updated                                    | [Emoji](#emoji-object)                                                    |
+| Emoji Delete                                | 62    | Emoji was deleted                                         | [Emoji](#emoji-object)                                                    |
+| Message Delete                              | 72    | Single message was deleted                                |                                                                           |
+| Message Bulk Delete                         | 73    | Multiple messages were deleted                            |                                                                           |
+| Message Pin                                 | 74    | Message was pinned to a channel                           |                                                                           |
+| Message Unpin                               | 75    | Message was unpinned from a channel                       |                                                                           |
+| Integration Create                          | 80    | App was added to server                                   | [Integration](#integration-object)                                        |
+| Integration Update                          | 81    | App was updated (as an example, its scopes were updated)  | [Integration](#integration-object)                                        |
+| Integration Delete                          | 82    | App was removed from server                               | [Integration](#integration-object)                                        |
+| Stage Instance Create                       | 83    | Stage instance was created (stage channel becomes live)   | [Stage Instance](#stage-instance-object)                                  |
+| Stage Instance Update                       | 84    | Stage instance details were updated                       | [Stage Instance](#stage-instance-object)                                  |
+| Stage Instance Delete                       | 85    | Stage instance was deleted (stage channel no longer live) | [Stage Instance](#stage-instance-object)                                  |
+| Sticker Create                              | 90    | Sticker was created                                       | [Sticker](#sticker-object)                                                |
+| Sticker Update                              | 91    | Sticker details were updated                              | [Sticker](#sticker-object)                                                |
+| Sticker Delete                              | 92    | Sticker was deleted                                       | [Sticker](#sticker-object)                                                |
+| Guild Scheduled Event Create                | 100   | Event was created                                         | [Guild Scheduled Event](#guild-scheduled-event-object)                    |
+| Guild Scheduled Event Update                | 101   | Event was updated                                         | [Guild Scheduled Event](#guild-scheduled-event-object)                    |
+| Guild Scheduled Event Delete                | 102   | Event was cancelled                                       | [Guild Scheduled Event](#guild-scheduled-event-object)                    |
+| Thread Create                               | 110   | Thread was created in a channel                           | [Thread](#thread-metadata-object)                                         |
+| Thread Update                               | 111   | Thread was updated                                        | [Thread](#thread-metadata-object)                                         |
+| Thread Delete                               | 112   | Thread was deleted                                        | [Thread](#thread-metadata-object)                                         |
+| Application Command Permission Update       | 121   | Permissions were updated for a command                    | [Command Permission](#application-command-permissions-structure)\*        |
+| Auto Moderation Rule Create                 | 140   | Auto Moderation rule was created                          | [Auto Moderation Rule](#auto-moderation-rule-object)                      |
+| Auto Moderation Rule Update                 | 141   | Auto Moderation rule was updated                          | [Auto Moderation Rule](#auto-moderation-rule-object)                      |
+| Auto Moderation Rule Delete                 | 142   | Auto Moderation rule was deleted                          | [Auto Moderation Rule](#auto-moderation-rule-object)                      |
+| Auto Moderation Block Message               | 143   | Message was blocked by Auto Moderation                    |                                                                           |
+| Auto Moderation Flag To Channel             | 144   | Message was flagged by Auto Moderation                    |                                                                           |
+| Auto Moderation User Communication Disabled | 145   | Member was timed out by Auto Moderation                   |                                                                           |
+| Creator Monetization Request Created        | 150   | Creator monetization request was created                  |                                                                           |
+| Creator Monetization Terms Accepted         | 151   | Creator monetization terms were accepted                  |                                                                           |
 
-| Event                                       | Value | Description                                               | Object Changed                                                                                                                                   |
-|---------------------------------------------|-------|-----------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| GUILD_UPDATE                                | 1     | Server settings were updated                              | [Guild](#guild-object)                                                                                                      |
-| CHANNEL_CREATE                              | 10    | Channel was created                                       | [Channel](#channel-object)                                                                                                |
-| CHANNEL_UPDATE                              | 11    | Channel settings were updated                             | [Channel](#channel-object)                                                                                                |
-| CHANNEL_DELETE                              | 12    | Channel was deleted                                       | [Channel](#channel-object)                                                                                                |
-| CHANNEL_OVERWRITE_CREATE                    | 13    | Permission overwrite was added to a channel               | [Channel Overwrite](#overwrite-object)                                                                                    |
-| CHANNEL_OVERWRITE_UPDATE                    | 14    | Permission overwrite was updated for a channel            | [Channel Overwrite](#overwrite-object)                                                                                    |
-| CHANNEL_OVERWRITE_DELETE                    | 15    | Permission overwrite was deleted from a channel           | [Channel Overwrite](#overwrite-object)                                                                                    |
-| MEMBER_KICK                                 | 20    | Member was removed from server                            |     |
-| MEMBER_PRUNE                                | 21    | Members were pruned from server                           |   |
-| MEMBER_BAN_ADD                              | 22    | Member was banned from server                             |    |
-| MEMBER_BAN_REMOVE                           | 23    | Server ban was lifted for a member                        |    |
-| MEMBER_UPDATE                               | 24    | Member was updated in server                              | [Member](#guild-member-object)                                                                                              |
-| MEMBER_ROLE_UPDATE                          | 25    | Member was added or removed from a role                   | [Partial Role](#role-object)\*                                                                                           |
-| MEMBER_MOVE                                 | 26    | Member was moved to a different voice channel             |       |
-| MEMBER_DISCONNECT                           | 27    | Member was disconnected from a voice channel              |         |
-| BOT_ADD                                     | 28    | Bot user was added to server                              |    |
-| ROLE_CREATE                                 | 30    | Role was created                                          | [Role](#role-object)                                                                                                     |
-| ROLE_UPDATE                                 | 31    | Role was edited                                           | [Role](#role-object)                                                                                                     |
-| ROLE_DELETE                                 | 32    | Role was deleted                                          | [Role](#role-object)                                                                                                     |
-| INVITE_CREATE                               | 40    | Server invite was created                                 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object)*                             |
-| INVITE_UPDATE                               | 41    | Server invite was updated                                 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object)*                             |
-| INVITE_DELETE                               | 42    | Server invite was deleted                                 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object)*                             |
-| WEBHOOK_CREATE                              | 50    | Webhook was created                                       | [Webhook](#webhook-object)\*                                                                                              |
-| WEBHOOK_UPDATE                              | 51    | Webhook properties or channel were updated                | [Webhook](#webhook-object)\*                                                                                              |
-| WEBHOOK_DELETE                              | 52    | Webhook was deleted                                       | [Webhook](#webhook-object)\*                                                                                              |
-| EMOJI_CREATE                                | 60    | Emoji was created                                         | [Emoji](#emoji-object)                                                                                                      |
-| EMOJI_UPDATE                                | 61    | Emoji name was updated                                    | [Emoji](#emoji-object)                                                                                                      |
-| EMOJI_DELETE                                | 62    | Emoji was deleted                                         | [Emoji](#emoji-object)                                                                                                      |
-| MESSAGE_DELETE                              | 72    | Single message was deleted                                |      |
-| MESSAGE_BULK_DELETE                         | 73    | Multiple messages were deleted                            |  |
-| MESSAGE_PIN                                 | 74    | Message was pinned to a channel                           |   |
-| MESSAGE_UNPIN                               | 75    | Message was unpinned from a channel                       |  |
-| INTEGRATION_CREATE                          | 80    | App was added to server                                   | [Integration](#integration-object)                                                                                          |
-| INTEGRATION_UPDATE                          | 81    | App was updated (as an example, its scopes were updated)  | [Integration](#integration-object)                                                                                          |
-| INTEGRATION_DELETE                          | 82    | App was removed from server                               | [Integration](#integration-object)                                                                                          |
-| STAGE_INSTANCE_CREATE                       | 83    | Stage instance was created (stage channel becomes live)   | [Stage Instance](#stage-instance-object)                                                                           |
-| STAGE_INSTANCE_UPDATE                       | 84    | Stage instance details were updated                       | [Stage Instance](#stage-instance-object)                                                                           |
-| STAGE_INSTANCE_DELETE                       | 85    | Stage instance was deleted (stage channel no longer live) | [Stage Instance](#stage-instance-object)                                                                           |
-| STICKER_CREATE                              | 90    | Sticker was created                                       | [Sticker](#sticker-object)                                                                                                |
-| STICKER_UPDATE                              | 91    | Sticker details were updated                              | [Sticker](#sticker-object)                                                                                                |
-| STICKER_DELETE                              | 92    | Sticker was deleted                                       | [Sticker](#sticker-object)                                                                                                |
-| GUILD_SCHEDULED_EVENT_CREATE                | 100   | Event was created                                         | [Guild Scheduled Event](#guild-scheduled-event-object)                                                      |
-| GUILD_SCHEDULED_EVENT_UPDATE                | 101   | Event was updated                                         | [Guild Scheduled Event](#guild-scheduled-event-object)                                                      |
-| GUILD_SCHEDULED_EVENT_DELETE                | 102   | Event was cancelled                                       | [Guild Scheduled Event](#guild-scheduled-event-object)                                                      |
-| THREAD_CREATE                               | 110   | Thread was created in a channel                           | [Thread](#thread-metadata-object)                                                                                         |
-| THREAD_UPDATE                               | 111   | Thread was updated                                        | [Thread](#thread-metadata-object)                                                                                         |
-| THREAD_DELETE                               | 112   | Thread was deleted                                        | [Thread](#thread-metadata-object)                                                                                         |
-| APPLICATION_COMMAND_PERMISSION_UPDATE       | 121   | Permissions were updated for a command                    | [Command Permission](#application-command-permissions-structure)\* |
-| AUTO_MODERATION_RULE_CREATE                 | 140   | Auto Moderation rule was created                          | [Auto Moderation Rule](#auto-moderation-rule-object)                                                              |
-| AUTO_MODERATION_RULE_UPDATE                 | 141   | Auto Moderation rule was updated                          | [Auto Moderation Rule](#auto-moderation-rule-object)                                                              |
-| AUTO_MODERATION_RULE_DELETE                 | 142   | Auto Moderation rule was deleted                          | [Auto Moderation Rule](#auto-moderation-rule-object)                                                              |
-| AUTO_MODERATION_BLOCK_MESSAGE               | 143   | Message was blocked by Auto Moderation                    |      |
-| AUTO_MODERATION_FLAG_TO_CHANNEL             | 144   | Message was flagged by Auto Moderation                    |     |
-| AUTO_MODERATION_USER_COMMUNICATION_DISABLED | 145   | Member was timed out by Auto Moderation                   |      |
-| CREATOR_MONETIZATION_REQUEST_CREATED        | 150   | Creator monetization request was created                  |        |
-| CREATOR_MONETIZATION_TERMS_ACCEPTED         | 151   | Creator monetization terms were accepted                  |     |
-
-\* Object has exception(s) to available keys. See the [exceptions](#audit-log-change-exceptions) section below for details.
+**\* Object has exception(s) to available keys. See the [exceptions](#audit-log-change-exceptions) section below for details.**
 
 #### Optional Audit Entry Info
-
 | Field                             | Type      | Description                                                      | Event Types                                                                                                                                                                                                                                        |
 |-----------------------------------|-----------|------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | application_id                    | snowflake | ID of the app whose permissions were targeted                    | APPLICATION_COMMAND_PERMISSION_UPDATE                                                                                                                                                                                                              |
@@ -3655,12 +6098,13 @@ The **Object Changed** column notes which object's values may be included in the
 
 #### Audit Log Change Object
 **Many audit log events include a `changes` array in their [entry object](#audit-log-entry-structure).**  
-The [structure for the individual changes](#audit-log-change-structure) varies based on the event type and its changed objects, so apps shouldn't depend on a single pattern of handling audit log events.
+**The [structure for the individual changes](#audit-log-change-structure) varies based on the event type and its changed objects, so apps shouldn't depend on a single pattern of handling audit log events.**
 
 #### Audit Log Change Structure
 **Some events don't follow the same pattern as other audit log events.**  
 
-> If `new_value` is not present in the change object while `old_value` is, it indicates that the property has been reset or set to `null`. If `old_value` isn't included, it indicated that the property was previously `null`.
+**If `new_value` is not present in the change object while `old_value` is, it indicates that the property has been reset or set to `null`.**  
+**If `old_value` isn't included, it indicated that the property was previously `null`.**
 
 
 | Field      | Type                                | Description                                                                       |
@@ -3670,34 +6114,31 @@ The [structure for the individual changes](#audit-log-change-structure) varies b
 | key        | string                              | Name of the changed entity, with a few [exceptions](#audit-log-change-exceptions) |
 
 #### Audit Log Change Exceptions
+**For most objects, the change keys may be any field on the changed object. The following table details the exceptions to this pattern.**
 
-For most objects, the change keys may be any field on the changed object. The following table details the exceptions to this pattern.
-
-| Object Changed                                             | Change Key Exceptions                                    | Change Object Exceptions                                                                                                                                                                                                                                    |
-|------------------------------------------------------------|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Command Permission](#application-command-permissions-structure) | snowflake as key                                         | The `changes` array contains objects with a `key` field representing the entity whose command was affected (role, channel, or user ID), a previous permissions object (with an `old_value` key), and an updated permissions object (with a `new_value` key) |
+| Object Changed                                                          | Change Key Exceptions                                          | Change Object Exceptions                                                                                                                                                                                                                                    |
+|-------------------------------------------------------------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Command Permission](#application-command-permissions-structure)        | snowflake as key                                               | The `changes` array contains objects with a `key` field representing the entity whose command was affected (role, channel, or user ID), a previous permissions object (with an `old_value` key), and an updated permissions object (with a `new_value` key) |
 | [Invite](#invite-object) and [Invite Metadata](#invite-metadata-object) | Additional `channel_id` key (instead of object's `channel.id`) |                                                                                                                                                                                                                                                             |
-| [Partial Role](#role-object)                                 | `$add` and `$remove` as keys                             | `new_value` is an array of objects that contain the role `id` and `name`                                                                                                                                                                                    |
-| [Webhook](#webhook-object)                                   | `avatar_hash` key (instead of `avatar`)                  |                                                                                                                                                                                                                                                             |
+| [Partial Role](#role-object)                                            | `$add` and `$remove` as keys                                   | `new_value` is an array of objects that contain the role `id` and `name`                                                                                                                                                                                    |
+| [Webhook](#webhook-object)                                              | `avatar_hash` key (instead of `avatar`)                        |                                                                                                                                                                                                                                                             |
 
 #### Auto Moderation Rule Structure
-
-| Field            | Type                                      | Description                                                             |
-|------------------|-------------------------------------------|-------------------------------------------------------------------------|
-| id               | snowflake                                 | the id of this rule                                                     |
-| guild_id         | snowflake                                 | the id of the guild which this rule belongs to                          |
-| name             | string                                    | the rule name                                                           |
-| creator_id       | snowflake                                 | the user which first created this rule                                  |
-| event_type       | integer                                   | the rule [event type](#event-types)                                     |
-| trigger_type     | integer                                   | the rule [trigger type](#trigger-types)                                 |
-| trigger_metadata | object                                    | the rule [trigger metadata](#trigger-metadata)                          |
+| Field            | Type                                                      | Description                                                             |
+|------------------|-----------------------------------------------------------|-------------------------------------------------------------------------|
+| id               | snowflake                                                 | the id of this rule                                                     |
+| guild_id         | snowflake                                                 | the id of the guild which this rule belongs to                          |
+| name             | string                                                    | the rule name                                                           |
+| creator_id       | snowflake                                                 | the user which first created this rule                                  |
+| event_type       | integer                                                   | the rule [event type](#event-types)                                     |
+| trigger_type     | integer                                                   | the rule [trigger type](#trigger-types)                                 |
+| trigger_metadata | object                                                    | the rule [trigger metadata](#trigger-metadata)                          |
 | actions          | array of [action](#audo-moderation-action-object) objects | the actions which will execute when the rule is triggered               |
-| enabled          | boolean                                   | whether the rule is enabled                                             |
-| exempt_roles     | array of snowflakes                       | the role ids that should not be affected by the rule (Maximum of 20)    |
-| exempt_channels  | array of snowflakes                       | the channel ids that should not be affected by the rule (Maximum of 50) |
+| enabled          | boolean                                                   | whether the rule is enabled                                             |
+| exempt_roles     | array of snowflakes                                       | the role ids that should not be affected by the rule (Maximum of 20)    |
+| exempt_channels  | array of snowflakes                                       | the channel ids that should not be affected by the rule (Maximum of 50) |
 
 ###### Example Auto Moderation Rule
-
 ```json
 {
   "id": "969707018069872670",
@@ -3731,22 +6172,21 @@ For most objects, the change keys may be any field on the changed object. The fo
 ```
 
 #### Trigger Types
-Characterizes the type of content which can trigger the rule.
+**Characterizes the type of content which can trigger the rule.**
 
 | Trigger Type   | Value | Description                                                          | Max per Guild |
 |----------------|-------|----------------------------------------------------------------------|---------------|
-| KEYWORD        | 1     | check if content contains words from a user defined list of keywords | 6             |
-| SPAM           | 3     | check if content represents generic spam                             | 1             |
-| KEYWORD_PRESET | 4     | check if content contains words from internal pre-defined wordsets   | 1             |
-| MENTION_SPAM   | 5     | check if content contains more unique mentions than allowed          | 1             |
+| Keyword        | 1     | check if content contains words from a user defined list of keywords | 6             |
+| Spam           | 3     | check if content represents generic spam                             | 1             |
+| Keyword Preset | 4     | check if content contains words from internal pre-defined wordsets   | 1             |
+| Mention Spam   | 5     | check if content contains more unique mentions than allowed          | 1             |
 
 #### Trigger Metadata
-
-Additional data used to determine whether a rule should be triggered. Different fields are relevant based on the
-value of [trigger_type](#trigger-types).
+**Additional data used to determine whether a rule should be triggered.**  
+**Different fields are relevant based on the value of [trigger_type](#trigger-types).**
 
 | Field                           | Type                                                   | Associated Trigger Types | Description                                                                       |
-|---------------------------------|-------------------------------------------------------------------------------------------------------------------|--------------------------|-----------------------------------------------------------------------------------|
+|---------------------------------|--------------------------------------------------------|--------------------------|-----------------------------------------------------------------------------------|
 | keyword_filter                  | array of strings *                                     | KEYWORD                  | substrings which will be searched for in content (Maximum of 1000)                |
 | regex_patterns                  | array of strings **                                    | KEYWORD                  | regular expression patterns which will be matched against content (Maximum of 10) |
 | presets                         | array of [keyword preset types](#keyword-preset-types) | KEYWORD_PRESET           | the internally pre-defined wordsets which will be searched for in content         |
@@ -3754,14 +6194,11 @@ value of [trigger_type](#trigger-types).
 | mention_total_limit             | integer                                                | MENTION_SPAM             | total number of unique role and user mentions allowed per message (Maximum of 50) |
 | mention_raid_protection_enabled | boolean                                                | MENTION_SPAM             | whether to automatically detect mention raids                                     |
 
-\* A keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Each keyword must be 60 characters or less.
-
-\** Only Rust flavored regex is currently supported, which can be tested in online editors such as [Rustexp](https://rustexp.lpil.uk/). Each regex pattern must be 260 characters or less.
-
-\*** Each `allow_list` keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Rules with `KEYWORD` [trigger_type](#trigger-types) accept a maximum of 100 keywords. Rules with `KEYWORD_PRESET` [trigger_type](#trigger-types) accept a maximum of 1000 keywords.
+**\* A keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Each keyword must be 60 characters or less.**  
+**\*\* Only Rust flavored regex is currently supported, which can be tested in online editors such as Rustexp. Each regex pattern must be 260 characters or less.**  
+**\*\*\* Each `allow_list` keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Rules with `KEYWORD` [trigger_type](#trigger-types) accept a maximum of 100 keywords. Rules with `KEYWORD_PRESET` [trigger_type](#trigger-types) accept a maximum of 1000 keywords.**
 
 #### Trigger Metadata Field Limits
-
 | Field          | Trigger Type   | MAX ARRAY LENGTH | MAX CHARACTERS PER STRING |
 |----------------|----------------|------------------|---------------------------|
 | keyword_filter | KEYWORD        | 1000             | 60                        |
@@ -3771,29 +6208,25 @@ value of [trigger_type](#trigger-types).
 
 
 #### Keyword Preset Types
-
 | Preset Type    | Value | Description                                                  |
 |----------------|-------|--------------------------------------------------------------|
-| PROFANITY      | 1     | words that may be considered forms of swearing or cursing    |
-| SEXUAL_CONTENT | 2     | words that refer to sexually explicit behavior or activity   |
-| SLURS          | 3     | personal insults or words that may be considered hate speech |
+| Profanity      | 1     | words that may be considered forms of swearing or cursing    |
+| Sexual Content | 2     | words that refer to sexually explicit behavior or activity   |
+| Slurs          | 3     | personal insults or words that may be considered hate speech |
 
 
 #### Event Types
-
-Indicates in what event context a rule should be checked.
+**Indicates in what event context a rule should be checked.**
 
 | Event Type   | Value | Description                                         |
 |--------------|-------|-----------------------------------------------------|
-| MESSAGE_SEND | 1     | when a member sends or edits a message in the guild |
+| Message Send | 1     | when a member sends or edits a message in the guild |
 
 
 ##### Keyword Matching Strategies
+**Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how it should be matched. All keywords are case insensitive.**
 
-Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how it should be matched. All keywords are case insensitive.
-
-**Prefix** - word must start with the keyword
-
+**Prefix** - word must start with the keyword  
 | Keyword   | Matches                               |
 |-----------|---------------------------------------|
 | cat\*     | **cat**ch, **Cat**apult, **CAt**tLE   |
@@ -3801,8 +6234,7 @@ Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how
 | the mat\* | **the mat**rix                        |
 
 
-**Suffix** - word must end with the keyword
-
+**Suffix** - word must end with the keyword  
 | Keyword   | Matches                             |
 |-----------|-------------------------------------|
 | \*cat     | wild**cat**, copy**Cat**            |
@@ -3810,8 +6242,7 @@ Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how
 | \*the mat | brea**the mat**                     |
 
 
-**Anywhere** - keyword can appear anywhere in the content
-
+**Anywhere** - keyword can appear anywhere in the content  
 | Keyword     | Matches                     |
 |-------------|-----------------------------|
 | \*cat\*     | lo**cat**ion, edu**Cat**ion |
@@ -3819,8 +6250,7 @@ Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how
 | \*the mat\* | brea**the mat**ter          |
 
 
-**Whole Word** - keyword is a full word or phrase and must be surrounded by whitespace
-
+**Whole Word** - keyword is a full word or phrase and must be surrounded by whitespace  
 | Keyword | Matches     |
 |---------|-------------|
 | cat     | **cat**     |
@@ -3829,32 +6259,47 @@ Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how
 
 
 #### Auto Moderation Action Object
-An action which will execute whenever a rule is triggered.
+**An action which will execute whenever a rule is triggered.**
 
 | Field       | Type                                | Description                                                               |
 |-------------|-------------------------------------|---------------------------------------------------------------------------|
 | type        | [action type](#action-types)        | the type of action                                                        |
 | metadata? * | [action metadata](#action-metadata) | additional metadata needed during execution for this specific action type |
 
-\* Can be omitted based on `type`. See the `Associated Action Types` column in [action metadata](#action-metadata) to understand which `type` values require `metadata` to be set.
+**\* Can be omitted based on `type`. See the `Associated Action Types` column in [action metadata](#action-metadata) to understand which `type` values require `metadata` to be set.**
 
 #### Action Types
-
 | Action Type        | Value | Description                                                                                                                                                |
 |--------------------|-------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| BLOCK_MESSAGE      | 1     | blocks a member's message and prevents it from being posted. A custom explanation can be specified and shown to members whenever their message is blocked. |
-| SEND_ALERT_MESSAGE | 2     | logs user content to a specified channel                                                                                                                   |
-| TIMEOUT            | 3     | timeout user for a specified duration *                                                                                                                    |  
+| Block Message      | 1     | blocks a member's message and prevents it from being posted. A custom explanation can be specified and shown to members whenever their message is blocked. |
+| Send Alert Message | 2     | logs user content to a specified channel                                                                                                                   |
+| Timeout            | 3     | timeout user for a specified duration *                                                                                                                    |
 
-\* A `TIMEOUT` action can only be set up for `KEYWORD` and `MENTION_SPAM` rules. The `MODERATE_MEMBERS` permission is required to use the `TIMEOUT` action type.
-
+**\* A `TIMEOUT` action can only be set up for `KEYWORD` and `MENTION_SPAM` rules. The `MODERATE_MEMBERS` permission is required to use the `TIMEOUT` action type.**
 
 #### Action Metadata
-Additional data used when an action is executed. Different fields are relevant based on the
-value of [action type](#action-types).
+**Additional data used when an action is executed.**  
+**Different fields are relevant based on the value of [action type](#action-types).**
 
 | Field            | Type      | Associated Action Types | Description                                                                            | Constraints                          |
 |------------------|-----------|-------------------------|----------------------------------------------------------------------------------------|--------------------------------------|
-| channel_id       | snowflake | SEND_ALERT_MESSAGE      | channel to which user content should be logged                                         | existing channel                     |
-| duration_seconds | integer   | TIMEOUT                 | timeout duration in seconds                                                            | maximum of 2419200 seconds (4 weeks) |
-| custom_message?  | string    | BLOCK_MESSAGE           | additional explanation that will be shown to members whenever their message is blocked | maximum of 150 characters            |
+| channel_id       | snowflake | Send Alert Message      | channel to which user content should be logged                                         | existing channel                     |
+| duration_seconds | integer   | Timeout                 | timeout duration in seconds                                                            | maximum of 2419200 seconds (4 weeks) |
+| custom_message?  | string    | Block Message           | additional explanation that will be shown to members whenever their message is blocked | maximum of 150 characters            |
+
+### Stage Instance Object
+| Field                    | Type       | Description                                               |
+|--------------------------|------------|---------------------------------------------------------- |
+| id                       | snowflake  | The id of this Stage instance                             |
+| guild_id                 | snowflake  | The guild id of the associated Stage channel              |
+| channel_id               | snowflake  | The id of the associated Stage channel                    |
+| topic                    | string     | The topic of the Stage instance (1-120 characters)        |
+| privacy_level            | number     | The [privacy level](#privacy-level) of the Stage instance |
+| discoverable_disabled    | boolean    | Whether or not Stage Discovery is disabled (deprecated)   |
+| guild_scheduled_event_id | ?snowflake | The id of the scheduled event for this Stage instance     |
+
+#### Privacy Level
+| Level      | Value | Description                                          |
+|------------|-------|------------------------------------------------------|
+| Public     | 1     | The Stage instance is visible publicly. (deprecated) |
+| Guild Only | 2     | The Stage instance is visible to only guild members. |
