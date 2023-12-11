@@ -47,77 +47,77 @@ mapih.initialize({
 
 ## Table of Contents
 - [Applications](#applications)
-  - [getMe](#applications-getMe)
-  - [updateMe](#applications-updateMe)
-  - [appRoleConnectionMeta](#applications-appRoleConnectionMeta)
-  - [updateAppRoleConnectionMeta](#applications-updateAppRoleConnectionMeta)
-  - [commands](#applications-commands)
-    - [retrieve](#applications-commands-retrieve)
-    - [getAll](#applications-commands-getAll)
-    - [create](#applications-commands-create)
-    - [modify](#applications-commands-modify)
-    - [destroy](#applications-commands-destroy)
-    - [bulkOverwrite](#applications-commands-bulkOverwrite)
-    - [retrievePermissions](#applications-commands-retrievePermissions)
-    - [getAllPermissions](#applications-commands-getAllPermissions)
-    - [modifyPermissions](#applications-commands-modifyPermissions)
+  - [getMe](#get-current-application)
+  - [updateMe](#edit-current-application)
+  - [appRoleConnectionMeta](#get-application-role-connection-metadata-records)
+  - [updateAppRoleConnectionMeta](#update-application-role-connection-metadata-records)
+  - [commands](#application-commands)
+    - [retrieve](#get-application-command)
+    - [getAll](#get-application-commands)
+    - [create](#create-application-command)
+    - [update](#edit-application-command)
+    - [destroy](#delete-application-command)
+    - [bulkOverwrite](#bulk-overwrite-application-commands)
+    - [retrievePermissions](#get-application-command-permissions)
+    - [getAllPermissions](#get-guild-application-command-permissions)
+    - [updatePermissions](#edit-application-command-permissions)
   - [entitlements](#application-entitlements)
-    - [getAll](#applications-entitlements-getAll)
-    - [create](#applications-entitlements-create)
-    - [destroy](#applications-entitlements-destroy)
+    - [getAll](#list-entitlements)
+    - [create](#create-test-entitlement)
+    - [destroy](#delete-test-entitlement)
   - [skus](#application-skus)
-    - [getAll](#applications-skus-getAll)
+    - [getAll](#list-skus)
 - [Audit Log](#audit-log)
-  - [retrieve](#auditlog-retrieve)
+  - [retrieve](#get-guild-audit-log)
 - [Auto Moderation](#auto-moderation)
-  - [retrieveRule](#auto-moderation-retrieveRule)
-  - [getAllRules](#auto-moderation-getAllRules)
-  - [createRule](#auto-moderation-createRule)
-  - [updateRule](#auto-moderation-updateRule)
-  - [destroyRule](#auto-moderation-destroyRule)
+  - [retrieveRule](#get-auto-moderation-rule)
+  - [getAllRules](#list-auto-moderation-rules)
+  - [createRule](#create-auto-moderation-rule)
+  - [updateRule](#modify-auto-moderation-rule)
+  - [destroyRule](#destroy-auto-moderation-rule)
 - [Channels](#channel)
-  - [retrieve](#channel-retrieve)
-  - [modify](#channel-modify)
-  - [destroy](#channel-destroy)
-  - [updatePermissions](#channel-updatePermissions)
-  - [deletePermissions](#channel-deletePermissions)
-  - [getinvites](#channel-getinvites)
-  - [inviteCreate](#channel-inviteCreate)
-  - [typingCreate](#channel-typingCreate)
-  - [followAnnouncementChannel](#channel-followAnnouncementChannel)
-  - [groupDMadd](#channel-groupDMadd)
-  - [groupDMremove](#channel-groupDMremove)
+  - [retrieve](#get-channel)
+  - [update](#modify-channel)
+  - [destroy](#delete-channel)
+  - [updatePermissions](#edit-channel-permissions)
+  - [deletePermissions](#delete-channel-permissions)
+  - [getinvites](#get-channel-invites)
+  - [inviteCreate](#create-channel-invite)
+  - [typingCreate](#trigger-typing-indicator)
+  - [followAnnouncementChannel](#follow-announcement-channel)
+  - [groupDMadd](#group-dm-add-recipient)
+  - [groupDMremove](#group-dm-remove-recipient)
   - [messages](#channel-messages)
-    - [retrieve](#channel-messages-retrieve)
-    - [getAll](#channel-messages-getAll)
-    - [create](#channel-messages-create)
-    - [update](#channel-messages-update)
-    - [destroy](#channel-messages-destroy)
-    - [bulkDelete](#channel-messages-bulkDelete)
-    - [crosspost](#channel-messages-crosspost)
-    - [pin](#channel-messages-pin)
-    - [unpin](#channel-messages-unpin)
-    - [getPinned](#channel-messages-getPinned)
+    - [retrieve](#get-channel-message)
+    - [getAll](#get-channel-messages)
+    - [create](#create-message)
+    - [update](#edit-message)
+    - [destroy](#delete-message)
+    - [bulkDelete](#bulk-delete-messages)
+    - [crosspost](#crosspost-message)
+    - [pin](#pin-message)
+    - [unpin](#unpin-message)
+    - [getPinned](#get-pinned-messages)
   - [threads](#channel-threads)
-    - [forumThreadCreate](#channel-threads-forumThreadCreate)
-    - [createFromMessage](#channel-threads-createFromMessage)
-    - [createWithoutMessage](#channel-threads-createWithoutMessage)
-    - [join](#channel-threads-join)
-    - [leave](#channel-threads-leave)
-    - [addMember](#channel-threads-addMember)
-    - [removeMember](#channel-threads-removeMember)
-    - [retrieveMember](#channel-threads-retrieveMember)
-    - [getAllMembers](#channel-threads-getAllMembers)
-    - [getAllPublicArchived](#channel-threads-getAllPublicArchived)
-    - [getAllPrivateArchived](#channel-threads-getAllPrivateArchived)
-    - [getAllJoinedPrivateArchived](#channel-threads-getAllJoinedPrivateArchived)
+    - [forumThreadCreate](#start-thread-in-forum-channel)
+    - [createFromMessage](#start-thread-from-message)
+    - [createWithoutMessage](#start-thread-without-message)
+    - [join](#join-thread)
+    - [leave](#leave-thread)
+    - [addMember](#add-thread-member)
+    - [removeMember](#remove-thread-member)
+    - [retrieveMember](#get-thread-member)
+    - [getAllMembers](#list-thread-members)
+    - [getAllPublicArchived](#list-public-archived-threads)
+    - [getAllPrivateArchived](#list-private-archived-threads)
+    - [getAllJoinedPrivateArchived](#list-joined-private-archived-threads)
   - [reactions](#channel-reactions)
-    - [create](#channel-reactions-create)
-    - [deleteOwn](#channel-reactions-deleteOwn)
-    - [deleteUser](#channel-reactions-deleteUser)
-    - [deleteAll](#channel-reactions-deleteAll)
-    - [deleteAllEmoji](#channel-reactions-deleteAllEmoji)
-    - [getUsers](#channel-reactions-getUsers)
+    - [create](#create-reaction)
+    - [deleteOwn](#delete-own-reaction)
+    - [deleteUser](#delete-user-reaction)
+    - [deleteAll](#delete-all-reactions)
+    - [deleteAllEmoji](#delete-all-reactions-for-emoji)
+    - [getUsers](#get-reactions)
 - [Guilds](#guild)
   - [create](#create-guild)
   - [update](#modify-guild)
@@ -135,7 +135,7 @@ mapih.initialize({
   - [beginPrune](#begin-guild-prune)
   - [getVoiceRegions](#get-guild-voice-regions)
   - [getAllIntegrations](#get-guild-integrations)
-  - [destroyIntegration](#delete-guild-integrations)
+  - [destroyIntegration](#delete-guild-integration)
   - [retrieveWidget](#get-guild-widget)
   - [retrieveWidgetImage](#get-guild-widget-settings)
   - [retrieveWidgetSettings](#get-guild-widget-image)
@@ -160,7 +160,7 @@ mapih.initialize({
     - [addRole](#add-guild-member-role)
     - [removeRole](#remove-guild-member-role)
     - [getPermissionNames](#get-member-permission-names)
-    - [timeout](#timeout-member)
+    - [timeout](#timeout-guild-member)
   - [roles](#guild-roles)
     - [retrieve](#get-guild-role)
     - [getAll](#get-guild-roles)
@@ -178,7 +178,7 @@ mapih.initialize({
     - [retrieve](#get-sticker)
     - [nitroPacks](#list-nitro-sticker-packs)
     - [getAll](#list-guild-stickers)
-    - [retrieveGuildSticker](#get-guild-sticker)
+    - [retrieveGuild](#get-guild-sticker)
     - [create](#create-guild-sticker)
     - [update](#modify-guild-sticker)
     - [destroy](#delete-guild-sticker)
@@ -194,17 +194,61 @@ mapih.initialize({
     - [getAll](#get-guild-templates)
     - [create](#create-guild-template)
     - [createGuild](#create-guild-from-guild-template)
-    - [sync](#sync-guild-template)
+    - [sync](#sync-guild-templates)
     - [update](#modify-guild-template)
     - [destroy](#delete-guild-template)
 - [Interactions](#interactions)
   - [callback](#interaction-callbacks)
+    - [reply](#create-interaction-response)
+    - [defer](#defer-interaction-response)
+    - [get_original](#get-original-interaction-response)
+    - [update_original](#edit-original-interaction-response)
+    - [delete_original](#delete-original-interaction-response)
+    - [component_defer](#component-defer)
+    - [component_update](#component-update)
+    - [autocomplete_reply](#autocomplete-reply)
+    - [modal_reply](#modal-reply)
+    - [upgrade](#premium-required)
   - [followup](#interaction-followups)
+    - [retrieve](#get-followup-message)
+    - [create](#create-followup-message)
+    - [update](#edit-followup-message)
+    - [destroy](#delete-followup-message)
 - [Invites](#invites)
+  - [retrieve](#get-invite)
+  - [revoke](#delete-invite)
 - [OAuth 2](#oauth2)
 - [Stage Instances](#stage-instance)
+  - [retrieve](#get-stage-instance)
+  - [create](#create-stage-instance)
+  - [update](#modify-stage-instance)
+  - [destroy](#delete-stage-instance)
 - [Users](#users)
+  - [retrieve](#get-user)
+  - [currentUser](#get-current-user)
+  - [myGuilds](#get-current-user-guilds)
+  - [currentMember](#get-current-user-guild-member)
+  - [updateCurrent](#modify-current-user)
+  - [connections](#get-user-connections)
+  - [appRoleConnection](#get-user-application-role-connection)
+  - [updateAppRoleConnection](#update-user-application-role-connection)
+  - [createDM](#create-dm)
+  - [createGroupDM](#create-group-dm)
+  - [leaveGuild](#leave-guild)
 - [Webhooks](#webhooks)
+  - [retrieve](#get-webhook)
+  - [retrieveWithToken](#get-webhook-with-token)
+  - [retrieveChannel](#get-channel-webhooks)
+  - [retrieveGuild](#get-guild-webhooks)
+  - [retrieveMessage](#get-webhook-message)
+  - [updateMessage](#edit-webhook-message)
+  - [destroyMessage](#delete-webhook-message)
+  - [create](#create-webhook)
+  - [update](#modify-webhook)
+  - [updateWithToken](#modify-webhook-with-token)
+  - [destroy](#delete-webhook)
+  - [destroyWithToken](#delete-webhook-with-token)
+  - [execute](#execute-webhook)
 - [Objects/Types](#objects-and-types)
 
 ---
@@ -714,7 +758,7 @@ await api.discord.guilds.updateOnboarding({
       description: 'Option description',
       id: '0000000000',
       channel_ids: [
-        '0000000000
+        '0000000000'
       ],
       role_ids: [
         '0000000000'
@@ -1254,9 +1298,9 @@ await api.discord.guilds.emojis.destroy({
 | [`retrieveGuildSticker`](#get-guild-sticker) | Get a specific sticker from a guild |
 | [`nitroPacks`](#list-sticker-packs)          | Lists available sticker packs       | 
 | [`getAll`](#list-guild-stickers)             | List all stickers in a guild        |
-| [`create`](#remove-guild-member)             | Create a guild sticker              |
-| [`update`](#modify-guild-member)             | Update a guild sticker              |
-| [`destroy`](#modify-guild-member)            | Delete a guild sticker              |
+| [`create`](#create-guild-sticker)            | Create a guild sticker              |
+| [`update`](#modify-guild-sticker)            | Update a guild sticker              |
+| [`destroy`](#delete-guild-sticker)           | Delete a guild sticker              |
 
 ### [Get Sticker](https://discord.com/developers/docs/resources/sticker#get-sticker)
 
@@ -2545,13 +2589,6 @@ await api.discord.users.currentUser();
 await api.discord.users.myGuilds();
 ```
 
-### [Get Current User](https://discord.com/developers/docs/resources/user#get-current-user)
-
-#### Example
-```javascript
-await api.discord.users.currentUser();
-```
-
 ### [Get Current User Guild Member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member)
 
 #### Parameters
@@ -3386,10 +3423,10 @@ await api.discord.applications.updateAppRoleConnectionMeta();
 | [`create`](#create-application-command)                           | Create a new application command            |
 | [`update`](#edit-application-command)                             | Update an application command               |
 | [`destroy`](#delete-application-command)                          | Delete an application command               |
-| [`bulkOverwrite`](#bulkOverwrite-application-commands)            | Bulk overwrite application commands         |
+| [`bulkOverwrite`](#bulk-overwrite-application-commands)            | Bulk overwrite application commands         |
 | [`retrievePermissions`](#get-application-command-permissions)     | Get a guild commands permissions            |
 | [`getAllPermissions`](#get-guild-application-command-permissions) | Get permissions for all commands in a guild |
-| [`modifyPermissions`](#edit-application-command-permissions)      | Update a guild's application command        |
+| [`updatePermissions`](#edit-application-command-permissions)      | Update a guild's application command        |
 
 ### [Get Application Command](https://discord.com/developers/docs/interactions/application-commands#get-global-application-command)
 **This is to be used for both global and guild commands.**  
@@ -3428,25 +3465,6 @@ await api.discord.applications.commands.getAll();
 #### Example
 ```javascript
 await api.discord.applications.commands.getAll({
-  guild_id: '0000000000'
-})
-```
-
-### [Get Application Command](https://discord.com/developers/docs/interactions/application-commands#get-global-application-command)
-**This is to be used for both global and guild commands.**  
-**Provide a guild_id field if using for a guild command.**
-
-#### Parameters
-| Field           | Type      | Description               |
-|-----------------|-----------|---------------------------|
-| command_id      | snowflake | the id of the command     |
-| application_id? | snowflake | the id of the application |
-| guild_id?       | snowflake | the id of the guild       |
-
-#### Example
-```javascript
-await api.discord.applications.commands.retrieve({
-  command_id: '0000000000',
   guild_id: '0000000000'
 })
 ```
@@ -3559,7 +3577,7 @@ await api.discord.applications.commands.destroy({
 })
 ```
 
-### [Bulk Overwrite Application Command](https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-command)
+### [Bulk Overwrite Application Commands](https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-command)
 **This is to be used for both global and guild commands.**  
 **Provide a guild_id field if using for a guild command.**  
 **Takes a list of application commands, overwriting the existing global command list for this application.**
@@ -3626,7 +3644,7 @@ await api.discord.applications.commands.getAllPermissions({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.modifyPermissions({
+await api.discord.applications.commands.updatePermissions({
   guild_id: '0000000000',
   permissions: [{
     id: '0000000000',
