@@ -107,7 +107,6 @@ module.exports = {
       const paths = [`applications/${params.application_id}`, 'commands' /* `commands/?with_localizations=${params.with_localizations || false}`*/];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
       if (params.with_localizations) paths.push(`/?with_localizations=${params.with_localizations || false}`);
-      console.log('paths.join()', paths.join('/'));
 
       const attempt = await attemptHandler({
         method: 'get',
