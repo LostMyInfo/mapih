@@ -10,7 +10,7 @@ export function myGuilds(params?: {
 export function currentMember(params: {
     guild_id: string;
 }): Promise<Member>;
-export function modifyCurrent(params: {
+export function updateCurrent(params: {
     username?: string | undefined;
     avatar?: string | Buffer | null | undefined;
 }): Promise<User>;

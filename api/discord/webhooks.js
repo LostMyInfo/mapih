@@ -215,14 +215,14 @@ module.exports = {
    * ### [Modify Webhook]{@link https://discord.com/developers/docs/resources/webhook#modify-webhook}
    * - Webhook names follow the nickname guidelines in the [Usernames and Nicknames]{@link https://discord.com/developers/docs/resources/user#usernames-and-nicknames} documentation, with the exception that webhook names can be up to 80 characters.
    * @example
-   * await api.discord.webhooks.modify({
+   * await api.discord.webhooks.update({
    *   webhook_id: '0000000000',
    *   channel_id: '0000000000',
    *   name: 'MyNewWebhook',
    *   avatar: 'https://www.imgurl.com'
    * });
    * @memberof module:webhooks#
-   * @function modify
+   * @function update
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
    * @param {Snowflake} [params.channel_id] - The new channel id this webhook should be moved to
@@ -231,7 +231,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<Webhook>} The updated [Webhook]{@link https://discord.com/developers/docs/resources/webhook#webhook-object} object
    */
-  modify: async (params) => {
+  update: async (params) => {
     if (params.avatar) params.avatar = (await imageData(params.avatar, 'base64string')).data;
     return attemptHandler({
       method: 'PATCH',
@@ -246,14 +246,14 @@ module.exports = {
    * ### [Modify Webhook with Token]{@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
    * - Webhook names follow the nickname guidelines in the [Usernames and Nicknames]{@link https://discord.com/developers/docs/resources/user#usernames-and-nicknames} documentation, with the exception that webhook names can be up to 80 characters.
    * @example
-   * await api.discord.webhooks.modifyWithToken({
+   * await api.discord.webhooks.updateWithToken({
    *   webhook_id: '0000000000',
    *   webhook_token: 'abcdefg1234567',
    *   name: 'MyNewWebhook',
    *   avatar: 'https://www.imgurl.com'
    * });
    * @memberof module:webhooks#
-   * @function modifyWithToken
+   * @function updateWithToken
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
    * @param {string} params.webhook_token
@@ -261,7 +261,7 @@ module.exports = {
    * @param {string | Buffer} [params.avatar]
    * @returns {Promise<Omit<Webhook, 'channel_id'>>} The updated [Webhook]{@link https://discord.com/developers/docs/resources/webhook#webhook-object} object
    */
-  modifyWithToken: async (params) => {
+  updateWithToken: async (params) => {
     if (params.avatar) params.avatar = (await imageData(params.avatar, 'base64string')).data;
     return attemptHandler({
       method: 'PATCH',

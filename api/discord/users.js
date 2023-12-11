@@ -122,11 +122,11 @@ module.exports = {
    * @summary
    * ### [Modify Current User]{@link https://discord.com/developers/docs/resources/user#modify-current-user}
    * @example
-   * await api.discord.users.modifyCurrent({
+   * await api.discord.users.updateCurrent({
    *   username: 'newUsername',
    *   avatar: 'https://www.imgURL.com' // or buffer
    * });
-   * @function modifyCurrent
+   * @function updateCurrent
    * @memberof module:users#
    * @fires users#update
    * @param {object} params
@@ -134,7 +134,7 @@ module.exports = {
    * @param {?string | Buffer} [params.avatar] - If passed, modifies the user's avatar
    * @returns {Promise<User>} [User]{@link https://discord.com/developers/docs/resources/user#user-object} object
    */
-  modifyCurrent: async (params) =>
+  updateCurrent: async (params) =>
     attemptHandler({
       method: 'POST',
       endpoint: 'users/@me',

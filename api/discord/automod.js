@@ -108,7 +108,7 @@ module.exports = {
    * @summary
    * ### [Modify Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
    * @example
-   * await api.discord.automod.modifyRule({
+   * await api.discord.automod.updateRule({
    *   guild_id: '0000000000',
    *   auto_moderation_rule_id: '00000',
    *   name: 'EricsAutoModRule',
@@ -123,7 +123,7 @@ module.exports = {
    *   },
    *   enabled: true
    * });
-   * @function modifyRule
+   * @function updateRule
    * @memberof module:automod#
    * @fires automod#rule_update
    * @param {Object} params
@@ -139,7 +139,7 @@ module.exports = {
    * @param {Snowflake[]} [params.exempt_channels] - The channel ids that should not be affected by the rule (Maximum of 50)
    * @returns {Promise<AutoModRule>} [Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object}
    */
-  modifyRule: async (params) =>
+  updateRule: async (params) =>
     attemptHandler({
       method: 'PATCH',
       endpoint: `guilds/${params.guild_id}/auto-moderation/rules/${params.auto_moderation_rule_id}`,

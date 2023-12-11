@@ -34,7 +34,7 @@ export namespace discord {
             exempt_roles?: string[] | undefined;
             exempt_channels?: string[] | undefined;
         }) => Promise<AutoModRule>;
-        modifyRule: (params: {
+        updateRule: (params: {
             guild_id: string;
             auto_moderation_rule_id: string;
             name?: string | undefined;
@@ -92,7 +92,7 @@ export namespace discord {
                 type?: number | undefined;
                 options?: ApplicationCommandOption[] | undefined;
             }) => Promise<ApplicationCommand>;
-            modify: (params: {
+            update: (params: {
                 application_id: string;
                 command_id: string;
                 guild_id?: string | undefined;
@@ -127,7 +127,7 @@ export namespace discord {
                 application_id: string;
                 guild_id: string;
             }) => Promise<GuildApplicationCommandPermissions>;
-            modifyPermissions: (params: {
+            updatePermissions: (params: {
                 application_id: string;
                 guild_id: string;
                 command_id: string;
@@ -169,7 +169,7 @@ export namespace discord {
         retrieve: (params: {
             channel_id: string;
         }) => Promise<Channel>;
-        modify: (params: {
+        update: (params: {
             channel_id: string;
             name?: string | undefined;
             type?: number | undefined;
@@ -194,7 +194,7 @@ export namespace discord {
         destroy: (params: {
             channel_id: string;
         }) => Promise<Channel>;
-        editPermissions: (params: {
+        updatePermissions: (params: {
             channel_id: string;
             overwrite_id: string;
             type: 0 | 1;
@@ -204,7 +204,7 @@ export namespace discord {
             statusCode: number;
             message: string;
         }>;
-        deletePermission: (params: {
+        deletePermissions: (params: {
             channel_id: string;
             overwrite_id: string;
         }) => Promise<{
@@ -224,23 +224,6 @@ export namespace discord {
             target_user_id?: string | undefined;
             target_application_id?: string | undefined;
         }) => Promise<ExtendedInvite>;
-        pinMessage: (params: {
-            channel_id: string;
-            message_id: string;
-        }) => Promise<{
-            statusCode: number;
-            message: string;
-        }>;
-        unpinMessage: (params: {
-            channel_id: string;
-            message_id: string;
-        }) => Promise<{
-            statusCode: number;
-            message: string;
-        }>;
-        getPinnedMessages: (params: {
-            channel_id: string;
-        }) => Promise<Message[]>;
         typingCreate: (params: {
             channel_id: string;
         }) => Promise<{
@@ -313,6 +296,23 @@ export namespace discord {
                 around?: string | undefined;
                 before?: string | undefined;
                 after?: string | undefined;
+            }) => Promise<Message[]>;
+            pin: (params: {
+                channel_id: string;
+                message_id: string;
+            }) => Promise<{
+                statusCode: number;
+                message: string;
+            }>;
+            unpin: (params: {
+                channel_id: string;
+                message_id: string;
+            }) => Promise<{
+                statusCode: number;
+                message: string;
+            }>;
+            getPinned: (params: {
+                channel_id: string;
             }) => Promise<Message[]>;
         };
         threads: {
@@ -514,7 +514,7 @@ export namespace discord {
             statusCode: number;
             message: string;
         }>;
-        removeBan: (params: {
+        destroyBan: (params: {
             guild_id: string;
             user_id: string;
         }) => Promise<{
@@ -524,7 +524,7 @@ export namespace discord {
         getInvites: (params: {
             guild_id: string;
         }) => Promise<ExtendedInvite[]>;
-        modifyMFAlevel: (params: {
+        updateMFAlevel: (params: {
             guild_id: string;
             level: number;
         }) => Promise<number>;
@@ -546,7 +546,7 @@ export namespace discord {
         getVoiceRegions: (params: {
             guild_id: string;
         }) => Promise<GuildVoiceRegion[]>;
-        getIntegrations: (params: {
+        getAllIntegrations: (params: {
             guild_id: string;
         }) => Promise<GuildIntegration[]>;
         destroyIntegration: (params: {
@@ -566,7 +566,7 @@ export namespace discord {
             guild_id: string;
             style?: "shield" | "banner1" | "banner2" | "banner3" | "banner4" | undefined;
         }) => Promise<ArrayBuffer>;
-        modifyWidget: (params: {
+        updateWidget: (params: {
             guild_id: string;
             enabled?: boolean | undefined;
             channel_id?: string | undefined;
@@ -577,19 +577,19 @@ export namespace discord {
             code: number;
             uses: number;
         }>;
-        getWelcomeScreen: (params: {
+        retrieveWelcomeScreen: (params: {
             guild_id: string;
         }) => Promise<GuildWelcomeScreen>;
-        modifyWelcomeScreen: (params: {
+        updateWelcomeScreen: (params: {
             guild_id: string;
             enabled?: boolean | undefined;
             welcome_channels?: GuildWelcomeScreenChannel[] | undefined;
             description?: string | undefined;
         }) => Promise<GuildWelcomeScreen>;
-        getOnboarding: (params: {
+        retrieveOnboarding: (params: {
             guild_id: string;
         }) => Promise<GuildOnboarding>;
-        modifyOnboarding: (params: {
+        updateOnboarding: (params: {
             guild_id: string;
             prompts: OnboardingPrompt[];
             default_channel_ids: string[];
@@ -624,7 +624,7 @@ export namespace discord {
                 default_forum_layout?: number | null | undefined;
                 default_thread_rate_limit_per_user?: number | null | undefined;
             }) => Promise<Channel[]>;
-            modifyPositions: (params: {
+            updatePositions: (params: {
                 guild_id: string;
                 id: string;
                 position?: number | null | undefined;
@@ -733,7 +733,7 @@ export namespace discord {
                 statusCode: number;
                 message: string;
             }>;
-            modifyPositions: (params: {
+            updatePositions: (params: {
                 guild_id: string;
                 roles: {
                     id: string;
@@ -922,13 +922,13 @@ export namespace discord {
             name: string;
             avatar?: string | undefined;
         }) => Promise<Webhook>;
-        modify: (params: {
+        update: (params: {
             webhook_id: string;
             channel_id?: string | undefined;
             name?: string | undefined;
             avatar?: string | Buffer | undefined;
         }) => Promise<Webhook>;
-        modifyWithToken: (params: {
+        updateWithToken: (params: {
             webhook_id: string;
             webhook_token: string;
             name?: string | undefined;
@@ -1050,7 +1050,7 @@ export namespace discord {
                 statusCode: 204;
                 body: undefined;
             }>;
-            edit_original: (params: Pick<InteractionParams, "token" | "application_id">, input?: {
+            update_original: (params: Pick<InteractionParams, "token" | "application_id">, input?: {
                 content?: string | undefined;
                 embeds?: Embed[] | undefined;
                 components?: Component | undefined;
@@ -1068,7 +1068,7 @@ export namespace discord {
             }>;
         };
         followup: {
-            get: (params: Pick<InteractionParams, "token" | "application_id">, input: {
+            retrieve: (params: Pick<InteractionParams, "token" | "application_id">, input: {
                 message_id: string;
                 thread_id?: string | undefined;
             }) => Promise<Message>;
@@ -1082,7 +1082,7 @@ export namespace discord {
                 allowed_mentions?: AllowedMentions | undefined;
                 thread_name?: string | undefined;
             }) => Promise<Message | null>;
-            edit: (params: Pick<InteractionParams, "token" | "application_id">, input: {
+            update: (params: Pick<InteractionParams, "token" | "application_id">, input: {
                 message_id: string;
                 ephemeral?: boolean | undefined;
                 content?: string | undefined;
@@ -1092,7 +1092,7 @@ export namespace discord {
                 allowed_mentions?: AllowedMentions | undefined;
                 thread_id?: string | undefined;
             }) => Promise<Message | null>;
-            del: (params: Pick<InteractionParams, "token" | "application_id">, input: {
+            destroy: (params: Pick<InteractionParams, "token" | "application_id">, input: {
                 message_id: string;
             }) => Promise<{
                 statusCode: 204;
@@ -1143,7 +1143,7 @@ export namespace discord {
         currentMember: (params: {
             guild_id: string;
         }) => Promise<Member>;
-        modifyCurrent: (params: {
+        updateCurrent: (params: {
             username?: string | undefined;
             avatar?: string | Buffer | null | undefined;
         }) => Promise<User>;

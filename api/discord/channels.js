@@ -52,13 +52,13 @@ module.exports = {
    * 
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
-   * await api.discord.channels.modify({
+   * await api.discord.channels.update({
    *   channel_id: '0000000000',
    *   name: 'newName,
    *   position: 1
    * });
    * @memberof module:channels#
-   * @function modify
+   * @function update
    * @fires channels#channel_update
    * @param {Object} params
    * @param {Snowflake} params.channel_id
@@ -94,7 +94,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<Channel>} The updated [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object
    */
-  modify: async (params) =>
+  update: async (params) =>
     attemptHandler({
       method: 'PATCH',
       endpoint: `channels/${params.channel_id}`,
@@ -137,14 +137,14 @@ module.exports = {
    * 
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
-   * await api.discord.channels.editPermissions({
+   * await api.discord.channels.updatePermissions({
    *   channel_id: '0000000000',
    *   overwrite_id: '0000000000',
    *   type: 1, // member
    *   allow: '1024'
    * });
    * @memberof module:channels#
-   * @function editPermissions
+   * @function updatePermissions
    * @fires channels#channel_update
    * @param {Object} params
    * @param {Snowflake} params.channel_id
@@ -155,7 +155,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
-  editPermissions: async (params) => 
+  updatePermissions: async (params) => 
     attemptHandler({
       method: 'PUT',
       endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`,
@@ -175,12 +175,12 @@ module.exports = {
    * 
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
-   * await deletePermission({
+   * await deletePermissions({
    *   channel_id: '0000000000',
    *   overwrite_id: '0000000000'
    * });
    * @memberof module:channels#
-   * @function deletePermission
+   * @function deletePermissions
    * @fires channels#channel_update
    * @param {Object} params
    * @param {Snowflake} params.channel_id
@@ -188,7 +188,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
-  deletePermission: async (params) =>
+  deletePermissions: async (params) =>
     attemptHandler({
       method: 'DELETE',
       endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`,
@@ -285,80 +285,6 @@ module.exports = {
     
     return extendPayload(attempt/* , params*/);
   }, // End of Create Channel Invite
-
-  /**
-   * @summary
-   * ### [Pin Message]{@link https://discord.com/developers/docs/resources/channel#pin-message}
-   * 
-   * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
-   * @example
-   * await api.discord.channels.pinMessage({
-   *   channel_id: '0000000000',
-   *   message_id: '0000000000'
-   * });
-   * @memberof module:channels#
-   * @function pinMessage
-   * @fires channels#channel_pin_update
-   * @param {Object} params
-   * @param {Snowflake} params.channel_id
-   * @param {Snowflake} params.message_id
-   * @param {string} [params.reason]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
-   */
-  pinMessage: async (params) =>
-    attemptHandler({
-      method: 'PUT',
-      endpoint: `channels/${params.channel_id}/pins/${params.message_id}`,
-      reason: params.reason ?? null
-    }), // End of Pin Message
-  
-  /**
-   * @summary
-   * ### [Unpin Message]{@link https://discord.com/developers/docs/resources/channel#unpin-message}
-   * 
-   * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
-   * @example
-   * await api.discord.channels.unpinMessage({
-   *   channel_id: '0000000000',
-   *   message_id: '0000000000'
-   * });
-   * @memberof module:channels#
-   * @function unpinMessage
-   * @param {Object} params
-   * @param {Snowflake} params.channel_id
-   * @param {Snowflake} params.message_id
-   * @param {string} [params.reason]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
-   */
-  unpinMessage: async (params) =>
-    attemptHandler({
-      method: 'DELETE',
-      endpoint: `channels/${params.channel_id}/pins/${params.message_id}`,
-      reason: params.reason ?? null
-    }), // End of Unpin Message
-  
-  /**
-   * @summary
-   * ### [Get Pinned Messages]{@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
-   * @example
-   * await api.discord.channels.getPinnedMessages({
-   *   channel_id: '0000000000'
-   * });
-   * @memberof module:channels#
-   * @function getPinnedMessages
-   * @param {Object} params
-   * @param {Snowflake} params.channel_id
-   * @returns {Promise<Message[]>} All pinned messages in the channel as an array of [Message]{@link https://discord.com/developers/docs/resources/channel#message-object}
-   */
-  getPinnedMessages: async (params) => {
-    const attempt = await attemptHandler({
-      method: 'GET',
-      endpoint: `channels/${params.channel_id}/pins`
-    });
-    for (let message of attempt)
-      message = /* await */extendPayload(message/* , params*/);
-    return attempt;
-  }, // End of Get Pinned Messages
   
   /**
    * @summary
@@ -759,7 +685,81 @@ module.exports = {
       for (let message of attempt)
         message = /* await */extendPayload(message/* , params*/);
       return attempt;
-    } // End of Get Channel Messages
+    }, // End of Get Channel Messages
+
+    /**
+     * @summary
+     * ### [Pin Message]{@link https://discord.com/developers/docs/resources/channel#pin-message}
+     * 
+     * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
+     * @example
+     * await api.discord.channels.pin({
+     *   channel_id: '0000000000',
+     *   message_id: '0000000000'
+     * });
+     * @memberof module:channels.messages#
+     * @function pin
+     * @fires channels#channel_pin_update
+     * @param {Object} params
+     * @param {Snowflake} params.channel_id
+     * @param {Snowflake} params.message_id
+     * @param {string} [params.reason]
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     */
+    pin: async (params) =>
+      attemptHandler({
+        method: 'PUT',
+        endpoint: `channels/${params.channel_id}/pins/${params.message_id}`,
+        reason: params.reason ?? null
+      }), // End of Pin Message
+
+    /**
+     * @summary
+     * ### [Unpin Message]{@link https://discord.com/developers/docs/resources/channel#unpin-message}
+     * 
+     * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
+     * @example
+     * await api.discord.channels.unpin({
+     *   channel_id: '0000000000',
+     *   message_id: '0000000000'
+     * });
+     * @memberof module:channels.messages#
+     * @function unpin
+     * @param {Object} params
+     * @param {Snowflake} params.channel_id
+     * @param {Snowflake} params.message_id
+     * @param {string} [params.reason]
+     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     */
+    unpin: async (params) =>
+      attemptHandler({
+        method: 'DELETE',
+        endpoint: `channels/${params.channel_id}/pins/${params.message_id}`,
+        reason: params.reason ?? null
+      }), // End of Unpin Message
+
+    /**
+     * @summary
+     * ### [Get Pinned Messages]{@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
+     * @example
+     * await api.discord.channels.getPinned({
+     *   channel_id: '0000000000'
+     * });
+     * @memberof module:channels.messages#
+     * @function getPinned
+     * @param {Object} params
+     * @param {Snowflake} params.channel_id
+     * @returns {Promise<Message[]>} All pinned messages in the channel as an array of [Message]{@link https://discord.com/developers/docs/resources/channel#message-object}
+     */
+    getPinned: async (params) => {
+      const attempt = await attemptHandler({
+        method: 'GET',
+        endpoint: `channels/${params.channel_id}/pins`
+      });
+      for (let message of attempt)
+        message = /* await */extendPayload(message/* , params*/);
+      return attempt;
+    } // End of Get Pinned Messages
 
   }, // End of channels.messages
 
@@ -902,7 +902,7 @@ module.exports = {
      * await api.discord.channels.threads.createWithoutMessage({
      *   channel_id: '0000000000',
      *   name: 'thread name',
-     *   type: 11 / PUBLIC_THREAD
+     *   type: 11, // PUBLIC_THREAD
      *   auto_archive_duration: 10080,
      *   invitable: true
      * });

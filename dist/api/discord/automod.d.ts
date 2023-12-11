@@ -16,7 +16,7 @@ export function createRule(params: {
     exempt_roles?: string[] | undefined;
     exempt_channels?: string[] | undefined;
 }): Promise<AutoModRule>;
-export function modifyRule(params: {
+export function updateRule(params: {
     guild_id: string;
     auto_moderation_rule_id: string;
     name?: string | undefined;

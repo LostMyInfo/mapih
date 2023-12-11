@@ -331,11 +331,11 @@ module.exports = {
      * - Edits the initial Interaction response.
      * - Functions the same as [Edit Webhook Message]{@link module:webhooks#updateMessage} 
      * @example
-     * await api.discord.interactions.callback.edit_original(params, {
+     * await api.discord.interactions.callback.update_original(params, {
      *   content: 'new content',
      * });
      * @memberof module:interactions.callback#
-     * @method edit_original
+     * @method update_original
      * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
      * @param {object} input
      * @param {string} [input.content]
@@ -346,7 +346,7 @@ module.exports = {
      * @param {boolean} [input.ephemeral]
      * @returns {Promise<?Message>}
      */
-    edit_original: async (params, input = {}) => {
+    update_original: async (params, input = {}) => {
       const endpoint = `webhooks/${params.application_id}/${params.token}/messages/@original`;
       if (input.attachments && input.attachments.length)
         return sendAttachment('body', input, endpoint, 'patch', null, 0);
@@ -444,7 +444,7 @@ module.exports = {
      * ### [Get Followup Message]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
      * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage}
      * @example
-     * await api.discord.interactions.followup.get(params, {
+     * await api.discord.interactions.followup.retrieve(params, {
      *   message_id: '0000000000'
      * });
      * @memberof module:interactions.followup#
@@ -455,7 +455,7 @@ module.exports = {
      * @param {Snowflake} [input.thread_id]
      * @returns {Promise<Message>}
      */
-    get: async (params, input) => {
+    retrieve: async (params, input) => {
       let endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
       endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
   
@@ -554,7 +554,7 @@ module.exports = {
      * @param {Snowflake} [input.thread_id]
      * @returns {Promise<?Message>}
      */
-    edit: async (params, input) => {
+    update: async (params, input) => {
       const flags = input.ephemeral ? (1 << 6) : 0;
       let endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
       endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
@@ -615,7 +615,7 @@ module.exports = {
      * @param {Snowflake} input.message_id
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
-    del: async (params, input) =>
+    destroy: async (params, input) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}`

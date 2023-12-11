@@ -69,7 +69,7 @@ export function createBan(params: {
     statusCode: number;
     message: string;
 }>;
-export function removeBan(params: {
+export function destroyBan(params: {
     guild_id: string;
     user_id: string;
     reason?: string | undefined
@@ -80,7 +80,7 @@ export function removeBan(params: {
 export function getInvites(params: {
     guild_id: string;
 }): Promise<ExtendedInvite[]>;
-export function modifyMFAlevel(params: {
+export function updateMFAlevel(params: {
     guild_id: string;
     level: number;
 }): Promise<number>;
@@ -103,7 +103,7 @@ export function beginPrune(params: {
 export function getVoiceRegions(params: {
     guild_id: string;
 }): Promise<GuildVoiceRegion[]>;
-export function getIntegrations(params: {
+export function getAllIntegrations(params: {
     guild_id: string;
 }): Promise<GuildIntegration[]>;
 export function destroyIntegration(params: {
@@ -124,7 +124,7 @@ export function retrieveWidgetImage(params: {
     guild_id: string;
     style?: "shield" | "banner1" | "banner2" | "banner3" | "banner4" | undefined;
 }): Promise<ArrayBuffer>;
-export function modifyWidget(params: {
+export function updateWidget(params: {
     guild_id: string;
     enabled?: boolean | undefined;
     channel_id?: string | undefined;
@@ -136,20 +136,20 @@ export function retrieveVanityURL(params: {
     code: number;
     uses: number;
 }>;
-export function getWelcomeScreen(params: {
+export function retrieveWelcomeScreen(params: {
     guild_id: string;
 }): Promise<GuildWelcomeScreen>;
-export function modifyWelcomeScreen(params: {
+export function updateWelcomeScreen(params: {
     guild_id: string;
     enabled?: boolean | undefined;
     welcome_channels?: GuildWelcomeScreenChannel[] | undefined;
     description?: string | undefined;
     reason?: string | undefined
 }): Promise<GuildWelcomeScreen>;
-export function getOnboarding(params: {
+export function retrieveOnboarding(params: {
     guild_id: string;
 }): Promise<GuildOnboarding>;
-export function modifyOnboarding(params: {
+export function updateOnboarding(params: {
     guild_id: string;
     prompts: OnboardingPrompt[];
     default_channel_ids: string[];
@@ -187,7 +187,7 @@ export namespace channels {
         reason?: string | undefined
     }): Promise<Channel[]>;
     export { create_1 as create };
-    export function modifyPositions(params: {
+    export function updatePositions(params: {
         guild_id: string;
         channels: ModifyPositionsChannel[];
         reason?: string | undefined
@@ -310,7 +310,7 @@ export namespace roles {
         message: string;
     }>;
     export { destroy_1 as destroy };
-    export function modifyPositions_1(params: {
+    export function updatePositions_1(params: {
         guild_id: string;
         roles: {
             id: string;
@@ -318,7 +318,7 @@ export namespace roles {
         }[];
         reason?: string | undefined
     }): Promise<Role[]>;
-    export { modifyPositions_1 as modifyPositions };
+    export { updatePositions_1 as updatePositions };
 }
 export namespace emojis {
     export function retrieve_3(params: {

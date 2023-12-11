@@ -5,3 +5,7 @@ test.js
 .env
 config.json
 docs/guilds.md
+channels.md
+invites.md
+onsocketLogo.png
+jsdoc.json

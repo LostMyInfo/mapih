@@ -1,7 +1,7 @@
 export function retrieve(params: {
     channel_id: string;
 }): Promise<Channel>;
-export function modify(params: {
+export function update(params: {
     channel_id: string;
     name?: string | undefined;
     type?: number | undefined;
@@ -28,7 +28,7 @@ export function destroy(params: {
     channel_id: string;
     reason?: string | undefined
 }): Promise<Channel>;
-export function editPermissions(params: {
+export function updatePermissions(params: {
     channel_id: string;
     overwrite_id: string;
     type: 0 | 1;
@@ -39,7 +39,7 @@ export function editPermissions(params: {
     statusCode: number;
     message: string;
 }>;
-export function deletePermission(params: {
+export function deletePermissions(params: {
     channel_id: string;
     overwrite_id: string;
     reason?: string | undefined
@@ -61,25 +61,6 @@ export function inviteCreate(params: {
     target_user_id?: string | undefined;
     target_application_id?: string | undefined;
 }): Promise<ExtendedInvite>;
-export function pinMessage(params: {
-    channel_id: string;
-    message_id: string;
-    reason?: string | undefined
-}): Promise<{
-    statusCode: number;
-    message: string;
-}>;
-export function unpinMessage(params: {
-    channel_id: string;
-    message_id: string;
-    reason?: string | undefined
-}): Promise<{
-    statusCode: number;
-    message: string;
-}>;
-export function getPinnedMessages(params: {
-    channel_id: string;
-}): Promise<Message[]>;
 export function typingCreate(params: {
     channel_id: string;
 }): Promise<{
@@ -156,6 +137,25 @@ export namespace messages {
         around?: string | undefined;
         before?: string | undefined;
         after?: string | undefined;
+    }): Promise<Message[]>;
+    export function pin(params: {
+        channel_id: string;
+        message_id: string;
+        reason?: string | undefined
+    }): Promise<{
+        statusCode: number;
+        message: string;
+    }>;
+    export function unpin(params: {
+        channel_id: string;
+        message_id: string;
+        reason?: string | undefined
+    }): Promise<{
+        statusCode: number;
+        message: string;
+    }>;
+    export function getPinned(params: {
+        channel_id: string;
     }): Promise<Message[]>;
 }
 export namespace threads {

@@ -309,11 +309,11 @@ module.exports = {
    * ### [Remove Guild Ban]{@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
    * - Requires the `BAN_MEMBERS` permission.
    * @example
-   * await api.discord.guilds.removeBan({
+   * await api.discord.guilds.destroyBan({
    *   guild_id: '0000000000',
    *   user_id: '0000000000'
    * });
-   * @function removeBan
+   * @function destroyBan
    * @fires guilds#ban_remove
    * @memberof module:guilds#
    * @param {Object} params
@@ -322,7 +322,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
    */
-  removeBan: async (params) =>
+  destroyBan: async (params) =>
     attemptHandler({
       method: 'PUT',
       endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
@@ -354,18 +354,18 @@ module.exports = {
    * ### [Modify Guild MFA Level]{@link https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level}
    * - Requires guild ownership.
    * @example
-   * await api.discord.guilds.modifyMFAlevel({
+   * await api.discord.guilds.updateMFAlevel({
    *   guild_id: '0000000000',
    *   level: 0
    * });
-   * @function modifyMFAlevel
+   * @function updateMFAlevel
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id - Name of the webhook (1-80 characters)
    * @param {GuildMFALevel} params.level - [MFA Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-mfa-level}
    * @returns {Promise<GuildMFALevel>} The updated [MFA Level]{@link https://discord.com/developers/docs/resources/guild#guild-object-mfa-level} 
    */
-  modifyMFAlevel: async (params) =>
+  updateMFAlevel: async (params) =>
     attemptHandler({
       method: 'POST',
       endpoint: `guilds/${params.guild_id}/mfa`,
@@ -465,17 +465,17 @@ module.exports = {
    * - This endpoint returns a maximum of 50 integrations.
    * - If a guild has more integrations, they cannot be accessed.
    * @example
-   * await api.discord.guilds.getIntegrations({
+   * await api.discord.guilds.getAllIntegrations({
    *   guild_id: '0000000000'
    * });
-   * @function getIntegrations
+   * @function getAllIntegrations
    * @fires guilds#integrations_update
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @returns {Promise<GuildIntegration[]>} List of [Integration]{@link https://discord.com/developers/docs/resources/guild#integration-object} objects for the guild.
    */
-  getIntegrations: async (params) =>
+  getAllIntegrations: async (params) =>
     attemptHandler({
       method: 'GET',
       endpoint: `guilds/${params.guild_id}/integrations`
@@ -578,12 +578,12 @@ module.exports = {
    * @summary
    * ### [Modify Guild Widget]{@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
    * @example
-   * await api.discord.guilds.modifyWidget({
+   * await api.discord.guilds.updateWidget({
    *   guild_id: '0000000000',
    *   channel_id: '0000000000',
    *   enabled: true
    * });
-   * @function modifyWidget
+   * @function updateWidget
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
@@ -592,7 +592,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<GuildWidget>} The updated [Guild Widget]{@link https://discord.com/developers/docs/resources/guild#get-guild-widget} object for the guild
    */
-  modifyWidget: async (params) =>
+  updateWidget: async (params) =>
     attemptHandler({
       method: 'PATCH',
       endpoint: `guilds/${params.guild_id}/widget`,
@@ -624,7 +624,7 @@ module.exports = {
    * @param {Snowflake} params.guild_id
    * @returns {Promise<GuildWelcomeScreen>} The [Welcome Screen]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object} object for the guild
    */
-  getWelcomeScreen: async (params) =>
+  retrieveWelcomeScreen: async (params) =>
     attemptHandler({
       method: 'GET',
       endpoint: `guilds/${params.guild_id}/welcome-screen`
@@ -634,11 +634,11 @@ module.exports = {
    * @summary
    * ### [Modify Guild Welcome Screen]{@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
    * @example
-   * await api.discord.guilds.modifyWelcomeScreen({
+   * await api.discord.guilds.updateWelcomeScreen({
    *   guild_id: '0000000000',
    *   enabled: true
    * });
-   * @function modifyWelcomeScreen
+   * @function updateWelcomeScreen
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
@@ -648,7 +648,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<GuildWelcomeScreen>} The updated [Welcome Screen]{@link https://discord.com/developers/docs/resources/guild#welcome-screen-object} object
    */
-  modifyWelcomeScreen: async (params) =>
+  updateWelcomeScreen: async (params) =>
     attemptHandler({
       method: 'PATCH',
       endpoint: `guilds/${params.guild_id}/welcome-screen`,
@@ -661,16 +661,16 @@ module.exports = {
    * ### [Get Guild Onboarding]{@link https://discord.com/developers/docs/resources/guild#get-guild-onboarding}
    * - placeholder description
    * @example
-   * await api.discord.guilds.getOnboarding({
+   * await api.discord.guilds.retrieveOnboarding({
    *   guild_id: '0000000000'
    * });
-   * @function getOnboarding
+   * @function retrieveOnboarding
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
    * @returns {Promise<GuildOnboarding>} The [Onboarding]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object} object for the guild.
    */
-  getOnboarding: async (params) =>
+  retrieveOnboarding: async (params) =>
     attemptHandler({
       method: 'GET',
       endpoint: `guilds/${params.guild_id}/onboarding`
@@ -684,7 +684,7 @@ module.exports = {
    * - These constraints are that there must be at least 7 Default Channels and at least 5 of them must allow sending messages to the `@everyone` role.
    * - The mode field modifies what is considered when enforcing these constraints.
    * @example
-   * await api.discord.guilds.modifyOnboarding({
+   * await api.discord.guilds.updateOnboarding({
    *   guild_id: '0000000000',
    *   prompts: [{
    *     id: '0000000000',
@@ -711,7 +711,7 @@ module.exports = {
    *     }]
    *   }]
    * });
-   * @function modifyOnboarding
+   * @function updateOnboarding
    * @memberof module:guilds#
    * @param {Object} params
    * @param {Snowflake} params.guild_id
@@ -722,7 +722,7 @@ module.exports = {
    * @param {string} [params.reason]
    * @returns {Promise<GuildOnboarding>} The [Onboarding]{@link https://discord.com/developers/docs/resources/guild#guild-onboarding-object} object for the guild.
    */
-  modifyOnboarding: async (params) =>
+  updateOnboarding: async (params) =>
     attemptHandler({
       method: 'PUT',
       endpoint: `guilds/${params.guild_id}/onboarding`,
@@ -852,7 +852,7 @@ module.exports = {
      * @summary
      * ### [Modify Guild Channel Positions]{@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
      * @example
-     * await api.discord.guilds.channels.modifyPositions({
+     * await api.discord.guilds.channels.updatePositions({
      *   guild_id: '0000000000',
      *   channels: [{
      *     id: '0000000000',
@@ -861,14 +861,14 @@ module.exports = {
      *     parent_id: '0000000000'
      *   }]
      * });
-     * @function modifyPositions
+     * @function updatePositions
      * @memberof module:guilds.channels#
      * @param {Object} params
      * @param {Snowflake} params.guild_id
      * @param {ModifyPositionsChannel[]} params.channels
      * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
      */
-    modifyPositions: async (params) =>
+    updatePositions: async (params) =>
       attemptHandler({
         method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/channels`,
@@ -1399,7 +1399,7 @@ module.exports = {
      * @summary
      * ### [Modify Guild Role Positions]{@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
      * @example
-     * await api.discord.guilds.roles.modifyPositions({
+     * await api.discord.guilds.roles.updatePositions({
      *   guild_id: '0000000000',
      *   roles: [
      *     {
@@ -1412,7 +1412,7 @@ module.exports = {
      *     }
      *   ]
      * });
-     * @function modifyPositions
+     * @function updatePositions
      * @memberof module:guilds.roles#
      * @fires guilds#role_update
      * @param {Object} params
@@ -1421,7 +1421,7 @@ module.exports = {
      * @param {string} [params.reason]
      * @returns {Promise<Role[]>} List of all of the guild's [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} objects
      */
-    modifyPositions: async (params) => 
+    updatePositions: async (params) => 
       attemptHandler({
         method: 'PATCH',
         endpoint: `guilds/${params.guild_id}/roles`,
@@ -1583,7 +1583,7 @@ module.exports = {
   
     /**
      * @summary
-     * ### [Get Guild Sticker]{@link https://discord.com/developers/docs/resources/sticker#get-sticker}
+     * ### [Get Sticker]{@link https://discord.com/developers/docs/resources/sticker#get-sticker}
      * @example
      * await api.discord.guilds.stickers.retrieve({
      *   sticker_id: '0000000000'

@@ -31,14 +31,14 @@ export function create(params: {
     name: string;
     avatar?: string | undefined;
 }): Promise<Webhook>;
-export function modify(params: {
+export function update(params: {
     webhook_id: string;
     channel_id?: string | undefined;
     name?: string | undefined;
     avatar?: string | Buffer | undefined;
     reason?: string | undefined
 }): Promise<Webhook>;
-export function modifyWithToken(params: {
+export function updateWithToken(params: {
     webhook_id: string;
     webhook_token: string;
     name?: string | undefined;

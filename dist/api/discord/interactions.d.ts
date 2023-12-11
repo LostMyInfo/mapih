@@ -47,7 +47,7 @@ export namespace callback {
         statusCode: 204;
         body: undefined;
     }>;
-    function edit_original(params: Pick<InteractionParams, "token" | "application_id">, input?: {
+    function update_original(params: Pick<InteractionParams, "token" | "application_id">, input?: {
         content?: string | undefined;
         embeds?: Embed[] | undefined;
         components?: Component | undefined;
@@ -65,7 +65,7 @@ export namespace callback {
     }>;
 }
 export namespace followup {
-    function get(params: Pick<InteractionParams, "token" | "application_id">, input: {
+    function retrieve(params: Pick<InteractionParams, "token" | "application_id">, input: {
         message_id: string;
         thread_id?: string | undefined;
     }): Promise<Message>;
@@ -79,7 +79,7 @@ export namespace followup {
         allowed_mentions?: AllowedMentions | undefined;
         thread_name?: string | undefined;
     }): Promise<Message | null>;
-    function edit(params: Pick<InteractionParams, "token" | "application_id">, input: {
+    function update(params: Pick<InteractionParams, "token" | "application_id">, input: {
         message_id: string;
         ephemeral?: boolean | undefined;
         content?: string | undefined;
@@ -89,7 +89,7 @@ export namespace followup {
         allowed_mentions?: AllowedMentions | undefined;
         thread_id?: string | undefined;
     }): Promise<Message | null>;
-    function del(params: Pick<InteractionParams, "token" | "application_id">, input: {
+    function destroy(params: Pick<InteractionParams, "token" | "application_id">, input: {
         message_id: string;
     }): Promise<{
         statusCode: 204;

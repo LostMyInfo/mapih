@@ -40,7 +40,7 @@ export namespace commands {
         type?: number | undefined;
         options?: ApplicationCommandOption[] | undefined;
     }): Promise<ApplicationCommand>;
-    function modify(params: {
+    function update(params: {
         application_id: string | undefined;
         command_id: string;
         guild_id?: string | undefined;
@@ -75,7 +75,7 @@ export namespace commands {
         application_id: string | undefined;
         guild_id: string;
     }): Promise<GuildApplicationCommandPermissions>;
-    function modifyPermissions(params: {
+    function updatePermissions(params: {
         application_id: string | undefined;
         guild_id: string;
         command_id: string;

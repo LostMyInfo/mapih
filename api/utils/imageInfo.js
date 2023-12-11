@@ -242,7 +242,9 @@ function detector(input) {
  */
 function imageInfo(input) {
   if (!(input instanceof Uint8Array || Buffer.isBuffer(input) || ArrayBuffer.isView(input)))
-    throw new TypeError(`Expected the 'input' argument to be of type 'Uint8Array', 'Buffer', or 'ArrayBuffer', recieved: '${typeof input}'`);
+    throw new TypeError(
+      `Expected the 'input' argument to be of type 'Uint8Array', 'Buffer', or 'ArrayBuffer', recieved: '${typeof input}'`
+    );
   
   input = input instanceof Uint8Array ? input : new Uint8Array(input);
 

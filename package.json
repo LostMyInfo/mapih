@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.1",
+    "jsdoc-to-markdown": "^8.0.0",
     "typescript": "^5.3.2"
   }
 }

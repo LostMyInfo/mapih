@@ -271,7 +271,7 @@ module.exports = {
      * - Provide a guild_id field if using for a guild command.
      * - All fields are optional, but any fields provided will entirely overwrite the existing values of those fields.
      * @example
-     * await api.discord.applications.commands.modify({
+     * await api.discord.applications.commands.update({
      *   command_id: '0000000000',
      *   guild_id: '0000000000', // optional
      *   name: 'slashcommand',
@@ -295,7 +295,7 @@ module.exports = {
      *   }]
      * });
      * @memberof module:applications.commands#
-     * @function modify
+     * @function update
      * @param {Object} params
      * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.command_id
@@ -315,7 +315,7 @@ module.exports = {
      * @param {ApplicationCommandOption[]} [params.options] - Array of [Application Command options]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure}
      * @returns {Promise<ApplicationCommand>} [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} object
      */
-    modify: async (params) => {
+    update: async (params) => {
       const application_id = params?.application_id ?? await getAppId();
       const paths = [`applications/${application_id}`, `commands/${params.command_id}`];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
@@ -450,12 +450,12 @@ module.exports = {
      * - This endpoint requires authentication with a Bearer token that has permission to manage the guild and its roles.
      * - For more information, read about [Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#permissions}
      * @example
-     * await api.discord.applications.commands.modifyPermissions({
+     * await api.discord.applications.commands.updatePermissions({
      *   guild_id: '0000000000',
      *   command_id: '0000000000'
      * });
      * @memberof module:commands#
-     * @function modifyPermissions
+     * @function updatePermissions
      * @param {Object} params
      * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.guild_id
@@ -469,7 +469,7 @@ module.exports = {
      * }]
      * @returns {Promise<GuildApplicationCommandPermissions>} [Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure} object
      */
-    modifyPermissions: async (params) => {
+    updatePermissions: async (params) => {
       const application_id = params?.application_id ?? await getAppId();
       return attemptHandler({
         method: 'PUT',
