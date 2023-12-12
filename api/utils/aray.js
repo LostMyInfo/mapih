@@ -10,7 +10,7 @@ module.exports = {
    * @returns {Promise<boolean>}
    */
   async put(params) {// index, value
-    console.log('params in aray.put', params);
+    // console.log('params in aray.put', params);
     try {
       let file;
       let write;
@@ -19,10 +19,10 @@ module.exports = {
         const new_val = [];
         for (let i = 0; i < parsed.length; i++) {
           if (parsed[i].index == params.index) {
-            console.log('parsed[i].index === params.index', params.index);
-            console.log('old value', parsed[i].value);
+            // console.log('parsed[i].index === params.index', params.index);
+            // console.log('old value', parsed[i].value);
             parsed[i].value = params.value;
-            console.log('new value', parsed[i].value);
+            // console.log('new value', parsed[i].value);
             // return { error: "Index name already exists..." };
           } else new_val.push(parsed[i]);
         }
@@ -64,7 +64,7 @@ module.exports = {
   },
 
   async remove(params) {
-    console.log('aray.remove()');
+    // console.log('aray.remove()');
     try {
       // @ts-ignore
       const file = JSON.parse(await fs.readFile(process.cwd() + `/processes/data/${process.env.auid}/${process.env.uuid}/.aray`));

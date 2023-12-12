@@ -658,18 +658,10 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       description: a.description || ''
     }));
 
-    if (sender === 'data') {
-      /*
-      params.attachments = params.attachments.map((a, index) => ({
-        id: index, filename: a.filename, description: a.description ?? ''
-      }));
-      */
-      // console.log('\nSENDER = \'DATA\'\n');
+    if (sender === 'data')
       form.append('payload_json', JSON.stringify({ type: type, data: params }));
-    } else {
-      // console.log('\nSENDER donot= \'DATA\'\n');
-      const { attachments, ...newparams } = params;
-      // console.log('newparams\n', params);      
+    else {
+      const { attachments, ...newparams } = params;  
       form.append('payload_json', JSON.stringify({ data: newparams }));
     }
   
