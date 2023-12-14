@@ -13,22 +13,30 @@
 [![view on npm](https://badgen.net/npm/v/mapih)](https://www.npmjs.org/package/mapih)
 [![npm module downloads](https://badgen.net/npm/dt/mapih)](https://www.npmjs.org/package/mapih)
 # Mapih
-#### Comprehensive collection of Discord and Slack (in progress) API endpoint handlers  
+#### Comprehensive collection of Discord, Slack\*, and Spotify\* API endpoint handlers  
+
+\* These are still in very early development
+
 ---
 ## Authentication
-> Choose **one** of the following methods to authenticate:
+> Choose **one** of the following options to authenticate:
 
 ##### Option 1: Using Environment Variablese
 1. Create an **`.env`** file at the root of your project
 2. Discord  
-    • Add a variable named **`token`** and assign it to your Discord bot's token
-3. Slack  
-    • Add a variable named **`slackToken`** and assign it to your Slack API key
+    • Add a variable named **`token`** and assign it to your Discord bot's token  
+3. Slack (optional)  
+    • Add a variable named **`slackToken`** and assign it to your Slack API key  
+4. Spotify (optional)  
+    • Add a variable named **`client_id`** and assign it to your Spotify Web API client_id  
+    • Add a variable named **`client_secret`** and assign it to your Spotify Web API client_secret
 
 ###### Example .env file
 ```ini
 token='discord bot token'
 slackToken='slack api key'
+client_id='spotify web api client_id'
+client_secret='spotify web api client_secret'
 ```
 <!-- Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slackToken` for Slack). -->
 
@@ -36,9 +44,17 @@ slackToken='slack api key'
 ```javascript
 const mapih = require('mapih');
 
+// example 1  
+mapih.initialize({ discord: 'bot_token' });  
+
+// example 2  
 mapih.initialize({
   discord: 'bot_token',
-  slack: 'slack_api_key' // optional
+  slack: 'slack_api_key',
+  spotify: {
+    client_id: 'client_id',
+    client_secret: 'client_secret'
+  }
 });
 ```
 ---
@@ -56,6 +72,7 @@ mapih.initialize({
 ---
 
 ## Table of Contents
+### Discord
 **• [Applications](#applications)**  
 &nbsp; &nbsp; ◦ [getMe](#get-current-application)  
 &nbsp; &nbsp; ◦ [updateMe](#edit-current-application)  
@@ -228,7 +245,7 @@ mapih.initialize({
 &nbsp; &nbsp; ◦ [retrieve](#get-invite)  
 &nbsp; &nbsp; ◦ [revoke](#delete-invite)  
 **• [OAuth 2](#oauth2)**  
-#### **• [Stage Instances](#stage-instance)**
+**• [Stage Instances](#stage-instance)**  
 &nbsp; &nbsp; ◦ [retrieve](#get-stage-instance)  
 &nbsp; &nbsp; ◦ [create](#create-stage-instance)  
 &nbsp; &nbsp; ◦ [update](#modify-stage-instance)  
@@ -273,7 +290,11 @@ mapih.initialize({
 &nbsp; &nbsp; ◦ [Audit Log](#audit-log)  
 &nbsp; &nbsp; ◦ [Auto Moderation](#auto-moderation-1)  
 
+### Slack
+coming soon
 
+### Spotify
+**• [Search](#spotify-search)**  
 
 ---
 
@@ -6405,3 +6426,42 @@ The role connection object that an application has attached to a user.
 |------------|-------|------------------------------------------------------|
 | Public     | 1     | The Stage instance is visible publicly. (deprecated) |
 | Guild Only | 2     | The Stage instance is visible to only guild members. |
+
+---
+
+### Spotify Search
+
+#### Parameters
+| Field      | Type      | Description                                                                                     |
+|------------|-----------|-------------------------------------------------------------------------------------------------|
+| song? \*   | snowflake | the id of the guild                                                                             |
+| artist? \* | boolean   | Approcimate member and presence counts                                                          |
+| album? \*  | string    | Album name to search                                                                            |
+| limit?     | number    | The maximum number of results to return                                                         |
+| offset?    | number    | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?      | string    | Sort results by: 'populary', 'followers', or 'duration_seconds'                                 |
+
+\* At least one of `song`, `artist`, `album` is required.  
+
+#### Example 1
+```javascript
+await api.spotify.search({
+  song: 'oops i did it again',
+});
+```
+
+#### Example 2
+```javascript
+await api.spotify.search({
+  artist: 'britney spears',
+  limit: 10,
+  sort: 'popularity'
+});
+```
+
+#### Example 3
+```javascript
+await api.spotify.search({
+  album: 'your favorite album name',
+});
+```

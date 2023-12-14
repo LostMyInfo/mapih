@@ -1,9 +1,22 @@
 export type DiscordError = {
-    code: number;
     message: string;
+    ok?: boolean | undefined;
+    error?: string | {
+        status: number;
+        message: string;
+    } | undefined;
+    response_metadata?: {
+        messages: Array<string>;
+    } | undefined;
+    code?: number | undefined;
     global?: boolean | undefined;
     retry_after?: number | undefined;
+    /**
+     * ,
+     */
     errors?: DiscordErrorErrors;
+    needed?: string | undefined;
+    warnings?: string[] | undefined;
 };
 export type DiscordErrorErrors = any | {
     _errors: {
@@ -19,14 +32,16 @@ export class ResponseError extends Error {
      */
     constructor(res: DiscordError, response: Response, type: string);
     type: string;
-    status: number;
-    statusText: string;
+    status: number | undefined;
+    statusText: string | undefined;
+    message: string | {
+        status: number;
+        message: string;
+    } | undefined;
     code: number | undefined;
     retry_after: number | undefined;
     global: true | undefined;
-    details: {
-        [s: string]: string | number | boolean;
-    } | undefined;
+    details: any;
 }
 /**
  * @param {DiscordError} err
@@ -34,5 +49,18 @@ export class ResponseError extends Error {
 export function DiscordError(err: DiscordError): {
     [s: string]: string | number | boolean;
 } | undefined;
-export function SlackError(err: any): {};
+/**
+ *
+ * @param {DiscordError} err
+ * @returns
+ */
+export function SlackError(err: DiscordError): any;
+/**
+ * Format the message for an error.
+ * @param {string} code The error code
+ * @param {Array<*>} args Arguments to pass for util format or as function args
+ * @returns {string} Formatted string
+ * @ignore
+ */
+declare function message(code: string, args: Array<any>): string;
 //# sourceMappingURL=Errors.d.ts.map

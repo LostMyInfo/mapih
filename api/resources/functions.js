@@ -727,14 +727,14 @@ function embedModifier(embeds) {
 }
 
 /**
-   * API Handler Creator
-   * @param {Object} options
-   * @param {Method} options.method
-   * @param {string} options.endpoint
-   * @param {Object} [options.body]
-   * @returns {Promise<*>}
-   * @private
-   */
+ * API Handler Creator
+ * @param {Object} options
+ * @param {Method} options.method
+ * @param {string} options.endpoint
+ * @param {Object} [options.body]
+ * @returns {Promise<*>}
+ * @private
+ */
 async function slackHandler(options) {
   try {
 
@@ -750,6 +750,33 @@ async function slackHandler(options) {
 
   } catch (error) {
     // console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
+    throw error;
+  }
+}
+
+/**
+ * API Handler Creator
+ * @param {Object} options
+ * @param {Method} options.method
+ * @param {string} options.endpoint
+ * @param {Object} [options.body]
+ * @returns {Promise<*>}
+ * @private
+ */
+async function spotifyHandler(options) {
+  try {
+    const headers = new Headers({
+      'Authorization': `Bearer ${await spotifyAccessToken()}`
+    });
+
+    return https({
+      method: options.method,
+      url: `https://api.spotify.com/v1/${options.endpoint}`,
+      headers,
+      body: options.body ? JSON.stringify(options.body) : ''
+    });
+
+  } catch (error) {
     throw error;
   }
 }
@@ -782,12 +809,39 @@ function token(type) {
   const token = type === 'discord'
     ? require('../../Api').get_discord_token() || process.env.token
     : require('../../Api').get_slack_token() || process.env.slackToken;
+      
   if (!token) throw new Error(
     type === 'discord'
       ? 'Bot token not set. Please initialize the library first.'
       : 'Slack token not set. Please initialize the library first.'
   );
   return token;
+}
+
+async function spotifyAccessToken() {
+  const credentials = require('../../Api').get_spotify_token();
+  // console.log(credentials);
+  if (!credentials) throw new Error(
+    'Spotify credentials not set. Please initialize the library first.'
+  );
+
+  // const { client_id, client_secret } = (await (require('../../Api').get_spotify_token())) || process.env.spotify;
+  const data = new URLSearchParams({
+    client_id: credentials.client_id || process.env.spotify_client_id,
+    client_secret: credentials.client_secret || process.env.spotify_client_secret,
+    grant_type: 'client_credentials'
+  }).toString();
+  
+  const response = await https({
+    method: 'post',
+    url: 'https://accounts.spotify.com/api/token',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: data
+  });
+  
+  return response.access_token;
 }
 
 module.exports = {
@@ -805,6 +859,7 @@ module.exports = {
   isValidJSON,
   extendPayload,
   slackHandler,
+  spotifyHandler,
   buildQueryString,
   token,
   attemptHandler,

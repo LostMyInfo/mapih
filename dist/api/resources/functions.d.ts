@@ -129,11 +129,25 @@ export function slackHandler(options: {
     body?: Object | undefined;
 }): Promise<any>;
 /**
-   * @param {string} url
-   * @param {Object} params
-   * @param {boolean} encode
-   * @returns {string}
-   */
+ * API Handler Creator
+ * @param {Object} options
+ * @param {Method} options.method
+ * @param {string} options.endpoint
+ * @param {Object} [options.body]
+ * @returns {Promise<*>}
+ * @private
+ */
+export function spotifyHandler(options: {
+    method: Method;
+    endpoint: string;
+    body?: Object | undefined;
+}): Promise<any>;
+/**
+ * @param {string} url
+ * @param {Object} params
+ * @param {boolean} encode
+ * @returns {string}
+ */
 export function buildQueryString(url: string, params: Object, encode?: boolean): string;
 /**
  * @param {string} type
@@ -146,4 +160,5 @@ export declare function attemptHandler(params: {
     body?: Object | undefined;
 }): Promise<any>;
 export declare function sendAttachment(params: any, path: string, method: Method): Promise<any>;
+export function getAppId(): Promise<any>;
 //# sourceMappingURL=functions.d.ts.map

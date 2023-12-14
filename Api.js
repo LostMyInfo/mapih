@@ -1,4 +1,5 @@
 // @ts-check
+
 /**
  * @type {string | undefined}
  */
@@ -7,6 +8,10 @@ let discordToken = undefined;
  * @type {string | undefined}
  */
 let slackToken = undefined;
+/**
+ * @type {{client_id: string, client_secret: string} | undefined}
+ */
+let spotifyToken = undefined;
 
 module.exports = {
 
@@ -14,11 +19,13 @@ module.exports = {
    * @param {Object} options
    * @param {string} [options.discord]
    * @param {string} [options.slack]
+   * @param {{client_id: string, client_secret: string}} [options.spotify]
    */
   initialize: function(options) {
+    // console.log(options);
     if (options.discord) discordToken = options.discord;
     if (options.slack) slackToken = options.slack;
-
+    if (options.spotify) spotifyToken = options.spotify;
   },
 
   /**
@@ -33,6 +40,10 @@ module.exports = {
    */
   get_slack_token: function() {
     return slackToken;
+  },
+
+  get_spotify_token: function() {
+    return spotifyToken;
   },
 
   discord: {
@@ -56,8 +67,13 @@ module.exports = {
     users: require('./api/slack/users')
   },
 
+  spotify: {
+    search: require('./api/spotify/search').search
+  },
+  
   utils: {
-    https: require('./api/utils/https'),
-    aray: require('./api/utils/aray')
+    https: require('./api/utils/newhttps').https,
+    aray: require('./api/utils/aray'),
+    storage: require('./api/utils/storage')
   }
 };

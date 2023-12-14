@@ -1,11 +1,21 @@
+// @ts-check
+
 export function initialize(options: {
     discord?: string | undefined;
     slack?: string | undefined;
+    spotify?: {
+        client_id: string;
+        client_secret: string;
+    } | undefined;
 }): void;
 export function get_discord_token(): string | undefined;
 export function get_slack_token(): string | undefined;
+export function get_spotify_token(): {
+    client_id: string;
+    client_secret: string;
+} | undefined;
 export namespace discord {
-    let auditlog: {
+    const auditlog: {
         retrieve: (params: {
             guild_id: string;
             limit?: number | undefined;
@@ -15,7 +25,7 @@ export namespace discord {
             after?: string | undefined;
         }) => Promise<AuditLog>;
     };
-    let automod: {
+    const automod: {
         retrieveRule: (params: {
             guild_id: string;
             auto_moderation_rule_id: string;
@@ -50,7 +60,7 @@ export namespace discord {
             auto_moderation_rule_id: string;
         }) => Promise<{}>;
     };
-    let invites: {
+    const invites: {
         retrieve: (params: {
             invite_code: string;
             with_counts?: boolean | undefined;
@@ -61,7 +71,19 @@ export namespace discord {
             invite_code: string;
         }) => Promise<ExtendedInvite>;
     };
-    let applications: {
+    const applications: {
+        getMe: () => Promise<Application>;
+        updateMe: (params: {
+            description?: string | undefined;
+            custom_install_url?: string | undefined;
+            interactions_endpoint_url?: string | undefined;
+            role_connections_verification_url?: string | undefined;
+            install_params?: any;
+            flags?: number | undefined;
+            icon?: string | Buffer | undefined;
+            cover_image?: string | Buffer | undefined;
+            tags?: string[] | undefined;
+        }) => Promise<Application>;
         appRoleConnectionMeta: (params: {
             application_id: string;
         }) => Promise<ApplicationRoleConnectionMetadata[]>;
@@ -165,7 +187,7 @@ export namespace discord {
             }) => Promise<SKU[]>;
         };
     };
-    let channels: {
+    const channels: {
         retrieve: (params: {
             channel_id: string;
         }) => Promise<Channel>;
@@ -442,7 +464,7 @@ export namespace discord {
             }) => Promise<User[]>;
         };
     };
-    let guilds: {
+    const guilds: {
         create: (params: {
             name: string;
             region?: string | undefined;
@@ -888,7 +910,7 @@ export namespace discord {
             }) => Promise<GuildTemplate>;
         };
     };
-    let webhooks: {
+    const webhooks: {
         retrieve: (params: {
             webhook_id: string;
         }) => Promise<Webhook>;
@@ -978,7 +1000,7 @@ export namespace discord {
             allowed_mentions?: AllowedMentions | undefined;
         }) => Promise<Message>;
     };
-    let stageInstance: {
+    const stageInstance: {
         retrieve: (params: {
             channel_id: string;
         }) => Promise<StageInstance>;
@@ -1000,7 +1022,7 @@ export namespace discord {
             message: string;
         }>;
     };
-    let interactions: {
+    const interactions: {
         callback: {
             get_original: (params: Pick<InteractionParams, "token" | "application_id">) => Promise<Message | null>;
             reply: (params: Pick<InteractionParams, "id" | "token">, input?: {
@@ -1100,7 +1122,7 @@ export namespace discord {
             }>;
         };
     };
-    let oauth2: {
+    const oauth2: {
         token: {
             get: (params: {
                 client_id: string;
@@ -1130,7 +1152,7 @@ export namespace discord {
             }) => Promise<Omit<AccessTokenResponse, "refresh_token"> | null>;
         };
     };
-    let users: {
+    const users: {
         retrieve: (params: {
             user_id: string;
         }) => Promise<User>;
@@ -1194,7 +1216,7 @@ export namespace discord {
     };
 }
 export namespace slack {
-    let users: {
+    const users: {
         info: (params: {
             user: string;
             include_locale?: boolean | undefined
@@ -1206,16 +1228,19 @@ export namespace slack {
             team_id?: string | undefined
         }) => Promise<SlackUser[]>;
         identify: () => Promise<UserIdentity>;
-        getProfile: (params: {
-            user?: string;
+        getProfile: (params?: {
+            user?: string | undefined;
             include_locale?: boolean | undefined
-        }) => Promise<UserProfile>;
-        lookup: (params: {
+        } | undefined) => Promise<UserProfile>;
+        lookup: ({ email }: {
             email: string;
-        }) => Promise<{ ok: boolean, user: SlackUser; }>;
+        }) => Promise<{
+            ok: boolean;
+            user: SlackUser;
+        }>;
     };
 
-    let chat: {
+    const chat: {
         post: (params: {
             channel: string;
             text?: string | undefined;
@@ -1284,22 +1309,47 @@ export namespace slack {
             list: (params: any) => Promise<any>;
         };
     };
-    let conversations: typeof import("./api/slack/conversations");
-    let views: {
-        /**
-         * @param {Object} options
-         * @param {string} [options.discord]
-         * @param {string} [options.slack]
-         */
+    const conversations: {
+        create: (params: {
+            name: string;
+            is_private?: boolean | undefined;
+            team_id?: string | undefined;
+        }) => Promise<SlackChannel>;
+    };
+    const views: {
         open: (params: {
             view: string;
             trigger_id?: string | undefined;
             interactivity_pointer?: SlackBlock[] | undefined;
         }) => Promise<SlackMessageResponse>;
+        publish: (params: {
+            view: ModalView;
+            user_id?: string | undefined;
+            hash?: string | undefined;
+        }) => Promise<SlackViewResponse>;
     };
 }
+
+export namespace spotify {
+    const search: (options: {
+        artist?: string | undefined;
+        song?: string | undefined;
+        album?: string | undefined;
+        limit?: number | undefined;
+        offset?: number | undefined;
+        sort?: string | undefined;
+    }) => Promise<SpotifyReturn>;
+}
+
 export namespace utils {
-    let https: {
+    const https: (params: {
+        url?: string | undefined;
+        method?: string | undefined;
+        body?: string | Object | undefined;
+        headers?: any;
+    }, match?: string | undefined) => Promise<any>;
+    /*
+    const https: {
         get(params: {
             url: string;
             path?: string | undefined;
@@ -1314,14 +1364,11 @@ export namespace utils {
         patch(params: any): Promise<any>;
         del(params: any): Promise<any>;
     };
-    let aray: {
+    */
+    const aray: {
         put(params: {
             index: string | number;
-            value: any; /**
-             * @param {Object} options
-             * @param {string} [options.discord]
-             * @param {string} [options.slack]
-             */
+            value: any;
             ttl?: number | undefined;
         }): Promise<boolean>;
         get(params: {
@@ -1329,5 +1376,21 @@ export namespace utils {
         }): Promise<any>;
         remove(params: any): Promise<unknown>;
     };
+    const storage: {
+        put: ({ key, value, ttl, ttlCb }: {
+            key: string;
+            value: any;
+            ttl: number | undefined;
+            ttlCb: Function | undefined;
+        }) => Promise<any>;
+        get: (key: string) => any;
+        delete: (key: string) => Promise<boolean>;
+        clear: () => void;
+        entries: () => any;
+        keys: () => Array<string>;
+        size: () => number;
+        toJson: () => string;
+        export: () => string;
+    }
 }
 //# sourceMappingURL=Api.d.ts.map

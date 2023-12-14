@@ -1,14 +1,14 @@
 export function getMe(): Promise<Application>;
 export function updateMe(params: {
-    description: string | undefined;
-    custom_install_url: string | undefined;
-    interactions_endpoint_url: string | undefined;
-    role_connections_verification_url: string | undefined;
-    install_params: InstallParams | undefined;
-    flags: number | undefined;
-    icon: string | Buffer | undefined;
-    cover_image: string | Buffer | undefined;
-    tags: string[] | undefined;
+    description?: string | undefined;
+    custom_install_url?: string | undefined;
+    interactions_endpoint_url?: string | undefined;
+    role_connections_verification_url?: string | undefined;
+    install_params?: any;
+    flags?: number | undefined;
+    icon?: string | Buffer | undefined;
+    cover_image?: string | Buffer | undefined;
+    tags?: string[] | undefined;
 }): Promise<Application>;
 export function appRoleConnectionMeta(params: {
     application_id: string;

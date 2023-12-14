@@ -44,6 +44,12 @@ class ResponseError extends Error {
           this[k] = v;
         */
       }
+    } else if (type === 'spotify_error') {
+      if (!res) return;
+      if (typeof res.error !== 'string' && res.error?.message)
+        this.message = res.error?.message;
+
+      // console.log('res in errors', res);
     }
   }
   
@@ -236,7 +242,7 @@ function get(obj, path, defaultValue = undefined) {
  * @typedef {Object} DiscordError
  * @property {string} message
  * @property {boolean} [ok]
- * @property {string} [error]
+ * @property {string|{status: number, message: string}} [error]
  * @property {{messages: Array<string>}} [response_metadata]
  * @property {number} [code]
  * @property {boolean} [global]
