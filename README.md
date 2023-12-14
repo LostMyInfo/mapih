@@ -285,7 +285,7 @@ mapih.initialize({
 &nbsp; &nbsp; ◦ [Emojis/Stickers](#emojisticker)  
 &nbsp; &nbsp; ◦ [Message Components](#message-components)  
 &nbsp; &nbsp; ◦ [Webhooks](#webhook)  
-&nbsp; &nbsp; ◦ [Invites](#invite)
+&nbsp; &nbsp; ◦ [Invites](#invite)  
 &nbsp; &nbsp; ◦ [Application](#application)  
 &nbsp; &nbsp; ◦ [Audit Log](#audit-log)  
 &nbsp; &nbsp; ◦ [Auto Moderation](#auto-moderation-1)  
@@ -4022,10 +4022,48 @@ await api.discord.stageInstance.destroy({
   channel_id: '0000000000'
 });
 ```
+---
+
+### Spotify Search
+
+#### Parameters
+| Field      | Type      | Description                                                                                     |
+|------------|-----------|-------------------------------------------------------------------------------------------------|
+| song? \*   | snowflake | the id of the guild                                                                             |
+| artist? \* | boolean   | Approcimate member and presence counts                                                          |
+| album? \*  | string    | Album name to search                                                                            |
+| limit?     | number    | The maximum number of results to return                                                         |
+| offset?    | number    | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?      | string    | Sort results by: 'populary', 'followers', or 'duration_seconds'                                 |
+
+\* At least one of `song`, `artist`, `album` is required.  
+
+#### Example 1
+```javascript
+await api.spotify.search({
+  song: 'oops i did it again',
+});
+```
+
+#### Example 2
+```javascript
+await api.spotify.search({
+  artist: 'britney spears',
+  limit: 10,
+  sort: 'popularity'
+});
+```
+
+#### Example 3
+```javascript
+await api.spotify.search({
+  album: 'your favorite album name',
+});
+```
 
 ---
 
-# Objects and Types
+# Discord Objects and Types
 
 ## Guild
 
@@ -6426,42 +6464,3 @@ The role connection object that an application has attached to a user.
 |------------|-------|------------------------------------------------------|
 | Public     | 1     | The Stage instance is visible publicly. (deprecated) |
 | Guild Only | 2     | The Stage instance is visible to only guild members. |
-
----
-
-### Spotify Search
-
-#### Parameters
-| Field      | Type      | Description                                                                                     |
-|------------|-----------|-------------------------------------------------------------------------------------------------|
-| song? \*   | snowflake | the id of the guild                                                                             |
-| artist? \* | boolean   | Approcimate member and presence counts                                                          |
-| album? \*  | string    | Album name to search                                                                            |
-| limit?     | number    | The maximum number of results to return                                                         |
-| offset?    | number    | The index of the first result to return. Use with limit to get the next page of search results. |
-| sort?      | string    | Sort results by: 'populary', 'followers', or 'duration_seconds'                                 |
-
-\* At least one of `song`, `artist`, `album` is required.  
-
-#### Example 1
-```javascript
-await api.spotify.search({
-  song: 'oops i did it again',
-});
-```
-
-#### Example 2
-```javascript
-await api.spotify.search({
-  artist: 'britney spears',
-  limit: 10,
-  sort: 'popularity'
-});
-```
-
-#### Example 3
-```javascript
-await api.spotify.search({
-  album: 'your favorite album name',
-});
-```
