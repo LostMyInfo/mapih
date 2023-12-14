@@ -8,7 +8,7 @@ class Cache {
   constructor() {
     // @ts-ignore
     let _cache = JSON.parse(readFileSync(CACHE)), _size = _cache.length;
-    console.log(_cache);
+    // console.log(_cache);
 
     /**
      * @example
@@ -65,10 +65,8 @@ class Cache {
      * @param {string} key
      * @returns {any}
      */
-    this.get = (key) => {
-      console.log(_cache);
-      return (_cache.find((/** @type {{ key: string; }} */ e) => e.key === key) || {}).value || null;
-    };
+    this.get = (key) =>
+      (_cache.find((/** @type {{ key: string; }} */ e) => e.key === key) || {}).value || null;
 
 
     /**

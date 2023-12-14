@@ -1348,34 +1348,6 @@ export namespace utils {
         body?: string | Object | undefined;
         headers?: any;
     }, match?: string | undefined) => Promise<any>;
-    /*
-    const https: {
-        get(params: {
-            url: string;
-            path?: string | undefined;
-            port?: number | undefined;
-            body?: any;
-            headers?: any;
-            rejectUnauthorized?: boolean | undefined;
-        }): Promise<any>;
-        get80(params: any): Promise<any>;
-        post(params: any): Promise<any>;
-        put(params: any): Promise<any>;
-        patch(params: any): Promise<any>;
-        del(params: any): Promise<any>;
-    };
-    */
-    const aray: {
-        put(params: {
-            index: string | number;
-            value: any;
-            ttl?: number | undefined;
-        }): Promise<boolean>;
-        get(params: {
-            index: string | number;
-        }): Promise<any>;
-        remove(params: any): Promise<unknown>;
-    };
     const storage: {
         put: ({ key, value, ttl, ttlCb }: {
             key: string;

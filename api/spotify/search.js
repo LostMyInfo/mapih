@@ -53,7 +53,7 @@ module.exports = {
       endpoint: buildQueryString('search', endpoint)
     });
 
-    console.log('keys:', Object.keys(attempt));
+    // console.log('keys:', Object.keys(attempt));
     // console.log(JSON.stringify(attempt, null, 2));
     type = type === 'artist' ? 'artists' : type === 'track' ? 'tracks' : 'album';
     return buildSpotifyResponse(type, attempt, options.sort);
@@ -75,7 +75,7 @@ module.exports = {
       limit: options.limit,
       offset: options.offset
     });
-    console.log('endpoint:', endpoint);
+    // console.log('endpoint:', endpoint);
     const attempt = await spotifyHandler({
       method: 'GET',
       endpoint
@@ -102,13 +102,13 @@ module.exports = {
       limit: options.limit,
       offset: options.offset
     });
-    console.log('endpoint:', endpoint);
+    // console.log('endpoint:', endpoint);
     const attempt = await spotifyHandler({
       method: 'GET',
       // endpoint: 'search?q=satellites&artist=kevin%2520gates&type=track&limit=1&market=US'
       endpoint: 'search?q=doxy&artist=miles%20Davis&type=track'
     });
-    console.log(JSON.stringify(attempt, null, 2));
+    // console.log(JSON.stringify(attempt, null, 2));
     return buildSpotifyResponse('tracks', attempt, options.sort);
   }
 };
@@ -138,7 +138,7 @@ function buildQueryString(url, params, colon = false) {
     queryString = queryString.replace(/&/g, '%2520').replace(/(?<!q)=/g, '%3A');
   // console.log('query:', queryString);
   // if (colon) queryString = queryString.replace(/&/g, '%2520').replace(/(?<!q)=/g, '');
-  console.log('final:', `${url}?${queryString}`);
+  // console.log('final:', `${url}?${queryString}`);
   return queryString ? `${url}?${queryString}` : url;
 }
 

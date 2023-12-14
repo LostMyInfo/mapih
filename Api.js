@@ -68,12 +68,12 @@ module.exports = {
   },
 
   spotify: {
-    search: require('./api/spotify/search').search
+    search: require('./api/spotify/search').search,
+    artists: require('./api/spotify/artists')
   },
   
   utils: {
     https: require('./api/utils/newhttps').https,
-    aray: require('./api/utils/aray'),
     storage: require('./api/utils/storage')
   }
 };
