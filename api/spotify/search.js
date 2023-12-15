@@ -52,9 +52,7 @@ module.exports = {
       method: 'GET',
       endpoint: buildQueryString('search', endpoint)
     });
-
-    // console.log('keys:', Object.keys(attempt));
-    // console.log(JSON.stringify(attempt, null, 2));
+    
     type = type === 'artist' ? 'artists' : type === 'track' ? 'tracks' : 'album';
     return buildSpotifyResponse(type, attempt, options.sort);
     
@@ -66,7 +64,7 @@ module.exports = {
    * @param {number} [options.limit]
    * @param {number} [options.offset]
    * @param {string} [options.sort]
-   * @returns {Promise<SpotifySearchArtistReturn>}
+   * @returns
    */
   async artists(options) {
     const endpoint = buildQueryString('search', {
@@ -105,8 +103,7 @@ module.exports = {
     // console.log('endpoint:', endpoint);
     const attempt = await spotifyHandler({
       method: 'GET',
-      // endpoint: 'search?q=satellites&artist=kevin%2520gates&type=track&limit=1&market=US'
-      endpoint: 'search?q=doxy&artist=miles%20Davis&type=track'
+      endpoint
     });
     // console.log(JSON.stringify(attempt, null, 2));
     return buildSpotifyResponse('tracks', attempt, options.sort);
@@ -124,26 +121,16 @@ function buildQueryString(url, params, colon = false) {
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined) {
-      /*
-      if (colon && key !== 'q') {
-        key = `${key}:`
-      }
-      */
+    if (value !== undefined)
       queryParams.append(key, encodeURIComponent(value));
-    }
   });
   let queryString = queryParams.toString();
   if (colon) 
     queryString = queryString.replace(/&/g, '%2520').replace(/(?<!q)=/g, '%3A');
-  // console.log('query:', queryString);
-  // if (colon) queryString = queryString.replace(/&/g, '%2520').replace(/(?<!q)=/g, '');
-  // console.log('final:', `${url}?${queryString}`);
   return queryString ? `${url}?${queryString}` : url;
 }
 
 /**
- * 
  * @param {string} object 
  * @param {*} payload 
  * @param {string} [sort] 
@@ -160,7 +147,7 @@ function buildSpotifyResponse(object, payload, sort) {
   };
 
   for (const item of payload[object].items) {
-    // return console.log(JSON.stringify(item, null, 2))
+    
     /**
      * @param {*} object 
      * @returns {SpotifyImages|undefined}
@@ -216,7 +203,6 @@ function buildSpotifyResponse(object, payload, sort) {
 }
 
 /**
- * 
  * @param {Array<*>} arr 
  * @returns 
  */

@@ -5,37 +5,20 @@ const { spotifyHandler } = require('../resources/functions');
 
 module.exports = {
 
+  /**
+   * @param {string} id 
+   * @returns {Promise<SpotifyReturn>}
+   */
   async top_tracks(id) {
     const top = await spotifyHandler({
       method: 'GET',
       endpoint: `artists/${id}/top-tracks?market=US`
     });
 
-    // console.log(top);
     return buildSpotifyResponse('tracks:top', top);
   }
   
 };
-
-/**
- * 
- * @param {string} url 
- * @param {*} params 
- * @param {boolean} colon 
- * @returns {string}
- */
-function buildQueryString(url, params, colon = false) {
-  const queryParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined)
-      queryParams.append(key, encodeURIComponent(value));
-  });
-  let queryString = queryParams.toString();
-  if (colon) 
-    queryString = queryString.replace(/&/g, '%2520').replace(/(?<!q)=/g, '%3A');
-  return queryString ? `${url}?${queryString}` : url;
-}
 
 /**
  * 
@@ -56,7 +39,7 @@ function buildSpotifyResponse(object, payload, sort) {
   };
   const items = object === 'tracks:top' ? payload['tracks'] : payload[prop].items;
   for (const item of items) {
-    // return console.log(JSON.stringify(item, null, 2))
+    
     /**
      * @param {*} object 
      * @returns {SpotifyImages|undefined}
@@ -112,7 +95,6 @@ function buildSpotifyResponse(object, payload, sort) {
 }
 
 /**
- * 
  * @param {Array<*>} arr 
  * @returns 
  */

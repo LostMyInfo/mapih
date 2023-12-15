@@ -1,14 +1,19 @@
 // @ts-check
 
 const { readFileSync, writeFileSync } = require('fs');
-const { readFile, writeFile } = require('fs/promises');
-const CACHE = process.cwd() + '/storage.json';
+const { writeFile } = require('fs/promises');
 
 class Cache {
   constructor() {
-    // @ts-ignore
-    let _cache = JSON.parse(readFileSync(CACHE)), _size = _cache.length;
-    // console.log(_cache);
+    
+    const CACHE = process.cwd() + '/storage.json';
+
+    /**
+     * @type {{ key: string; value?: any; expire?: number | undefined; timeout?: any}[]}
+     */
+    let _cache, _size = 0;
+
+    loadCache();
 
     /**
      * @example
@@ -34,6 +39,9 @@ class Cache {
       validateTTL(ttl);
       validateTTLCallback(ttlCb);
 
+      /**
+       * @type {{ key: string; value?: any; expire?: number | undefined; timeout?: object | undefined}}
+       */
       const record = {
         key,
         value,
@@ -41,10 +49,12 @@ class Cache {
       };
 
       if (record.expire !== undefined && !isNaN(record.expire)) {
-        setTimeout(async () => {
-          await _del(key);
-          if (ttlCb) ttlCb(key, value);
-        }, ttl);
+        record.timeout = setTimeout(
+          async function() {
+            await _del(key);
+            if (ttlCb) ttlCb(key, value);
+          }.bind(this), ttl
+        );
       }
 
       const existing = _cache.findIndex((/** @type {{ key: string; }} */ e) => e.key === key);
@@ -55,7 +65,6 @@ class Cache {
       }
 
       await saveCache(_cache);
-      // fs.writeFileSync(CACHE, JSON.stringify(_cache), { flags: 'w' })
       return value;
     };
 
@@ -90,8 +99,12 @@ class Cache {
       writeFileSync(CACHE, JSON.stringify([]), { flag: 'w' });
     };
 
-    this.entries = () => _cache.map((/** @type {{ key: string; value: any; }} */ e) => [e.key, e.value]);
+    this.entries = () => _cache.map((/** @type {{ key: string; value?: any; }} */ e) => [e.key, e.value]);
     this.keys = () => _cache.map((/** @type {{ key: string; }} */ e) => e.key);
+    /**
+     * 
+     * @returns {number}
+     */
     this.size = () => _size;
     this.toJson = () => JSON.stringify(_cache, null, 2);
     this.export = () => {
@@ -99,14 +112,14 @@ class Cache {
       /**
        * @type {{[key: string]: { value: *, expire: number | undefined}}}
        */
-      const plainJS = {};
+      const exported = {};
       for (const key of _cache) {
-        plainJS[key.key] = {
+        exported[key.key] = {
           value: key.value,
           expire: key.expire || undefined
         };
       }
-      return JSON.stringify(plainJS);
+      return JSON.stringify(exported);
     };
 
     /**
@@ -121,30 +134,28 @@ class Cache {
     function loadCache() {
       try {
         const data = readFileSync(CACHE);
-        console.log(data);
         // @ts-ignore
         _cache = JSON.parse(data);
         _size = _cache.length;
       } catch (error) {
-        // Handle file read error or initialize cache if file doesn't exist
+        // @ts-ignore
+        if (error.code === 'ENOENT')
+          writeFileSync(CACHE, JSON.stringify([]), { flag: 'w' });
         _cache = [];
         _size = 0;
       }
     }
 
     /**
-     * @param {any} _cache
+     * @param {{ key: string; value?: any; expire?: number | undefined; timeout?: any}[]} _cache
      */
     async function saveCache(_cache) {
       try {
         await writeFile(CACHE, JSON.stringify(_cache), { flag: 'w' });
       } catch (error) {
-        throw new Error('Unable to save cache');
+        throw new Error('Unable to save cache:');
       }
     }
-
-    loadCache(); // Load cache when the Cache object is created
-
   }
 }
 
