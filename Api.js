@@ -9,7 +9,7 @@ let discordToken = undefined;
  */
 let slackToken = undefined;
 /**
- * @type {{client_id: string, client_secret: string} | undefined}
+ * @type {{client_id: string, client_secret: string, redirect_uri?: string|undefined} | undefined}
  */
 let spotifyToken = undefined;
 
@@ -19,7 +19,7 @@ module.exports = {
    * @param {Object} options
    * @param {string} [options.discord]
    * @param {string} [options.slack]
-   * @param {{client_id: string, client_secret: string}} [options.spotify]
+   * @param {{client_id: string, client_secret: string, redirect_uri?: string|undefined}} [options.spotify]
    */
   initialize: function(options) {
     // console.log(options);
@@ -69,7 +69,8 @@ module.exports = {
 
   spotify: {
     search: require('./api/spotify/search').search,
-    artists: require('./api/spotify/artists')
+    artists: require('./api/spotify/artists'),
+    users: require('./api/spotify/users')
   },
   
   utils: {

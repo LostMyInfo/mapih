@@ -40,7 +40,12 @@ class Cache {
       validateTTLCallback(ttlCb);
 
       /**
-       * @type {{ key: string; value?: any; expire?: number | undefined; timeout?: object | undefined}}
+       * @type {{
+       *   key: string;
+       *   value?: any;
+       *   expire?: number | undefined;
+       *   timeout?: object | undefined
+       * }}
        */
       const record = {
         key,

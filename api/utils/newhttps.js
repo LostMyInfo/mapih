@@ -49,8 +49,8 @@ module.exports = {
 
     try {
       const response = await fetch(url, options);
-      // console.log(response);
       const json = await response.json().catch(() => null);
+      // console.log(json);
 
       if (response.ok && response.status === 204)
         return { statusCode: response.status, message: 'success' };
@@ -59,35 +59,6 @@ module.exports = {
         throw (match = (url.match(/discord|slack|spotify/))?.[0])
           ? new ResponseError(json, response, `${match}_error`)
           : new Error(`Request failed with status ${response.status}: ${response.statusText}`);
-
-      /*
-      if (!response.ok || (json && json.ok == false)) {
-        throw url.includes('discord')
-          ? new ResponseError(json, response, 'discord_error')
-          : url.includes('slack')
-            ? new ResponseError(json, response, 'slack_error')
-            : new Error(`Request failed with status ${response.status}: ${response.statusText}`);
-      }
-      */
-      /*
-      let jsonResponse;
-      try {
-        jsonResponse = await response.json();
-      } catch (error) { }
-      // console.log('jsonResponse:', jsonResponse);
-      console.log('response.ok:', response.ok);
-      if (response.ok && response.status >= 200 && response.status <= 300 && jsonResponse)
-        return jsonResponse;
-  
-      if (!response.ok || (jsonResponse && jsonResponse.ok == false)) {
-        if (url.includes('discord'))
-          throw new ResponseError(jsonResponse, response, 'discord_error');
-        else if (url.includes('slack'))
-          throw new ResponseError(jsonResponse, response, 'slack_error');
-        else
-          throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
-      }
-      */
   
       return json;
     } catch (error) {

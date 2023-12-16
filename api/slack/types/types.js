@@ -134,17 +134,19 @@
 /**
  * @summary [Slack Message]{@link https://api.slack.com/events/message#subtypes}
  * @typedef {Object} SlackMessage
- * @property {string} bot_id
+ * @property {string} [bot_id]
+ * @property {string} [bot_link]
  * @property {string} type
  * @property {string} [subtype]
  * @property {string} text
  * @property {string} user
  * @property {string} ts
- * @property {string} app_id
- * @property {Block[]} blocks
+ * @property {string} [app_id]
+ * @property {string} [client_msg_id]
+ * @property {Block[]} [blocks]
  * @property {SlackAttachment[]} [attachments]
- * @property {string} team
- * @property {BotProfile} bot_profile
+ * @property {string} [team]
+ * @property {BotProfile} [bot_profile]
  */
 /**
  * @summary [Slack Message Response]{@link https://api.slack.com/methods/chat.postMessage#examples} Object
@@ -155,6 +157,58 @@
  * @property {string} channel - Channel ID
  * @property {string} ts - Timestamp
  * @property {SlackMessage} message - This field is only usable when `type` is `mrkdwn`.
+ */
+
+/**
+ * @summary [Slack Channel]{@link https://api.slack.com/types/conversation}
+ * @typedef {Object} SlackChannel
+ * @property {string} name - Indicates the name of the channel-like thing, without a leading hash sign
+ * @property {string} id
+ * @property {string} [creator] - The ID of the member that created this conversation
+ * @property {number} [created] - Timestamp of when the conversation was created
+ * @property {number[]} [last_read] - The timestamp for the last message the calling user has read in this channel
+ * @property {string} [latest] - The latest message in the channel
+ * @property {number} [unread_count] - A full count of visible messages that the calling user has yet to read
+ * @property {number} [unread_count_display] - A count of messages that the calling user has yet to read that matter to them (excludes things like join/leave messages)
+ * @property {Array<string>} [previous_names]
+ * @property {number} [updated]
+ * @property {?string} [parent_conversation]
+ * @property {Array<string>} [shared_team_ids]
+ * @property {Array<string>} [pending_connected_team_ids]
+ * @property {boolean} is_channel - Indicates whether a conversation is a channel
+ * @property {boolean} is_group - Means the channel is a private channel created before March 2021
+ * @property {boolean} is_im - Means the conversation is a direct message between two distinguished individuals or a user and a bot
+ * @property {boolean} is_archived - Indicates a conversation is archived, frozen in time
+ * @property {boolean} is_general - Means the channel is the workspace's "general" discussion channel
+ * @property {number} [unlinked]
+ * @property {string} [name_normalized]
+ * @property {boolean} is_shared - Means the conversation is in some way shared between multiple workspaces
+ * @property {boolean} is_ext_shared - Indicates whether a conversation is part of a Shared Channel with a remote organization
+ * @property {boolean} is_org_shared - Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization
+ * @property {Array<*>} [pending_shared]
+ * @property {boolean} is_pending_ext_shared - Means the conversation is ready to become an `is_ext_shared` channel, but needs some kind of approval or sign off first
+ * @property {boolean} is_member - Indicates whether the user, bot user or Slack app associated with the token making the API call is itself a member of the conversation
+ * @property {boolean} is_private - Means the conversation is privileged between two or more members
+ * @property {boolean} is_mpim - Represents an unnamed private conversation between multiple users
+ * @property {number} [priority]
+ * @property {boolean} [is_org_shared]
+ * @property {string} [pending_shared]
+ * @property {SlackConversationTopic} [topic]
+ * @property {SlackConversationPurpose} [purpose]
+ */
+
+/**
+ * @typedef {Object} SlackConversationTopic
+ * @property {string} creator
+ * @property {string} value
+ * @property {number} last_set
+ */
+
+/**
+ * @typedef {Object} SlackConversationPurpose
+ * @property {string} creator
+ * @property {string} value
+ * @property {number} last_set
  */
 
 /**

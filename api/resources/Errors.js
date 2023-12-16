@@ -35,31 +35,16 @@ class ResponseError extends Error {
       // console.log('res', res);
       if (SlackError(res)) {
         this.details = SlackError(res);
-        /*
-        const props = SlackError(res);
-        console.log('props', props);
-        if (!props && !Object.keys(props)?.length) return;
-        for (const [k, v] of Object.entries(props))
-          // console.log('k:', k);
-          this[k] = v;
-        */
       }
     } else if (type === 'spotify_error') {
       if (!res) return;
-      if (typeof res.error !== 'string' && res.error?.message)
-        this.message = res.error?.message;
-
-      // console.log('res in errors', res);
+      if (res.error) {
+        this.message = typeof res.error !== 'string' ? res.error?.message : res.error;
+      }
+      if (res.error_description)
+        this.details = res.error_description;
     }
   }
-  
-  /*
-  get name() {
-    // console.log('this.name', this.name);
-    // if (this.name === 'DiscordError')
-    return `${super.name}`;
-  }
-  */
   
 };
 
@@ -186,7 +171,7 @@ function SlackError(err) {
     // const prop = path[0];
     // errs[prop] = errs[prop] || [];
     // console.log('prop:', prop);
-    
+    // console.log('path:', path);
     for (const p of path.split('/')) {
       newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
     }
@@ -242,14 +227,15 @@ function get(obj, path, defaultValue = undefined) {
  * @typedef {Object} DiscordError
  * @property {string} message
  * @property {boolean} [ok]
- * @property {string|{status: number, message: string}} [error]
+ * @property {string|{status: number, message: string}|{message: string}} [error]
  * @property {{messages: Array<string>}} [response_metadata]
  * @property {number} [code]
  * @property {boolean} [global]
  * @property {number} [retry_after]
- * @property {DiscordErrorErrors} [errors],
+ * @property {DiscordErrorErrors} [errors]
  * @property {string} [needed]
  * @property {Array<string>} [warnings]
+ * @property {string} [error_description]
  */
 
 /**

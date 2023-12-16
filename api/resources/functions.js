@@ -844,6 +844,155 @@ async function spotifyAccessToken() {
   return response.access_token;
 }
 
+/**
+ * @param {string} code 
+ * @returns 
+ */
+async function spotifyAuth(code) {
+  const credentials = require('../../Api').get_spotify_token();
+  if (!credentials || !credentials.redirect_uri) throw new Error(
+    'Spotify redirect_uri not set'
+  );
+  // console.log('code:', code);
+  const client_id = credentials.client_id || process.env.spotify_client_id,
+    client_secret = credentials.client_secret || process.env.spotify_client_secret,
+    redirect_uri = credentials.redirect_uri || process.env.spotify_redirect_uri;
+
+  const url = buildQueryString('https://accounts.spotify.com/api/token', {
+    code: code,
+    redirect_uri: redirect_uri,
+    grant_type: 'authorization_code'
+  });
+
+  return https({
+    method: 'post',
+    url,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
+    }
+  });
+}
+
+/**
+ * 
+ * @param {string} object 
+ * @param {*} payload 
+ * @param {string} [sort] 
+ * @returns {SpotifyReturn|SpotifyTrack[]}
+ */
+function buildSpotifyResponse(object, payload, sort) {
+  const prop = object.split(':')[0];
+  const top_tracks = object === 'tracks:top';
+
+  /**
+   * @type {SpotifyReturn|{tracks: SpotifyTrack[]}}
+   */
+  const spotifyObject = {
+    [prop]: []
+  };
+
+  if (top_tracks) {
+    spotifyObject.total = payload[prop].total;
+    spotifyObject.limit = payload[prop].limit;
+  }
+
+  const items = top_tracks ? payload['tracks'] : payload[prop].items;
+  for (const item of items) {
+    
+    /**
+     * @param {*} object 
+     * @returns {SpotifyImages|undefined}
+     */
+    const buildImages = (object) => {
+      const path = object === 'album' || top_tracks
+        ? item.album?.images
+        : item.images;
+      let images = {
+        large: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 640))?.url,
+        medium: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 320 || x.height === 300))?.url,
+        small: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 160))?.url
+      };
+      images = removeFalsyFromObject(images);
+      if (images.large || images.medium || images.small)
+        return images;
+    };
+
+    let artists = [];
+    if (item.artists && item.artists.length) {
+      for (const artist of item.artists)
+        artists.push({
+          name: artist.name,
+          id: artist.id,
+          spotify_url: artist.external_urls?.spotify,
+          uri: artist.uri
+        });
+    }
+
+    artists = removeFalsyFromArray(artists);
+    
+    let album = item.album ? {
+      name: item.album?.name,
+      type: item.album?.album_type,
+      tracks: item.album?.total_tracks,
+      is_playable: item.album?.is_playable,
+      release_date: item.album?.release_date,
+      spotify_url: item.album?.external_urls?.spotify,
+      images: buildImages('album') ? buildImages('album') : undefined
+    } : undefined;
+
+    album = removeFalsyFromObject(album);
+
+    spotifyObject[prop].push({
+      name: item.name,
+      id: item.id,
+      explicit: item.explicit,
+      duration_seconds: Math.floor(item.duration_ms / 1000),
+      popularity: item.popularity,
+      followers: item.followers?.total,
+      genres: item.genres,
+      images: buildImages('tracks') ? buildImages('tracks') : undefined,
+      spotify_url: item.external_urls?.spotify,
+      preview_url: item.preview_url,
+      uri: item.uri,
+      artists,
+      album
+    });
+  }
+  
+  spotifyObject[prop] = removeFalsyFromArray(spotifyObject[prop]);
+
+  if (sort)
+    spotifyObject[prop].sort((/** @type {{ [x: string]: number; }} */ a, /** @type {{ [x: string]: number; }} */ b) => {
+      return b[sort] - a[sort];
+    });
+  
+  return top_tracks ? spotifyObject[prop] : spotifyObject;
+}
+
+/**
+ * 
+ * @param {*} obj
+ * @returns 
+ */
+function removeFalsyFromObject(obj) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== undefined)
+  );
+}
+
+/**
+ * @param {Array<*>} arr 
+ * @returns 
+ */
+const removeFalsyFromArray = (arr) => {
+  return arr.map(obj => {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined && v !== false && v !== 0 && v !== '' && !Number.isNaN(v))
+    );
+  }).filter(obj => Object.keys(obj).length > 0);
+};
+
 module.exports = {
   embedModifier,
   avatarFromObject,
@@ -864,5 +1013,8 @@ module.exports = {
   token,
   attemptHandler,
   sendAttachment,
-  getAppId
+  getAppId,
+  removeFalsyFromArray,
+  removeFalsyFromObject,
+  buildSpotifyResponse
 };
