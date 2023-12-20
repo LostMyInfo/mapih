@@ -70,7 +70,8 @@ module.exports = {
   spotify: {
     search: require('./api/spotify/search').search,
     artists: require('./api/spotify/artists'),
-    users: require('./api/spotify/users')
+    users: require('./api/spotify/users'),
+    playlists: require('./api/spotify/playlists')
   },
   
   utils: {

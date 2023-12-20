@@ -3,6 +3,11 @@
 // @ts-check
 const { spotifyHandler, buildQueryString, buildSpotifyResponse } = require('../resources/functions');
 
+/**
+ * @file Search for items on Spotify
+ * @module search
+ */
+
 module.exports = {
 
   /**

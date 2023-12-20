@@ -884,6 +884,7 @@ async function spotifyAuth(code) {
 function buildSpotifyResponse(object, payload, sort) {
   const prop = object.split(':')[0];
   const top_tracks = object === 'tracks:top';
+  const artist_albums = object === 'artist:albums';
 
   /**
    * @type {SpotifyReturn|{tracks: SpotifyTrack[]}}
@@ -897,7 +898,7 @@ function buildSpotifyResponse(object, payload, sort) {
     spotifyObject.limit = payload[prop].limit;
   }
 
-  const items = top_tracks ? payload['tracks'] : payload[prop].items;
+  const items = top_tracks ? payload['tracks'] : artist_albums ? payload.items : payload[prop].items;
   for (const item of items) {
     
     /**
@@ -913,7 +914,7 @@ function buildSpotifyResponse(object, payload, sort) {
         medium: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 320 || x.height === 300))?.url,
         small: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 160))?.url
       };
-      images = removeFalsyFromObject(images);
+      images = images ? removeFalsyFromObject(images) : undefined;
       if (images.large || images.medium || images.small)
         return images;
     };
@@ -929,7 +930,7 @@ function buildSpotifyResponse(object, payload, sort) {
         });
     }
 
-    artists = removeFalsyFromArray(artists);
+    artists = artists ? removeFalsyFromArray(artists) : undefined;
     
     let album = item.album ? {
       name: item.album?.name,
@@ -941,7 +942,7 @@ function buildSpotifyResponse(object, payload, sort) {
       images: buildImages('album') ? buildImages('album') : undefined
     } : undefined;
 
-    album = removeFalsyFromObject(album);
+    album = album ? removeFalsyFromObject(album) : undefined;
 
     spotifyObject[prop].push({
       name: item.name,
@@ -955,7 +956,7 @@ function buildSpotifyResponse(object, payload, sort) {
       spotify_url: item.external_urls?.spotify,
       preview_url: item.preview_url,
       uri: item.uri,
-      artists,
+      artists: artists.length ? artists : undefined,
       album
     });
   }

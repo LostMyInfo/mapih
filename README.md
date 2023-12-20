@@ -72,7 +72,9 @@ mapih.initialize({
 ---
 
 ## Table of Contents
-### Discord
+## | [Discord](#discord-methods) | [Slack](#slack-methods) | [Spotify](#spotify-methods) | [Utils](#utils-methods) |
+
+### [Discord Methods](#discord)
 **• [Applications](#applications)**  
 &nbsp; &nbsp; ◦ [getMe](#get-current-application)  
 &nbsp; &nbsp; ◦ [updateMe](#edit-current-application)  
@@ -290,15 +292,34 @@ mapih.initialize({
 &nbsp; &nbsp; ◦ [Audit Log](#audit-log)  
 &nbsp; &nbsp; ◦ [Auto Moderation](#auto-moderation-1)  
 
-### Slack
-coming soon
+### [Slack Methods](#slack)
+Docs coming soon
 
-### Spotify
+### [Spotify Methods](#spotify)
 **• [Search](#spotify-search)**  
+
+### [Utils Methods](#utils)
+**• [Storage](#storage)**  
+&nbsp; &nbsp; ◦ [get](#storage-get)  
+&nbsp; &nbsp; ◦ [set](#storage-set)  
+&nbsp; &nbsp; ◦ [delete](#storage-delete)  
+&nbsp; &nbsp; ◦ [merge](#storage-merge)  
+&nbsp; &nbsp; ◦ [push](#storage-push)  
+&nbsp; &nbsp; ◦ [export](#storage-export)  
+&nbsp; &nbsp; ◦ [all](#storage-all)  
+&nbsp; &nbsp; ◦ [has](#storage-has)  
+&nbsp; &nbsp; ◦ [entries](#storage-entries)  
+&nbsp; &nbsp; ◦ [keys](#storage-keys)  
+&nbsp; &nbsp; ◦ [size](#storage-size)  
+&nbsp; &nbsp; ◦ [bytes](#storage-bytes)  
+&nbsp; &nbsp; ◦ [clear](#storage-clear)  
+&nbsp; &nbsp; ◦ [equals](#storage-equals)  
+&nbsp; &nbsp; ◦ [history](#storage-history)  
 
 ---
 
-# Guilds
+# Discord
+## Guilds
 **All functions relating to Discord Guilds (servers)**
 
 | Method                                                 | Description                                                      |
@@ -4063,6 +4084,253 @@ await api.spotify.search({
 
 ---
 
+# Utils
+
+## Storage
+**Simple key/value persistent storage**
+
+| Method                        | Description                                           |
+|-------------------------------|-------------------------------------------------------|
+| [`set`](#storage-set)         | Creates an entry with a set value                     |
+| [`get`](#storage-get)         | Retrieves the value of a stored key                   |
+| [`delete`](#storage-delete)   | Delete an entry                                       |
+| [`merge`](#storage-merge)     | Merge object into an existing value's object          |
+| [`push`](#storage-push)       | Push values into an existing value's array            |
+| [`export`](#storage-export)   | Export storage with mapped keys to values             |
+| [`all`](#storage-all)         | Retrieve all stored items                             |
+| [`has`](#storage-has)         | Checks if storage has a specified key                 |
+| [`entries`](#storage-entries) | Get storage's entries                                 |
+| [`keys`](#storage-keys)       | Get storage's keys                                    |
+| [`size`](#storage-size)       | Get the amount of entries in storage                  |
+| [`bytes`](#storage-bytes)     | Get the total size (in bytes) of storage              |
+| [`clear`](#storage-clear)     | Clear all entries from storage                        |
+| [`equals`](#storage-equals)   | Check if specified key's value equals specified value |
+| [`history`](#storage-history) | Retrieve a keys previous values with timestamps       |
+
+### [Storage Set](/api/utils/storage.js#L79)
+
+#### Parameters
+| Field            | Type     | Description                                         |
+|------------------|----------|-----------------------------------------------------|
+| key              | string   | The key to assign a value                           |
+| value            | any      | The value to assign to a key                        |
+| tts?             | number   | Amount of time in ms that this value will be stored |
+| ttlCb?           | function | A function to invoke upon expiration                |
+| allow_overwrite? | boolean  | Whether to allow this key's value to be overwritten |
+
+#### Example 1
+```javascript
+await api.utils.storage.set({
+  key: 'password',
+  value: 'abcd1234'
+});
+```
+
+#### Example 2
+```javascript
+await api.utils.storage.set({
+  key: 'password',
+  value: 'abcd1234',
+  ttl: 5000, // 5 seconds
+  ttlCb: () => console.log('password expired')
+});
+```
+
+#### Example 3
+```javascript
+await api.utils.storage.set({
+  key: 'password',
+  value: 'abcd1234',
+  allow_overwrite: false
+});
+
+await api.utils.storage.set({
+  key: 'password',
+  value: 'newvalue',
+}); //=> error
+```
+
+### [Storage Get](/api/utils/storage.js#L41)
+
+#### Parameters
+| Field | Type   | Description                       |
+|-------|--------|-----------------------------------|
+| key   | string | The key to retrieve the value for |
+
+#### Example
+```javascript
+api.utils.storage.get('password');
+```
+
+### [Storage Delete](/api/utils/storage.js#L142)
+
+#### Parameters
+| Field | Type   | Description                    |
+|-------|--------|--------------------------------|
+| key   | string | The key of the entry to delete |
+
+#### Example
+```javascript
+await api.utils.storage.delete('password');
+```
+
+### [Storage Merge](/api/utils/storage.js#L172)
+
+#### Parameters
+| Field | Type   | Description                                  |
+|-------|--------|----------------------------------------------|
+| key   | string | The key of the entry to alter                |
+| value | Object | The properties to merge into existing object |
+
+\* Value must be an object  
+
+#### Example
+```javascript
+await api.utils.storage.set({
+  key: 'example',
+  value: { a: 'b' }
+});
+
+await api.utils.storage.merge('example', { c: 'd' });
+//=> new value: { a: 'b', c: 'd' }
+
+await api.utils.storage.merge('example', { a: 'z' });
+//=> new value: { a: 'z', c: 'd' }
+```
+
+### [Storage Push](/api/utils/storage.js#L209)
+
+#### Parameters
+| Field | Type   | Description                                                   |
+|-------|--------|---------------------------------------------------------------|
+| key   | string | The key of the entry to alter                                 |
+| value | ...any | Comma delimited set of values to push into the existing array |
+
+#### Example
+```javascript
+await api.utils.storage.set({
+  key: 'array',
+  value: [1, 2]
+});
+
+await api.utils.storage.push('array', 3, 4);
+//=> new value: [1, 2, 3, 4]
+
+await api.utils.storage.push('array', [5, 6], 7);
+//=> new value: [ 1, 2, [ 5, 6 ], 7 ]
+
+// keep duplicates
+await api.utils.storage.push('array', 1, 7);
+//=> new value: [ 1, 2, [ 5, 6 ], 7, 1, 7 ]
+
+// filter out duplicates
+await api.utils.storage.push('array', 1, 7, {
+  unique: true
+});
+//=> new value: [ 1, 2, [ 5, 6 ], 7 ]
+```
+
+### [Storage Export](/api/utils/storage.js#L227)
+
+#### Example
+```javascript
+api.utils.storage.export();
+//=> {"password": {"value": "abcd1234"}}
+```
+
+### [Storage All](/api/utils/storage.js#L361)
+
+#### Example
+```javascript
+api.utils.storage.all();
+//=>
+// [
+//   { key: 'array', value: [ 1, 2, [Array], 7 ] },
+//   { key: 'password', value: 'abc123' }
+// ]
+```
+
+### [Storage Has](/api/utils/storage.js#370)
+
+#### Parameters
+| Field | Type   | Description      |
+|-------|--------|------------------|
+| key   | string | The key to check |
+
+#### Example
+```javascript
+api.utils.storage.has('password');
+```
+
+### [Storage Entries](/api/utils/storage.js#L379)
+
+#### Example
+```javascript
+api.utils.storage.entries();
+//=> [ [ 'password', 'abcd1234' ], [ 'test', '4321dcba' ] ]
+```
+
+### [Storage Keys](/api/utils/storage.js#L388)
+
+#### Example
+```javascript
+api.utils.storage.keys();
+//=> ['password', 'stuff']
+```
+
+### [Storage Size](/api/utils/storage.js#L396)
+
+#### Example
+```javascript
+api.utils.storage.size(); // 3
+```
+
+### [Storage Bytes](/api/utils/storage.js#L404)
+
+#### Example
+```javascript
+api.utils.storage.bytes(); // 23235 (bytes)
+```
+
+### [Storage Clear](/api/utils/storage.js#L426)
+
+#### Example
+```javascript
+await api.utils.storage.clear(); // undefined
+```
+
+### [Storage Equals](/api/utils/storage.js#L437)
+
+#### Parameters
+| Field | Type   | Description                                 |
+|-------|--------|---------------------------------------------|
+| key   | string | The key of the entry to check the value for |
+| value | any    | The value to compare                        |
+
+#### Example
+```javascript
+api.utils.storage.equals('password', 'abcd1234'); // true
+```
+
+### [Storage History](/api/utils/storage.js#L451)
+
+#### Parameters
+| Field | Type   | Description                                |
+|-------|--------|--------------------------------------------|
+| key   | string | The key of the entry to get the history of |
+
+#### Example
+```javascript
+api.utils.storage.history('password');
+//=>
+// [
+//   { value: 'abcd1234', timestamp: 1703037628164 },
+//   { value: '4321dcba', timestamp: 1703037861827 },
+//   { value: '1234abcd', timestamp: 1703037890201 },
+// ]
+```
+
+---
 # Discord Objects and Types
 
 ## Guild

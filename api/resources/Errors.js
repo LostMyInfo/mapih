@@ -148,7 +148,7 @@ function DiscordError(err) {
  * @returns 
  */
 function SlackError(err) {
-  // console.log('err in parseSlackError:\n', err);
+  console.log('err in parseSlackError:\n', err);
   const errs = {};
   if (err.needed) errs['missing_scope'] = err.needed;
   if (!err.errors && !err.response_metadata && !err.warnings) {
@@ -160,26 +160,32 @@ function SlackError(err) {
     // console.log('e of err.errors:', e);
     const match = e.match(/(?:(?<=]\s)).*|^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
     // const match = e.match(/^.*?(?:(?=:)|(?=\s\[))|(?<=:\/).*(?=\])/gmi);
-    // console.log('match', match);
+    console.log('match', match);
     const specificProp = e.match(/(?<=:\s)(\w+)(?!\[)/gi)?.[0];
-    // console.log('specific prop:', specificProp);
+    console.log('specific prop:', specificProp);
     // const specificProp = e.match(/:\s(\w+)(?!\[)/i)?.[1];
     if (!match) return e;
-    const [message, path] = match;
+    let message, path;
+    if (match.length === 1)
+      message = match[0];
+    else [message, path] = match;
+    // const [message, path] = match;
     let newPath = '';
     // path = path.split('/');
     // const prop = path[0];
     // errs[prop] = errs[prop] || [];
     // console.log('prop:', prop);
-    // console.log('path:', path);
-    for (const p of path.split('/')) {
-      newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
-    }
+    console.log('path:', path);
+    if (path)
+      for (const p of path.split('/')) {
+        newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
+      }
     
     // path = path.slice(2).join('.');
-    newPath = newPath.slice(1);
+    newPath = path ? newPath.slice(1) : specificProp ? specificProp : 'error';
     // console.log('newPath:', newPath);
     // console.log('path:', path);
+    // specificProp ? errs[message] = specificProp : errs[newPath] = message;
     errs[newPath] = message;
     /*
     for (const block of blocks) {

@@ -51,7 +51,7 @@ module.exports = {
    * @param {boolean} [params.prevent_creation] - Do not create a direct message or multi-person direct message. This is used to see if there is an existing dm or mpdm.
    * @param {boolean} [params.return_im] - Indicates you want the full IM channel definition in the response
    * @param {string} [params.users] - Comma separated lists of users. If only one user is included, this creates a 1:1 DM.
-   * @returns {Promise<{channel: string; no_op: boolean; already_open: boolean}>} 
+   * @returns {Promise<{channel: string; no_op?: boolean; already_open?: boolean}>} 
    */
   open: async (params) =>
     slackHandler({
@@ -75,8 +75,8 @@ module.exports = {
    * @memberof module:conversations#
    * @function close
    * @param {Object} params
-   * @param {string} params.channel - Conversation to close
-   * @returns {Promise<{no_op: boolean; already_closed: boolean}>}
+   * @param {string} params.channel - ID of conversation to close
+   * @returns {Promise<{ok: boolean; no_op?: boolean; already_closed?: boolean}>}
    */
   close: async (params) =>
     slackHandler({
@@ -87,6 +87,234 @@ module.exports = {
       }
     }),
   
+  /**
+   * @summary
+   * ### [Archives a conversation]{@link https://api.slack.com/methods/conversations.archive}
+   * @example
+   * await api.slack.conversations.archive({
+   *   channel: 'G1234567890'
+   * });
+   * @memberof module:conversations#
+   * @function archive
+   * @param {Object} params
+   * @param {string} params.channel - ID of conversation to archive
+   * @returns {Promise<{ok: boolean}>}
+   */
+  archive: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.archive',
+      body: {
+        channel: params.channel
+      }
+    }),
+  
+  
+  /**
+   * @summary
+   * ### [Renames a conversation]{@link https://api.slack.com/methods/conversations.rename}
+   * @example
+   * await api.slack.conversations.rename({
+   *   channel: 'G1234567890',
+   *   name: 'new name'
+   * });
+   * @memberof module:conversations#
+   * @function rename
+   * @param {Object} params
+   * @param {string} params.channel - ID of conversation to rename
+   * @param {string} params.name - New name for conversation
+   * @returns {Promise<{ok: boolean; channel: SlackChannel}>}
+   */
+  rename: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.rename',
+      body: {
+        channel: params.channel,
+        name: params.name
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Sets the topic for a conversation]{@link https://api.slack.com/methods/conversations.setTopic}
+   * @example
+   * await api.slack.conversations.setTopic({
+   *   channel: 'G1234567890',
+   *   topic: 'new topic!'
+   * });
+   * @memberof module:conversations#
+   * @function setTopic
+   * @param {Object} params
+   * @param {string} params.channel - Conversation to set the topic of
+   * @param {string} params.topic - The new topic string. Does not support formatting or linkification.
+   * @returns {Promise<{ok: boolean; channel: SlackChannel}>}
+   */
+  setTopic: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.setTopic',
+      body: {
+        channel: params.channel,
+        topic: params.topic
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Sets the purpose for a conversation]{@link https://api.slack.com/methods/conversations.setPurpose}
+   * @example
+   * await api.slack.conversations.setPurpose({
+   *   channel: 'G1234567890',
+   *   purpose: 'new topic!'
+   * });
+   * @memberof module:conversations#
+   * @function setPurpose
+   * @param {Object} params
+   * @param {string} params.channel - Conversation to set the purpose of
+   * @param {string} params.purpose - A new, specialer purpose
+   * @returns {Promise<{ok: boolean; purpose?: string}>}
+   */
+  setPurpose: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.setPurpose',
+      body: {
+        channel: params.channel,
+        topic: params.purpose
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Joins an existing conversation]{@link https://api.slack.com/methods/conversations.join}
+   * @example
+   * await api.slack.conversations.join({
+   *   channel: '123456789'
+   * });
+   * @memberof module:conversations#
+   * @function join
+   * @param {Object} params
+   * @param {string} params.channel - ID of conversation to join
+   * @returns {Promise<{channel: SlackChannel; warning?: string; response_metadata?: { warnings?: Array<string> }}>} 
+   */
+  join: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.join',
+      body: {
+        channel: params.channel
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Leaves a conversation]{@link https://api.slack.com/methods/conversations.leave}
+   * @example
+   * await api.slack.conversations.leave({
+   *   channel: '123456789'
+   * });
+   * @memberof module:conversations#
+   * @function leave
+   * @param {Object} params
+   * @param {string} params.channel - ID of conversation to leave
+   * @returns {Promise<{ok: boolean; not_in_channel?: boolean}>} 
+   */
+  leave: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.leave',
+      body: {
+        channel: params.channel
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Removes a user from a conversation]{@link https://api.slack.com/methods/conversations.kick}
+   * @example
+   * await api.slack.conversations.kick({
+   *   channel: '123456789',
+   *   user: 'C1234567890'
+   * });
+   * @memberof module:conversations#
+   * @function kick
+   * @param {Object} params
+   * @param {string} params.channel - ID of conversation to remove user from
+   * @param {string} params.user - User ID to be removed
+   * @returns {Promise<{ok: boolean; error?: string}>} 
+   */
+  kick: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.kick',
+      body: {
+        channel: params.channel,
+        user: params.user
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Invites users to a channel]{@link https://api.slack.com/methods/conversations.invite}
+   * @example
+   * await api.slack.conversations.invite({
+   *   channel: 'C1234567890',
+   *   users: ['W1234567890']
+   * });
+   * @memberof module:conversations#
+   * @function invite
+   * @param {Object} params
+   * @param {string} params.channel - The ID of the public or private channel to invite user(s) to
+   * @param {Array<string>} params.users - An array of user IDs. Up to 1000.
+   * @param {boolean} [params.force] - When set to true and multiple user IDs are provided, continue inviting the valid ones while disregarding invalid IDs. Defaults to false.
+   * @returns {Promise<SlackChannel>} a list of limited channel-like [conversation objects]{@link https://api.slack.com/types/conversation}
+   */
+  invite: async (params) => {
+    
+    const res = await slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.invite',
+      body: {
+        channel: params.channel,
+        users: params.users.join(','),
+        force: params.force || false
+      }
+    });
+
+    return res.channel;
+  },
+
+  /**
+   * @summary
+   * ### [Lists shared channel invites that have been generated or received but have not been approved by all parties]{@link https://api.slack.com/methods/conversations.listConnectInvites}
+   * @example
+   * await api.slack.conversations.listConnectInvites({
+   *   count: 5
+   * });
+   * @memberof module:conversations#
+   * @function listConnectInvites
+   * @param {Object} params
+   * @param {number} [params.count] - Maximum number of invites to return
+   * @param {string} [params.cursor] - Set to next_cursor returned by previous call to list items in subsequent page
+   * @param {string} [params.team_id] - Encoded team id for the workspace to retrieve invites for, required if org token is used
+   * @returns {Promise<SlackInvite[]>} Returns a paginated list of invites that represesent pending shared channel invitations sent or received
+   */
+  listConnectInvites: async (params) => {
+    
+    const res = await slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.listConnectInvites',
+      body: {
+        count: params.count ?? 100,
+        cursor: params.cursor ?? undefined,
+        team_id: params.team_id ?? undefined
+      }
+    });
+
+    return res.invites;
+  },
+
   /**
    * @summary
    * ### [Retrieve information about a conversation]{@link https://api.slack.com/methods/conversations.info}
@@ -117,6 +345,44 @@ module.exports = {
 
   /**
    * @summary
+   * ### [Retrieve a thread of messages posted to a conversation]{@link https://api.slack.com/methods/conversations.replies}
+   * @example
+   * await api.slack.conversations.replies({
+   *   channel: '123456789',
+   *   ts: 1234567890.123456
+   * });
+   * @memberof module:conversations#
+   * @function replies
+   * @param {Object} params
+   * @param {string} params.channel - Conversation ID to fetch thread from
+   * @param {boolean} [params.ts] - Unique identifier of either a thread’s parent message or a message in the thread
+   * @param {string} [params.cursor] - Paginate through collections of data by setting the `cursor` parameter to a `next_cursor` attribute returned by a previous request's `response_metadata`
+   * @param {boolean} [params.include_all_metadata] - Return all metadata associated with this message
+   * @param {boolean} [params.inclusive] - Include messages with `oldest` or `latest` timestamps in results. Ignored unless either timestamp is specified
+   * @param {string} [params.latest] - Only messages before this Unix timestamp will be included in results. Default is the current time.
+   * @param {number} [params.limit] - The maximum number of items to return
+   * @param {string} [params.oldest] - Only messages after this Unix timestamp will be included in results
+   * @returns {Promise<{ok: boolean; messages: SlackMessage[]; has_more: boolean; response_metadata: { next_cursor: string; } }>}
+   */
+  replies: async (params) => {
+    const endpoint = buildQueryString('conversations.replies', {
+      channel: params.channel,
+      ts: params.ts,
+      cursor: params.cursor ?? undefined,
+      include_all_metadata: params.include_all_metadata || false,
+      inclusive: params.inclusive ?? undefined,
+      latest: params.latest ?? undefined,
+      limit: params.limit ?? 100,
+      oldest: params.oldest ?? undefined
+    });
+    return slackHandler({
+      method: 'GET',
+      endpoint
+    });
+  },
+
+  /**
+   * @summary
    * ### [Fetches a conversation's history of messages and events]{@link https://api.slack.com/methods/conversations.history}
    * @example
    * await api.slack.conversations.history({
@@ -134,7 +400,7 @@ module.exports = {
    * @param {string} [params.latest] - Only messages before this Unix timestamp will be included in results. Default is the current time.
    * @param {number} [params.limit] - The maximum number of items to return
    * @param {string} [params.oldest] - Only messages after this Unix timestamp will be included in results
-   * @returns {Promise<{messages: SlackMessage[], has_more: boolean, pin_count: number, channel_actions_ts: ?number, channel_actions_count: number}>} A list of [Application Role Connection Metadata]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object} objects for the given application.
+   * @returns {Promise<{messages: SlackMessage[], has_more: boolean, pin_count: number, channel_actions_ts: ?number, channel_actions_count: number}>}
    */
   history: async (params) => {
     const endpoint = buildQueryString('conversations.history', {
@@ -150,7 +416,64 @@ module.exports = {
       method: 'GET',
       endpoint
     });
+  },
+
+  /**
+   * @summary
+   * ### [Lists all channels in a Slack team]{@link https://api.slack.com/methods/conversations.list}
+   * @example
+   * await api.slack.conversations.list({
+   *   exclude_archived: true
+   * });
+   * @memberof module:conversations#
+   * @function list
+   * @param {Object} params
+   * @param {string} [params.cursor] - Paginate through collections of data by setting the `cursor` parameter to a `next_cursor` attribute returned by a previous request's `response_metadata`
+   * @param {boolean} [params.exclude_archived] - Whether to exclude archived channels from the list
+   * @param {string} [params.team_id] - encoded team id to list channels in, required if token belongs to org-wide app
+   * @param {string} [params.types] - Mix and match channel types by providing a comma-separated list of any combination of `public_channel`, `private_channel`, `mpim`, `im`. Default `public_channel`
+   * @param {number} [params.limit] - The maximum number of items to return
+   * @returns {Promise<SlackChannel[]>} a list of limited channel-like [conversation objects]{@link https://api.slack.com/types/conversation}
+   */
+  list: async (params) => {
+    const endpoint = buildQueryString('conversations.list', {
+      cursor: params.cursor ?? undefined,
+      exclude_archived: params.exclude_archived || false,
+      team_id: params.team_id ?? undefined,
+      types: params.types ?? undefined,
+      limit: params.limit ?? 100
+    });
+    return slackHandler({
+      method: 'GET',
+      endpoint
+    });
+  },
+  
+  /**
+   * @summary
+   * ### [Retrieve members of a conversation]{@link https://api.slack.com/methods/conversations.members}
+   * @example
+   * await api.slack.conversations.members({
+   *   channel: 'C1234567890',
+   *   limit: 5
+   * });
+   * @memberof module:conversations#
+   * @function members
+   * @param {Object} params
+   * @param {string} params.channel - ID of the conversation to retrieve members for
+   * @param {string} [params.cursor] - Paginate through collections of data by setting the `cursor` parameter to a `next_cursor` attribute returned by a previous request's `response_metadata`
+   * @param {number} [params.limit] - The maximum number of items to return. Default 100.
+   * @returns {Promise<{ok: boolean, members: Array<string>, response_metadata?: { next_cursor: string } }>}
+   */
+  members: async (params) => {
+    const endpoint = buildQueryString('conversations.members', {
+      channel: params.channel,
+      cursor: params.cursor ?? undefined,
+      limit: params.limit ?? 100
+    });
+    return slackHandler({
+      method: 'GET',
+      endpoint
+    });
   }
-  
-  
 };

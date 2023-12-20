@@ -3,6 +3,11 @@
 // @ts-check
 const { spotifyHandler, buildQueryString, buildSpotifyResponse } = require('../resources/functions');
 
+/**
+ * @file All Spotify API endpoints relating to Spotify users
+ * @module users
+ */
+
 module.exports = {
   async getMe() {
     
