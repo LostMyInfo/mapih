@@ -301,20 +301,27 @@ Docs coming soon
 ### [Utils Methods](#utils)
 **• [Storage](#storage)**  
 &nbsp; &nbsp; ◦ [get](#storage-get)  
+&nbsp; &nbsp; ◦ [getMany](#storage-get-many)  
 &nbsp; &nbsp; ◦ [set](#storage-set)  
+&nbsp; &nbsp; ◦ [setMany](#storage-set-many)  
 &nbsp; &nbsp; ◦ [delete](#storage-delete)  
+&nbsp; &nbsp; ◦ [deleteMany](#storage-delete-many)  
 &nbsp; &nbsp; ◦ [merge](#storage-merge)  
 &nbsp; &nbsp; ◦ [push](#storage-push)  
 &nbsp; &nbsp; ◦ [export](#storage-export)  
+&nbsp; &nbsp; ◦ [filter](#storage-filter)  
 &nbsp; &nbsp; ◦ [all](#storage-all)  
 &nbsp; &nbsp; ◦ [has](#storage-has)  
 &nbsp; &nbsp; ◦ [entries](#storage-entries)  
 &nbsp; &nbsp; ◦ [keys](#storage-keys)  
+&nbsp; &nbsp; ◦ [values](#storage-values)  
 &nbsp; &nbsp; ◦ [size](#storage-size)  
 &nbsp; &nbsp; ◦ [bytes](#storage-bytes)  
+&nbsp; &nbsp; ◦ [toJson](#storage-toJson)  
 &nbsp; &nbsp; ◦ [clear](#storage-clear)  
 &nbsp; &nbsp; ◦ [equals](#storage-equals)  
 &nbsp; &nbsp; ◦ [history](#storage-history)  
+&nbsp; &nbsp; ◦ [clearHistory](#storage-clear-history)  
 
 ---
 
@@ -4089,25 +4096,32 @@ await api.spotify.search({
 ## Storage
 **Simple key/value persistent storage**
 
-| Method                        | Description                                           |
-|-------------------------------|-------------------------------------------------------|
-| [`set`](#storage-set)         | Creates an entry with a set value                     |
-| [`get`](#storage-get)         | Retrieves the value of a stored key                   |
-| [`delete`](#storage-delete)   | Delete an entry                                       |
-| [`merge`](#storage-merge)     | Merge object into an existing value's object          |
-| [`push`](#storage-push)       | Push values into an existing value's array            |
-| [`export`](#storage-export)   | Export storage with mapped keys to values             |
-| [`all`](#storage-all)         | Retrieve all stored items                             |
-| [`has`](#storage-has)         | Checks if storage has a specified key                 |
-| [`entries`](#storage-entries) | Get storage's entries                                 |
-| [`keys`](#storage-keys)       | Get storage's keys                                    |
-| [`size`](#storage-size)       | Get the amount of entries in storage                  |
-| [`bytes`](#storage-bytes)     | Get the total size (in bytes) of storage              |
-| [`clear`](#storage-clear)     | Clear all entries from storage                        |
-| [`equals`](#storage-equals)   | Check if specified key's value equals specified value |
-| [`history`](#storage-history) | Retrieve a keys previous values with timestamps       |
+| Method                                   | Description                                           |
+|------------------------------------------|-------------------------------------------------------|
+| [`set`](#storage-set)                    | Creates an entry with a set value                     |
+| [`setMany`](#storage-setMany)            | Creates multiple entries at a time                    |
+| [`get`](#storage-get)                    | Retrieves the value of a stored key                   |
+| [`getMany`](#storage-getMany)            | Retrieves a key-value pair of multiple entries        |
+| [`delete`](#storage-delete)              | Deletes an entry                                      |
+| [`deleteMany`](#storage-deleteMany)      | Deletes multiple entries at a time                    |
+| [`merge`](#storage-merge)                | Merge object into an existing value's object          |
+| [`push`](#storage-push)                  | Push values into an existing value's array            |
+| [`export`](#storage-export)              | Export storage with mapped keys to values             |
+| [`filter`](#storage-filter)              | Filter storage with given predicate                   |
+| [`all`](#storage-all)                    | Retrieve all stored items                             |
+| [`has`](#storage-has)                    | Checks if storage has a specified key                 |
+| [`entries`](#storage-entries)            | Get storage's entries                                 |
+| [`keys`](#storage-keys)                  | Get storage's keys                                    |
+| [`values`](#storage-values)              | Get storage's values                                  |
+| [`size`](#storage-size)                  | Get the amount of entries in storage                  |
+| [`bytes`](#storage-bytes)                | Get the total size (in bytes) of storage              |
+| [`keys`](#storage-toJson)                | Export storage as a JSON string                       |
+| [`clear`](#storage-clear)                | Clear all entries from storage                        |
+| [`equals`](#storage-equals)              | Check if specified key's value equals specified value |
+| [`history`](#storage-history)            | Retrieve a keys previous values with timestamps       |
+| [`clearHistory`](#storage-clear-history) | Clear one or all entries in a key's history           |
 
-### [Storage Set](/api/utils/storage.js#L79)
+### [Storage Set](/api/utils/storage.js#L129)
 
 #### Parameters
 | Field            | Type     | Description                                         |
@@ -4150,19 +4164,68 @@ await api.utils.storage.set({
 }); //=> error
 ```
 
-### [Storage Get](/api/utils/storage.js#L41)
+### [Storage Set Many](/api/utils/storage.js#L200)
 
 #### Parameters
 | Field | Type   | Description                       |
 |-------|--------|-----------------------------------|
 | key   | string | The key to retrieve the value for |
+| value | any    | The value to assign to a key      |
 
 #### Example
 ```javascript
-api.utils.storage.get('password');
+await api.utils.storage.setMany({
+  keyname1: 'value1',
+  keyname2: 'value2',
+  keyname3: 'value3'
+})
 ```
 
-### [Storage Delete](/api/utils/storage.js#L142)
+
+### [Storage Get](/api/utils/storage.js#L58)
+
+#### Parameters
+| Field    | Type    | Description                                             |
+|----------|---------|---------------------------------------------------------|
+| key      | string  | The key to assign the value                             |
+| default? | boolean | Default value to assign a key if an entry doesn't exist |
+| delete?  | boolean | Whether to delete this entry after retrieving the value |
+
+#### Example
+```javascript
+await api.utils.storage.get('password'); //=> 'abcd1234'
+```
+#### Example 2
+```javascript
+// Set default value if value doesn't exist
+await api.utils.storage.get('password', {
+  default: 'defaultValue'
+}); //=> 'defaultValue'
+```
+#### Example 3
+```javascript
+// Delete entry after retrieving the value
+await api.utils.storage.get('password', {
+  delete: true
+}); //=> 'defaultValue'
+
+await api.utils.storage.get('password'); //=> null
+```
+
+### [Storage Get Many](/api/utils/storage.js#L80)
+
+#### Parameters
+| Field | Type             | Description                             |
+|-------|------------------|-----------------------------------------|
+| keys  | Array of strings | An array of keys to retrieve values for |
+
+#### Example
+```javascript
+await api.utils.storage.getMany(['password', 'password2', 'password3'])
+//=> { password: 'abc123', password2: '123abc', password3: undefined }
+```
+
+### [Storage Delete](/api/utils/storage.js#L214)
 
 #### Parameters
 | Field | Type   | Description                    |
@@ -4174,7 +4237,20 @@ api.utils.storage.get('password');
 await api.utils.storage.delete('password');
 ```
 
-### [Storage Merge](/api/utils/storage.js#L172)
+### [Storage Delete Many](/api/utils/storage.js#L235)
+
+#### Parameters
+| Field | Type             | Description                                |
+|-------|------------------|--------------------------------------------|
+| keys  | Array of strings | An array of keys to delete the entries for |
+
+#### Example
+```javascript
+await api.utils.storage.deleteMany(['password', 'password2', 'password3'])
+//=> [true, true, false]
+```
+
+### [Storage Merge](/api/utils/storage.js#L264)
 
 #### Parameters
 | Field | Type   | Description                                  |
@@ -4198,7 +4274,7 @@ await api.utils.storage.merge('example', { a: 'z' });
 //=> new value: { a: 'z', c: 'd' }
 ```
 
-### [Storage Push](/api/utils/storage.js#L209)
+### [Storage Push](/api/utils/storage.js#L301)
 
 #### Parameters
 | Field | Type   | Description                                                   |
@@ -4230,7 +4306,7 @@ await api.utils.storage.push('array', 1, 7, {
 //=> new value: [ 1, 2, [ 5, 6 ], 7 ]
 ```
 
-### [Storage Export](/api/utils/storage.js#L227)
+### [Storage Export](/api/utils/storage.js#L319)
 
 #### Example
 ```javascript
@@ -4238,7 +4314,20 @@ api.utils.storage.export();
 //=> {"password": {"value": "abcd1234"}}
 ```
 
-### [Storage All](/api/utils/storage.js#L361)
+### [Storage Filter](/api/utils/storage.js#L469)
+
+#### Parameters
+| Field     | Type     | Description            |
+|-----------|----------|------------------------|
+| predicate | Callback | The callback to invoke |
+
+#### Example
+```javascript
+api.utils.storage.filter((x) => x.key.includes('ass'));
+//=> [{ key: 'password', value: 'abc123' }]
+```
+
+### [Storage All](/api/utils/storage.js#L481)
 
 #### Example
 ```javascript
@@ -4250,7 +4339,7 @@ api.utils.storage.all();
 // ]
 ```
 
-### [Storage Has](/api/utils/storage.js#370)
+### [Storage Has](/api/utils/storage.js#490)
 
 #### Parameters
 | Field | Type   | Description      |
@@ -4262,7 +4351,7 @@ api.utils.storage.all();
 api.utils.storage.has('password');
 ```
 
-### [Storage Entries](/api/utils/storage.js#L379)
+### [Storage Entries](/api/utils/storage.js#L499)
 
 #### Example
 ```javascript
@@ -4270,7 +4359,7 @@ api.utils.storage.entries();
 //=> [ [ 'password', 'abcd1234' ], [ 'test', '4321dcba' ] ]
 ```
 
-### [Storage Keys](/api/utils/storage.js#L388)
+### [Storage Keys](/api/utils/storage.js#L508)
 
 #### Example
 ```javascript
@@ -4278,28 +4367,44 @@ api.utils.storage.keys();
 //=> ['password', 'stuff']
 ```
 
-### [Storage Size](/api/utils/storage.js#L396)
+### [Storage Values](/api/utils/storage.js#L517)
+
+#### Example
+```javascript
+api.utils.storage.keys();
+//=> ['password', 'stuff']
+```
+
+### [Storage Size](/api/utils/storage.js#L525)
 
 #### Example
 ```javascript
 api.utils.storage.size(); // 3
 ```
 
-### [Storage Bytes](/api/utils/storage.js#L404)
+### [Storage Bytes](/api/utils/storage.js#L533)
 
 #### Example
 ```javascript
 api.utils.storage.bytes(); // 23235 (bytes)
 ```
 
-### [Storage Clear](/api/utils/storage.js#L426)
+### [Storage toJson](/api/utils/storage.js#L542)
+
+#### Example
+```javascript
+api.utils.storage.toJson();
+//=> [{"key":"array","value":[1,2,[5,6],7]},{"key":"password","value":"abc123"}]
+```
+
+### [Storage Clear](/api/utils/storage.js#L555)
 
 #### Example
 ```javascript
 await api.utils.storage.clear(); // undefined
 ```
 
-### [Storage Equals](/api/utils/storage.js#L437)
+### [Storage Equals](/api/utils/storage.js#L566)
 
 #### Parameters
 | Field | Type   | Description                                 |
@@ -4312,7 +4417,7 @@ await api.utils.storage.clear(); // undefined
 api.utils.storage.equals('password', 'abcd1234'); // true
 ```
 
-### [Storage History](/api/utils/storage.js#L451)
+### [Storage History](/api/utils/storage.js#L583)
 
 #### Parameters
 | Field | Type   | Description                                |
@@ -4328,6 +4433,22 @@ api.utils.storage.history('password');
 //   { value: '4321dcba', timestamp: 1703037861827 },
 //   { value: '1234abcd', timestamp: 1703037890201 },
 // ]
+```
+
+### [Storage Clear History](/api/utils/storage.js#L599)
+
+#### Parameters
+| Field | Type   | Description                                |
+|-------|--------|--------------------------------------------|
+| key?  | string | The key of the entry to delete, optional   |
+
+#### Example
+```javascript
+// Clear history for a specific key
+api.utils.storage.clearHistory('password');
+
+// Clear all entries in history
+api.utils.storage.clearHistory();
 ```
 
 ---

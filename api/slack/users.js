@@ -10,7 +10,7 @@ module.exports = {
 
   /**
    * @summary
-   * ### [Get User's Info']{@link https://api.slack.com/methods/users.info}
+   * ### [Get User's Info]{@link https://api.slack.com/methods/users.info}
    * @example
    * await api.slack.users.info({
    *   user: 'U0680E4DA3S'

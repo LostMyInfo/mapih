@@ -33,12 +33,62 @@ const isObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
 
 /**
  * @example
- * api.utils.storage.get('password'); //=> 'abcd1234'
+ * await api.utils.storage.get('password'); //=> 'abcd1234'
+ *
+ * @example
+ * // Set default value if value doesn't exist
+ * await api.utils.storage.get('password', {
+ *   default: 'defaultValue'
+ * }); //=> 'defaultValue'
+ *
+ * @example
+ * // Delete entry after retrieving the value
+ * await api.utils.storage.get('password', {
+ *   delete: true
+ * }); //=> 'defaultValue'
+ *
+ * await api.utils.storage.get('password'); //=> null
  *
  * @param {string} key
- * @returns {any}
+ * @param {Object} [options]
+ * @param {any} [options.default] - Set default value if value doesn't exist
+ * @param {boolean} [options.delete] - Delete entry after retrieving the value
+ * @returns {Promise<any>}
  */
-const get = (key) => (find(key, _cache) || {}).value || null;
+const get = async (key, options = {}) => {
+  const value = (find(key, _cache) || {}).value || null;
+  if (value) {
+    if (options?.delete) await _del(key);
+    return value;
+  }
+  if (value === null && options?.default) {
+    _cache.push({ key, value: options.default });
+    await save(_cache);
+    return options?.default;
+  }
+};
+
+// ////////////////////// GETMANY ////////////////////////
+/**
+ * @example
+ * await api.utils.storage.getMany(['password', 'password2', 'password3'])
+ * //=> { password: 'abc123', password2: '123abc', password3: undefined }
+ *
+ * @param {Array<string>} keys
+ * @returns {Promise<{[x: string]: any}>}
+ */
+const getMany = async (keys = []) => {
+  /** @type {{[x: string]: any}} */
+  const results = {};
+  
+  await Promise.all(keys.map(async (key) => {
+    const value = await get(key);
+    results[key] = value;
+  }));
+
+  return results;
+};
+
 
 // //////////////////////// SET //////////////////////////
 /**
@@ -77,25 +127,27 @@ const get = (key) => (find(key, _cache) || {}).value || null;
  * @returns 
  */
 const set = async (options = { key: '', value: undefined }) => {
-  validateKeyVals(options);
+  
   const {
     key, value, ttl, ttlCb,
     allow_overwrite = options.allow_overwrite !== false
   } = options;
 
-  validateTTL(ttl);
-  validateTTLCallback(ttlCb);
+  validate(options);
 
   const oldValue = find(key, _cache);
+
   if (oldValue && JSON.stringify(options) == JSON.stringify(oldValue)) return;
   if (oldValue && 'allow_overwrite' in oldValue && !allow_overwrite) 
     throw new Error(`The value for \`${key}\` is not allowed to be overwritten.`);
 
-  if (oldValue)
-    if (!_history.length || (oldValue && oldValue !== value) || !_history.some(x => x.key === key)) {
-      !_history.length || !_history.some(x => x.key === key)
-        ? _history.push({ key, values: [[value, Date.now()]] })
-        : (_history.find((x) => x.key === key))?.values?.push([value, Date.now()]);
+  if (oldValue) 
+    if (!_history.length || oldValue.value !== value || !_history.some((x) => x.key === key)) {
+      if (!_history.length || !_history.some((x) => x.key === key)) {
+        if (!_history.find((x) => x.key === key)?.values?.some((y) => y.includes(value)))
+          _history.push({ key, values: [[value, Date.now()]] });
+      } else if (!_history.find((x) => x.key === key)?.values?.some((y) => y.includes(value)))
+        (_history.find((x) => x.key === key))?.values?.push([value, Date.now()]);
       await save(_history, 'history');
     }
 
@@ -131,6 +183,26 @@ const set = async (options = { key: '', value: undefined }) => {
   return value;
 };
 
+// ////////////////////// SETMANY ////////////////////////
+/**
+ * @example
+ * await api.utils.storage.setMany({
+ *   keyname1: 'value1',
+ *   keyname2: 'value2',
+ *   keyname3: 'value3'
+ * })
+ *
+ * @param {Object} entries
+ * @param {string} entries.key
+ * @param {any} entries.value
+ * @returns {Promise<undefined>}
+ */
+const setMany = async (entries = { key: '', value: undefined }) => {
+  const setPromises = Object.entries(entries).map(([key, value]) =>
+    set({ key, value }));
+  await Promise.all(setPromises);
+};
+
 // ////////////////////// DELETE ////////////////////////
 /**
  * @example
@@ -149,6 +221,26 @@ const _delete = async (key) => {
     }
   }
   return false;
+};
+
+
+/**
+ * @example
+ * await api.utils.storage.deleteMany(['password', 'password2', 'password3]);
+ * //=> [true, true, false]
+ * 
+ * @param {string[]} keys - Array of keys to delete
+ * @returns {Promise<boolean[]>} - Promise resolving to an array of booleans indicating success or failure for each deletion operation
+ */
+const deleteMany = async (keys = []) => {
+  const deletionResults = [];
+
+  for (const key of keys) {
+    const success = await _delete(key);
+    deletionResults.push(success);
+  }
+
+  return deletionResults;
 };
 
 // ////////////////////// MERGE /////////////////////////
@@ -342,12 +434,40 @@ function validateTTLCallback(ttlCb) {
     throw new Error('ttlCb must be a function');
 }
 
+/**
+ * @param {Object} [options]
+ * @param {string} [options.key]
+ * @param {any} [options.value]
+ * @param {number} [options.ttl]
+ * @param {Function} [options.ttlCb]
+ */
+function validate(options) {
+  if (!options)
+    throw new Error('Please provide the required parameters');
+  validateKeyVals(options);
+  validateTTL(options.ttl);
+  validateTTLCallback(options.ttlCb);
+}
+
 module.exports = {
   set,
+  setMany,
   get,
+  getMany,
+  deleteMany,
   merge,
   push,
   
+  /**
+   * @example
+   * api.utils.storage.filter((x) => x.key.includes('ass'));
+   * //=> [{ key: 'password', value: 'abc123' }]
+   * 
+   * @param {(file: _File) => boolean} predicate 
+   * @returns {_File[]}
+   */
+  filter: (predicate) => _cache.filter(predicate),
+
   /**
    * @example
    * api.utils.storage.all();
@@ -387,6 +507,15 @@ module.exports = {
    */
   keys: () => _cache.map((e) => e.key),
   
+  /**
+   * @example
+   * api.utils.storage.values();
+   * //=> ['abc123', '123abc']
+   *
+   * @returns {Array<string>}
+   */
+  values: () => _cache.map((e) => e.key),
+
   /**
    * @example
    * api.utils.storage.size(); //=> 2
@@ -432,17 +561,20 @@ module.exports = {
    *
    * @param {string} key
    * @param {any} value
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
-  equals: (key, value) => get(key) && get(key) === value,
+  equals: async (key, value) => {
+    const found = await get(key);
+    return found && found === value;
+  },
 
   /**
    * @example
    * api.utils.storage.history('password');
    * // [
-   * //   { key: 'first', timestamp: 1703037628164 },
-   * //   { key: 'second', timestamp: 1703037861827 },
-   * //   { key: 'third', timestamp: 1703037890201 }
+   * //   { value: 'first', timestamp: 1703037628164 },
+   * //   { value: 'second', timestamp: 1703037861827 },
+   * //   { value: 'third', timestamp: 1703037890201 }
    * // ]
    *
    * @param {string} key
@@ -450,8 +582,24 @@ module.exports = {
    */
   history: (key) => (_history.find((x) => x.key === key))?.values?.map((x) => ({ 
     value: x[0], timestamp: x[1] 
-  }))
+  })),
 
+  /**
+   * @example
+   * // Clear history for a specific key
+   * api.utils.storage.clearHistory('password');
+   * 
+   * // Clear all entries in history
+   * api.utils.storage.clearHistory();
+   *
+   * @param {string} [key]
+   * @param {any} [filtered]
+   * @returns {undefined}
+   */
+  clearHistory: (key, filtered = []) => {
+    if (key) filtered = _history.filter((x) => x.key !== key);
+    writeFile(HIST, JSON.stringify(filtered));
+  }
   
 };
 

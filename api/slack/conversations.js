@@ -109,6 +109,27 @@ module.exports = {
       }
     }),
   
+  /**
+   * @summary
+   * ### [Reverses conversation archival]{@link https://api.slack.com/methods/conversations.unarchive}
+   * @example
+   * await api.slack.conversations.unarchive({
+   *   channel: 'G1234567890'
+   * });
+   * @memberof module:conversations#
+   * @function unarchive
+   * @param {Object} params
+   * @param {string} params.channel - ID of conversation to unarchive
+   * @returns {Promise<{ok: boolean}>}
+   */
+  unarchive: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.unarchive',
+      body: {
+        channel: params.channel
+      }
+    }),
   
   /**
    * @summary
@@ -285,6 +306,91 @@ module.exports = {
     return res.channel;
   },
 
+  /**
+   * @summary
+   * ### [Approves an invitation to a Slack Connect channel]{@link https://api.slack.com/methods/conversations.approveSharedInvite}
+   * @example
+   * await api.slack.conversations.approveSharedInvite({
+   *   invite_id: '123123123'
+   * });
+   * @memberof module:conversations#
+   * @function approveSharedInvite
+   * @param {Object} params
+   * @param {string} params.invite_id - ID of the shared channel invite to approve
+   * @param {string} [params.target_team] - The team or enterprise id of the other party involved in the invitation you are approving
+   * @returns {Promise<{ok: boolean}>}
+   */
+  approveSharedInvite: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.approveSharedInvite',
+      body: {
+        invite_id: params.invite_id,
+        target_team: params.target_team ?? undefined
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Accepts an invitation to a Slack Connect channel]{@link https://api.slack.com/methods/conversations.acceptSharedInvite}
+   * Must provide either `invite_id` or `channel_id`.
+   * 
+   * @example
+   * await api.slack.conversations.acceptSharedInvite({
+   *   channel_name: 'something-cool',
+   *   channel_id: '123456'
+   * });
+   * @memberof module:conversations#
+   * @function acceptSharedInvite
+   * @param {Object} params
+   * @param {string} params.channel_name - Name of the channel. If the channel does not exist already in your workspace, this name is the one that the channel will take.
+   * @param {string} [params.channel_id] - ID of the channel that you'd like to accept
+   * @param {string} [params.invite_id] - ID of the invite that you’d like to accept
+   * @param {boolean} [params.free_trial_accepted] - Whether you'd like to use your workspace's free trial to begin using Slack Connect
+   * @param {boolean} [params.is_private] - Whether the channel should be private
+   * @param {string} [params.team_id] - The ID of the workspace to accept the channel in
+   * @returns {Promise<{ok: boolean, implicit_approval?: boolean, channel_id?: string, invite_id?: string}>}
+   */
+  acceptSharedInvite: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.acceptSharedInvite',
+      body: {
+        channel_name: params.channel_name,
+        channel_id: params.channel_id ?? undefined,
+        invite_id: params.invite_id ?? undefined,
+        free_trial_accepted: params.free_trial_accepted || false,
+        is_private: params.is_private || false,
+        team_id: params.team_id ?? undefined
+      }
+    }),
+  
+  /**
+   * @summary
+   * ### [Declines a Slack Connect channel invite]{@link https://api.slack.com/methods/conversations.declineSharedInvite}
+   * 
+   * @example
+   * await api.slack.conversations.declineSharedInvite({
+   *   channel_name: 'something-cool',
+   *   invite_id: '123456'
+   * });
+   * @memberof module:conversations#
+   * @function declineSharedInvite
+   * @param {Object} params
+   * @param {string} params.invite_id - ID of the Slack Connect invite to decline
+   * @param {string} [params.target_team] - The team or enterprise id of the other party involved in the invitation you are declining
+   * @returns {Promise<{ok: boolean}>}
+   */
+  declineSharedInvite: async (params) =>
+    slackHandler({
+      method: 'POST',
+      endpoint: 'conversations.declineSharedInvite',
+      body: {
+        invite_id: params.invite_id,
+        target_team: params.target_team ?? undefined
+      }
+    }),
+  
   /**
    * @summary
    * ### [Lists shared channel invites that have been generated or received but have not been approved by all parties]{@link https://api.slack.com/methods/conversations.listConnectInvites}
