@@ -73,7 +73,7 @@ module.exports = {
           ? await response[`${params.response_type}`]()
           : await response.clone().json();
       } catch {
-        console.log('CATCH');
+        // console.log('CATCH');
         data = data || await response.text();
       }
 

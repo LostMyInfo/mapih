@@ -122,7 +122,7 @@ async function handler(options) {
     const _headers = [
       ['Content-Type', `${options.type === 'content' ? 'text/plain' : 'application/json; charset=UTF-8'}`]
     ];
-    console.log(options);
+    // console.log(options);
     
     /**
      * @type {{[x: string]: {url: string, auth: string, header?: [string, string]}}}
@@ -162,7 +162,7 @@ async function handler(options) {
     };
     
     const { url, auth, header = undefined } = handlers[options.handler];
-    console.log('auth in handler():', auth);
+    // console.log('auth in handler():', auth);
 
     if (header)
       _headers.push(header);
@@ -227,9 +227,9 @@ async function paypalHandler(options) {
 async function paypalAccessToken(refresh = false) {
   const oldToken = await get('paypalAuth') || {};
   if (!oldToken || oldToken?.expires <= Date.now()) {
-    if (refresh) { console.log('refresh === true'); }
+    if (refresh) { /*console.log('refresh === true');*/ }
     else oldToken.access_token = await paypalAccessToken(true);
-    console.log('refresh2:', refresh);
+    // console.log('refresh2:', refresh);
   }
 
   if (oldToken?.access_token) return oldToken.access_token;
@@ -343,7 +343,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
   const oauth2 = require(`../${service}/oauth2`);
   const token = await get(`${service}Auth`);
   
-  console.log(type + ' token in oauthToken():', token);
+  // console.log(type + ' token in oauthToken():', token);
 
   if (token && token.expires <= Date.now())
     token.access_token = await oauth2.refresh();
@@ -363,7 +363,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
 
   // @ts-ignore
   const credentials = api[`get_${service}_token`]();
-  console.log('credentials in oauthToken():', credentials);
+  // console.log('credentials in oauthToken():', credentials);
   if (!credentials?.access_token && !credentials?.user && !process.env[`${service}_access_token`] && !process.env[`${service}_user_token`])
     throw await oauth2.authorize();
 
