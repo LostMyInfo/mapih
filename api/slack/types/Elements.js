@@ -1,8 +1,9 @@
+// @ts-check
 /**
  * @summary [Button Element]{@link https://api.slack.com/reference/block-kit/block-elements#button}
  * @typedef {Object} ButtonElement
  * @property {string} type - Type of element. In this case, always `button`
- * @property {PlainTextObject} text Defines the button's text - maximum length: 75 characters.
+ * @property {PlainTextElement} text Defines the button's text - maximum length: 75 characters.
  * @property {string} [url] A URL to load in the user's browser when the button is clicked - maximum length: 3000
  * @property {string} [value] The value to send along with the [interaction payload]{@link https://api.slack.com/interactivity/handling#payloads} - maximum length: 2000
  * @property {string} [style] Decorative buttons with alternative visual color schemes.
@@ -41,7 +42,7 @@
 /**
  * @summary [Datetime Picker Element]{@link https://api.slack.com/reference/block-kit/block-elements#datetimepicker}
  * @description Allows users to select both a date and a time of day, formatted as a Unix timestamp.
- * @typedef {Object} DatetimePickerElement
+ * @typedef {Object} DateTimePickerElement
  * @property {string} type - Type of element. In this case, always `datetimepicker`
  * @property {string} [action_id] An identifier for this action - maximum length: 255
  * @property {Option[]} [initial_date_time] The initial date and time that is selected when the element is loaded, represented as a UNIX timestamp in seconds.
@@ -59,4 +60,13 @@
  * @property {DispatchActionConfiguration} [dispatch_action_config] Determines when during text input the element returns a `block_actions` payload.
  * @property {boolean} [focus_on_load] Indicates whether the element will be set to auto focus within the `view object`. Only one element can be set to true.
  * @property {PlainTextElement} [placeholder] Defines the placeholder text shown in the email input - maximum length: 150 
+ */
+
+
+/**
+ * @typedef {Object} SlackDescriptionElement
+ * @property {boolean} [emoji]
+ * @property {string} [type]
+ * @property {string} [text]
+ * @property {boolean} [verbatim]
  */

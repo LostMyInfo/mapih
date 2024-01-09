@@ -2,8 +2,9 @@
 // @ts-check
 'use-strict';
 
-const { https } = require('../utils/newhttps');
-const { attemptHandler, extendPayload, isValidMedia, token } = require('../resources/functions');
+const { attemptHandler, token } = require('../resources/handlers');
+const { https } = require('../utils/https');
+const { extendPayload, isValidMedia } = require('../resources/functions');
 const { embedModifier } = require('../resources/functions');
 const { ResponseError } = require('../resources/Errors');
 
@@ -669,7 +670,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       method,
       body: form,
       headers: {
-        'Authorization': `Bot ${token('discord')}`
+        'Authorization': `Bot ${token('discord', 'discord')}`
       }
     });
 

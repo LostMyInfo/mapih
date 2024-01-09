@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
-
-const { attemptHandler, sendAttachment, imageData, getBadges, retrieveDate, avatarFromObject, generateCDN } = require('../resources/functions');
+const { attemptHandler, sendAttachment } = require('../resources/handlers');
+const { imageData, getBadges, retrieveDate, avatarFromObject, generateCDN } = require('../resources/functions');
 
 // Users
 // https://discord.com/developers/docs/resources/user#users-resource

@@ -1,8 +1,8 @@
 // @ts-check
 'use-strict';
 
-const { attemptHandler, getAppId, buildQueryString, imageData } = require('../resources/functions');
-
+const { getAppId, buildQueryString, imageData } = require('../resources/functions');
+const { attemptHandler } = require('../resources/handlers');
 // Applications
 // https://discord.com/developers/docs/interactions/application-commands/
 

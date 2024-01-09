@@ -11,3 +11,8 @@ onsocketLogo.png
 jsdoc.json
 docs
 test1.js
+.hist
+.listeners
+.stor
+server.js
+functions.js

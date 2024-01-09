@@ -6,104 +6,12 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
 // @ts-check
 
-const { https } = require('../utils/newhttps');
 const { USER_FLAGS, PERMISSION_NAMES } = require('../../enum');
 const apng = require('../utils/apng');
 const sharp = require('sharp');
 const { imageInfo } = require('../utils/imageInfo');
-const { ResponseError } = require('./Errors');
+const { attemptHandler } = require('./handlers');
 
-/**
- * @global
- * @typedef {'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} Method
- */
-
-/**
- * API Handler Creator
- * @param {Object} params
- * @param {Method} params.method
- * @param {string} params.endpoint
- * @param {Object} [params.body]
- * @param {?string} [params.reason]
- * @returns {Promise<*>}
- * @private
- */
-async function attemptHandler(params) {
-  // console.log('params in attemptHandler:', params);
-  const headers = new Headers({
-    'Authorization': `Bot ${token('discord')}`
-  });
-
-  if (!params.endpoint.includes('prune'))
-    headers.append('content-type', 'application/json');
-
-  if (params.reason)
-    headers.append('x-audit-log-reason', params.reason);
-    
-  try {
-
-    return https({
-      method: params.method,
-      url: `https://discord.com/api/v10/${params.endpoint}`,
-      headers,
-      body: params.body ? JSON.stringify(params.body) : ''
-    });
-    // console.log('attempt in functions', attempt)
-      
-  } catch (e) {
-    throw e;
-  }
-}
-
-/**
- * Handles multipart form-data for Discord attachments
- * @param {*} params
- * @param {string} path 
- * @param {Method} method
- * @private
- */
-async function sendAttachment(params, path, method) {
-  try {
-    const form = new FormData();
-    
-    for (const attachment of params.attachments) {
-      if (!attachment.file || !attachment.filename)
-        throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
-
-      if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
-        const response = await fetch(attachment.file);
-        attachment.file = await response.blob();
-      } else if (!(attachment.file instanceof Blob))
-        throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
-  
-      form.append(`files[${params.attachments.indexOf(attachment)}]`, attachment.file, attachment.filename);
-    }
-    
-    params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
-      id: index,
-      filename: a.filename,
-      description: a.description || ''
-    }));
-
-    form.append('payload_json', JSON.stringify(params));
-
-    const response = await fetch(`https://discord.com/api/v10/${path}`, {
-      method,
-      body: form,
-      headers: {
-        'Authorization': `Bot ${token('discord')}`
-      }
-    });
-
-    if (!response.ok)
-      throw new ResponseError(await response.json(), response, 'discord_error');
-
-    return response.json();
-    
-  } catch (e) {
-    throw e;
-  }
-}
 async function getAppId() {
   return (await attemptHandler({
     method: 'GET',
@@ -350,8 +258,10 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
       image = sharp(buffer, { animated: true });
       
       if (startHeight !== height || startWidth !== width)
+        // @ts-ignore
         image = (await apng.sharpToApng(image, 'buffer', { height, width }))?.[0].buffer;
       else
+        // @ts-ignore
         image = (await apng.sharpToApng(image, 'buffer'))?.[0].buffer;
             
     } else if (type === 'image/apng') {
@@ -397,6 +307,7 @@ async function reduceSize(buffer, type, size, MAX_SIZE = 524288) {
     if (type === 'image/png') {
       image = await sharp(buffer).resize({ width, height }).png().toBuffer();
     } else if (type === 'image/gif') {
+      // @ts-ignore
       image = (await apng.sharpToApng(
         sharp(buffer, { animated: true }),
         'buffer',
@@ -456,13 +367,34 @@ function retrieveDate(value, snowflake, style) {
  * generateCDN(params, 'banner');
  * generateCDN(params, 'splash');
  * ```
- * @param {Guild | User | Role} object
- * @param {'icon' | 'banner' | 'splash' | 'discovery_splash'} media
- * @param {'128' | '256' | '512' | '1024' | '4096'} [size]
+ * @param {any} object
+ * @param {('icon' | 'splash' | 'banner' | 'discovery_splash')} media
+ * @param {('128' | '256' | '512' | '1024' | '4096')} [size]
  * @param {string} x
  * @returns {string | undefined} url
  */
 function generateCDN(object, media, size = '1024', x = '') {
+
+  x = {
+    icon: 'icons',
+    splash: 'splashes',
+    banner: 'banners',
+    discovery_splash: 'discovery-splashes'
+  }[media] || x;
+
+  let url;
+  if (object[media] && object.id) {
+    const ext = object[media].startsWith('a_') ? 'gif' : 'png';
+    url = `https://cdn.discordapp.com/${x}/${object.id}/${object[media]}.${ext}?size=${size}`;
+    if (x === 'icons' && object.hoist) {
+      x = 'role-icons';
+      url = `https://cdn.discordapp.com/${x}/${object.id}/${object[media]}.${ext}?size=${size}`;
+    }
+  }
+  return url || undefined;
+
+
+  /*
   media === 'icon' ? x = 'icons' : '';
   media === 'splash' ? x = 'splashes' : '';
   media === 'banner' ? x = 'banners' : '';
@@ -476,6 +408,7 @@ function generateCDN(object, media, size = '1024', x = '') {
     
   }
   return url ?? undefined;
+  */
 }
 
 /**
@@ -658,7 +591,7 @@ function embedModifier(embeds) {
     }
     if (payload.message.interaction?.member?.user) {
       payload.message.interaction.member.user.badges = getBadges(payload.message.interaction.member.user.public_flags);
-      payload.message.interaction.member.displayAvatar = avatarFromObject(payload.message.interaction.member.user.id, payload.message.interaction.member.user.avatar, guild_id, payload.message.interaction.avatar ?? payload.message.interaction.member?.avatar);
+      payload.message.interaction.member.displayAvatar = avatarFromObject(payload.message.interaction.member.user.id, payload.message.interaction.member.user.avatar, guild_id, payload.message.interaction.user?.avatar ?? payload.message.interaction.member?.avatar);
       payload.message.interaction.member.displayName = payload.message.interaction.member.nick ?? payload.message.interaction.member.user.display_name ?? payload.message.interaction.member.user.global_name ?? payload.message.interaction.member.user.username;
       payload.message.interaction.member.user.created_at = retrieveDate(payload.message.interaction.member.user.id, true);
     }
@@ -685,7 +618,9 @@ function embedModifier(embeds) {
   }
   if (payload.data) {
     // payload.data.trueType = ApplicationCommandType[payload.data.type];
+    // @ts-ignore
     if (payload.data?.resolved) {
+      // @ts-ignore
       for (const [object, values] of Object.entries(payload.data.resolved)) {
         for (const [id, value] of Object.entries(values)) {
           let userObject;
@@ -726,60 +661,6 @@ function embedModifier(embeds) {
   return payload;
 }
 
-/**
- * API Handler Creator
- * @param {Object} options
- * @param {Method} options.method
- * @param {string} options.endpoint
- * @param {Object} [options.body]
- * @returns {Promise<*>}
- * @private
- */
-async function slackHandler(options) {
-  try {
-
-    return https({
-      url: `https://slack.com/api/${options.endpoint}`,
-      method: options.method || 'GET',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': `Bearer xoxb-${token('slack')}`
-      },
-      ...(options.body && { body: options.body })
-    });
-
-  } catch (error) {
-    // console.log('error in slackHandler catch:\n', JSON.stringify(error, null, 2));
-    throw error;
-  }
-}
-
-/**
- * API Handler Creator
- * @param {Object} options
- * @param {Method} options.method
- * @param {string} options.endpoint
- * @param {Object} [options.body]
- * @returns {Promise<*>}
- * @private
- */
-async function spotifyHandler(options) {
-  try {
-    const headers = new Headers({
-      'Authorization': `Bearer ${await spotifyAccessToken()}`
-    });
-
-    return https({
-      method: options.method,
-      url: `https://api.spotify.com/v1/${options.endpoint}`,
-      headers,
-      body: options.body ? JSON.stringify(options.body) : ''
-    });
-
-  } catch (error) {
-    throw error;
-  }
-}
 
 /**
    * @param {string} url
@@ -802,189 +683,34 @@ function buildQueryString(url, params, encode = false) {
 }
 
 /**
- * @param {string} type
- * @returns {string}
+ * @param {Array<string>} param0
+ * @returns {string} - The formatted URL with query parameters.
  */
-function token(type) {
-  const token = type === 'discord'
-    ? require('../../Api').get_discord_token() || process.env.token
-    : require('../../Api').get_slack_token() || process.env.slackToken;
-      
-  if (!token) throw new Error(
-    type === 'discord'
-      ? 'Bot token not set. Please initialize the library first.'
-      : 'Slack token not set. Please initialize the library first.'
-  );
-  return token;
-}
-
-async function spotifyAccessToken() {
-  const credentials = require('../../Api').get_spotify_token();
-  // console.log(credentials);
-  if (!credentials) throw new Error(
-    'Spotify credentials not set. Please initialize the library first.'
+function buildQueryStringFromArrays([url, ...rest]) {
+  const params = new URLSearchParams(
+    rest
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, value]) => [key, encodeURIComponent(value)])
   );
 
-  // const { client_id, client_secret } = (await (require('../../Api').get_spotify_token())) || process.env.spotify;
-  const data = new URLSearchParams({
-    client_id: credentials.client_id || process.env.spotify_client_id,
-    client_secret: credentials.client_secret || process.env.spotify_client_secret,
-    grant_type: 'client_credentials'
-  }).toString();
-  
-  const response = await https({
-    method: 'post',
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: data
-  });
-  
-  return response.access_token;
+  return params.toString() ? `${url}?${params.toString()}` : url;
 }
 
-/**
- * @param {string} code 
- * @returns 
- */
-async function spotifyAuth(code) {
-  const credentials = require('../../Api').get_spotify_token();
-  if (!credentials || !credentials.redirect_uri) throw new Error(
-    'Spotify redirect_uri not set'
-  );
-  // console.log('code:', code);
-  const client_id = credentials.client_id || process.env.spotify_client_id,
-    client_secret = credentials.client_secret || process.env.spotify_client_secret,
-    redirect_uri = credentials.redirect_uri || process.env.spotify_redirect_uri;
-
-  const url = buildQueryString('https://accounts.spotify.com/api/token', {
-    code: code,
-    redirect_uri: redirect_uri,
-    grant_type: 'authorization_code'
-  });
-
-  return https({
-    method: 'post',
-    url,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-    }
-  });
-}
-
-/**
- * 
- * @param {string} object 
- * @param {*} payload 
- * @param {string} [sort] 
- * @returns {SpotifyReturn|SpotifyTrack[]}
- */
-function buildSpotifyResponse(object, payload, sort) {
-  const prop = object.split(':')[0];
-  const top_tracks = object === 'tracks:top';
-  const artist_albums = object === 'artist:albums';
-
-  /**
-   * @type {SpotifyReturn|{tracks: SpotifyTrack[]}}
-   */
-  const spotifyObject = {
-    [prop]: []
-  };
-
-  if (top_tracks) {
-    spotifyObject.total = payload[prop].total;
-    spotifyObject.limit = payload[prop].limit;
-  }
-
-  const items = top_tracks ? payload['tracks'] : artist_albums ? payload.items : payload[prop].items;
-  for (const item of items) {
-    
-    /**
-     * @param {*} object 
-     * @returns {SpotifyImages|undefined}
-     */
-    const buildImages = (object) => {
-      const path = object === 'album' || top_tracks
-        ? item.album?.images
-        : item.images;
-      let images = {
-        large: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 640))?.url,
-        medium: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 320 || x.height === 300))?.url,
-        small: (path?.find((/** @type {{ height: number; }} */ x) => x.height === 160))?.url
-      };
-      images = images ? removeFalsyFromObject(images) : undefined;
-      if (images.large || images.medium || images.small)
-        return images;
-    };
-
-    let artists = [];
-    if (item.artists && item.artists.length) {
-      for (const artist of item.artists)
-        artists.push({
-          name: artist.name,
-          id: artist.id,
-          spotify_url: artist.external_urls?.spotify,
-          uri: artist.uri
-        });
-    }
-
-    artists = artists ? removeFalsyFromArray(artists) : undefined;
-    
-    let album = item.album ? {
-      name: item.album?.name,
-      type: item.album?.album_type,
-      tracks: item.album?.total_tracks,
-      is_playable: item.album?.is_playable,
-      release_date: item.album?.release_date,
-      spotify_url: item.album?.external_urls?.spotify,
-      images: buildImages('album') ? buildImages('album') : undefined
-    } : undefined;
-
-    album = album ? removeFalsyFromObject(album) : undefined;
-
-    spotifyObject[prop].push({
-      name: item.name,
-      id: item.id,
-      explicit: item.explicit,
-      duration_seconds: Math.floor(item.duration_ms / 1000),
-      popularity: item.popularity,
-      followers: item.followers?.total,
-      genres: item.genres,
-      images: buildImages('tracks') ? buildImages('tracks') : undefined,
-      spotify_url: item.external_urls?.spotify,
-      preview_url: item.preview_url,
-      uri: item.uri,
-      artists: artists.length ? artists : undefined,
-      album
-    });
-  }
-  
-  spotifyObject[prop] = removeFalsyFromArray(spotifyObject[prop]);
-
-  if (sort)
-    spotifyObject[prop].sort((/** @type {{ [x: string]: number; }} */ a, /** @type {{ [x: string]: number; }} */ b) => {
-      return b[sort] - a[sort];
-    });
-  
-  return top_tracks ? spotifyObject[prop] : spotifyObject;
-}
 
 /**
  * 
  * @param {*} obj
- * @returns 
+ * @returns {any}
  */
 function removeFalsyFromObject(obj) {
   return Object.fromEntries(
-    Object.entries(obj).filter(([, v]) => v !== undefined)
+    Object.entries(obj).filter(([, v]) => v !== undefined && v !== null && v !== '')
   );
 }
 
 /**
  * @param {Array<*>} arr 
- * @returns 
+ * @returns {any}
  */
 const removeFalsyFromArray = (arr) => {
   return arr.map(obj => {
@@ -1008,14 +734,9 @@ module.exports = {
   retrieveDate,
   isValidJSON,
   extendPayload,
-  slackHandler,
-  spotifyHandler,
   buildQueryString,
-  token,
-  attemptHandler,
-  sendAttachment,
   getAppId,
   removeFalsyFromArray,
   removeFalsyFromObject,
-  buildSpotifyResponse
+  buildQueryStringFromArrays
 };

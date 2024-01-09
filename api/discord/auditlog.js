@@ -2,7 +2,8 @@
 'use strict';
 
 const { AuditLogEvents, channelType } = require('../../enum');
-const { attemptHandler, retrieveDate, getBadges, buildQueryString } = require('../resources/functions');
+const { retrieveDate, getBadges, buildQueryString } = require('../resources/functions');
+const { attemptHandler } = require('../resources/handlers');
 
 /**
  * @file API endpoint for retrieving Guild Audit Logs

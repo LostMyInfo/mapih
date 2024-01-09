@@ -26,11 +26,12 @@ export type DiscordErrorErrors = any | {
 };
 export class ResponseError extends Error {
     /**
-     * @param {DiscordError} res
-     * @param {Response} response
+     * @param {?DiscordError} res
+     * @param {?Response} response
      * @param {string} type
+     * @param {string} [content]
      */
-    constructor(res: DiscordError, response: Response, type: string);
+    constructor(res: ?DiscordError, response: ?Response, type: string, content?: string);
     type: string;
     status: number | undefined;
     statusText: string | undefined;

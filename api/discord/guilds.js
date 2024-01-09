@@ -1,8 +1,8 @@
 // @ts-check
 /* eslint-disable node/no-unsupported-features/es-syntax */
 'use strict';
-
-const { attemptHandler, imageData, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload, token } = require('../resources/functions');
+const { attemptHandler, token } = require('../resources/handlers');
+const { imageData, getBadges, resizeImage, retrieveDate, avatarFromObject, parsePermissions, generateCDN, extendPayload } = require('../resources/functions');
 const { ScheduledEventStatus, ScheduledEventEntityType } = require('../../enum');
 const { ResponseError } = require('../resources/Errors');
 
@@ -1763,7 +1763,7 @@ module.exports = {
           method: 'POST',
           body: form,
           headers: {
-            'Authorization': `Bot ${token('discord')}`
+            'Authorization': `Bot ${token('discord', 'discord')}`
           }
         });
 

@@ -26,7 +26,7 @@
 2. Discord  
     • Add a variable named **`token`** and assign it to your Discord bot's token  
 3. Slack (optional)  
-    • Add a variable named **`slackToken`** and assign it to your Slack API key  
+    • Add a variable named **`slack_bot_token`** and assign it to your Slack API key  
 4. Spotify (optional)  
     • Add a variable named **`client_id`** and assign it to your Spotify Web API client_id  
     • Add a variable named **`client_secret`** and assign it to your Spotify Web API client_secret
@@ -34,11 +34,11 @@
 ###### Example .env file
 ```ini
 token='discord bot token'
-slackToken='slack api key'
+slack_bot_token='slack api key'
 client_id='spotify web api client_id'
 client_secret='spotify web api client_secret'
 ```
-<!-- Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slackToken` for Slack). -->
+<!-- Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slack_bot_token` for Slack). -->
 
 #### Option 2: Using Initialization Function
 ```javascript
@@ -72,7 +72,7 @@ mapih.initialize({
 ---
 
 ## Table of Contents
-## | [Discord](#discord-methods) | [Slack](#slack-methods) | [Spotify](#spotify-methods) | [Utils](#utils-methods) |
+### | [Discord](#discord-methods) | [Slack](#slack-methods) | [Spotify](#spotify-methods) | [Utils](#utils-methods) |
 
 ### [Discord Methods](#discord)
 **• [Applications](#applications)**  
@@ -2150,7 +2150,7 @@ await api.discord.channels.messages.update({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.bulkDelete({
+await api.discord.channels.messages.destroy({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2168,7 +2168,7 @@ await api.discord.channels.messages.bulkDelete({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.destroy({
+await api.discord.channels.messages.bulkDelete({
   channel_id: '0000000000',
   messages: [ 
     '0000000000',
@@ -2490,6 +2490,7 @@ await api.discord.channels.threads.getAllJoinedPrivateArchived({
 | Method                                              | Description                                                 |
 |-----------------------------------------------------|-------------------------------------------------------------|
 | [`create`](#create-reaction)                        | Create a reaction for the message                           |
+| [`createMany`](#create-multiple-reactions)          | Create multiple reactions to a message at once              |
 | [`deleteOwn`](#delete-own-reaction)                 | Delete a reaction the current user has made for the message |
 | [`deleteUser`](#delete-user-reactions)              | Deletes another user's reaction                             |
 | [`deleteAll`](#delete-all-reactions)                | Deletes all reactions on a message                          |
@@ -2511,6 +2512,30 @@ await api.discord.channels.reactions.create({
   channel_id: '0000000000',
   message_id: '0000000000',
   emoji: 'name:id'
+});
+```
+
+### [Create Multiple Reactions](https://discord.com/developers/docs/resources/channel#create-reaction)
+
+#### Parameters
+| Field      | Type      | Description                                                                                      |
+|------------------------|--------------------------------------------------------------------------------------------------|
+| channel_id | snowflake | The id of the channel                                                                            |
+| message_id | snowflake | The id of the message                                                                            |
+| emojis     | string[]  | An array of emoji parameters                                                                     |
+| delay?     | number    | Amount of millseconds to wait between reactions. For use when getting rate-limited. Default 300. |
+
+#### Example
+```javascript
+await api.discord.channels.reactions.createMany({
+  channel_id: '0000000000',
+  message_id: '0000000000',
+  emojis: [
+    'name:id:',
+    'name:id:',
+    'name:id:'
+  ],
+  delay: 200
 });
 ```
 

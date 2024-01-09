@@ -1,14 +1,48 @@
+/* eslint-disable node/no-unsupported-features/node-builtins */
 // @ts-check
 'use-strict';
+const { https } = require('../utils/https');
+const { attemptHandler } = require('../resources/handlers');
 
 /**
  * @file OAuth2 endpoints
  * @module oauth2
  */
 
-const { https } = require('../utils/newhttps');
 
 module.exports = {
+
+  /**
+   * @summary
+   * ### [Get Current Bot Application Information]{@link https://discord.com/developers/docs/topics/oauth2#get-current-bot-application-information}
+   * @example
+   * await api.discord.oauth2.appInfo();
+   * @memberof module:oauth2#
+   * @function appInfo
+   * @returns {Promise<Application>} The bots [Application]{@link https://discord.com/developers/docs/resources/application#application-object} object
+   */
+  appInfo: async () =>
+    attemptHandler({
+      method: 'GET',
+      endpoint: 'oauth2/token'
+    }),
+  
+  /**
+   * @summary
+   * ### [Get Current Authorization Information]{@link https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information}
+   * @example
+   * await api.discord.oauth2.authorizationInfo();
+   * @memberof module:oauth2#
+   * @function authorizationInfo
+   * @returns {Promise<{application: Application, scopes: Array<string>, expires: ISO8601Timestamp, user?: User}>} Returns info about the current authorization. Requires authentication with a bearer token.
+   */
+  /*
+  authorizationInfo: async () =>
+    attemptHandler({
+      method: 'GET',
+      endpoint: 'oauth2/@me'
+    })
+  */
 
   /**
    * @summary OAuth2 token functions
@@ -39,7 +73,7 @@ module.exports = {
      */
     get: async (params) => {
       const { client_id, client_secret, oauth2_redirect, code } = params;
-      return oauth('getToken', client_id, client_secret, { oauth2_redirect, code });
+      return oauth('authorization_code', client_id, client_secret, { oauth2_redirect, code });
     },
 
     /**
@@ -61,7 +95,7 @@ module.exports = {
      */
     refresh: async (params) => {
       const { client_id, client_secret, refresh_token } = params;
-      return oauth('refreshToken', client_id, client_secret, { refresh_token });
+      return oauth('refresh_token', client_id, client_secret, { refresh_token });
     },
 
     /**
@@ -83,7 +117,7 @@ module.exports = {
      */
     revoke: async (params) => {
       const { client_id, client_secret, token } = params;
-      return oauth('revokeToken', client_id, client_secret, { token });
+      return oauth('revoke', client_id, client_secret, { token });
     }
 
   },
@@ -109,7 +143,7 @@ module.exports = {
      */
     user: (params) => {
       const { token } = params;
-      return oauth('getUserCreds', undefined, undefined, { token });
+      return oauth('user', undefined, undefined, { token });
     },
 
     /**
@@ -131,14 +165,14 @@ module.exports = {
      */
     client: (params) => {
       const { client_id, client_secret, scope } = params;
-      return oauth('getClientCreds', client_id, client_secret, { scope });
+      return oauth('client_credentials', client_id, client_secret, { scope });
     }
 
   }
 };
 
 /**
- * @param {'getClientCreds'|'getUserCreds'|'getToken'|'refreshToken'|'revokeToken'} grant_type
+ * @param {string} grant_type
  * @param {Snowflake} [client_id]
  * @param {string} [client_secret]
  * @param {Object} options
@@ -154,31 +188,35 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
     const { oauth2_redirect, refresh_token, scope, code, token } = options;
     if (!client_id || !client_secret || (!oauth2_redirect && !refresh_token && !scope && !code && !token)) return null;
     
-    let path = grant_type.includes('Token')
+    let path = /auth|oke/gi.test(grant_type)
       ? '/api/oauth2/token' : '/api/users/@me';
-    if (grant_type === 'revokeToken') path += '/revoke';
+    if (grant_type === 'revoke') path += '/revoke';
 
-    const method = grant_type.includes('Token') ? 'POST' : 'GET';
-    const types = {
-      getToken: 'authorization_code',
-      refreshToken: 'refresh_token',
-      revokeToken: 'revoke',
-      getClientCreds: 'client_credentials',
-      getUserCreds: 'user'
+    const method = /auth|oke/gi.test(grant_type) ? 'POST' : 'GET';
+
+    /**
+     * @type {{grant_type?: string, client_id?: string, client_secret?: string, redirect_uri?: string, code?: string, refresh_token?: string, scope?: string, token?: string}|undefined}
+     */
+    let body = {
+      grant_type, client_id, client_secret
     };
-
-    let body = `grant_type=${types[grant_type]}&client_id=${client_id}&client_secret=${client_secret}` || undefined;
     
-    if (types[grant_type] === 'authorization_code' && oauth2_redirect && code)
-      body += `&redirect_uri=${encodeURIComponent(oauth2_redirect)}&code=${code}`;
-    else if (types[grant_type] === 'refresh_token' && refresh_token)
-      body += `&refresh_token=${refresh_token}`;
-    else if (types[grant_type] === 'client_credentials' && scope)
-      body += `&scope=${scope}`;
-    else if (types[grant_type] === 'user' && token)
+    if (grant_type === 'authorization_code' && oauth2_redirect && code) {
+      body['redirect_uri'] = oauth2_redirect;
+      body['code'] = code;
+    } else if (grant_type === 'refresh_token' && refresh_token) 
+      body['refresh_token'] = refresh_token;
+    else if (grant_type === 'client_credentials' && scope)
+      body['scope'] = scope;
+    else if (grant_type === 'user' && token)
       body = undefined;
-    else if (types[grant_type] === 'revoke' && token)
-      body = `${body?.replace(/^(.*?)&/, '')}&token=${token}`;
+    else if (grant_type === 'revoke' && token) {
+      body['token'] = token.access_token ?? token.refresh_token;
+    }
+        
+    // @ts-ignore
+    body = new URLSearchParams(body);
+
         
     const headers = grant_type === 'getUserCreds'
       ? { Authorization: `${token?.token_type} ${token?.access_token}` }
@@ -187,6 +225,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
     /**
      * @typedef {Object} ResponseBody
      * @property {string} url
+     * @property {string} method
      * @property {Object} headers
      * @property {Object} [body]
      * @property {number} [statusCode]
@@ -197,6 +236,7 @@ async function oauth(grant_type, client_id, client_secret, options = {}) {
      */
     const responseBody = {
       url: `https://discord.com${path}`,
+      method,
       headers,
       body
     };

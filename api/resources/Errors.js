@@ -3,50 +3,85 @@
 
 const { SlackErrorCodes, Messages } = require('./ErrorMessages');
 
+// DELETE `| string` from DiscordError
+
 class ResponseError extends Error {
   
   /**
-   * @param {DiscordError} res 
-   * @param {Response} response
+   * @param {?DiscordError} res 
+   * @param {?Response} response
    * @param {string} type
+   * @param {string} [content]
    */
-  constructor(res, response, type) {
+  constructor(res, response, type, content) {
     super();
 
     this.type = type;
-    if (response.status !== 200) this.status = response.status;
-    if (response.statusText !== 'OK') this.statusText = response.statusText;
+    if (response?.status && response?.status !== 200)
+      this.status = response.status;
+    if (response?.statusText && response?.statusText !== 'OK')
+      this.statusText = response.statusText;
     
     if (type === 'discord_error') {
-      if (!res) return;
-      this.message = res.message;
-      /** @type {number} */
-      if (res.code !== 0) this.code = res.code;
-      if (res.retry_after) this.retry_after = res.retry_after;
-      if (res.global) this.global = res.global;
-      
-      if (DiscordError(res))
-        this.details = DiscordError(res);
+      if (!res && !content) return;
+      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || content)
+        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : content || '' : '';
 
+      if (res) {
+        if (res.message && typeof res.message === 'string') this.message = res.message;
+        else if (res.error && typeof res.error === 'string') this.message = res.error;
+
+        /** @type {number} */
+        if (res.code && res.code !== 0) this.code = res.code;
+        if (res.retry_after) this.retry_after = res.retry_after;
+        if (res.global) this.global = res.global;
+          
+        if (DiscordError(res))
+          this.details = DiscordError(res);
+      }
+            
     } else if (type === 'slack_error') {
-      if (!res) return;
-      this.message = res.error;
-      // console.log('slack error');
-      // console.log('res', res);
-      if (SlackError(res)) {
+      if (!res && !content) return;
+      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || content)
+        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : content || '' : '';
+      if (res && SlackError(res))
         this.details = SlackError(res);
-      }
+    
     } else if (type === 'spotify_error') {
-      if (!res) return;
-      if (res.error) {
-        this.message = typeof res.error !== 'string' ? res.error?.message : res.error;
+      if (!res && !content) return;
+      if (content) this.message = content;
+            
+      if (res && res.error) {
+        this.message = typeof res.error !== 'string' ? res.error.message : res.error;
+        if (typeof res.error !== 'string' && res.error.reason)
+          this.reason = res.error.reason;
       }
-      if (res.error_description)
+      if (res && res.error_description)
         this.details = res.error_description;
+
+    } else if (type === 'dropbox_error') {
+      if (!res && !content) return;
+      // if (typeof res === 'string')
+      // this.details = res;
+      if (content) this.message = content;
+      if (res && res.error_summary)
+        this.details = res.error_summary;
+
+    } else if (type === 'openai_error') {
+      // console.log('res in error\n', res);
+      if (!res && !content) return;
+      if (content) this.message = content;
+      else if (res && res.error) {
+        this.message = typeof res.error !== 'string' ? res.error.message : '';
+        this.details = typeof res.error !== 'string' && res.error.type ? res.error.type : '';
+        if (typeof res.error !== 'string' && res.error.param)
+          this.param = typeof res.error !== 'string' && res.error.param ? res.error.param : '';
+      }
     }
   }
-  
 };
+
+// DELETE `| string` from DiscordError
 
 /**
  * Format the message for an error.
@@ -70,7 +105,7 @@ function message(code, args) {
  * @param {DiscordError} err 
  */
 function DiscordError(err) {
-  // ('error from discordError', JSON.stringify(err, null, 2));
+  // console.log('error from discordError', JSON.stringify(err, null, 2));
   /**
    * @type {{ [s: string]: string|number|boolean; }}
    */
@@ -98,7 +133,7 @@ function DiscordError(err) {
    */
   const check = (k, v) => !isIndex(k) && ignore(k) && has(v);
   /**
-   * @param {{ [s: string]: string|number|boolean; } | ArrayLike<any>} obj
+   * @param {DiscordError} obj
    */
   function parseErrors(obj) {
     for (const [, value] of Object.entries(obj))
@@ -139,6 +174,7 @@ function DiscordError(err) {
   }
   parseErrors(err);
 
+  // console.log('errinfo:', errinfo);
   return err.errors ? errinfo : undefined;
 }
 
@@ -233,7 +269,7 @@ function get(obj, path, defaultValue = undefined) {
  * @typedef {Object} DiscordError
  * @property {string} message
  * @property {boolean} [ok]
- * @property {string|{status: number, message: string}|{message: string}} [error]
+ * @property {string|{status?: number, message: string, reason?: string, param?: string, code?: ?number, type?: string}} [error]
  * @property {{messages: Array<string>}} [response_metadata]
  * @property {number} [code]
  * @property {boolean} [global]
@@ -242,6 +278,7 @@ function get(obj, path, defaultValue = undefined) {
  * @property {string} [needed]
  * @property {Array<string>} [warnings]
  * @property {string} [error_description]
+ * @property {string} [error_summary]
  */
 
 /**

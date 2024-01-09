@@ -4,8 +4,8 @@
 const { WebhookType } = require('../../enum');
 // Webhooks
 // https://discord.com/developers/docs/resources/webhook#webhook-resource
-
-const { attemptHandler, imageData, sendAttachment, getBadges, retrieveDate, avatarFromObject, extendPayload } = require('../resources/functions');
+const { attemptHandler, sendAttachment } = require('../resources/handlers');
+const { imageData, getBadges, retrieveDate, avatarFromObject, extendPayload } = require('../resources/functions');
 
 /**
  * @file

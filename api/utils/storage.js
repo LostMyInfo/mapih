@@ -1,14 +1,19 @@
+/* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
 const CACHE = process.cwd() + '/.stor',
   HIST = process.cwd() + '/.hist',
+  LISTENERS = process.cwd() + '/.listeners',
   { readFileSync, writeFileSync, statSync } = require('fs'),
-  { writeFile } = require('fs/promises');
+  { writeFile, readFile } = require('fs/promises');
 
 /** @type {_File[]} */
 let _cache;
 
-/** @type {_File[]} */
+/** @type {_History[]} */
 let _history;
+
+/** @type {_Listener} */
+let _listeners;
 
 loadCache();
 
@@ -53,23 +58,68 @@ const isObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
  * @param {Object} [options]
  * @param {any} [options.default] - Set default value if value doesn't exist
  * @param {boolean} [options.delete] - Delete entry after retrieving the value
+ * @param {boolean} [options.keep_history] - Keeps the history for this key. For use only when using the delete option.
+ * @param {boolean} [options.keep_listeners] - Keeps the listeners for this key. For use only when using the delete option.
  * @returns {Promise<any>}
  */
-const get = async (key, options = {}) => {
-  const value = (find(key, _cache) || {}).value || null;
-  if (value) {
-    if (options?.delete) await _del(key);
-    return value;
+const get = async (key, options) => {
+  const { value, saveCache } = prepareGet(key, options?.default);
+  
+  if (options?.delete) {
+    const deletePromises = [ _del(key) ];
+    if (!options.keep_listeners) deletePromises.push(removeListener(key));
+    if (!options.keep_history) deletePromises.push(clearHistory(key));
+    await Promise.all(deletePromises);
   }
-  if (value === null && options?.default) {
-    _cache.push({ key, value: options.default });
-    await save(_cache);
-    return options?.default;
+
+  if (saveCache) await save(_cache);
+  return value;
+};
+
+/**
+ * @example
+ * api.utils.storage.getSync('password'); //=> 'abcd1234'
+ *
+ * @example
+ * // Set default value if value doesn't exist
+ * api.utils.storage.getSync('password', {
+ *   default: 'defaultValue'
+ * }); //=> 'defaultValue'
+ *
+ * @example
+ * // Delete entry after retrieving the value
+ * api.utils.storage.getSync('password', {
+ *   delete: true
+ * }); //=> 'defaultValue'
+ *
+ * api.utils.storage.getSync('password'); //=> null
+ *
+ * @param {string} key
+ * @param {Object} [options]
+ * @param {any} [options.default] - Set default value if value doesn't exist
+ * @param {boolean} [options.delete] - Delete entry after retrieving the value
+ * @param {boolean} [options.keep_history] - Keeps the history for this key. For use only when using the delete option.
+ * @param {boolean} [options.keep_listeners] - Keeps the listeners for this key. For use only when using the delete option.
+ * @returns {any}
+ */
+const getSync = (key, options) => { 
+  const { value, saveCache } = prepareGet(key, options?.default);
+  
+  if (options?.delete) {
+    _delSync(key);
+    if (!options?.keep_listeners) removeListenerSync(key);
+    if (!options?.keep_history) clearHistorySync(key);
   }
+
+  if (saveCache) saveSync(_cache);
+  return value;
 };
 
 // ////////////////////// GETMANY ////////////////////////
 /**
+ * Get multiple key's values at a time.  
+ * \* This will not trigger any listeners
+ * 
  * @example
  * await api.utils.storage.getMany(['password', 'password2', 'password3'])
  * //=> { password: 'abc123', password2: '123abc', password3: undefined }
@@ -78,15 +128,8 @@ const get = async (key, options = {}) => {
  * @returns {Promise<{[x: string]: any}>}
  */
 const getMany = async (keys = []) => {
-  /** @type {{[x: string]: any}} */
-  const results = {};
-  
-  await Promise.all(keys.map(async (key) => {
-    const value = await get(key);
-    results[key] = value;
-  }));
-
-  return results;
+  const values = await Promise.all(keys.map(key => get(key)));
+  return Object.fromEntries(keys.map((key, index) => [key, values[index]]));
 };
 
 
@@ -124,67 +167,87 @@ const getMany = async (keys = []) => {
  * @param {number} [options.ttl] - Amount of time in ms that this value will be stored
  * @param {Function} [options.ttlCb] - A function to invoke upon expiration
  * @param {boolean} [options.allow_overwrite] - Whether to allow this key's value to be overwritten
+ * @param {Function} [options.on_change] - A function to invoke when key is modified
  * @returns 
  */
-const set = async (options = { key: '', value: undefined }) => {
-  
-  const {
-    key, value, ttl, ttlCb,
-    allow_overwrite = options.allow_overwrite !== false
-  } = options;
-
+const set = async (options) => {
   validate(options);
+  const { key, value, ttl, ttlCb, on_change } = options;
 
-  const oldValue = find(key, _cache);
+  await saveHistory(key, value);
+  if (on_change) await addListener(key, on_change);
+  const entry = prepareSet(options);
 
-  if (oldValue && JSON.stringify(options) == JSON.stringify(oldValue)) return;
-  if (oldValue && 'allow_overwrite' in oldValue && !allow_overwrite) 
-    throw new Error(`The value for \`${key}\` is not allowed to be overwritten.`);
-
-  if (oldValue) 
-    if (!_history.length || oldValue.value !== value || !_history.some((x) => x.key === key)) {
-      if (!_history.length || !_history.some((x) => x.key === key)) {
-        if (!_history.find((x) => x.key === key)?.values?.some((y) => y.includes(value)))
-          _history.push({ key, values: [[value, Date.now()]] });
-      } else if (!_history.find((x) => x.key === key)?.values?.some((y) => y.includes(value)))
-        (_history.find((x) => x.key === key))?.values?.push([value, Date.now()]);
-      await save(_history, 'history');
-    }
-
-  /**
-   * @type {string|undefined}
-   */
-  let newkey = undefined, newvalue = undefined;
-
-  if (!!options && typeof options === 'object' && options.constructor === Object && !key)
-    for (const k of Object.keys(options)) {
-      !get(key) ? newkey = k.split(/\\?\./).join('\\.') : '';
-      newvalue = options[k];
-    }
-
-  /** @type {_File} */
-  const entry = {
-    key: newkey ?? key, value: newvalue ?? value,
-    expire: ttl ? ttl + Date.now() : undefined,
-    allow_overwrite: allow_overwrite ? undefined : false
-  };
-
-  if (entry.expire !== undefined && !isNaN(entry.expire))
+  if (entry?.expire !== undefined && !isNaN(entry.expire)) 
     entry.timeout = setTimeout(async () => {
       await _del(key);
       if (ttlCb) ttlCb(key, value);
     }, ttl);
-  
-  const index = _cache.findIndex((i) => i.key === find(newkey ?? key, _cache)?.key);
-  if (index !== -1) _cache[index] = entry;
-  else _cache.push(entry);
 
   await save(_cache);
   return value;
 };
 
-// ////////////////////// SETMANY ////////////////////////
+// //////////////////////// setSync //////////////////////////
 /**
+ * @example
+ * api.utils.storage.setSync({
+ *   key: 'password',
+ *   value: 'abcd1234'
+ * });
+ *
+ * @example
+ * api.utils.storage.setSync({
+ *   key: 'password',
+ *   value: 'abcd1234',
+ *   ttl: 5000, // 5 seconds
+ *   ttlCb: () => console.log('password expired')
+ * });
+ * 
+ * @example
+ * api.utils.storage.setSync({
+ *   key: 'password',
+ *   value: 'abcd1234',
+ *   allow_overwrite: false
+ * });
+ * 
+ * api.utils.storage.setSync({
+ *   key: 'password',
+ *   value: 'newvalue',
+ * }); //=> error
+ *
+ * @param {Object} options
+ * @param {string} options.key
+ * @param {*} options.value
+ * @param {number} [options.ttl] - Amount of time in ms that this value will be stored
+ * @param {Function} [options.ttlCb] - A function to invoke upon expiration
+ * @param {boolean} [options.allow_overwrite] - Whether to allow this key's value to be overwritten
+ * @param {Function} [options.on_change] - A function to invoke when key is modified
+ * @returns 
+ */
+const setSync = (options = { key: '', value: undefined }) => {
+  validate(options);
+  const { key, value, ttl, ttlCb, on_change } = options;
+  
+  saveHistorySync(key, value);
+  if (on_change) addListenerSync(key, on_change);
+  const entry = prepareSet(options);
+
+  if (entry?.expire !== undefined && !isNaN(entry.expire))
+    entry.timeout = setTimeout(() => {
+      _delSync(key);
+      if (ttlCb) ttlCb(key, value);
+    }, ttl);
+  
+  saveSync(_cache);
+  return value;
+};
+
+// ////////////////////// setMany ////////////////////////
+/**
+ * Set multiple key's values at a time.  
+ * \* This will not trigger any listeners
+ *
  * @example
  * await api.utils.storage.setMany({
  *   keyname1: 'value1',
@@ -195,36 +258,81 @@ const set = async (options = { key: '', value: undefined }) => {
  * @param {Object} entries
  * @param {string} entries.key
  * @param {any} entries.value
- * @returns {Promise<undefined>}
+ * @returns {Promise<any[]>}
  */
-const setMany = async (entries = { key: '', value: undefined }) => {
-  const setPromises = Object.entries(entries).map(([key, value]) =>
-    set({ key, value }));
-  await Promise.all(setPromises);
-};
+const setMany = async (entries = { key: '', value: undefined }) =>
+  Promise.all(
+    Object.entries(entries).map(([key, value]) =>
+      set({ key, value })
+    )
+  );
 
-// ////////////////////// DELETE ////////////////////////
+// ////////////////////// delete ////////////////////////
 /**
  * @example
  * await api.utils.storage.delete('password'); //=> true
  *
  * @param {string} key
+ * @param {Object} [options]
+ * @param {boolean} [options.keep_history]
+ * @param {boolean} [options.keep_listeners]
  * @returns {Promise<boolean>}
  */
-const _delete = async (key) => {
+const _delete = async (key, options = { keep_history: false, keep_listeners: false }) => {
   const old = find(key, _cache);
-  if (old) {
-    clearTimeout(old.timeout);
-    if (!old.expire || (!isNaN(old.expire) && old.expire < Date.now())) {
-      await _del(key);
-      return true;
-    }
+  if (!old) return false;
+
+  onChange(key);
+
+  if (!options.keep_history) await clearHistory(key);
+  if (!options.keep_listeners) await removeListener(key);
+  if (old.timeout) clearTimeout(old.timeout);
+  if (!old.expire || (!isNaN(old.expire) && old.expire < Date.now())) {
+    await _del(key);
+    return true;
   }
   return false;
 };
 
+// ////////////////////// deleteSync ////////////////////////
+/**
+ * @example
+ * api.utils.storage.deleteSync('password'); //=> true
+ *
+ * @example
+ * api.utils.storage.deleteSync('password', {
+ *   keep_history: true
+ * });
+ * 
+ * @param {string} key
+ * @param {Object} [options]
+ * @param {boolean} [options.keep_history]
+ * @param {boolean} [options.keep_listeners]
+ * @returns {boolean}
+ */
+const deleteSync = (key, options = { keep_history: false, keep_listeners: false }) => {
+  const old = find(key, _cache);
+  if (!old) return false;
+
+  onChange(key);
+
+  if (!options.keep_history) clearHistorySync(key);
+  if (!options.keep_listeners) removeListenerSync(key);
+  if (old.timeout) clearTimeout(old.timeout);
+  if (!old.expire || (!isNaN(old.expire) && old.expire < Date.now())) {
+    _delSync(key);
+    return true;
+  }
+  return false;
+};
+
+// ////////////////////// deleteMany ////////////////////////
 
 /**
+ * Delete multiple entries at a time.  
+ * \* This will not trigger any listeners
+ * \* This will clear all listeners and/or history for the deleted keys
+ * 
  * @example
  * await api.utils.storage.deleteMany(['password', 'password2', 'password3]);
  * //=> [true, true, false]
@@ -232,18 +340,41 @@ const _delete = async (key) => {
  * @param {string[]} keys - Array of keys to delete
  * @returns {Promise<boolean[]>} - Promise resolving to an array of booleans indicating success or failure for each deletion operation
  */
-const deleteMany = async (keys = []) => {
-  const deletionResults = [];
+const deleteMany = async (keys = []) => Promise.all(keys.map(key => _delete(key)));
 
-  for (const key of keys) {
-    const success = await _delete(key);
-    deletionResults.push(success);
-  }
+// ////////////////////// each /////////////////////////
 
-  return deletionResults;
+/**
+ * @example
+ * await api.utils.storage.each((x) => console.log(x))
+ * 
+ * @param {Function} callback 
+ */
+const each = async (callback) => {
+  if (typeof callback !== 'function')
+    throw new Error('Callback must be a function');
+  _cache.forEach(async (x) => {
+    await callback(x);
+  });
 };
 
-// ////////////////////// MERGE /////////////////////////
+// ////////////////////// eachSync /////////////////////////
+
+/**
+ * @example
+ * api.utils.storage.eachSync((x) => console.log(x))
+ * 
+ * @param {Function} callback 
+ */
+const eachSync = (callback) => {
+  if (typeof callback !== 'function')
+    throw new Error('Callback must be a function');
+  _cache.forEach((x) => {
+    callback(x);
+  });
+};
+
+// ////////////////////// merge /////////////////////////
 /**
  * @example
  * await api.utils.storage.set({
@@ -262,14 +393,46 @@ const deleteMany = async (keys = []) => {
  * @returns {Promise<any>}
  */
 const merge = async (key, value) => {
-  const oldVal = get(key);
+  const oldVal = await get(key);
   if (isObject(value) && isObject(oldVal)) {
-    value = Object.assign(get(key), value);
-  } else throw new Error('Both new and old values must to be objects');
+    value = Object.assign(oldVal, value);
+  } else throw new Error('Both new and old values must be objects');
+  
+  onChange(key);
+  await saveHistory(key, value);
   return set({ key, value });
 };
 
-// ////////////////////// PUSH /////////////////////////
+// ////////////////////// mergeSync /////////////////////////
+/**
+ * @example
+ * api.utils.storage.setSync({
+ *   key: 'object',
+ *   value: { a: 'b' }
+ * });
+ * 
+ * api.utils.storage.mergeSync('object', { c: 'd' });
+ * //=> new value: { a: 'b', c: 'd' }
+ * 
+ * api.utils.storage.mergeSync('object', { a: 'z' });
+ * //=> new value: { a: 'z', c: 'd' }
+ *
+ * @param {string} key
+ * @param {any} value
+ * @returns {any}
+ */
+const mergeSync = (key, value) => {
+  const oldVal = getSync(key);
+  if (isObject(value) && isObject(oldVal)) {
+    value = Object.assign(oldVal, value);
+  } else throw new Error('Both new and old values must to be objects');
+
+  onChange(key);
+  saveHistorySync(key, value);
+  return setSync({ key, value });
+};
+
+// ////////////////////// push /////////////////////////
 
 /**
  * @example
@@ -299,16 +462,140 @@ const merge = async (key, value) => {
  * @returns {Promise<Array<any>>}
  */
 const push = async (key, ...args) => {
-  const { unique = false } = typeof args[args.length - 1] === 'object' ? args.pop() : {};
-  const oldValues = get(key);
-  if (!Array.isArray(oldValues)) throw new Error('Existing value must be an Array');
-  const value = unique
-    ? removeDuplicates([...oldValues, ...args])
-    : [...oldValues, ...args];
+  onChange(key);
+  const oldValues = await get(key);
+  const value = preparePush(oldValues, ...args);
+  await saveHistory(key, value);
   return set({ key, value });
 };
 
-// ////////////////////// EXPORT /////////////////////////
+// ////////////////////// pushSync /////////////////////////
+
+/**
+ * @example
+ * api.utils.storage.setSync({
+ *   key: 'array',
+ *   value: [1, 2]
+ * });
+ * 
+ * api.utils.storage.pushSync('array', 3, 4);
+ * //=> new value: [1, 2, 3, 4]
+ * 
+ * api.utils.storage.pushSync('array', [5, 6], 7);
+ * //=> new value: [ 1, 2, [ 5, 6 ], 7 ]
+ *
+ * // keep duplicates
+ * api.utils.storage.pushSync('array', 1, 7);
+ * //=> new value: [ 1, 2, [ 5, 6 ], 7, 1, 7 ]
+ * 
+ * // filter out duplicates
+ * api.utils.storage.pushSync('array', 1, 7, {
+ *   unique: true
+ * });
+ * //=> new value: [ 1, 2, [ 5, 6 ], 7 ]
+ * 
+ * @param {string} key
+ * @param {...any} args
+ * @returns {Promise<Array<any>>}
+ */
+const pushSync = (key, ...args) => {
+  onChange(key);
+  const oldValues = getSync(key);
+  const value = preparePush(oldValues, ...args);
+  saveHistorySync(key, value);
+  return setSync({ key, value });
+};
+
+// ////////////////////// search /////////////////////////
+
+/**
+ * @example
+ * await api.utils.storage.search('something');
+ * //=> { something: 51, somethingelse: 18, something3: 12 }
+ * 
+ * @param {string} str
+ * @param {{[x: string]: any}} res
+ * @returns {Promise<{[x: string]: any}>}
+ */
+const search = async (str, res = {}) => {
+  const arr = _cache.map((e) => e.key);
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (arr[i].indexOf(str) > -1) res[arr[i]] = await get(arr[i]);
+  }
+  return res;
+};
+
+// ////////////////////// searchSync /////////////////////////
+
+/**
+ * @param {string} str
+ * @param {{[x: string]: any}} res
+ * @returns {{[x: string]: any}}
+ */
+const searchSync = (str, res = {}) => {
+  const arr = _cache.map((e) => e.key);
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (arr[i].indexOf(str) > -1) res[arr[i]] = getSync(arr[i]);
+  }
+  return res;
+};
+
+// ////////////////////// increment /////////////////////////
+
+/**
+ * @example
+ * await api.utils.storage.increment('keyName', 5);
+ * 
+ * @param {string} key 
+ * @param {number|string} amount 
+ */
+const increment = async (key, amount = 1) => {
+  const value = prepareIncrDecr(key, amount, 'incr');
+  return set({ key, value });
+};
+
+// ////////////////////// incrementSync /////////////////////////
+
+/**
+ * @example
+ * api.utils.storage.increment('keyName', 5);
+ * 
+ * @param {string} key 
+ * @param {number|string} amount 
+ */
+const incrementSync = (key, amount = 1) => {
+  const value = prepareIncrDecr(key, amount, 'incr');
+  return setSync({ key, value });
+};
+
+// ////////////////////// decrement /////////////////////////
+
+/**
+ * @example
+ * await api.utils.storage.decrement('keyName', 5);
+ * 
+ * @param {string} key 
+ * @param {number|string} amount 
+ */
+const decrement = async (key, amount = 1) => {
+  const value = prepareIncrDecr(key, amount);
+  return set({ key, value });
+};
+
+// ////////////////////// decrementSync /////////////////////////
+
+/**
+ * @example
+ * api.utils.storage.decrementSync('keyName', 5);
+ * @param {string} key 
+ * @param {number|string} amount 
+ */
+const decrementSync = async (key, amount = 1) => {
+  const value = prepareIncrDecr(key, amount);
+  return setSync({ key, value });
+};
+
+// ////////////////////// export /////////////////////////
 /**
  * @example
  * api.utils.storage.export();
@@ -329,9 +616,155 @@ const _export = () => {
   return exported;
 };
 
+/**
+ * @example
+ * // Clear history for a specific key
+ * await api.utils.storage.clearHistory('password');
+ * 
+ * // Clear all entries in history
+ * await api.utils.storage.clearHistory();
+ *
+ * @param {string} key
+ * @param {Array<_History>} [filtered]
+ * @returns {Promise<void>}
+ */
+async function clearHistory(key, filtered = []) {
+  if (key) {
+    onChange(key);
+    filtered = _history.filter((x) => x.key !== key);
+  }
+  await writeFile(HIST, JSON.stringify(filtered));
+}
+
+/**
+ * @example
+ * // Clear history for a specific key
+ * api.utils.storage.clearHistorySync('password');
+ * 
+ * // Clear all entries in history
+ * api.utils.storage.clearHistorySync();
+ *
+ * @param {string} key
+ * @param {Array<_History>} [filtered]
+ * @returns {void}
+ */
+function clearHistorySync(key, filtered = []) {
+  if (key) {
+    onChange(key);
+    filtered = _history.filter((x) => x.key !== key);
+  }
+  writeFileSync(HIST, JSON.stringify(filtered));
+}
 // ///////////////////////////////////////////////////////
 // ////////////////////// HELPERS ////////////////////////
 // ///////////////////////////////////////////////////////
+
+/**
+ * @param {string} key 
+ * @param {string} [defaultVal] 
+ * @returns {{value: any, saveCache: boolean}}
+ */
+function prepareGet(key, defaultVal) {
+  let value = (find(key, _cache) || {}).value || null;
+  
+  if (value === null && key.split('.').length > 1) {
+    const [object, ...path] = key.split('.');
+    key = object;
+    value = (find(object, _cache) || {}).value || null;
+    value = getPathVal(value, path.join('.'));
+  } else if (value === null && defaultVal) {
+    _cache.push({ key, value: defaultVal });
+  }
+  
+  onChange(key);
+  return {
+    value: value ?? defaultVal,
+    saveCache: !!defaultVal
+  };
+}
+
+/**
+ * @param {Object} options
+ * @param {string} options.key
+ * @param {*} options.value
+ * @param {number} [options.ttl] - Amount of time in ms that this value will be stored
+ * @param {Function} [options.ttlCb] - A function to invoke upon expiration
+ * @param {boolean} [options.allow_overwrite] - Whether to allow this key's value to be overwritten
+ * @param {Function} [options.on_change] - A function to invoke when key is modified
+ * @returns {{key: string, value: any, expire?: number|undefined, allow_overwrite?: boolean|undefined, timeout?: Object|undefined}|undefined}
+ */
+function prepareSet(options) {
+  const {
+    key, value, ttl, allow_overwrite = options.allow_overwrite !== false
+  } = options;
+  onChange(key);
+  
+  /**
+   * @type {string|undefined}
+   */
+  let newkey = undefined, newvalue = undefined;
+
+  if (!!options && typeof options === 'object' && options.constructor === Object && !key)
+    for (const k of Object.keys(options)) {
+      newkey = k.split(/\\?\./).join('\\.') || k;
+      // @ts-ignore
+      newvalue = options[k];
+    }
+
+  if (!value && !newvalue) return;
+  const oldValue = find(key ?? newkey, _cache);
+
+  if (oldValue && (JSON.stringify(value ?? newvalue) == JSON.stringify(oldValue.value))) return;
+  if (oldValue && 'allow_overwrite' in oldValue && !allow_overwrite) 
+    throw new Error(`The value for \`${key}\` is not allowed to be overwritten.`);
+    
+  const entry = {
+    key: newkey ?? key, value: newvalue ?? value,
+    expire: ttl ? ttl + Date.now() : undefined,
+    allow_overwrite: allow_overwrite ? undefined : false
+  };
+
+  const index = _cache.findIndex((i) => i.key === find(newkey ?? key, _cache)?.key);
+  if (index !== -1) _cache[index] = entry;
+  else _cache.push(entry);
+  
+  return entry;
+}
+
+/**
+ * @param {Array<any>} oldValues
+ * @param {...any} args
+ * @returns {Array<any>}
+ */
+function preparePush(oldValues, ...args) {
+  args = args.filter(arg => arg !== undefined && arg !== null);
+  const { unique = false } = typeof args[args.length - 1] === 'object' ? args.pop() : {};
+
+  if (!Array.isArray(oldValues)) throw new Error('Existing value must be an Array');
+  const value = unique
+    ? removeDuplicates([...oldValues, ...args])
+    : [...oldValues, ...args];
+  
+  return value;
+}
+
+/**
+ * @param {string} key 
+ * @param {number|string} amount 
+ * @param {'incr'|'decr'} [method] 
+ * @returns {number}
+ */
+function prepareIncrDecr(key, amount = 1, method) {
+  if (!(amount = parseInt(String(amount), 10)))
+    throw new Error('Amount needs to be a number or a string representation of a number.');
+  
+  let value = (find(key, _cache) || {}).value || null;
+  if (!value) value = 0;
+  else if (!(value = parseInt(value, 10)))
+    throw new Error('Existing value needs to be a number or a string representation of a number.');
+
+  return method === 'incr' ? value + amount : value - amount;
+}
 
 /**
  * @param {string} key
@@ -340,6 +773,24 @@ const _export = () => {
 async function _del(key) {
   _cache = _cache.filter((e) => e.key !== key);
   await save(_cache);
+}
+
+/**
+ * @param {string} key
+ * @returns {void}
+ */
+function _delSync(key) {
+  _cache = _cache.filter((e) => e.key !== key);
+  saveSync(_cache);
+}
+
+/**
+ * @param {string} key
+ * @returns {void}
+ */
+function onChange(key) {
+  if (!_listeners.hasOwnProperty(key)) return;
+  eval(_listeners[key])();
 }
 
 function loadCache() {
@@ -362,24 +813,31 @@ function loadCache() {
       writeFileSync(HIST, JSON.stringify([]));
     _history = [];
   }
+
+  try {
+    // @ts-ignore
+    _listeners = JSON.parse(readFileSync(LISTENERS));
+  } catch (error) {
+    // @ts-ignore
+    if (error.code === 'ENOENT')
+      writeFileSync(LISTENERS, JSON.stringify({}));
+    _listeners = {};
+  }
 }
 
 /**
- * @param {_File[]} content
- * @param {string} [file]
+ * @param {_File[]} content 
+ * @param {string} [file] 
+ * @returns {{ content: string, file: string }}
  */
-async function save(content, file) {
-  if (file === 'history') {
-    try {
-      return writeFile(HIST, JSON.stringify(content));
-    } catch (e) {
-      throw new Error('Unable to save history:');
-    }
-  }
+function prepareData(content, file) {
+  if (file === 'history' || file === 'listeners')
+    return {
+      content: JSON.stringify(content),
+      file: file === 'history' ? HIST : LISTENERS
+    };
 
-  /**
-   * @type {Array<Object>}
-   */
+  /** @type {Array<Object>} */
   const timeouts = [];
   content.forEach((item) => {
     if (item.timeout) {
@@ -387,20 +845,158 @@ async function save(content, file) {
       delete item.timeout;
     }
   });
+    
+  const cacheString = JSON.stringify(content);
 
+  content.forEach((item) => {
+    if (timeouts[0] === item['key'])
+      item.timeout = timeouts[1];
+  });
+  
+  return { content: cacheString, file: CACHE };
+}
+
+// //////////////////
+
+/**
+ * @param {_File[]} content 
+ * @param {string} [file]
+ * @returns {Promise<void>}
+ */
+async function save(content, file) {
+  const data = prepareData(content, file ?? undefined);
   try {
-    const cacheString = JSON.stringify(content);
-
-    content.forEach((item) => {
-      if (timeouts[0] === item['key'])
-        item.timeout = timeouts[1];
-    });
-
-    await writeFile(CACHE, cacheString);
+    await writeFile(data?.file, data?.content);
   } catch (e) {
-    throw new Error('Unable to save cache:');
+    throw new Error(`Unable to save _${file ?? 'cache'}:`);
   }
-};
+}
+
+/**
+ * @param {_File[]} content 
+ * @param {string|undefined} [file]
+ * @returns {void}
+ */
+function saveSync(content, file) {
+  const data = prepareData(content, file ?? undefined);
+  try {
+    writeFileSync(data?.file, data?.content);
+  } catch (e) {
+    throw new Error(`Unable to save _${file ?? 'cache'}:`);
+  }
+}
+
+// //////////////////
+
+/**
+ * @param {string} key
+ * @param {any} value
+ * @returns {void}
+ */
+function prepareHistory(key, value) {
+  if (!_history.length || !_history.some((x) => x.key === key))
+    _history.push({ key, values: [[value, Date.now()]] });
+  else if (
+    _history.some((x) => x.key === key) &&
+    !_history.find((x) => x.key === key)?.values?.some((y) =>
+      (JSON.stringify(value) === JSON.stringify(y[0])))
+  ) (_history.find((x) => x.key === key))?.values?.push([value, Date.now()]);
+}
+
+/**
+ * @param {string} key
+ * @param {any} value
+ * @returns {Promise<void>}
+ */
+async function saveHistory(key, value) {
+  prepareHistory(key, value);
+  await save(_history, 'history');
+}
+
+/**
+ * @param {string} key
+ * @param {any} value
+ * @returns {void}
+ */
+function saveHistorySync(key, value) {
+  prepareHistory(key, value);
+  saveSync(_history, 'history');
+}
+
+// //////////////////
+
+/**
+ * @param {string} key
+ * @returns {void}
+ */
+function prepareListeners(key) {
+  _listeners = {};
+  for (const [k, v] of Object.entries(_listeners)) {
+    if (k === key) continue;
+    _listeners[k] = v;
+  }
+}
+
+/**
+ * @param {string} key
+ * @returns {Promise<void>}
+ */
+async function removeListener(key) {
+  prepareListeners(key);
+  // @ts-ignore
+  await save(_listeners, 'listeners');
+}
+
+/**
+ * @param {string} key
+ * @returns {void}
+ */
+function removeListenerSync(key) {
+  prepareListeners(key);
+  // @ts-ignore
+  saveSync(_listeners, 'listeners');
+}
+
+/**
+ * @param {string} key 
+ * @param {Function} callback
+ * @returns {Promise<void>}
+ */
+async function addListener(key, callback) {
+  _listeners[key] = callback.toString();
+  // @ts-ignore
+  await save(_listeners, 'listeners');
+}
+
+/**
+ * @param {string} key 
+ * @param {Function} callback
+ * @returns {void}
+ */
+function addListenerSync(key, callback) {
+  _listeners[key] = callback.toString();
+  // @ts-ignore
+  saveSync(_listeners, 'listeners');
+}
+
+/**
+ * @param {any} obj 
+ * @param {string} path
+ * @returns {any}
+ */
+function getPathVal(obj, path) {
+  /** @type {(regexp: RegExp) => any} */
+  const travel = (regexp) =>
+    String(path).split(regexp).filter(Boolean).reduce((res, key) => (
+      (res !== null && res !== undefined)
+        ? res[key]
+        : res
+    ), obj);
+
+  return travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
+}
+
+// //////////////////
 
 /**
  * @param {Object} options
@@ -414,7 +1010,8 @@ function validateKeyVals(options) {
   if (('key' in options || 'value' in options) && !('key' in options && 'value' in options))
     throw new Error('If providing `key` or `value`, both `key` and `value` are required.');
 
-  if (!options.value) throw new Error(`Value of \`${options.key}\` is undefined`);
+  if (!!options && typeof options === 'object' && options.constructor === Object && !options.key) return true;
+  else if (!options.value) throw new Error(`Value of \`${options.key}\` is undefined`);
 }
 
 
@@ -435,11 +1032,20 @@ function validateTTLCallback(ttlCb) {
 }
 
 /**
+ * @param {Function} [listener] 
+ */
+function validateListener(listener) {
+  if (typeof listener !== 'undefined' && typeof listener !== 'function')
+    throw new Error('listener must be a function');
+}
+
+/**
  * @param {Object} [options]
  * @param {string} [options.key]
  * @param {any} [options.value]
  * @param {number} [options.ttl]
  * @param {Function} [options.ttlCb]
+ * @param {Function} [options.listener]
  */
 function validate(options) {
   if (!options)
@@ -447,16 +1053,20 @@ function validate(options) {
   validateKeyVals(options);
   validateTTL(options.ttl);
   validateTTLCallback(options.ttlCb);
+  validateListener(options.listener);
 }
 
 module.exports = {
-  set,
-  setMany,
-  get,
-  getMany,
-  deleteMany,
-  merge,
-  push,
+  set, setSync, setMany,
+  get, getSync, getMany,
+  deleteSync, deleteMany,
+  merge, mergeSync,
+  push, pushSync,
+  search, searchSync,
+  each, eachSync,
+  increment, incrementSync,
+  decrement, decrementSync,
+  clearHistory, clearHistorySync,
   
   /**
    * @example
@@ -470,6 +1080,18 @@ module.exports = {
 
   /**
    * @example
+   * await api.utils.storage.all();
+   * // [
+   * //   { key: 'array', value: [ 1, 2, [Array], 7 ] },
+   * //   { key: 'password', value: 'abc123' }
+   * // ]
+   * @returns {Promise<Array<_File[]>>}
+   */
+  // @ts-ignore
+  all: async () => JSON.parse(await readFile(CACHE)),
+
+  /**
+   * @example
    * api.utils.storage.all();
    * // [
    * //   { key: 'array', value: [ 1, 2, [Array], 7 ] },
@@ -478,7 +1100,7 @@ module.exports = {
    * @returns {Array<_File[]>}
    */
   // @ts-ignore
-  all: () => JSON.parse(readFileSync(CACHE)),
+  allSync: () => JSON.parse(readFileSync(CACHE)),
 
   /**
    * @example
@@ -512,9 +1134,9 @@ module.exports = {
    * api.utils.storage.values();
    * //=> ['abc123', '123abc']
    *
-   * @returns {Array<string>}
+   * @returns {Array<any>}
    */
-  values: () => _cache.map((e) => e.key),
+  values: () => _cache.map((e) => e.value),
 
   /**
    * @example
@@ -548,15 +1170,23 @@ module.exports = {
   
   /**
    * @example
-   * api.utils.storage.clear();
+   * await api.utils.storage.clear();
    *
    * @returns {Promise<void>}
    */
-  clear: async () => writeFile(CACHE, JSON.stringify([])),
+  clear: async () => await writeFile(CACHE, JSON.stringify([])),
   
   /**
    * @example
-   * api.utils.storage.equals('password', 'abcd1234');
+   * api.utils.storage.clear();
+   *
+   * @returns {void}
+   */
+  clearSync: () => writeFileSync(CACHE, JSON.stringify([])),
+
+  /**
+   * @example
+   * await api.utils.storage.equals('password', 'abcd1234');
    * //=> true
    *
    * @param {string} key
@@ -565,6 +1195,20 @@ module.exports = {
    */
   equals: async (key, value) => {
     const found = await get(key);
+    return found && found === value;
+  },
+
+  /**
+   * @example
+   * api.utils.storage.equals('password', 'abcd1234');
+   * //=> true
+   *
+   * @param {string} key
+   * @param {any} value
+   * @returns {boolean}
+   */
+  equalsSync: (key, value) => {
+    const found = getSync(key);
     return found && found === value;
   },
 
@@ -582,24 +1226,7 @@ module.exports = {
    */
   history: (key) => (_history.find((x) => x.key === key))?.values?.map((x) => ({ 
     value: x[0], timestamp: x[1] 
-  })),
-
-  /**
-   * @example
-   * // Clear history for a specific key
-   * api.utils.storage.clearHistory('password');
-   * 
-   * // Clear all entries in history
-   * api.utils.storage.clearHistory();
-   *
-   * @param {string} [key]
-   * @param {any} [filtered]
-   * @returns {undefined}
-   */
-  clearHistory: (key, filtered = []) => {
-    if (key) filtered = _history.filter((x) => x.key !== key);
-    writeFile(HIST, JSON.stringify(filtered));
-  }
+  }))
   
 };
 
@@ -613,7 +1240,18 @@ module.exports.export = _export;
  * @property {Array<Array<any>>} [values]
  * @property {number} [ttl] - The duration in ms this value will be stored
  * @property {Function} [ttlCb] - A function to invoke upon expiration
+ * @property {Function} [on_change] - A function to invoke when changes are made to a specified key
  * @property {boolean} [allow_overwrite] - Whether to allow this key's value to be overwritten
  * @property {number|undefined} [expire]
  * @property {?any} [timeout]
+ */
+
+/**
+ * @typedef {Object} _History
+ * @property {string} key
+ * @property {Array<Array<any>>} values
+ */
+
+/**
+ * @typedef {{[key: string]: string}} _Listener
  */

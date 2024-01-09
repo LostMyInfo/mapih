@@ -1,7 +1,9 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
-const { spotifyHandler, buildQueryString, buildSpotifyResponse } = require('../resources/functions');
+const { buildQueryString } = require('../resources/functions');
+const { buildSpotifyResponse } = require('./functions');
+const { handler } = require('../resources/handlers');
 
 /**
  * @file Search for items on Spotify
@@ -35,7 +37,7 @@ module.exports = {
    * @param {string} [options.sort]
    * @returns {Promise<SpotifyReturn>}
   */
-  async search(options) {
+  search: async (options) => {
     
     const { song, artist, album, limit, offset } = options;
   
@@ -53,12 +55,14 @@ module.exports = {
       // @ts-ignore
       endpoint[artist ? 'artist' : 'album'] = artist || album;
 
-    const attempt = await spotifyHandler({
+    const attempt = await handler({
       method: 'GET',
-      endpoint: buildQueryString('search', endpoint)
+      endpoint: buildQueryString('search', endpoint),
+      handler: 'spotify'
     });
     
     type = type === 'artist' ? 'artists' : type === 'track' ? 'tracks' : 'album';
+    // @ts-ignore
     return buildSpotifyResponse(type, attempt, options.sort);
     
   },
@@ -71,21 +75,17 @@ module.exports = {
    * @param {string} [options.sort]
    * @returns
    */
-  async artists(options) {
-    const endpoint = buildQueryString('search', {
-      type: 'artist',
-      q: options.artist,
-      limit: options.limit,
-      offset: options.offset
-    });
-    
-    const attempt = await spotifyHandler({
+  artists: async (options) =>
+    buildSpotifyResponse('artists', (await handler({
       method: 'GET',
-      endpoint
-    });
-    
-    return buildSpotifyResponse('artists', attempt, options.sort);
-  },
+      endpoint: buildQueryString('search', {
+        type: 'artist',
+        q: options.artist,
+        limit: options.limit,
+        offset: options.offset
+      }),
+      handler: 'spotify'
+    })), options.sort),
 
   /**
    * 
@@ -97,19 +97,17 @@ module.exports = {
    * @param {string} [options.sort]
    * @returns 
    */
-  async songs(options) {
-    const endpoint = buildQueryString('search', {
-      q: options.song,
-      artist: options.artist,
-      type: 'track',
-      limit: options.limit,
-      offset: options.offset
-    });
-    
-    const attempt = await spotifyHandler({
+  songs: async (options) =>
+    buildSpotifyResponse('tracks', (await handler({
       method: 'GET',
-      endpoint
-    });
-    return buildSpotifyResponse('tracks', attempt, options.sort);
-  }
+      endpoint: buildQueryString('search', {
+        q: options.song,
+        artist: options.artist,
+        type: 'track',
+        limit: options.limit,
+        offset: options.offset
+      }),
+      handler: 'spotify'
+    })), options.sort)
+  
 };

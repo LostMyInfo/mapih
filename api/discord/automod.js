@@ -4,7 +4,7 @@
 // Auto Moderation
 // https://discord.com/developers/docs/resources/auto-moderation#auto-moderation
 
-const { attemptHandler } = require('../resources/functions');
+const { attemptHandler } = require('../resources/handlers');
 
 /**
  * @file

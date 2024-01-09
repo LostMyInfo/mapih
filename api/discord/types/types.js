@@ -1697,7 +1697,7 @@
  * @property {InteractionType} type
  * @property {string} name
  * @property {User} user
- * @property {MemberParams} [member]
+ * @property {Member} [member]
  */
 
 /**

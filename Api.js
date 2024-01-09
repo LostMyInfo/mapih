@@ -4,47 +4,95 @@
  * @type {string | undefined}
  */
 let discordToken = undefined;
+
+/**
+ * @type {{bot: string, user?: string, client_id?: string, client_secret?: string, team_id?: string, redirect_uri?: string, scope?: Array<string>}|undefined}
+ */
+let slack_bot_token = undefined;
+
 /**
  * @type {string | undefined}
  */
-let slackToken = undefined;
+let openaiKey = undefined;
+
 /**
- * @type {{client_id: string, client_secret: string, redirect_uri?: string|undefined} | undefined}
+ * @type {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined}
  */
 let spotifyToken = undefined;
+
+/**
+ * @type {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>, access_token?: string|undefined} | undefined}
+ */
+let dropboxToken = undefined;
+
+/**
+ * @type {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, restricted_to: { scope: string, object: { id: string, etag: string, type: string, sequence_id: string, name: string}}, scope?: string} | undefined}
+ */
+let boxToken = undefined;
+
+
+/**
+ * @type {{client_id: string, secret_key: string}|undefined}
+ */
+let paypalToken = undefined;
 
 module.exports = {
 
   /**
    * @param {Object} options
    * @param {string} [options.discord]
-   * @param {string} [options.slack]
-   * @param {{client_id: string, client_secret: string, redirect_uri?: string|undefined}} [options.spotify]
+   * @param {{bot: string, user?: string, client_id?: string, client_secret?: string, team_id?: string, redirect_uri?: string, scope?: Array<string>}|undefined} [options.slack]
+   *  @param {string} [options.openai]
+   * @param {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>}|undefined} [options.spotify]
+   * @param {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>, access_token?: string|undefined}} [options.dropbox]
+   * @param {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, restricted_to: { scope: string, object: { id: string, etag: string, type: string, sequence_id: string, name: string}}, scope?: string} | undefined} [options.box]
+   * @param {{client_id: string, secret_key: string}} [options.paypal]
    */
   initialize: function(options) {
     // console.log(options);
     if (options.discord) discordToken = options.discord;
-    if (options.slack) slackToken = options.slack;
+    if (options.slack) slack_bot_token = options.slack;
+    if (options.openai) openaiKey = options.openai;
     if (options.spotify) spotifyToken = options.spotify;
+    if (options.dropbox) dropboxToken = options.dropbox;
+    if (options.paypal) paypalToken = options.paypal;
+    if (options.box) boxToken = options.box;
   },
 
   /**
    * @returns {string|undefined}
    */
-  get_discord_token: function() {
-    return discordToken;
-  },
+  get_discord_token: function() { return discordToken; },
+
+  /**
+   * @returns {{bot: string, user?: string, client_id?: string, client_secret?: string, team_id?: string, redirect_uri?: string, scope?: Array<string>}|undefined}
+   */
+  get_slack_token: function() { return slack_bot_token; },
 
   /**
    * @returns {string|undefined}
    */
-  get_slack_token: function() {
-    return slackToken;
-  },
+  get_openai_token: function() { return openaiKey; },
 
-  get_spotify_token: function() {
-    return spotifyToken;
-  },
+  /**
+   * @returns {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>}|undefined}
+   */
+  get_spotify_token: function() { return spotifyToken; },
+
+  /**
+   * @returns {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>, access_token?: string|undefined}|undefined}
+   */
+  get_dropbox_token: function() { return dropboxToken; },
+
+  /**
+   * @returns {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, restricted_to: { scope: string, object: { id: string, etag: string, type: string, sequence_id: string, name: string}}, scope?: string}|undefined}
+   */
+  get_box_token: function() { return boxToken; },
+
+  /**
+   * @returns {{client_id: string, secret_key: string}|undefined}
+   */
+  get_paypal_token: function() { return paypalToken; },
 
   discord: {
     auditlog: require('./api/discord/auditlog'),
@@ -71,11 +119,29 @@ module.exports = {
     search: require('./api/spotify/search').search,
     artists: require('./api/spotify/artists'),
     users: require('./api/spotify/users'),
-    playlists: require('./api/spotify/playlists')
+    playlists: require('./api/spotify/playlists'),
+    playback: require('./api/spotify/playback'),
+    oauth2: require('./api/spotify/oauth2')
+  },
+
+  openai: {
+    chat: require('./api/openai/chat'),
+    images: require('./api/openai/images'),
+    speech: require('./api/openai/speech')
+  },
+
+  dropbox: {
+    oauth2: require('./api/dropbox/oauth2'),
+    files: require('./api/dropbox/files')
+  },
+
+  box: {
+    oauth2: require('./api/box/oauth2'),
+    collections: require('./api/box/collections')
   },
   
   utils: {
-    https: require('./api/utils/newhttps').https,
+    https: require('./api/utils/https').https,
     storage: require('./api/utils/storage')
   }
 };

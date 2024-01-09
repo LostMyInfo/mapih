@@ -153,7 +153,7 @@ export function buildQueryString(url: string, params: Object, encode?: boolean):
  * @param {string} type
  * @returns {string}
  */
-export function token(type: string): string;
+export function token(type: string, handler: string): string;
 export declare function attemptHandler(params: {
     method: Method;
     endpoint: string;

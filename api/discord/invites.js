@@ -1,7 +1,7 @@
 // @ts-check
 'use-strict';
-
-const { attemptHandler, extendPayload } = require('../resources/functions');
+const { attemptHandler } = require('../resources/handlers');
+const { extendPayload } = require('../resources/functions');
 
 // Invites
 // https://discord.com/developers/docs/resources/invite#invite-resource

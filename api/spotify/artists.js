@@ -1,9 +1,10 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
-const { spotifyHandler, buildSpotifyResponse, buildQueryString } = require('../resources/functions');
+const { buildQueryString } = require('../resources/functions');
+const { handler } = require('../resources/handlers');
+const { buildSpotifyResponse } = require('./functions');
 const { search } = require('./search');
-
 /**
  * @file All Spotify API endpoints relating to artists
  * @module artists
@@ -30,15 +31,17 @@ module.exports = {
   async top_tracks(query, options = {}) {
     const { limit, market } = options;
     
-    const id = findArtist(query);
-    const top = await spotifyHandler({
+    const id = find(query);
+    const top = await handler({
       method: 'GET',
-      endpoint: `artists/${id}/top-tracks?market=${market ?? 'US'}`
+      endpoint: `artists/${id}/top-tracks?market=${market ?? 'US'}`,
+      handler: 'spotify'
     });
 
     if (top && limit && !isNaN(limit) && limit < top.tracks?.length)
       top.tracks = top.tracks.sort((/** @type {{ popularity: number; }} */ a, /** @type {{ popularity: number; }} */ b) => b.popularity - a.popularity).slice(0, limit);
     // console.log('LENGTH:', top.tracks[0].artists);
+    // @ts-ignore
     return buildSpotifyResponse('tracks:top', top);
   },
 
@@ -65,7 +68,7 @@ module.exports = {
   async albums(query, options = {}) {
     const { limit, market, include_groups, offset } = options;
     let groups;
-    const id = await findArtist(query);
+    const id = await find(query);
     console.log('id:', id);
     if (include_groups)
       groups = include_groups.join(', ');
@@ -73,14 +76,16 @@ module.exports = {
       include_groups: groups, limit, offset, market
     });
 
-    let albums = await spotifyHandler({
+    let albums = await handler({
       method: 'GET',
-      endpoint
+      endpoint,
+      handler: 'spotify'
     });
 
     if (albums && limit && !isNaN(limit) && limit < albums?.length)
       albums = albums.sort((/** @type {{ popularity: number; }} */ a, /** @type {{ popularity: number; }} */ b) => b.popularity - a.popularity).slice(0, limit);
     // console.log('LENGTH:', top.tracks[0].artists);
+    // @ts-ignore
     return buildSpotifyResponse('artist:albums', albums);
   }
   
@@ -90,7 +95,7 @@ module.exports = {
  * @param {string} query 
  * @returns {Promise<string>}
  */
-async function findArtist(query) {
+async function find(query) {
   const [artist] = (await search({
     artist: query
   }))?.artists || [];

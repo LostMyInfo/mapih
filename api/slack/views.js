@@ -1,5 +1,5 @@
 // @ts-check
-const { slackHandler } = require('../resources/functions');
+const { handler } = require('../resources/handlers');
 
 /**
  * @file All Slack API endpoints relating to views
@@ -11,6 +11,7 @@ module.exports = {
   /**
    * @summary
    * ### [Open A View For A User]{@link https://api.slack.com/methods/views.open}
+   * 
    * @example
    * await api.slack.views.open({
    *   trigger_id: '123123.123123.sfasdf',
@@ -66,16 +67,17 @@ module.exports = {
    *     callback_id: 'view_identifier_12'
    *   }
    * });
+   * 
    * @memberof module:views#
    * @function open
    * @param {Object} params
    * @param {ModalView} params.view
    * @param {string} [params.trigger_id]
-   * @param {(KnownBlock | Block)[]} [params.interactivity_pointer]
-   * @returns {Promise<SlackViewResponse>}
+   * @param {(KnownBlock | SlackBlock)[]} [params.interactivity_pointer]
+   * @returns {Promise<{ok: boolean, view: SlackView, response_metadata?: { messages: string[]}}>}
    */
   open: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'views.open',
       body: {
@@ -84,12 +86,14 @@ module.exports = {
           : params.view,
         trigger_id: params.trigger_id ?? undefined,
         interactivity_pointer: params.interactivity_pointer ?? undefined
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
    * @summary
    * ### [Open A View For A User]{@link https://api.slack.com/methods/views.open}
+   * 
    * @example
    * await api.slack.views.publish({
    *   user_id: '0000000000',
@@ -145,16 +149,17 @@ module.exports = {
    *     callback_id: 'view_identifier_12'
    *   }
    * });
+   * 
    * @memberof module:views#
    * @function publish
    * @param {Object} params
    * @param {ModalView} params.view
    * @param {string} [params.user_id]
    * @param {string} [params.hash] - A string that represents view state to protect against possible race conditions.
-   * @returns {Promise<SlackViewResponse>}
+   * @returns {Promise<{ok: boolean, view: SlackView, response_metadata?: { messages: string[]}}>}
    */
   publish: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'views.publish',
       body: {
@@ -163,7 +168,8 @@ module.exports = {
           ? JSON.stringify(params.view)
           : params.view,
         hash: params.hash ?? undefined
-      }
+      },
+      handler: 'slack'
     })
 };
 

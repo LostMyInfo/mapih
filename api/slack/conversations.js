@@ -1,5 +1,6 @@
 // @ts-check
-const { slackHandler, buildQueryString } = require('../resources/functions');
+const { handler } = require('../resources/handlers');
+const { buildQueryString } = require('../resources/functions');
 
 /**
  * @file All Slack API endpoints relating to conversations (channels)
@@ -25,14 +26,15 @@ module.exports = {
    * @returns {Promise<SlackChannel>}
    */
   create: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.create',
       body: {
         name: params.name,
         is_private: params.is_private || false,
         team_id: params.team_id ?? undefined
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -54,7 +56,7 @@ module.exports = {
    * @returns {Promise<{channel: string; no_op?: boolean; already_open?: boolean}>} 
    */
   open: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.open',
       body: {
@@ -62,7 +64,8 @@ module.exports = {
         prevent_creation: params.prevent_creation || false,
         return_im: params.return_im || false,
         users: params.users ?? undefined
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -79,12 +82,13 @@ module.exports = {
    * @returns {Promise<{ok: boolean; no_op?: boolean; already_closed?: boolean}>}
    */
   close: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.close',
       body: {
         channel: params.channel
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -101,12 +105,13 @@ module.exports = {
    * @returns {Promise<{ok: boolean}>}
    */
   archive: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.archive',
       body: {
         channel: params.channel
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -123,12 +128,13 @@ module.exports = {
    * @returns {Promise<{ok: boolean}>}
    */
   unarchive: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.unarchive',
       body: {
         channel: params.channel
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -147,13 +153,14 @@ module.exports = {
    * @returns {Promise<{ok: boolean; channel: SlackChannel}>}
    */
   rename: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.rename',
       body: {
         channel: params.channel,
         name: params.name
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -172,13 +179,14 @@ module.exports = {
    * @returns {Promise<{ok: boolean; channel: SlackChannel}>}
    */
   setTopic: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.setTopic',
       body: {
         channel: params.channel,
         topic: params.topic
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -197,13 +205,14 @@ module.exports = {
    * @returns {Promise<{ok: boolean; purpose?: string}>}
    */
   setPurpose: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.setPurpose',
       body: {
         channel: params.channel,
         topic: params.purpose
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -220,12 +229,13 @@ module.exports = {
    * @returns {Promise<{channel: SlackChannel; warning?: string; response_metadata?: { warnings?: Array<string> }}>} 
    */
   join: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.join',
       body: {
         channel: params.channel
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -242,12 +252,13 @@ module.exports = {
    * @returns {Promise<{ok: boolean; not_in_channel?: boolean}>} 
    */
   leave: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.leave',
       body: {
         channel: params.channel
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -266,13 +277,14 @@ module.exports = {
    * @returns {Promise<{ok: boolean; error?: string}>} 
    */
   kick: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.kick',
       body: {
         channel: params.channel,
         user: params.user
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -291,20 +303,17 @@ module.exports = {
    * @param {boolean} [params.force] - When set to true and multiple user IDs are provided, continue inviting the valid ones while disregarding invalid IDs. Defaults to false.
    * @returns {Promise<SlackChannel>} a list of limited channel-like [conversation objects]{@link https://api.slack.com/types/conversation}
    */
-  invite: async (params) => {
-    
-    const res = await slackHandler({
+  invite: async (params) =>
+    (await handler({
       method: 'POST',
       endpoint: 'conversations.invite',
       body: {
         channel: params.channel,
         users: params.users.join(','),
         force: params.force || false
-      }
-    });
-
-    return res.channel;
-  },
+      },
+      handler: 'slack'
+    }))?.channel,
 
   /**
    * @summary
@@ -321,13 +330,14 @@ module.exports = {
    * @returns {Promise<{ok: boolean}>}
    */
   approveSharedInvite: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.approveSharedInvite',
       body: {
         invite_id: params.invite_id,
         target_team: params.target_team ?? undefined
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -352,7 +362,7 @@ module.exports = {
    * @returns {Promise<{ok: boolean, implicit_approval?: boolean, channel_id?: string, invite_id?: string}>}
    */
   acceptSharedInvite: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.acceptSharedInvite',
       body: {
@@ -362,7 +372,8 @@ module.exports = {
         free_trial_accepted: params.free_trial_accepted || false,
         is_private: params.is_private || false,
         team_id: params.team_id ?? undefined
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -382,13 +393,14 @@ module.exports = {
    * @returns {Promise<{ok: boolean}>}
    */
   declineSharedInvite: async (params) =>
-    slackHandler({
+    handler({
       method: 'POST',
       endpoint: 'conversations.declineSharedInvite',
       body: {
         invite_id: params.invite_id,
         target_team: params.target_team ?? undefined
-      }
+      },
+      handler: 'slack'
     }),
   
   /**
@@ -404,22 +416,19 @@ module.exports = {
    * @param {number} [params.count] - Maximum number of invites to return
    * @param {string} [params.cursor] - Set to next_cursor returned by previous call to list items in subsequent page
    * @param {string} [params.team_id] - Encoded team id for the workspace to retrieve invites for, required if org token is used
-   * @returns {Promise<SlackInvite[]>} Returns a paginated list of invites that represesent pending shared channel invitations sent or received
+   * @returns {Promise<SlackConversationsListConnectInviteResponse>} Returns a paginated list of invites that represesent pending shared channel invitations sent or received
    */
-  listConnectInvites: async (params) => {
-    
-    const res = await slackHandler({
+  listConnectInvites: async (params) =>
+    (await handler({
       method: 'POST',
       endpoint: 'conversations.listConnectInvites',
       body: {
         count: params.count ?? 100,
         cursor: params.cursor ?? undefined,
         team_id: params.team_id ?? undefined
-      }
-    });
-
-    return res.invites;
-  },
+      },
+      handler: 'slack'
+    }))?.invites,
 
   /**
    * @summary
@@ -437,17 +446,16 @@ module.exports = {
    * @param {boolean} [params.include_num_members] - Whether to include the member count for the specified conversation. Defaults to false.
    * @returns {Promise<SlackChannel>} A list of [Application Role Connection Metadata]{@link https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object} objects for the given application.
    */
-  info: async (params) => {
-    const endpoint = buildQueryString('conversations.info', {
-      channel: params.channel,
-      include_locale: params.include_locale || false,
-      include_num_members: params.include_num_members || false
-    });
-    return slackHandler({
+  info: async (params) =>
+    handler({
       method: 'GET',
-      endpoint
-    });
-  },
+      endpoint: buildQueryString('conversations.info', {
+        channel: params.channel,
+        include_locale: params.include_locale || false,
+        include_num_members: params.include_num_members || false
+      }),
+      handler: 'slack'
+    }),
 
   /**
    * @summary
@@ -470,22 +478,21 @@ module.exports = {
    * @param {string} [params.oldest] - Only messages after this Unix timestamp will be included in results
    * @returns {Promise<{ok: boolean; messages: SlackMessage[]; has_more: boolean; response_metadata: { next_cursor: string; } }>}
    */
-  replies: async (params) => {
-    const endpoint = buildQueryString('conversations.replies', {
-      channel: params.channel,
-      ts: params.ts,
-      cursor: params.cursor ?? undefined,
-      include_all_metadata: params.include_all_metadata || false,
-      inclusive: params.inclusive ?? undefined,
-      latest: params.latest ?? undefined,
-      limit: params.limit ?? 100,
-      oldest: params.oldest ?? undefined
-    });
-    return slackHandler({
+  replies: async (params) =>
+    handler({
       method: 'GET',
-      endpoint
-    });
-  },
+      endpoint: buildQueryString('conversations.replies', {
+        channel: params.channel,
+        ts: params.ts,
+        cursor: params.cursor ?? undefined,
+        include_all_metadata: params.include_all_metadata || false,
+        inclusive: params.inclusive ?? undefined,
+        latest: params.latest ?? undefined,
+        limit: params.limit ?? 100,
+        oldest: params.oldest ?? undefined
+      }),
+      handler: 'slack'
+    }),
 
   /**
    * @summary
@@ -508,21 +515,20 @@ module.exports = {
    * @param {string} [params.oldest] - Only messages after this Unix timestamp will be included in results
    * @returns {Promise<{messages: SlackMessage[], has_more: boolean, pin_count: number, channel_actions_ts: ?number, channel_actions_count: number}>}
    */
-  history: async (params) => {
-    const endpoint = buildQueryString('conversations.history', {
-      channel: params.channel,
-      cursor: params.cursor ?? undefined,
-      include_all_metadata: params.include_all_metadata || false,
-      inclusive: params.inclusive ?? undefined,
-      latest: params.latest ?? undefined,
-      limit: params.limit ?? 100,
-      oldest: params.oldest ?? undefined
-    });
-    return slackHandler({
+  history: async (params) =>
+    handler({
       method: 'GET',
-      endpoint
-    });
-  },
+      endpoint: buildQueryString('conversations.history', {
+        channel: params.channel,
+        cursor: params.cursor ?? undefined,
+        include_all_metadata: params.include_all_metadata || false,
+        inclusive: params.inclusive ?? undefined,
+        latest: params.latest ?? undefined,
+        limit: params.limit ?? 100,
+        oldest: params.oldest ?? undefined
+      }),
+      handler: 'slack'
+    }),
 
   /**
    * @summary
@@ -541,19 +547,18 @@ module.exports = {
    * @param {number} [params.limit] - The maximum number of items to return
    * @returns {Promise<SlackChannel[]>} a list of limited channel-like [conversation objects]{@link https://api.slack.com/types/conversation}
    */
-  list: async (params) => {
-    const endpoint = buildQueryString('conversations.list', {
-      cursor: params.cursor ?? undefined,
-      exclude_archived: params.exclude_archived || false,
-      team_id: params.team_id ?? undefined,
-      types: params.types ?? undefined,
-      limit: params.limit ?? 100
-    });
-    return slackHandler({
+  list: async (params) =>
+    handler({
       method: 'GET',
-      endpoint
-    });
-  },
+      endpoint: buildQueryString('conversations.list', {
+        cursor: params.cursor ?? undefined,
+        exclude_archived: params.exclude_archived || false,
+        team_id: params.team_id ?? undefined,
+        types: params.types ?? undefined,
+        limit: params.limit ?? 100
+      }),
+      handler: 'slack'
+    }),
   
   /**
    * @summary
@@ -571,15 +576,14 @@ module.exports = {
    * @param {number} [params.limit] - The maximum number of items to return. Default 100.
    * @returns {Promise<{ok: boolean, members: Array<string>, response_metadata?: { next_cursor: string } }>}
    */
-  members: async (params) => {
-    const endpoint = buildQueryString('conversations.members', {
-      channel: params.channel,
-      cursor: params.cursor ?? undefined,
-      limit: params.limit ?? 100
-    });
-    return slackHandler({
+  members: async (params) =>
+    handler({
       method: 'GET',
-      endpoint
-    });
-  }
+      endpoint: buildQueryString('conversations.members', {
+        channel: params.channel,
+        cursor: params.cursor ?? undefined,
+        limit: params.limit ?? 100
+      }),
+      handler: 'slack'
+    })
 };

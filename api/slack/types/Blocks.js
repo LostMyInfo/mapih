@@ -1,5 +1,6 @@
+// @ts-check
 /**
- * @typedef {Object} Block
+ * @typedef {Object} SlackBlock
  * @property {string} type
  * @property {string} [block_id]
  * A string acting as a unique identifier for a block.
@@ -53,7 +54,7 @@
  * @property {PlainTextElement} [hint] - An optional hint that appears below an input element in a lighter grey. It must be a {@link PlainTextElement object}. Maximum length for the `text` in this field is 2000 characters.
  * @property {boolean} [optional] - A boolean that indicates whether the input element may be empty when a user submits the modal. Defaults to `false`.
  * @property {boolean} [dispatch_action] - A boolean that indicates whether or not the use of elements in this block should dispatch a {@link https://api.slack.com/reference/interaction-payloads/block-actions block_actions payload}. Defaults to `false`.
- * @property {Select | MultiSelect | Datepicker | Timepicker | DateTimepicker | PlainTextInput | URLInput | EmailInput | NumberInput | RadioButtons | Checkboxes | RichTextInput | FileInput} element - A block element.
+ * @property {Select | MultiSelect | DatePickerElement | Timepicker | DateTimePickerElement | PlainTextInput | URLInput | EmailInput | NumberInput | RadioButtons | CheckboxesElement | RichTextInput | FileInput} element - A block element.
  */
 
 /**
@@ -71,7 +72,7 @@
  * Holds multiple interactive elements.
  * @typedef {Object} ActionsBlock
  * @property {string} type - The type of block Set to `actions` for actions blocks.
- * @property {(SlackButton | Checkboxes | Datepicker | DateTimepicker | MultiSelect | Overflow | RadioButtons | Select | Timepicker | WorkflowButton | RichTextInput)[]} elements - There is a maximum of 25 elements in each action block.
+ * @property {(SlackButton | CheckboxesElement | DatePickerElement | DateTimePickerElement | MultiSelect | Overflow | RadioButtons | Select | Timepicker | WorkflowButton | RichTextInput)[]} elements - There is a maximum of 25 elements in each action block.
  */
 
 /**
@@ -102,9 +103,48 @@
  * @property {string} type - The type of block Set to `section` for context blocks.
  * @property {PlainTextElement | MrkdwnElement} [text] - This field is not required if a valid array of `fields` objects is provided instead.
  * @property {(PlainTextElement | MrkdwnElement)[]} [fields] - Required if no `text` is provided. Any text objects included with `fields` will be rendered in a compact format that allows for 2 columns of side-by-side text.
- * @property {SlackButton | DatePicker | TimePicker | Select | MultiSelect | Actionable | ImageElement | RadioButtons | Checkboxes} [accessory]
+ * @property {SlackButton | DatePickerElement | TimePicker | Select | MultiSelect | Actionable | ImageElement | RadioButtons | CheckboxesElement} [accessory]
  */
 
 /**
  * @typedef {ImageBlock | SectionBlock | DividerBlock | ContextBlock | ActionsBlock | InputBlock | FileBlock | HeaderBlock | RichTextBlock} KnownBlock
+ */
+
+/**
+ * @typedef {Object} SlackAttachmentBlock
+ * @property {SlackAccessory} [accessory]
+ * @property {string} [alt_text]
+ * @property {string[]} [app_collaborators]
+ * @property {string} [app_id]
+ * @property {string} [author_name]
+ * @property {string} [block_id]
+ * @property {string} [bot_user_id]
+ * @property {string} [button_label]
+ * @property {SlackDescriptionElement|string} [description]
+ * @property {string} [developer_trace_id]
+ * @property {SlackAccessory[]} [elements]
+ * @property {string} [fallback]
+ * @property {SlackDescriptionElement[]} [fields]
+ * @property {string} [function_trigger_id]
+ * @property {number} [image_bytes]
+ * @property {number} [image_height]
+ * @property {number} [image_width]
+ * @property {string} [image_url]
+ * @property {boolean} [is_workflow_app]
+ * @property {string} [owning_team_id]
+ * @property {string} [provider_icon_url]
+ * @property {string} [provider_name]
+ * @property {number} [sales_home_workflow_app_type]
+ * @property {string} [share_url]
+ * @property {SlackDescriptionElement} [text]
+ * @property {string} [thumbnail_url]
+ * @property {SlackDescriptionElement | string} [title]
+ * @property {string} [title_url]
+ * @property {string} [trigger_subtype]
+ * @property {string} [trigger_type]
+ * @property {string} [app_id]
+ * @property {string} [type]
+ * @property {string} [url]
+ * @property {string} [video_url]
+ * @property {string} [workflow_id]
  */

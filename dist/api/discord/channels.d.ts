@@ -248,6 +248,12 @@ export namespace reactions {
         message: string;
     }>;
     export { create_1 as create };
+    export function createMany(params: {
+        channel_id: string;
+        message_id: string;
+        emojis: string[];
+        delay?: number;
+    }): Promise<undefined>;
     export function deleteOwn(params: {
         channel_id: string;
         message_id: string;

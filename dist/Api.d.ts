@@ -423,6 +423,12 @@ export namespace discord {
                 statusCode: number;
                 message: string;
             }>;
+            createMany: (params: {
+                channel_id: string;
+                message_id: string;
+                emojis: string[];
+                delay?: number;
+            }) => Promise<undefined>;
             deleteOwn: (params: {
                 channel_id: string;
                 message_id: string;

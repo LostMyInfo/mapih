@@ -4,7 +4,7 @@
 // Stage Instance
 // https://discord.com/developers/docs/resources/stage-instance#stage-instance-resource
 
-const { attemptHandler } = require('../resources/functions');
+const { attemptHandler } = require('../resources/handlers');
 
 /**
  * All Discord API endpoints relating to Stage Instance functions.

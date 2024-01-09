@@ -6,9 +6,8 @@
 // //////////////////////////////////////////////////////////////////////
 // https://discord.com/developers/docs/resources/channel#channels-resource
 const { messageType, channelType } = require('../../enum');
-const { embedModifier } = require('../resources/functions');
-const { attemptHandler, sendAttachment, extendPayload } = require('../resources/functions');
-
+const { embedModifier, extendPayload } = require('../resources/functions');
+const { attemptHandler, sendAttachment } = require('../resources/handlers');
 /*
 let members;
 (async (params) => {
@@ -1217,6 +1216,42 @@ module.exports = {
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/@me`
       }), // End of Create Reaction
     
+    /**
+     * @summary
+     * ### [Create Multiple Reactions]{@link https://discord.com/developers/docs/resources/channel#create-reaction}
+     * @example
+     * await api.discord.channels.reactions.createMany({
+     *   channel_id: '0000000000000',
+     *   message_id: '0000000000000',
+     *   emojis: [
+     *     'name:id'
+     *     'name:id'
+     *   ],
+     *   delay: 300
+     * });
+     * @memberof module:channels.reactions#
+     * @function create
+     * @param {Object} params
+     * @param {Snowflake} params.channel_id
+     * @param {Snowflake} params.message_id
+     * @param {string[]} params.emojis - An array of emoji parameters
+     * @param {number} [params.delay] - The delay (in milliseconds) between each reaction (to help with rate-limiting)
+     * @returns {Promise<undefined>} `204 No Content`
+     */
+    createMany: async (params) => {
+      if (!params.emojis || !Array.isArray(params.emojis))
+        throw new Error('\`emojis\` must be an array of \`emoji_name:emoji_id:\` strings');
+      
+      for (const emoji of params.emojis) {
+        await attemptHandler({
+          method: 'PUT',
+          endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${emoji}/@me`
+        });
+        await new Promise(resolve => setTimeout(resolve, params.delay ?? 300));
+      }
+      return undefined;
+    },
+
     /**
      * @summary
      * ### [Delete Own Reaction]{@link https://discord.com/developers/docs/resources/channel#delete-own-reaction}
