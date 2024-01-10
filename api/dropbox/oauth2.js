@@ -2,7 +2,6 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 // @ts-check
 'use-strict';
-require('dotenv').config();
 const { https } = require('../utils/https');
 const storage = require('../utils/storage');
 const { authorize: auth, refresh: fresh } = require('../resources/handlers');
