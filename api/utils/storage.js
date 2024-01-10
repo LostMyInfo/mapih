@@ -817,8 +817,7 @@ function loadCache() {
   try {
     // @ts-ignore
     _listeners = JSON.parse(readFileSync(LISTENERS));
-  } catch (error) {
-    // @ts-ignore
+  } catch (/** @type {any} */ error) {
     if (error.code === 'ENOENT')
       writeFileSync(LISTENERS, JSON.stringify({}));
     _listeners = {};

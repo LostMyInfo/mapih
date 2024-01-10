@@ -227,7 +227,7 @@ async function paypalHandler(options) {
 async function paypalAccessToken(refresh = false) {
   const oldToken = await get('paypalAuth') || {};
   if (!oldToken || oldToken?.expires <= Date.now()) {
-    if (refresh) { /*console.log('refresh === true');*/ }
+    if (refresh) { /* console.log('refresh === true');*/ }
     else oldToken.access_token = await paypalAccessToken(true);
     // console.log('refresh2:', refresh);
   }
@@ -340,22 +340,21 @@ function token(type, handler) {
 async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
   if (service !== handler) return;
   const api = require('../../Api');
-  const oauth2 = require(`../${service}/oauth2`);
   const token = await get(`${service}Auth`);
   
   // console.log(type + ' token in oauthToken():', token);
 
   if (token && token.expires <= Date.now())
-    token.access_token = await oauth2.refresh();
+    token.access_token = await refresh(service);
 
-  if (scope && scope.length) {
+  if (token && scope && scope.length) {
     const scopes = [];
     for (const _scope of scope)
       if (!token?.scope?.includes(_scope))
         scopes.push(_scope);
           
     if (scopes.length)
-      throw new ResponseError(null, null, `${service}_error`, `Your app does not have the required scopes: \`${scopes.join(scopes.length > 1 ? ',' : '')}\``);
+      throw new ResponseError(null, null, `${service}_error`, `Your app does not have the required scopes: \`${scopes.join(scopes.length > 1 ? ', ' : '')}\``);
   }
   
   if (token?.access_token) return token.access_token;
@@ -365,7 +364,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
   const credentials = api[`get_${service}_token`]();
   // console.log('credentials in oauthToken():', credentials);
   if (!credentials?.access_token && !credentials?.user && !process.env[`${service}_access_token`] && !process.env[`${service}_user_token`])
-    throw await oauth2.authorize();
+    throw await authorize(type);
 
   return credentials?.access_token ?? credentials?.user ?? process.env[`${service}_access_token`] ?? process.env[`${service}_user_token`];
 }
@@ -428,9 +427,8 @@ async function authorize(type, params) {
 }
 
 /**
- * 
- * @param {'dropbox'|'spotify'|'slack'|'box'} type 
- * @returns 
+ * @param {string} type 
+ * @returns {Promise<string>}
  */
 async function refresh(type) {
     
