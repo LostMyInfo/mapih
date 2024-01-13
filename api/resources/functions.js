@@ -720,6 +720,23 @@ const removeFalsyFromArray = (arr) => {
   }).filter(obj => Object.keys(obj).length > 0);
 };
 
+/**
+ * @param {any} obj 
+ * @param {string} path
+ * @returns {any}
+ */
+function getPathValue(obj, path) {
+  /** @type {(regexp: RegExp) => any} */
+  const travel = (regexp) =>
+    String(path).split(regexp).filter(Boolean).reduce((res, key) => (
+      (res !== null && res !== undefined)
+        ? res[key]
+        : res
+    ), obj);
+
+  return travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
+}
+
 module.exports = {
   embedModifier,
   avatarFromObject,
@@ -738,5 +755,6 @@ module.exports = {
   getAppId,
   removeFalsyFromArray,
   removeFalsyFromObject,
-  buildQueryStringFromArrays
+  buildQueryStringFromArrays,
+  getPathValue
 };

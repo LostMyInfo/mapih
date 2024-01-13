@@ -26,14 +26,13 @@ module.exports = {
     // throw new Error('this access token is expired.');
     
     
-    console.log('Object.keys(token) in refresh():', Object.keys(token));
+    // console.log('Object.keys(token) in refresh():', Object.keys(token));
     const refresh = await https({
       method: 'post',
       url: 'https://accounts.spotify.com/api/token',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        // @ts-ignore
-        Authorization: 'Basic ' + (new Buffer.from((credentials?.client_id || process.env.spotify_client_id) + ':' + (credentials?.client_secret || process.env.spotify_client_secret)).toString('base64'))
+        Authorization: 'Basic ' + Buffer.from((credentials?.client_id || process.env.spotify_client_id) + ':' + (credentials?.client_secret || process.env.spotify_client_secret)).toString('base64')
       },
       // @ts-ignore
       body: new URLSearchParams({

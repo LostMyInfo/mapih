@@ -125,48 +125,48 @@ async function handler(options) {
     // console.log(options);
     
     /**
-     * @type {{[x: string]: {url: string, auth: string, header?: [string, string]}}}
+     * @type {{[x: string]: {url: string, auth: () => Promise<string>, header?: [string, string]}}}
      */
     const handlers = {
       spotify: {
         url: 'https://api.spotify.com/v1',
-        auth: !options.oauth
+        auth: async () => !options.oauth
           ? `Bearer ${await spotifyAccessToken()}`
           : `Bearer ${await oauthToken('Spotify', options.handler, options.scope)}`
       },
       slack: {
         url: 'https://slack.com/api',
-        auth: !options.oauth
+        auth: async () => !options.oauth
           ? `Bearer ${token('slack', options.handler)}`
           : `Bearer ${await oauthToken('Slack', options.handler, options.scope)}`
       },
       openai: {
         url: 'https://api.openai.com/v1',
-        auth: `Bearer ${token('openai', options.handler)}`
+        auth: async () => `Bearer ${token('openai', options.handler)}`
       },
       dropbox: {
         url: `https://${options.type === 'content' ? 'content' : 'api'}.dropboxapi.com`,
-        auth: `Bearer ${await oauthToken('Dropbox', options.handler, options.scope)}`,
+        auth: async () => `Bearer ${await oauthToken('Dropbox', options.handler, options.scope)}`,
         header: options.type === 'content' ? [
           'Dropbox-API-Arg', JSON.stringify(options.body)
         ] : undefined
       },
       box: {
         url: 'https://api.box.com/2.0',
-        auth: `Bearer ${await oauthToken('Box', options.handler, options.scope)}`
+        auth: async () => `Bearer ${await oauthToken('Box', options.handler, options.scope)}`
       },
       paypal: {
         url: 'https://api-m.sandbox.paypal.com',
-        auth: `Basic ${await paypalAccessToken()}`
+        auth: async () => `Basic ${await paypalAccessToken()}`
       }
     };
     
     const { url, auth, header = undefined } = handlers[options.handler];
-    // console.log('auth in handler():', auth);
+    const authorization = await auth();
 
     if (header)
       _headers.push(header);
-    _headers.push(['Authorization', auth]);
+    _headers.push(['Authorization', authorization]);
     
     return https({
       method: options.method,
@@ -305,7 +305,7 @@ function token(type, handler) {
    */
   const tokenTypes = {
     discord: {
-      getToken: api.get_discord_token,
+      getToken: () => api.get_discord_token(),
       env: 'token',
       errorMessage: 'Discord Bot token not set. Please initialize the library first.'
     },
@@ -315,7 +315,7 @@ function token(type, handler) {
       errorMessage: 'Slack token not set. Please initialize the library first.'
     },
     openai: {
-      getToken: api.get_openai_token,
+      getToken: () => api.get_openai_token(),
       env: 'openai_api_key',
       errorMessage: 'OpenAI API key not set. Please initialize the library first.'
     }
@@ -466,8 +466,7 @@ async function refresh(type) {
   if (type !== 'spotify')
     searchParams.client_secret = credentials?.client_secret ?? process.env[`${type}_client_secret`];
   else
-    // @ts-ignore
-    headers.Authorization = 'Basic ' + (new Buffer.from((credentials?.client_id || process.env.spotify_client_id) + ':' + (credentials?.client_secret || process.env.spotify_client_secret)).toString('base64'));
+    headers.Authorization = 'Basic ' + Buffer.from((credentials?.client_id || process.env.spotify_client_id) + ':' + (credentials?.client_secret || process.env.spotify_client_secret)).toString('base64');
   
   const refresh = await https({
     method: 'post',

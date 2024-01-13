@@ -1,35 +1,68 @@
 // @ts-check
 
-const { removeFalsyFromArray, removeFalsyFromObject } = require('../resources/functions');
+const { ResponseError } = require('../resources/Errors');
+const { removeFalsyFromArray, removeFalsyFromObject, getPathValue } = require('../resources/functions');
+
 
 /**
- * @param {any} payload 
+ * @param {any} payload
+ * @param {string} [sort]
+ * @param {string} [property]
  * @param {any} [artists] 
  * @returns {SpotifyArtist[]}
  */
-function buildArtists(payload, artists = []) {
-  if ((payload.item?.artists && payload.item?.artists.length) || (payload.currently_playing?.artists && payload.currently_playing?.artists.length) || (payload.artists && payload.artists.length)) {
-    for (const artist of payload.item?.artists ?? payload.currently_playing?.artists ?? payload.artists)
+function buildArtists(payload, sort, property, artists = []) {
+  const items = property ? getPathValue(payload, property) : payload.item?.artists || payload.currently_playing?.artists || (payload.artists?.length ? payload.artists : undefined) || payload.artists?.items || payload.items || (payload.length && payload[0].type === 'artist' ? payload : undefined) || (payload.type === 'artist' ? [payload] : undefined);
+  // console.log('ARRAY', items);
+  // return log('buildArtists', payload);
+  // if ((payload.item?.artists && payload.item?.artists.length) || (payload.currently_playing?.artists && payload.currently_playing?.artists.length) || (payload.artists && payload.artists.length)) {
+  if (items?.length)
+    for (const artist of items) {
       artists.push({
         name: artist.name,
+        followers: artist.followers?.total,
+        popularity: artist.popularity,
+        images: buildImages('images', artist),
+        genres: artist.genres?.length ? artist.genres : undefined,
         id: artist.id,
         spotify_url: artist.external_urls?.spotify,
         uri: artist.uri
       });
-  }
-  return removeFalsyFromArray(artists);
+    }
+  if (sort)
+    artists.sort((/** @type {{ [x: string]: number; }} */ a, /** @type {{ [x: string]: number; }} */ b) => {
+      return b[sort] - a[sort];
+    });
+  
+  return artists.length ? removeFalsyFromArray(artists) : undefined;
 }
   
+/**
+ * 
+ * @param {any} payload 
+ * @param {any} albums
+ * @returns {SpotifyAlbum[]|undefined}
+ */
+function buildAlbums(payload, albums = []) {
+  // log('buildAlbums', payload);
+  if (!payload.items || !payload.items?.length) return;
+  for (const album of payload.items)
+    albums.push(buildAlbum(album));
+  return albums;
+}
+
 /**
  * @param {any} payload 
  * @returns {SpotifyAlbum|undefined}
  */
 function buildAlbum(payload) {
-  // console.log(lightOrange('\npayload in buildAlbum'), payload);
-  const prop = payload.item?.album ?? payload.currently_playing?.album ?? payload.album ?? payload.track?.album;
-  if (!prop) return undefined;
+  // log('buildAlbum', payload);
+  let prop = payload.item?.album ?? payload.currently_playing?.album ?? payload.album ?? payload.track?.album;
+  prop = prop ?? (payload.type === 'album' ? payload : null);
+  // console.log('PROP:', prop);
+  if (!prop) return;
 
-  const result = prop ? {
+  return removeFalsyFromObject({
     name: prop.name,
     id: prop.id,
     type: prop.album_type,
@@ -38,11 +71,9 @@ function buildAlbum(payload) {
     release_date: prop.release_date,
     spotify_url: prop.external_urls?.spotify,
     uri: prop.uri,
-    images: buildImages('null', prop),
+    images: buildImages(payload.type === 'album' ? 'images' : 'null', prop),
     artists: buildArtists(payload)
-  } : undefined;
-
-  return removeFalsyFromObject(result);
+  });
 }
 
 /**
@@ -51,8 +82,8 @@ function buildAlbum(payload) {
  * @returns
  */
 const playbackStruct = (payload, method) => {
-  log('playbackStruct', payload);
-  log('arist in playbackStruct', payload.item?.artists?.[0]);
+  // log('playbackStruct', payload);
+  // log('arist in playbackStruct', payload.item?.artists?.[0]);
   const track = buildTrack(payload, 'item');
   const result = removeFalsyFromObject({
     device: payload.device,
@@ -75,12 +106,12 @@ const playbackStruct = (payload, method) => {
 
 /**
  * @param {any} payload
- * @param {string} item
+ * @param {string} [item]
  * @returns {SpotifyTrack}
  */
 const buildTrack = (payload, item) => {
-  log('buildTrack', payload);
-  const prop = payload[item];
+  // log('buildTrack', payload);
+  const prop = item ? payload[item] : payload;
   // console.log(red('\nprop in buildTrack():'), prop);
   return removeFalsyFromObject({
     name: prop.name,
@@ -99,23 +130,27 @@ const buildTrack = (payload, item) => {
 /**
  * 
  * @param {any} payload 
+ * @param {string} [sort]
  * @param {any} [tracks] 
  * @returns {SpotifyTrack[]|undefined}
  */
-const buildTrackList = (payload, tracks = []) => {
-  log('buildTrackList', payload);
-  log('keys in buildTrackList', Object.keys(payload));
+const buildTrackList = (payload, sort, tracks = []) => {
+  // log('buildTrackList', payload);
+  // log('keys in buildTrackList', Object.keys(payload));
   if (
     (
       (payload.queue && payload.queue.length) ||
       (payload.items && payload.items.length) ||
-      (payload.tracks?.items && payload.tracks.items.length)
+      (payload.tracks?.items && payload.tracks.items.length) ||
+      (payload.tracks && payload.tracks.length && !payload.tracks?.items)
     )
     
   ) {
-    for (const entry of payload.queue ?? payload.items ?? payload.tracks?.items) {
+    for (const entry of payload.queue ?? payload.items ?? payload.tracks?.items ?? payload.tracks) {
       // return console.log('\nEntry in tracks.push\n', entry);
-      const item = payload.queue ? entry : entry.track;
+      let item = payload.queue || payload.tracks?.length || payload.tracks?.items?.length || payload.items?.length ? entry : entry.track;
+      item = item.track ? item.track : item;
+      // const item = payload.length ? entry : entry.track;
       if (!item) return;
       // return console.log('item', item)
       tracks.push(removeFalsyFromObject({
@@ -144,26 +179,23 @@ const buildTrackList = (payload, tracks = []) => {
         artists: buildArtists(item),
         parent_type: payload.queue ? undefined : entry.context?.type,
         parent_spotify_url: payload.queue ? undefined : entry.context?.external_urls?.spotify,
-        parent_uri: payload.queue ? undefined : entry.context?.uri
+        parent_uri: payload.queue ? undefined : entry.context?.uri,
+        is_local: item.is_local,
+        is_playable: item.is_playable,
+        linked_from: item.linked_from,
+        restrictions: item.restrictions
       }));
     }
-    return removeFalsyFromArray(tracks);
+
+    if (sort)
+      tracks.sort((/** @type {{ [x: string]: number; }} */ a, /** @type {{ [x: string]: number; }} */ b) => {
+        return b[sort] - a[sort];
+      });
+    
+    return tracks.length ? removeFalsyFromArray(tracks) : undefined;
   }
   return undefined;
 };
-
-/**
- * @param {any} payload 
- * @returns {SpotifyPlaylistReturn}
- */
-const playlistsStruct = (payload) => removeFalsyFromObject({
-  message: payload.message,
-  total: payload.playlists?.total ?? payload.total,
-  limit: payload.playlists?.limit ?? payload.limit,
-  offset: payload.playlists?.offset ?? payload.offset,
-  playlists: buildPlaylists(payload)
-});
-
 
 /**
  * @param {any} payload 
@@ -172,8 +204,8 @@ const playlistsStruct = (payload) => removeFalsyFromObject({
  * @returns {any}
  */
 function buildPlaylists(payload, shortTrack, playlists = []) {
-  if (((!payload.playlists || !payload.playlists?.items?.length) && payload.type !== 'playlist') && !payload.items?.length) return null;
-  log('buildPlaylists', payload.playlists.items[0]);
+  if (((!payload.playlists || !payload.playlists?.items?.length) && payload.type !== 'playlist')/* && !payload.items?.length*/) return null;
+  // log('buildPlaylists', payload.playlists.items[0]);
   /** @param {any} playlist */
   const struct = (playlist) => ({
     name: playlist.name,
@@ -208,6 +240,7 @@ function buildPlaylists(payload, shortTrack, playlists = []) {
   return playlists;
 }
 
+
 /**
  * @param {any} fields 
  * @returns {string}
@@ -228,7 +261,7 @@ function fieldsToString(fields) {
                   if (typeof d1 === 'string') {
                     string += d1 + ',';
                   } else if (Array.isArray(d1)) {
-                    console.log('d1 is array');
+                    // console.log('d1 is array');
                   } else if (typeof d1 === 'object') {
                     Object.entries(d1)
                       .map(([e, f]) => {
@@ -239,7 +272,7 @@ function fieldsToString(fields) {
                             if (typeof f1 === 'string') {
                               string += f1 + ', ';
                             } else if (Array.isArray(f1)) {
-                              console.log('f1 is array');
+                              // console.log('f1 is array');
                             } else {
                               Object.entries(f1)
                                 .map(([g, h]) => {
@@ -250,7 +283,7 @@ function fieldsToString(fields) {
                                       if (typeof h1 === 'string') {
                                         string += h1 + ', ';
                                       } else {
-                                        console.log('fuck this shit');
+                                        // console.log('fuck this shit');
                                       }
                                     }
                                   }
@@ -262,7 +295,7 @@ function fieldsToString(fields) {
                   }
                 }
               } else if (typeof d === 'object') {
-                console.log('d is object...');
+                // console.log('d is object...');
               }
             });
         }
@@ -283,7 +316,7 @@ function fieldsToString(fields) {
 function buildSpotifyResponse(object, payload, sort) {
   const prop = object.split(':')[0];
   const top_tracks = object === 'tracks:top';
-  const artist_albums = object === 'artist:albums';
+  const artist_albums = object === 'albums';
 
   /**
    * @type {SpotifyReturn|{tracks: SpotifyTrack[]}}
@@ -298,38 +331,8 @@ function buildSpotifyResponse(object, payload, sort) {
   }
 
   const items = top_tracks ? payload['tracks'] : artist_albums ? payload.items : payload[prop].items;
-  for (const item of items) {
-    
-    /*
-    let artists = [];
-    if (item.artists && item.artists.length) {
-      for (const artist of item.artists)
-        artists.push({
-          name: artist.name,
-          id: artist.id,
-          spotify_url: artist.external_urls?.spotify,
-          uri: artist.uri
-        });
-    }
+  for (const item of items)
 
-    artists = artists.length ? removeFalsyFromArray(artists) : undefined;
-    */
-    const artists = buildArtists(payload);
-    const album = buildAlbum(payload);
-    /*
-    let album = item.album ? {
-      name: item.album?.name,
-      type: item.album?.album_type,
-      tracks: item.album?.total_tracks,
-      is_playable: item.album?.is_playable,
-      release_date: item.album?.release_date,
-      spotify_url: item.album?.external_urls?.spotify,
-      images: buildImages('album', item, top_tracks) ? buildImages('album', item, top_tracks) : undefined
-    } : undefined;
-
-    album = album ? removeFalsyFromObject(album) : undefined;
-    */
-    
     // @ts-ignore
     spotifyObject[prop].push({
       name: item.name,
@@ -343,10 +346,9 @@ function buildSpotifyResponse(object, payload, sort) {
       spotify_url: item.external_urls?.spotify,
       preview_url: item.preview_url,
       uri: item.uri,
-      artists: artists.length ? artists : undefined,
-      album
+      artists: buildArtists(payload),
+      album: buildAlbum(payload)
     });
-  }
   
   // @ts-ignore
   spotifyObject[prop] = removeFalsyFromArray(spotifyObject[prop]);
@@ -378,22 +380,30 @@ function findImagesArray(item) {
 }
 
 /**
- * @param {any} object 
+ * @param {string} object 
  * @param {any} item
  * @param {boolean} [top_tracks]
  * @returns {SpotifyImages|undefined}
  */
 function buildImages(object, item, top_tracks) {
   // console.log('object in buildImages\n', object);
-  // return console.log('item:', item)
-  
+  // return console.log('item:', item.images)
+  // console.log(item.images);
+  // console.log(getPathValue(item, 'images'))
+  let path = object === 'album' || top_tracks
+    ? item.album?.images
+    : object === 'images'
+      ? item
+      : (item.images ?? item.playlists?.items);
+  path = path.images ?? path;
+  /*
   const path = findImagesArray(object === 'album' || top_tracks
     ? item.album?.images
     : object === 'images'
       ? item
-      : (item.images ?? item.playlists.items));
-  
-  
+      : (item.images ?? item.playlists?.items));
+  */
+  // console.log('path', path);
   // path = findImagesArray(path);
   if (!path || !path.length) return;
   // return console.log('findimagesarray:', findImagesArray(path))
@@ -411,23 +421,59 @@ function buildImages(object, item, top_tracks) {
 };
 
 /**
- * @typedef {Object} SpotifyImageObject
- * @property {?number} height
- * @property {?number} width
- * @property {string} url
+ * @param {any} user 
+ * @returns {SpotifyUser|undefined}
  */
+function buildUser(user) {
+  if (!user || !('display_name' in user)) return;
+  return removeFalsyFromObject({
+    email: user.email,
+    display_name: user.display_name,
+    id: user.id,
+    spotify_url: user.external_urls?.spotify,
+    uri: user.uri,
+    followers: user.followers?.total,
+    images: buildImages('images', user),
+    product: user.product,
+    country: user.country,
+    explicit_content: user.explicit_content
+  });
+}
+
+/**
+ * @param {string} query
+ * @param {'tracks'|'artists'} type
+ * @param {boolean} [throwErr]
+ * @returns {Promise<string|undefined>}
+ */
+async function find(query, type, throwErr = false) {
+  const { advanced } = require('./search');
+  const [item] = (await advanced({
+    song: type === 'tracks' ? query : undefined,
+    artist: type === 'artists' ? query : undefined
+    // include: [type === 'tracks' ? 'songs' : 'artists']
+  }))?.[type] || [];
+  // console.log(item);
+  if (!item?.id && throwErr) 
+    throw new ResponseError(null, null, 'spotify_error', `${type.slice(0, type.length - 1)} not found`);
+  // console.log('item.id', item?.id);
+  return item?.id || undefined;
+}
 
 module.exports = {
   buildImages,
   buildSpotifyResponse,
   buildArtists,
   buildAlbum,
+  buildAlbums,
   playbackStruct,
   buildTrack,
   buildTrackList,
-  playlistsStruct,
   buildPlaylists,
-  fieldsToString
+  buildUser,
+  fieldsToString,
+  find,
+  genres: ['acoustic', 'afrobeat', 'alt-rock', 'alternative', 'ambient', 'anime', 'black-metal', 'bluegrass', 'blues', 'bossanova', 'brazil', 'breakbeat', 'british', 'cantopop', 'chicago-house', 'children', 'chill', 'classical', 'club', 'comedy', 'country', 'dance', 'dancehall', 'death-metal', 'deep-house', 'detroit-techno', 'disco', 'disney', 'drum-and-bass', 'dub', 'dubstep', 'edm', 'electro', 'electronic', 'emo', 'folk', 'forro', 'french', 'funk', 'garage', 'german', 'gospel', 'goth', 'grindcore', 'groove', 'grunge', 'guitar', 'happy', 'hard-rock', 'hardcore', 'hardstyle', 'heavy-metal', 'hip-hop', 'holidays', 'honky-tonk', 'house', 'idm', 'indian', 'indie', 'indie-pop', 'industrial', 'iranian', 'j-dance', 'j-idol', 'j-pop', 'j-rock', 'jazz', 'k-pop', 'kids', 'latin', 'latino', 'malay', 'mandopop', 'metal', 'metal-misc', 'metalcore', 'minimal-techno', 'movies', 'mpb', 'new-age', 'new-release', 'opera', 'pagode', 'party', 'philippines-opm', 'piano', 'pop', 'pop-film', 'post-dubstep', 'power-pop', 'progressive-house', 'psych-rock', 'punk', 'punk-rock', 'r-n-b', 'rainy-day', 'reggae', 'reggaeton', 'road-trip', 'rock', 'rock-n-roll', 'rockabilly', 'romance', 'sad', 'salsa', 'samba', 'sertanejo', 'show-tunes', 'singer-songwriter', 'ska', 'sleep', 'songwriter', 'soul', 'soundtracks', 'spanish', 'study', 'summer', 'swedish', 'synth-pop', 'tango', 'techno', 'trance', 'trip-hop', 'turkish', 'work-out', 'world-music']
 };
 
 /** @param {string} content */
@@ -456,6 +502,6 @@ function log(fn, payload, color = 'red') {
   const dashesBefore = Math.floor((90 - ` payload in ${fn}() `.length) / 2);
   const dashesAfter = Math.ceil((90 - ` payload in ${fn}() `.length) / 2);
   
-  console.log(`\n${colors[color]}${'-'.repeat(90)}\n${'-'.repeat(dashesBefore)} payload in ${fn}() ${'-'.repeat(dashesAfter)}\n${'-'.repeat(90)}\u001b[0m\n`, payload);
+  // console.log(`\n${colors[color]}${'-'.repeat(90)}\n${'-'.repeat(dashesBefore)} payload in ${fn}() ${'-'.repeat(dashesAfter)}\n${'-'.repeat(90)}\u001b[0m\n`, payload);
   // console.log(`\n${colors[color]}${'-'.repeat(70)}\n${'-'.repeat(Math.floor(70 - `payload in ${fn}()`.length / 2))}${`payload in ${fn}()`}${'-'.repeat(Math.ceil(70 - `payload in ${fn}()`.length / 2))}\n${'-'.repeat(70)}${'\u001b[0m'}\n`);
 }

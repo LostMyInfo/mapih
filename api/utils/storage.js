@@ -665,13 +665,14 @@ function clearHistorySync(key, filtered = []) {
  * @returns {{value: any, saveCache: boolean}}
  */
 function prepareGet(key, defaultVal) {
+  const { getPathValue } = require('../resources/functions');
   let value = (find(key, _cache) || {}).value || null;
   
   if (value === null && key.split('.').length > 1) {
     const [object, ...path] = key.split('.');
     key = object;
     value = (find(object, _cache) || {}).value || null;
-    value = getPathVal(value, path.join('.'));
+    value = getPathValue(value, path.join('.'));
   } else if (value === null && defaultVal) {
     _cache.push({ key, value: defaultVal });
   }
@@ -976,23 +977,6 @@ function addListenerSync(key, callback) {
   _listeners[key] = callback.toString();
   // @ts-ignore
   saveSync(_listeners, 'listeners');
-}
-
-/**
- * @param {any} obj 
- * @param {string} path
- * @returns {any}
- */
-function getPathVal(obj, path) {
-  /** @type {(regexp: RegExp) => any} */
-  const travel = (regexp) =>
-    String(path).split(regexp).filter(Boolean).reduce((res, key) => (
-      (res !== null && res !== undefined)
-        ? res[key]
-        : res
-    ), obj);
-
-  return travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
 }
 
 // //////////////////

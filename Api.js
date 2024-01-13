@@ -116,11 +116,12 @@ module.exports = {
   },
 
   spotify: {
-    search: require('./api/spotify/search').search,
+    search: require('./api/spotify/search'),
     artists: require('./api/spotify/artists'),
     users: require('./api/spotify/users'),
     playlists: require('./api/spotify/playlists'),
     playback: require('./api/spotify/playback'),
+    songs: require('./api/spotify/songs'),
     oauth2: require('./api/spotify/oauth2')
   },
 

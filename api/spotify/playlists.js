@@ -1,8 +1,8 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
-const { buildQueryString } = require('../resources/functions');
-const { buildImages, fieldsToString, playlistsStruct, buildPlaylists, buildTrackList } = require('./functions');
+const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
+const { buildImages, fieldsToString, buildPlaylists } = require('./functions');
 const { handler } = require('../resources/handlers');
 const { ResponseError } = require('../resources/Errors');
 
@@ -438,3 +438,15 @@ module.exports = {
       handler: 'spotify'
     }))
 };
+
+/**
+ * @param {any} payload 
+ * @returns {SpotifyPlaylistReturn}
+ */
+const playlistsStruct = (payload) => removeFalsyFromObject({
+  message: payload.message,
+  total: payload.playlists?.total ?? payload.total,
+  limit: payload.playlists?.limit ?? payload.limit,
+  offset: payload.playlists?.offset ?? payload.offset,
+  playlists: buildPlaylists(payload)
+});
