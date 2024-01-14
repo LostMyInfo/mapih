@@ -111,6 +111,7 @@ async function sendAttachment(params, path, method) {
  * @param {string} [options.message]
  * @param {any} [options.payload]
  * @param {string} [options.type]
+ * @param {string} [options.youtubeEndpoint]
  * @param {'json'|'text'|'arrayBuffer'|'blob'|'formData'} [options.response_type]
  * @returns {Promise<*>}
  * @private
@@ -125,7 +126,7 @@ async function handler(options) {
     // console.log(options);
     
     /**
-     * @type {{[x: string]: {url: string, auth: () => Promise<string>, header?: [string, string]}}}
+     * @type {{[x: string]: {url: string, auth?: () => Promise<string>, header?: [string, string]}}}
      */
     const handlers = {
       spotify: {
@@ -144,6 +145,9 @@ async function handler(options) {
         url: 'https://api.openai.com/v1',
         auth: async () => `Bearer ${token('openai', options.handler)}`
       },
+      youtube: {
+        url: `https://www.googleapis.com/youtube/v3/${options.youtubeEndpoint}?key=${token('youtube', options.handler)}`
+      },
       dropbox: {
         url: `https://${options.type === 'content' ? 'content' : 'api'}.dropboxapi.com`,
         auth: async () => `Bearer ${await oauthToken('Dropbox', options.handler, options.scope)}`,
@@ -161,16 +165,18 @@ async function handler(options) {
       }
     };
     
-    const { url, auth, header = undefined } = handlers[options.handler];
-    const authorization = await auth();
+    const { url, auth = undefined, header = undefined } = handlers[options.handler];
+    const authorization = auth ? await auth() : undefined;
 
-    if (header)
-      _headers.push(header);
-    _headers.push(['Authorization', authorization]);
+    if (header) _headers.push(header);
+    if (authorization)
+      _headers.push(['Authorization', authorization]);
     
     return https({
       method: options.method,
-      url: `${url}/${options.endpoint}`,
+      url: options.handler !== 'youtube'
+        ? `${url}/${options.endpoint}`
+        : `${url}&${options.endpoint}`,
       headers: new Headers(_headers),
       ...(options.body && {
         body: options.type !== 'content' ? options.body : ''
@@ -296,7 +302,7 @@ async function spotifyAccessToken() {
  * @returns {string|undefined}
  */
 function token(type, handler) {
-  if (!/discord|slack|openai/.test(type)) return;
+  if (!/discord|slack|openai|youtube/.test(type)) return;
   if (type !== handler) return;
   const api = require('../../Api');
 
@@ -307,24 +313,29 @@ function token(type, handler) {
     discord: {
       getToken: () => api.get_discord_token(),
       env: 'token',
-      errorMessage: 'Discord Bot token not set. Please initialize the library first.'
+      errorMessage: 'Discord Bot token not set. '
     },
     slack: {
       getToken: () => api.get_slack_token()?.bot,
       env: 'slack_bot_token',
-      errorMessage: 'Slack token not set. Please initialize the library first.'
+      errorMessage: 'Slack token not set. '
     },
     openai: {
       getToken: () => api.get_openai_token(),
       env: 'openai_api_key',
-      errorMessage: 'OpenAI API key not set. Please initialize the library first.'
+      errorMessage: 'OpenAI API key not set. '
+    },
+    youtube: {
+      getToken: () => api.get_youtube_token(),
+      env: 'youtube_api_key',
+      errorMessage: 'YouTube API key not set. '
     }
   };
 
   const { getToken, errorMessage, env } = tokenTypes[type] || {};
 
   const token = (getToken && getToken()) || process.env[env] || null;
-  if (!token) throw new Error(errorMessage);
+  if (!token) throw new Error(errorMessage + 'Please initialize the library first.');
   
   return token;
 }

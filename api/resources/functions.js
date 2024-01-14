@@ -669,6 +669,7 @@ function embedModifier(embeds) {
    * @returns {string}
    */
 function buildQueryString(url, params, encode = false) {
+  url = url === 'null' ? '' : `${url}?`;
   const queryParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -679,7 +680,7 @@ function buildQueryString(url, params, encode = false) {
   });
 
   const queryString = queryParams.toString();
-  return queryString ? `${url}?${queryString}` : url;
+  return queryString ? `${url}${queryString}` : url;
 }
 
 /**

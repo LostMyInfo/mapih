@@ -502,6 +502,6 @@ function log(fn, payload, color = 'red') {
   const dashesBefore = Math.floor((90 - ` payload in ${fn}() `.length) / 2);
   const dashesAfter = Math.ceil((90 - ` payload in ${fn}() `.length) / 2);
   
-  // console.log(`\n${colors[color]}${'-'.repeat(90)}\n${'-'.repeat(dashesBefore)} payload in ${fn}() ${'-'.repeat(dashesAfter)}\n${'-'.repeat(90)}\u001b[0m\n`, payload);
+  console.log(`\n${colors[color]}${'-'.repeat(90)}\n${'-'.repeat(dashesBefore)} payload in ${fn}() ${'-'.repeat(dashesAfter)}\n${'-'.repeat(90)}\u001b[0m\n`, payload);
   // console.log(`\n${colors[color]}${'-'.repeat(70)}\n${'-'.repeat(Math.floor(70 - `payload in ${fn}()`.length / 2))}${`payload in ${fn}()`}${'-'.repeat(Math.ceil(70 - `payload in ${fn}()`.length / 2))}\n${'-'.repeat(70)}${'\u001b[0m'}\n`);
 }

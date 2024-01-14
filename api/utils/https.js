@@ -69,6 +69,7 @@ module.exports = {
       let data;
       try {
         // console.log('TRY');
+        // data = await response.clone().json();
         data = await response.clone()[`${params.response_type ?? 'json'}`]();
       } catch {
         // console.log('CATCH');
