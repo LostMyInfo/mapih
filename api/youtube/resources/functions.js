@@ -32,14 +32,33 @@ function validateOptions(options) {
 };
 
 /**
+ * @param {any} snippet 
+ * @returns {YouTubeSnippet}
+ */
+function buildSnippet(snippet) {
+  return removeFalsyFromObject({
+    title: snippet.title,
+    description: snippet.description,
+    tags: snippet.tags,
+    categoryId: snippet.categoryId,
+    channelId: snippet.channelId,
+    channelTitle: snippet.channelTitle,
+    publishTime: snippet.publishTime,
+    publishedAt: snippet.publishedAt,
+    liveBroadcastContent: snippet.liveBroadcastContent,
+    thumbnails: buildThumbnails(snippet.thumbnails)
+  });
+}
+
+/**
  * @param {any} payload 
- * @param {YouTubeSearchSnippet[]} videos 
- * @param {YouTubeSearchSnippet[]} channels 
- * @param {YouTubeSearchSnippet[]} playlists 
+ * @param {YouTubeSnippet[]} videos 
+ * @param {YouTubeSnippet[]} channels 
+ * @param {YouTubeSnippet[]} playlists 
  * @returns {YouTubeSearchReturn|undefined}
  */
-function buildSearchResult(payload, videos = [], channels = [], playlists = []) {
-  console.log(payload);
+function buildSearchReturn(payload, videos = [], channels = [], playlists = []) {
+  // console.log(payload);
   if (!payload || !payload.items?.length) return;
   for (const item of payload.items) {
     const type = item.id.kind.split('#')[1];
@@ -48,13 +67,7 @@ function buildSearchResult(payload, videos = [], channels = [], playlists = []) 
       videoId: item.id.videoId,
       channelId: item.id.channelId || item.snippet.channelId,
       playlistId: item.id.playlistId,
-      title: item.snippet.title,
-      description: item.snippet.description,
-      channelTitle: item.snippet.channelTitle,
-      publishTime: item.snippet.publishTime,
-      publishedAt: item.snippet.publishedAt,
-      liveBroadcastContent: item.snippet.liveBroadcastContent,
-      thumbnails: buildThumbnails(item.snippet.thumbnails)
+      ... buildSnippet(item.snippet)
     }));
   }
   // console.log('videos', videos);
@@ -64,6 +77,40 @@ function buildSearchResult(payload, videos = [], channels = [], playlists = []) 
     videos: videos.length ? videos : undefined,
     channels: channels.length ? channels : undefined,
     playlists: playlists.length ? playlists : undefined
+  });
+}
+
+/**
+ * 
+ * @param {any} payload 
+ * @param {(YouTubeSnippet & { contentDetails?: YouTubeContentDetails, fileDetails?: YouTubeVideoFileDetails, statistics?: YouTubeVideoStatistics, status?: YouTubeVideoStatus, processingDetails?: YouTubeVideoProcessingDetails, recordingDetails?: YouTubeVideoRecordingDetails, player?: YouTubeVideoPlayer, suggestions?: YouTubeVideoSuggestions, liveStreamingDetails?: YouTubeVideoLiveStreamingDetails, topicDetails?: YouTubeVideoTopicDetails })[]} videos 
+ * @returns {YouTubeVideoReturn|undefined}
+ */
+function buildVideoReturn(payload, videos = []) {
+  if (!payload || !payload.items?.length) return;
+  for (const item of payload.items) {
+    videos.push(removeFalsyFromObject({
+      etag: item.etag,
+      videoId: item.id.videoId ?? item.id,
+      channelId: item.id?.channelId,
+      ...buildSnippet(item.snippet),
+      contentDetails: item.contentDetails,
+      fileDetails: item.fileDetails,
+      statistics: item.statistics,
+      status: item.status,
+      processingDetails: item.processingDetails,
+      recordingDetails: item.recordingDetails,
+      player: item.player,
+      suggestions: item.suggestions,
+      liveStreamingDetails: item.liveStreamingDetails,
+      topicDetails: item.topicDetails
+    }));
+  }
+  // console.log('videos', videos);
+  return removeFalsyFromObject({
+    total: payload.pageInfo.totalResults,
+    limit: payload.pageInfo.resultsPerPage,
+    videos: videos.length ? videos : undefined
   });
 }
 
@@ -78,7 +125,7 @@ function buildThumbnails(thumbnails) {
   }, {});
 }
 
-module.exports = { buildSearchResult, validateOptions };
+module.exports = { buildSearchReturn, buildVideoReturn, validateOptions };
 
 /**
  * 

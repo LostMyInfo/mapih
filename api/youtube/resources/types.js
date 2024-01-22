@@ -2,7 +2,18 @@
 
 /**
  * @typedef {Object} YouTubeVideoReturn
- * @property {YouTubeVideoSnippet} snippet
+ * @property {string} [channelId]
+ * @property {string} [categoryId]
+ * @property {string} [videoId]
+ * @property {string} [playlistId]
+ * @property {string} title
+ * @property {string} description
+ * @property {string} channelTitle
+ * @property {string} publishTime
+ * @property {string} publishedAt
+ * @property {YouTubeThumbnails} thumbnails
+ * @property {string} liveBroadcastContent
+ * @property {string[]} [tags]
  * @property {YouTubeContentDetails} contentDetails
  * @property {YouTubeVideoStatus} status
  * @property {YouTubeVideoStatistics} statistics
@@ -27,6 +38,9 @@
 /**
  * @typedef {Object} YouTubeSnippet
  * @property {string} [channelId]
+ * @property {string} [categoryId]
+ * @property {string} [videoId]
+ * @property {string} [playlistId]
  * @property {string} title
  * @property {string} description
  * @property {string} channelTitle
@@ -34,11 +48,11 @@
  * @property {string} publishedAt
  * @property {YouTubeThumbnails} thumbnails
  * @property {string} liveBroadcastContent
+ * @property {string[]} [tags]
  */
 
 /**
  * @typedef {YouTubeSnippet & {
- *   type: string,
  *   videoId?: string,
  *   playlistId?: string
  * }} YouTubeSearchSnippet

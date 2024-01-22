@@ -82,7 +82,7 @@ module.exports = {
 
     } catch (/** @type {any} */ error) {
       if (error.message === 'Specified id doesn\'t exist')
-        throw new ResponseError(null, null, 'spotify_error', `Category doesn\'t exist: \`${category_id}\``);
+        throw new ResponseError(null, null, 'spotify_error', { error: `Category doesn\'t exist: \`${category_id}\`` });
       else throw error;
     }
   },
@@ -101,17 +101,24 @@ module.exports = {
    * @function create
    * @memberof module:playlists#
    * @param {Object} options
-   * @param {string} options.user_id
    * @param {string} options.name - The name for the new playlist. This name does not need to be unique; a user may have several playlists with the same name.
    * @param {string} [options.description] - Value for playlist description as displayed in Spotify Clients and in the Web API.
    * @param {boolean} [options.public] - Whether playlist will be public (default true)
    * @param {boolean} [options.collaborative] - Whether the playlist will be collaborative. To create a collaborative playlist you must also set `public` to `false`.
    * @returns {Promise<?SpotifyPlaylist>}
    */
-  create: async (options) =>
-    buildPlaylists(await handler({
+  create: async (options) => {
+    const me = (await handler({
+      method: 'GET',
+      endpoint: 'me',
+      oauth: true,
+      scope: ['user-read-private', 'user-read-email'],
+      handler: 'spotify'
+    }))?.id;
+
+    return buildPlaylists(await handler({
       method: 'POST',
-      endpoint: `users/${options.user_id}/playlists`,
+      endpoint: `users/${me}/playlists`,
       body: {
         name: options.name,
         description: options.description ?? undefined,
@@ -121,7 +128,8 @@ module.exports = {
       oauth: true,
       scope: ['playlist-modify-public', 'playlist-modify-private'],
       handler: 'spotify'
-    })),
+    }));
+  },
   
   /**
    * @summary
@@ -129,26 +137,26 @@ module.exports = {
    * Add one or more items to a user's playlist.
    * 
    * @example
-   * await api.spotify.playlists.addTracks({
+   * await api.spotify.playlists.addSongs({
    *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
-   *   uris: [
+   *   song_ids: [
    *     '4iV5W9uYEdYUVa79Axb7Rh',
    *     '1301WleyT98MSxVHPZCA6M,
    *   ]
    * });
    *
-   * @function addTracks
+   * @function addSongs
    * @memberof module:playlists#
    * @param {Object} options
    * @param {string} options.playlist_id
-   * @param {string[]} [options.uris] - An array of Spotify track IDs
+   * @param {string[]} [options.song_ids] - An array of Spotify song IDs
    * @param {number} [options.position] - The position to insert the items, a zero-based index. If omitted, the items will be appended to the playlist.
    * @returns {Promise<{snapshot_id: string}>}
    */
-  addTracks: async (options) =>
+  addSongs: async (options) =>
     handler({
       method: 'PUT',
-      endpoint: `playlists/${options.playlist_id}/tracks?uris=${options.uris?.map((uri) => `spotify:track:${uri}`).join(',')}`,
+      endpoint: `playlists/${options.playlist_id}/tracks?uris=${options.song_ids?.map((uri) => `spotify:track:${uri}`).join(',')}`,
       body: { position: options.position },
       oauth: true,
       scope: ['playlist-modify-public', 'playlist-modify-private'],
@@ -204,29 +212,29 @@ module.exports = {
    * Note: Replace and reorder are mutually exclusive operations which share the same endpoint, but have different parameters. These operations can't be applied together in a single request.
    * 
    * @example
-   * await api.spotify.playlists.updateTracks({
+   * await api.spotify.playlists.updateSongs({
    *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
-   *   uris: [
+   *   song_ids: [
    *     '4iV5W9uYEdYUVa79Axb7Rh',
    *     '1301WleyT98MSxVHPZCA6M,
    *   ]
    * });
    *
-   * @function updateTracks
+   * @function updateSongs
    * @memberof module:playlists#
    * @param {Object} options
    * @param {string} options.playlist_id
-   * @param {string[]} [options.uris] - An array of Spotify track IDs
+   * @param {string[]} [options.song_ids] - An array of Spotify track IDs
    * @param {number} [options.range_start] - The position of the first item to be reordered
    * @param {number} [options.range_length] - The amount of items to be reordered. Defaults to 1 if not set. The range of items to be reordered begins from the `range_start` position, and includes the `range_length` subsequent items. Examples: To move the items at index 9-10 to the start of the playlist, `range_start` is set to 9, and `range_length` is set to 2.
    * @param {number} [options.insert_before] - The position where the items should be inserted. To reorder the items to the end of the playlist, simply set `insert_before` to the position after the last item. To reorder the first item to the last position in a playlist with 10 items, set `range_start` to 0, and `insert_before` to 10. Examples: To reorder the last item in a playlist with 10 items to the start of the playlist, set `range_start` to 9, and `insert_before` to 0.
    * @param {string} [options.snapshot_id] - The playlist's snapshot ID against which you want to make the changes
    * @returns {Promise<{snapshot_id: string}>}
    */
-  updateTracks: async (options) =>
+  updateSongs: async (options) =>
     handler({
       method: 'PUT',
-      endpoint: `playlists/${options.playlist_id}/tracks?uris=${options.uris?.map((uri) => `spotify:track:${uri}`).join(',')}`,
+      endpoint: `playlists/${options.playlist_id}/tracks?uris=${options.song_ids?.map((uri) => `spotify:track:${uri}`).join(',')}`,
       body: {
         range_start: options.range_start,
         range_length: options.range_length,
@@ -243,29 +251,29 @@ module.exports = {
    * ### [Remove Playlist Items]{@link https://developer.spotify.com/documentation/web-api/reference/remove-tracks-playlist}
    * 
    * @example
-   * await api.spotify.playlists.removeTracks({
+   * await api.spotify.playlists.removeSongs({
    *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
-   *   tracks: [
-   *     { uri: 'spotify:track:4iV5W9uYEdYUVa79Axb7Rh' },
-   *     { uri: 'spotify:track:1301WleyT98MSxVHPZCA6M' }
+   *   uris: [
+   *     '4iV5W9uYEdYUVa79Axb7Rh',
+   *     '1301WleyT98MSxVHPZCA6M,
    *   ]
    * });
    *
-   * @function removeTracks
+   * @function removeSongs
    * @memberof module:playlists#
    * @param {Object} options
    * @param {string} options.playlist_id - The Spotify ID of the playlist
-   * @param {Array<{[uri: string]: string}>} options.tracks - An array of objects containing Spotify URIs of the tracks or episodes to remove. A maximum of 100 objects can be sent at once.
+   * @param {string[]} options.uris - An array of objects containing Spotify URIs of the tracks or episodes to remove. A maximum of 100 objects can be sent at once.
    * @param {string} [options.snapshot_id] - The playlist's snapshot ID against which you want to make the changes
    * @returns {Promise<{snapshot_id: string}>}
    */
-  removeTracks: async (options) =>
+  removeSongs: async (options) =>
     handler({
       method: 'DELETE',
       endpoint: `playlists/${options.playlist_id}/tracks`,
       body: {
-        tracks: options.tracks,
-        description: options.snapshot_id ?? undefined
+        tracks: options.uris?.map((x) => ({ uri: 'spotify:track:' + x })),
+        snapshot_id: options.snapshot_id ?? undefined
       },
       oauth: true,
       scope: ['playlist-modify-public', 'playlist-modify-private'],
@@ -278,13 +286,13 @@ module.exports = {
    * Get full details of the items of a playlist owned by a Spotify user.
    * 
    * @example
-   * await api.spotify.playlists.retrieve({
+   * await api.spotify.playlists.retrieveSongs({
    *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
    *   fields: ['name', 'description']
    * });
    *
    * @example
-   * await api.spotify.playlists.retrieve({
+   * await api.spotify.playlists.retrieveSongs({
    *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
    *   fields: { // fields=tracks.items(added_at)
    *     tracks: {
@@ -294,7 +302,7 @@ module.exports = {
    * });
    *
    * @example
-   * await api.spotify.playlists.retrieve({
+   * await api.spotify.playlists.retrieveSongs({
    *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
    *   fields: { // fields=tracks.items(track(name,href,album(name,href)))
    *     tracks: {
@@ -307,7 +315,7 @@ module.exports = {
    *   }
    * });
    * 
-   * @function retrieveTracks
+   * @function retrieveSongs
    * @memberof module:playlists#
    * @param {Object} options
    * @param {string} options.playlist_id
@@ -316,7 +324,7 @@ module.exports = {
    * @param {Object} [options.fields] - Filters for the query
    * @returns {Promise<SpotifyPlaylist>}
    */
-  retrieve: async (options) => {
+  retrieveSongs: async (options) => {
     const playlist = await handler({
       method: 'GET',
       endpoint: buildQueryString(`playlists/${options.playlist_id}`, {
@@ -339,21 +347,69 @@ module.exports = {
    * ### [Get Current User's Playlists]{@link https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists}
    * 
    * @example
-   * await api.spotify.playlists.me();
+   * await api.spotify.playlists.created();
    * 
    * @example
-   * await api.spotify.playlists.me({
+   * await api.spotify.playlists.created({
    *   limit: 5
    * });
    * 
-   * @function me
+   * @function created
    * @memberof module:playlists#
    * @param {Object} [options]
    * @param {number} [options.limit]
    * @param {number} [options.offset]
    * @returns {Promise<SpotifyPlaylistReturn>}
    */
-  me: async (options) =>
+  created: async (options) => {
+    const me = (await handler({
+      method: 'GET',
+      endpoint: 'me',
+      oauth: true,
+      scope: ['user-read-private', 'user-read-email'],
+      handler: 'spotify'
+    }))?.id;
+
+    const following = /* playlistsStruct*/(await handler({
+      method: 'GET',
+      endpoint: buildQueryString('me/playlists', {
+        limit: 50,
+        offset: options?.offset ?? 0
+      }),
+      oauth: true,
+      scope: ['playlist-read-private'],
+      handler: 'spotify'
+    }));
+
+    following.items = following.items.filter((/** @type {{ owner: { id: any; }; }} */ x) => x.owner.id === me);
+    if (options?.limit)
+      following.items = following.items
+        .sort((/** @type {{ added_at: string }} */ a, /** @type {{ added_at: string }} */ b) => new Date(b.added_at).getTime() - new Date(a.added_at).getTime())
+        .slice(0, options.limit);
+      
+    return playlistsStruct(following);
+  },
+
+  /**
+   * @summary
+   * ### [Get Current User's Playlists]{@link https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists}
+   * 
+   * @example
+   * await api.spotify.playlists.following();
+   * 
+   * @example
+   * await api.spotify.playlists.following({
+   *   limit: 5
+   * });
+   * 
+   * @function following
+   * @memberof module:playlists#
+   * @param {Object} [options]
+   * @param {number} [options.limit]
+   * @param {number} [options.offset]
+   * @returns {Promise<SpotifyPlaylistReturn>}
+   */
+  following: async (options) =>
     playlistsStruct(await handler({
       method: 'GET',
       endpoint: buildQueryString('me/playlists', {
@@ -397,6 +453,89 @@ module.exports = {
       handler: 'spotify'
     })),
 
+  /**
+   * @summary
+   * ### [Check if Users Follow Playlist]{@link https://developer.spotify.com/documentation/web-api/reference/check-if-user-follows-playlist}
+   * 
+   * @example
+   * await api.spotify.playlists.isFollowing({
+   *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+   *   user_ids: [
+   *     'jmperezperez',
+   *     'thelinmichael'
+   *   ]
+   * });
+   * 
+   * @function isFollowing
+   * @memberof module:playlists#
+   * @param {Object} options
+   * @param {string} options.playlist_id - The Spotify ID of the playlist
+   * @param {string[]} options.user_ids - An array of the users that you want to check to see if they follow the playlist (max: 5)
+   * @returns {Promise<boolean[]>}
+   */
+  isFollowing: async (options) =>
+    handler({
+      method: 'GET',
+      endpoint: buildQueryString(`playlists/${options.playlist_id}/followers/contains`, {
+        ids: options.user_ids.join(',')
+      }),
+      handler: 'spotify'
+    }),
+  
+  /**
+   * @summary
+   * ### [Follow Playlist]{@link https://developer.spotify.com/documentation/web-api/reference/follow-playlist}
+   * Add the current user as a follower of a playlist
+   * 
+   * @example
+   * await api.spotify.playlists.follow({
+   *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n'
+   * });
+   * 
+   * @function follow
+   * @memberof module:playlists#
+   * @param {string} playlist_id
+   * @param {boolean} [public]
+   * @returns {Promise<{statusText: number, type: string, message: string}>}
+   */
+  // @ts-ignore
+  follow: async (playlist_id, public = true) =>
+    handler({
+      method: 'PUT',
+      endpoint: `playlists/${playlist_id}/followers`,
+      // @ts-ignore
+      body: { public },
+      oauth: true,
+      scope: ['playlist-modify-public', 'playlist-modify-private'],
+      handler: 'spotify',
+      message: 'Successfully followed playlist'
+    }),
+  
+  /**
+   * @summary
+   * ### [Unfollow Playlist]{@link https://developer.spotify.com/documentation/web-api/reference/unfollow-playlist}
+   * Remove the current user as a follower of a playlist
+   * 
+   * @example
+   * await api.spotify.playlists.unFollow({
+   *   playlist_id: '3cEYpjA9oz9GiPac4AsH4n'
+   * });
+   * 
+   * @function unfollow
+   * @memberof module:users#
+   * @param {string} playlist_id
+   * @returns {Promise<{statusText: number, type: string, message: string}>}
+   */
+  unFollow: async (playlist_id) =>
+    handler({
+      method: 'DELETE',
+      endpoint: `playlists/${playlist_id}/followers`,
+      oauth: true,
+      scope: ['playlist-modify-public', 'playlist-modify-private'],
+      handler: 'spotify',
+      message: 'Successfully unfollowed playlist'
+    }),
+  
   /**
    * @summary
    * ### [Add Custom Playlist Cover Image]{@link https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover}
@@ -443,10 +582,13 @@ module.exports = {
  * @param {any} payload 
  * @returns {SpotifyPlaylistReturn}
  */
-const playlistsStruct = (payload) => removeFalsyFromObject({
-  message: payload.message,
-  total: payload.playlists?.total ?? payload.total,
-  limit: payload.playlists?.limit ?? payload.limit,
-  offset: payload.playlists?.offset ?? payload.offset,
-  playlists: buildPlaylists(payload)
-});
+const playlistsStruct = (payload, message = payload.message) => {
+  payload = payload.playlists ?? payload;
+  return removeFalsyFromObject({
+    message,
+    total: payload.total,
+    limit: payload.limit,
+    offset: payload.offset && payload.offset !== 0 ? payload.offset : undefined,
+    playlists: buildPlaylists(payload)
+  });
+};

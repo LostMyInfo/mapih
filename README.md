@@ -19,46 +19,63 @@
 
 ---
 ## Authentication
-> Choose **one** of the following options to authenticate:
+> Choose **one** of the following options to authenticate:  
 
-##### Option 1: Using Environment Variablese
-1. Create an **`.env`** file at the root of your project
-2. Discord  
-    • Add a variable named **`token`** and assign it to your Discord bot's token  
-3. Slack (optional)  
-    • Add a variable named **`slack_bot_token`** and assign it to your Slack API key  
-4. Spotify (optional)  
-    • Add a variable named **`client_id`** and assign it to your Spotify Web API client_id  
-    • Add a variable named **`client_secret`** and assign it to your Spotify Web API client_secret
+#### Option 1: Using Environment Variablese  
+**If you are using OnSocket, use this file to get the valid keys but add them to OnSocket's environment variables on the website itself.**  
 
-###### Example .env file
-```ini
-token='discord bot token'
-slack_bot_token='slack api key'
-client_id='spotify web api client_id'
-client_secret='spotify web api client_secret'
-```
-<!-- Add a variable named `token` to your `.env` file and set it to your bot's token for Discord (`slack_bot_token` for Slack). -->
+Rename the provided **`.env.example`** file at the root of your project to **`.env`** and fill in any tokens/keys you wish to use.  
 
-#### Option 2: Using Initialization Function
+#### Option 2: Using Initialization Function  
 ```javascript
 const mapih = require('mapih');
 
-// example 1  
+// Minimum requirement if using this method
 mapih.initialize({ discord: 'bot_token' });  
 
-// example 2  
+// All possible properties 
 mapih.initialize({
   discord: 'bot_token',
-  slack: 'slack_api_key',
+  openai: 'sk-1p7NKtCpA0sG7XLdT3L7EqW9GFefX',
   spotify: {
-    client_id: 'client_id',
-    client_secret: 'client_secret'
-  }
+    client_id: 'cc4287d9Cm4692a9f681d07d9boqji83',
+    client_secret: '898Nb8f7b09tMnb2lkj3c55443ddmn0ze',
+    redirect_uri: 'http:localhost:8001/spotify',
+    scope: 'user-read-email user-read-private'
+  },
+  google: {
+    api_key: 'AISlkuhyA4q4L9m0c3I09maoOYTN0wuyWdA',
+    client_id: '2164170085-9r94msc46elo.apps.googleusercontent.com',
+    client_secret: 'GOSLPM-sPn88Kn6GWk90Nh0uk_MNim7698By4',
+    redirect_uri: 'http://localhost:8001/youtube'
+  },
+  slack: {
+    user: '6942854604069-6272480346098-6284925009575-6901309',
+    bot: '6942854604069-6262140883098-Vt6RKehxmTj4Luvvy',
+    client_id: '6942854604069.624286609478',
+    client_secret: '4e4998dh94rl846bdsdfegfb0f12',
+    redirect_uri: 'http:localhost:8001/slack',
+    user_scope: 'admin users:read.email',
+    bot_scope: 'users:read.email channels:read'
+  },
+  dropbox: {
+    basic_token: 'N09asdfGlzZzB9P63465efasNWxAvfpk3dQ',
+    access_token: 'sl.BsobToktTBbsdf235aiihH7j60T_4T',
+    client_id: '7cxvzmptyug7ymc9',
+    client_secret: 'easdf8980k6csdf5y7u',
+    redirect_uri: 'http:localhost:8001/dropbox'
+  },
+  box: {
+    client_id: '3sdfgi8j90fpl8q25809sd0',
+    client_secret: 'Jsdf6BB4UErgS2chrg4365sdfBXS',
+    redirect_uri: 'http:localhost:8001/box'
+  },
 });
 ```
+
 ---
-## Basic usage
+
+## Basic usage  
 ```javascript
 (async() => {
 
@@ -69,10 +86,11 @@ mapih.initialize({
 
 })();
 ```
+
 ---
 
 ## Table of Contents
-### | [Discord](#discord-methods) | [Slack](#slack-methods) | [Spotify](#spotify-methods) | [Utils](#utils-methods) |
+### | [Discord](#discord-methods) | [Slack](#slack-methods) | [Spotify](#spotify-methods) | [YouTube](#youtube-methods) | [Dropbox](#dropbox-methods) | [Box](#box-methods) | [Utils](#utils-methods) |
 
 ### [Discord Methods](#discord)
 **• [Applications](#applications)**  
@@ -295,8 +313,79 @@ mapih.initialize({
 ### [Slack Methods](#slack)
 Docs coming soon
 
-### [Spotify Methods](#spotify)
-**• [Search](#spotify-search)**  
+### [Spotify Methods](#spotify)  
+**• [Users](#users)**  
+&nbsp; &nbsp; ◦ [me](#get-current-users-profile)  
+&nbsp; &nbsp; ◦ [topItems](#get-users-top-items)  
+&nbsp; &nbsp; ◦ [getProfile](#get-users-profile)  
+**• [Search](#search)**  
+&nbsp; &nbsp; ◦ [advanced](#advanced-search)  
+&nbsp; &nbsp; ◦ [artists](#search-artists)  
+&nbsp; &nbsp; ◦ [songs](#search-songs)  
+&nbsp; &nbsp; ◦ [albums](#search-albums)  
+**• [Songs](#songs)**  
+&nbsp; &nbsp; ◦ [retrieve](#get-song)  
+&nbsp; &nbsp; ◦ [retrieveMany](#get-several-songs)  
+&nbsp; &nbsp; ◦ [recommendations](#get-recommendations)  
+&nbsp; &nbsp; ◦ [save](#save-song)  
+&nbsp; &nbsp; ◦ [unsave](#remove-song)  
+&nbsp; &nbsp; ◦ [saved](#get-users-saved-songs)  
+&nbsp; &nbsp; ◦ [isSaved](#check-users-saved-songs)  
+&nbsp; &nbsp; ◦ [analyze](#analyze-song)  
+&nbsp; &nbsp; ◦ [audioFeatures](#get-audio-features)  
+&nbsp; &nbsp; ◦ [audioFeaturesMany](#get-several-audio-features)  
+**• [Artists](#artists)**  
+&nbsp; &nbsp; ◦ [retrieve](#get-artist)  
+&nbsp; &nbsp; ◦ [retrieveMany](#get-several-artists)  
+&nbsp; &nbsp; ◦ [recommendations](#get-artists-top-songs)  
+&nbsp; &nbsp; ◦ [albums](#get-artists-albums)  
+&nbsp; &nbsp; ◦ [related](#get-related-artists)  
+&nbsp; &nbsp; ◦ [follow](#follow-artists-or-users)  
+&nbsp; &nbsp; ◦ [unfollow](#unfollow-artists-or-users)  
+&nbsp; &nbsp; ◦ [following](#get-followed-artists)  
+&nbsp; &nbsp; ◦ [isFollowing](#check-followed-artists-or-users)  
+**• [Albums](#albums)**  
+&nbsp; &nbsp; ◦ [retrieve](#get-album)  
+&nbsp; &nbsp; ◦ [retrieveMany](#get-several-albums)  
+&nbsp; &nbsp; ◦ [songs](#get-album-songs)  
+&nbsp; &nbsp; ◦ [new](#get-new-releases)  
+&nbsp; &nbsp; ◦ [save](#save-album)  
+&nbsp; &nbsp; ◦ [unsave](#remove-album)  
+&nbsp; &nbsp; ◦ [saved](#get-users-saved-albums)  
+&nbsp; &nbsp; ◦ [isSaved](#check-users-saved-albums)  
+**• [Playlists](#playlists)**  
+&nbsp; &nbsp; ◦ [featured](#get-featured-playlists)  
+&nbsp; &nbsp; ◦ [category](#get-categories-playlists)  
+&nbsp; &nbsp; ◦ [create](#create-playlist)  
+&nbsp; &nbsp; ◦ [addSongs](#add-songs-to-playlist)  
+&nbsp; &nbsp; ◦ [update](#change-playlist-details)  
+&nbsp; &nbsp; ◦ [updateSongs](#update-playlist-items)  
+&nbsp; &nbsp; ◦ [removeSongs](#remove-songs-from-playlist)  
+&nbsp; &nbsp; ◦ [retrieveSongs](#get-playlist-items)  
+&nbsp; &nbsp; ◦ [created](#get-current-users-created-playlists)  
+&nbsp; &nbsp; ◦ [following](#get-current-users-playlists)  
+&nbsp; &nbsp; ◦ [isFollowing](#check-if-user-follows-playlists)  
+&nbsp; &nbsp; ◦ [follow](#follow-playlist)  
+&nbsp; &nbsp; ◦ [unfollow](#unfollow-playlist)  
+&nbsp; &nbsp; ◦ [user](#get-users-playlists)  
+&nbsp; &nbsp; ◦ [cover](#get-playlists-cover-image)  
+&nbsp; &nbsp; ◦ [updateCover](#add-playlist-cover-image)  
+**• [Playback](#playback)**  
+&nbsp; &nbsp; ◦ [state](#get-playback-state)  
+&nbsp; &nbsp; ◦ [currentSong](#get-currently-playing-song)  
+&nbsp; &nbsp; ◦ [devices](#get-available-devices)  
+&nbsp; &nbsp; ◦ [togglePlayback](#start/resume-playback)  
+&nbsp; &nbsp; ◦ [pause](#pause-playback)  
+&nbsp; &nbsp; ◦ [skip](#skip-to-next-song)  
+&nbsp; &nbsp; ◦ [previous](#skip-to-previous-song)  
+&nbsp; &nbsp; ◦ [seek](#seek-to-position)  
+&nbsp; &nbsp; ◦ [setVolume](#set-playback-volume)  
+&nbsp; &nbsp; ◦ [toggleShuffle](#toggle-playback-shuffle)  
+&nbsp; &nbsp; ◦ [toggleRepeat](#set-repeat-mode)  
+&nbsp; &nbsp; ◦ [queue](#get-users-queue)  
+&nbsp; &nbsp; ◦ [recent](#get-recently-played-songs)  
+&nbsp; &nbsp; ◦ [addToQueue](#add-item-to-queue)  
+&nbsp; &nbsp; ◦ [transfer](#transfer-playback)  
 
 ### [Utils Methods](#utils)
 **• [Storage](#storage)**  
@@ -4077,31 +4166,115 @@ await api.discord.stageInstance.destroy({
 ```
 ---
 
-### Spotify Search
+---
+# Spotify
+> **Many of the Spotify endpoints are designed for the input of a specific Spotify ID.**  
+
+However, I have also incorporated the functionality to accept names.  
+Each endpoint includes options for both the ID\* and the name\*\*.  
+Utilizing a specific ID ensures the retrieval of the correct item.  
+On the other hand, providing a name might result in incorrect items depending on the uniqueness of the name.  
+
+\* `song_id(s)`, `artist_id(s)`, `album_id(s)`, `playlist_id(s)`  
+\*\* `song_name(s)`, `artist_name(s)`, `album_name(s)`, `playlist_name(s)`
+
+---
+# Users  
+### Methods
+
+| Method                             | Description                                             |
+|------------------------------------|---------------------------------------------------------|
+| [`me`](#get-current-users-profile) | Get detailed profile information about the current user |
+| [`topItems`](#get-users-top-items) | Get the current user's top artists or tracks            |
+| [`getProfile`](#get-users-profile) | Get public profile information about a Spotify user     |
+
+### [Get Current User's Profile](https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile)
+
+#### Example
+```javascript
+await api.spotify.users.me();
+```
+
+### [Get User's Top Items](https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks)
 
 #### Parameters
-| Field      | Type      | Description                                                                                     |
-|------------|-----------|-------------------------------------------------------------------------------------------------|
-| song? \*   | snowflake | the id of the guild                                                                             |
-| artist? \* | boolean   | Approcimate member and presence counts                                                          |
-| album? \*  | string    | Album name to search                                                                            |
-| limit?     | number    | The maximum number of results to return                                                         |
-| offset?    | number    | The index of the first result to return. Use with limit to get the next page of search results. |
-| sort?      | string    | Sort results by: 'populary', 'followers', or 'duration_seconds'                                 |
+| Field          | Type   | Description                                                                                     |
+|----------------|--------|-------------------------------------------------------------------------------------------------|
+| type           | string | The type of entity to return (`artists` or `tracks`)                                            |
+| time_range? \* | string | Over what time frame the affinities are computed (default `medium_term`)                        |
+| limit?         | number | The maximum number of results to return                                                         |
+| offset?        | number | The index of the first result to return. Use with limit to get the next page of search results. |  
+
+\* Valid values for `time_range`:  
+- `long_term`: calculated from several years of data and including all new data as it becomes available  
+- `medium_term`: approximately last 6 months  
+- `short_term`: approximately last 4 weeks  
+
+#### Example
+```javascript
+await api.spotify.users.topItems({
+  type: 'tracks',
+  time_range: 'long_term',
+  limit: 10
+});
+```
+
+### [Get User's Profile](https://developer.spotify.com/documentation/web-api/reference/get-users-profile)
+
+#### Parameters
+| Field   | Type   | Description                |
+|---------|--------|----------------------------|
+| user_id | string | The user's Spotify user ID |
+
+#### Example
+```javascript
+await api.spotify.users.getProfile({
+  user_id: 'smedjan'
+});
+```
+
+---
+
+# Search  
+### Methods
+
+| Method                  | Description                                 |
+|-------------------------|---------------------------------------------|
+| [`advanced`](#advanced-search) | Extensive search for songs, artists, albums |
+| [`artists`](#search-artists)   | Search for artists                          |
+| [`songs`](#search-songs)       | Search for songs                            |
+| [`albums`](#search-albums)     | Search for albums                           |
+
+### [Advanced Search](https://developer.spotify.com/documentation/web-api/reference/search)
+
+#### Parameters
+| Field      | Type      | Description                                                                                    |
+|------------|-----------|------------------------------------------------------------------------------------------------|
+| song? \*   | string   | Song name to search for                                                                         |
+| artist? \* | string   | Artist name to search for                                                                       |
+| album? \*  | string   | Album name to search for                                                                        |
+| include?   | string[] | Type of results to include. One or more of `songs`, `artists`, `albums`.                        |
+| limit?     | number   | The maximum number of results to return                                                         |
+| offset?    | number   | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?      | string   | Sort results by: `popularity`, `followers`, or `duration_seconds`                               |
+| year?      | string   | Filter on a single year or a range (e.g. 1955-1960)                                             |
+| genre?     | string   | Filter on a single genre                                                                        |
 
 \* At least one of `song`, `artist`, `album` is required.  
 
 #### Example 1
 ```javascript
-await api.spotify.search({
+await api.spotify.search.advanced({
   song: 'oops i did it again',
+  year: '1990-1995',
+  limit: 1
 });
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.search({
-  artist: 'britney spears',
+await api.spotify.search.advanced({
+  song: 'some popular song name',
   limit: 10,
   sort: 'popularity'
 });
@@ -4109,8 +4282,1178 @@ await api.spotify.search({
 
 #### Example 3
 ```javascript
-await api.spotify.search({
+await api.spotify.search.advanced({
   album: 'your favorite album name',
+  include: ['albums'],
+});
+```
+
+### [Search Artists](https://developer.spotify.com/documentation/web-api/reference/search)
+
+#### Parameters
+| Field   | Type   | Description                                                                                     |
+|---------|--------|-------------------------------------------------------------------------------------------------|
+| artist  | string | Artist name to search for                                                                       |
+| limit?  | number | The maximum number of results to return                                                         |
+| offset? | number | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?   | string | Sort results by: `popularity` or `followers`                                                    |
+
+
+#### Example 1
+```javascript
+await api.spotify.search.artists('artist name');
+```
+
+#### Example 2
+```javascript
+await api.spotify.search.artists('artist name', {
+  limit: 10,
+  sort: 'popularity'
+});
+```
+
+### [Search Songs](https://developer.spotify.com/documentation/web-api/reference/search)
+
+#### Parameters
+| Field   | Type   | Description                                                                                     |
+|---------|--------|-------------------------------------------------------------------------------------------------|
+| song    | string | Song name to search for                                                                         |
+| limit?  | number | The maximum number of results to return                                                         |
+| offset? | number | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?   | string | Sort results by: `popularity`, `followers`, or `duration_seconds`                               |
+
+
+#### Example 1
+```javascript
+await api.spotify.search.songs('song name');
+```
+
+#### Example 2
+```javascript
+await api.spotify.search.songs('song name', {
+  limit: 10,
+  sort: 'popularity'
+});
+```
+---
+
+# Songs
+
+### Methods
+
+| Method                                             | Description                                                                                      |
+|----------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| [`retrieve`](#get-song)                            | Get Spotify catalog information for a single song                                                |
+| [`retrieveMany`](#get-several-songs)               | Get Spotify catalog information for multiple songs                                               |
+| [`recommendations`](#get-recommendations)          | Get song recommendations                                                                         |
+| [`save`](#save-song)                               | Save one or more songs to the current user's 'Your Music' library                                |
+| [`unsave`](#remove-song)                           | Remove one or more songs from the current user's 'Your Music' library                            |
+| [`saved`](#get-users-saved-songs)                  | Get a list of the songs saved in the current Spotify user's 'Your Music' library                 |
+| [`isSaved`](#check-users-saved-songs)              | Check if one or more tracks is already saved in the current Spotify user's 'Your Music' library  |
+| [`analyze`](#analyze-song)                         | Get a low-level audio analysis for a song in the Spotify catalog                                 |
+| [`audioFeatures`](#get-audio-features)             | Get audio feature information for a single song                                                  |
+| [`audioFeaturesMany`](#get-several-audio-features) | Get audio feature information for multiple songs                                                 |
+
+### [Get Song](https://developer.spotify.com/documentation/web-api/reference/get-track)
+
+#### Parameters
+| Field      | Type   | Description                        |
+|------------|--------|------------------------------------|
+| song_id?   | string | The id of the song to retrieve     |
+| song_name? | string | The name of the song to search for |
+
+#### Example
+```javascript
+await api.spotify.songs.retrieve({
+  song_name: 'Satellites'
+  // song_id: '4B9El4lQqztivDlRUCxbZB''
+});
+```
+
+### [Get Several Songs](https://developer.spotify.com/documentation/web-api/reference/get-several-tracks)
+
+#### Parameters
+| Field       | Type     | Description                                                       |
+|-------------|----------|-------------------------------------------------------------------|
+| song_ids?   | string[] | The ids of the songs to retrieve                                  |
+| song_names? | string[] | The names of the songs to search for                              |
+| sort?       | string   | Sort results by: `popularity`, `followers`, or `duration_seconds` |
+
+#### Example
+```javascript
+await api.spotify.songs.retrieveMany({
+  song_names: ['song 1', 'song 2'],
+  // song_ids: ['id 1', 'id 2']
+});
+```
+
+### [Get Recommendations](https://developer.spotify.com/documentation/web-api/reference/get-recommendations)
+
+#### Parameters
+| Field                    | Type     | Description                             |
+|--------------------------|----------|-----------------------------------------|
+| songs? \*                | string   | Song name to search for                 |
+| artists? \*              | string   | Artist name to search for               |
+| genres?                  | string   | Genres to include                       |
+| limit?                   | number   | The maximum number of results to return |
+| min_acousticness?        | number   |                                         |
+| max_acousticness?        | number   |                                         |
+| target_acousticness?     | number   |                                         |
+| min_danceability?        | number   |                                         |
+| max_danceability?        | number   |                                         |
+| target_danceability?     | number   |                                         |
+| min_duration_ms?         | number   |                                         |
+| max_duration_ms?         | number   |                                         |
+| target_duration_ms?      | number   |                                         |
+| min_energy?              | number   |                                         |
+| target_energy?           | number   |                                         |
+| min_instrumentalness?    | number   |                                         |
+| max_instrumentalness?    | number   |                                         |
+| target_instrumentalness? | number   |                                         |
+| min_key?                 | number   |                                         |
+| max_key?                 | number   |                                         |
+| target_key?              | number   |                                         |
+| min_liveness?            | number   |                                         |
+| max_livenessc?           | number   |                                         |
+| target_liveness?         | number   |                                         |
+| min_loudness?            | number   |                                         |
+| max_loudness?            | number   |                                         |
+| target_loudness?         | number   |                                         |
+| min_mode?                | number   |                                         |
+| max_mode?                | number   |                                         |
+| target_mode?             | number   |                                         |
+| min_popularity?          | number   |                                         |
+| max_popularity?          | number   |                                         |
+| target_popularity?       | number   |                                         |
+| min_speechiness?         | number   |                                         |
+| max_speechiness?         | number   |                                         |
+| target_speechiness?      | number   |                                         |
+| min_tempo?               | number   |                                         |
+| max_tempo?               | number   |                                         |
+| target_tempo?            | number   |                                         |
+| min_time_signature?      | number   |                                         |
+| max_time_signature?      | number   |                                         |
+| target_time_signature?   | number   |                                         |
+| min_valence?             | number   |                                         |
+| max_valence?             | number   |                                         |
+| target_valence?          | number   |                                         |
+
+#### Example
+```javascript
+await api.spotify.songs.recommendations({
+  artists: ['artist name', 'another name'],
+  songs: ['song name'],
+  limit: 5,
+  min_duration_ms: 5000
+});
+```
+
+### [Save Song](https://developer.spotify.com/documentation/web-api/reference/save-tracks-user)
+
+#### Parameters
+| Field       | Type     | Description                                   |
+|-------------|----------|-----------------------------------------------|
+| song_names? | string[] | Song names to search and save to your library |
+| song_ids?   | string[] | Song IDs of songs to save to your library     |
+
+#### Example
+```javascript
+await api.spotify.songs.save({
+  song_names: [
+    'song name',
+    'another song name'
+  ]
+  // song_ids: ['id 1', 'id 2']
+});
+```
+
+### [Remove Song](https://developer.spotify.com/documentation/web-api/reference/remove-tracks-user)
+
+#### Parameters
+| Field       | Type     | Description                                       |
+|-------------|----------|---------------------------------------------------|
+| song_names? | string[] | Song names to search and remove from your library |
+| song_ids?   | string[] | Song IDs of songs to remove from your library     |
+
+#### Example
+```javascript
+await api.spotify.songs.unsave({
+  song_names: [
+    'song name',
+    'another song name'
+  ]
+  // song_ids: ['id 1', 'id 2']
+});
+```
+
+### [Get User's Saved Songs](https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks)
+
+#### Parameters
+| Field   | Type   | Description                                                                                     |
+|---------|--------|-------------------------------------------------------------------------------------------------|
+| limit?  | number | The maximum number of results to return                                                         |
+| offset? | number | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?   | string | Sort results by: `popularity`, `followers`, or `duration_seconds`                               |
+
+#### Example
+```javascript
+await api.spotify.songs.saved();
+```
+
+### [Check User's Saved Songs](https://developer.spotify.com/documentation/web-api/reference/check-users-saved-tracks)
+
+#### Parameters
+| Field       | Type     | Description                                    |
+|-------------|----------|------------------------------------------------|
+| song_names? | string[] | Song names to search and check if user follows |
+| song_ids?   | string[] | Song IDs of songs to check if user follows     |
+
+#### Example
+```javascript
+await api.spotify.songs.isSaved({
+  song_names: [
+    'song name',
+    'another song name'
+  ]
+  // song_ids: ['id 1', 'id 2']
+});
+```
+
+### [Analyze Song](https://developer.spotify.com/documentation/web-api/reference/get-audio-analysis)
+
+#### Parameters
+| Field      | Type   | Description                     |
+|------------|--------|---------------------------------|
+| song_name? | string | Song name to search and analyze |
+| song_id?   | string | Song ID of song to analyze      |
+
+#### Example
+```javascript
+await api.spotify.songs.analyze({
+  song_name: 'song name'
+  // song_id: 'id 1'
+});
+```
+
+### [Get Audio Features](https://developer.spotify.com/documentation/web-api/reference/get-audio-features)
+
+#### Parameters
+| Field      | Type   | Description                                   |
+|------------|--------|-----------------------------------------------|
+| song_name? | string | Song name to search and retrieve features for |
+| song_id?   | string | Song ID of song to retrieve features for      |
+
+#### Example
+```javascript
+await api.spotify.songs.audioFeatures({
+  song_name: 'song name'
+  // song_id: 'id 1'
+});
+```
+
+### [Get Several Audio Features](https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features)
+
+#### Parameters
+| Field       | Type    | Description                                      |
+|-------------|---------|--------------------------------------------------|
+| song_names? | string[] | Song names to search and retrieve features for  |
+| song_ids?   | string[] | Song IDs of songs to retrieve features for      |
+
+#### Example
+```javascript
+await api.spotify.songs.audioFeaturesMany({
+  song_names: [
+    'song name',
+    'another song name'
+  ]
+  // song_ids: ['id 1', 'id 2']
+});
+```
+
+---
+
+# Artists
+### Methods
+
+| Method                                             | Description                                                                              |
+|----------------------------------------------------|------------------------------------------------------------------------------------------|
+| [`retrieve`](#get-artist)                          | Get Spotify catalog information for a single artist                                      |
+| [`retrieveMany`](#get-several-artists)             | Get Spotify catalog information for multiple artists                                     |
+| [`topSongs`](#get-artists-top-songs)               | Get Spotify catalog information about an artist's top songs                              |
+| [`albums`](#get-artists-albums)                    | Get Spotify catalog information about an artist's albums                                 |
+| [`related`](#get-artists-related-artists)          | Get Spotify catalog information about artists similar to a given artist                  |
+| [`follow`](#follow-artists-or-users)               | Add the current user as a follower of one or more artists or other Spotify users         |
+| [`unfollow`](#unfollow-artists-or-users)           | Remove the current user as a follower of one or more artists or other Spotify users      |
+| [`following`](#get-followed-artists)               | Get the current user's followed artists                                                  |
+| [`isFollowing`](#check-followed-artists-or-users)  | Check to see if the current user is following one or more artists or other Spotify users |
+
+### [Get Artist](https://developer.spotify.com/documentation/web-api/reference/get-an-artist)
+
+#### Parameters
+| Field        | Type   | Description                        |
+|--------------|--------|------------------------------------|
+| artist_id?   | string | The id of the song to retrieve     |
+| artist_name? | string | The name of the song to search for |
+ 
+
+#### Example
+```javascript
+await api.spotify.artists.retrieve({
+  artist_name: 'artist name'
+  // artist_id: '0uZ8zQLHru4BiNTL2PQY91'
+});
+```
+
+### [Get Several Artists](https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists)
+
+#### Parameters
+| Field         | Type     | Description                                  |
+|---------------|----------|----------------------------------------------|
+| artist_ids?   | string[] | The ids of the artists to retrieve           |
+| artist_names? | string[] | The names of the artists to search for       |
+| sort?         | string   | Sort results by: `popularity` or `followers` |
+
+#### Example
+```javascript
+await api.spotify.artists.retrieveMany({
+  artist_names: ['artist 1', 'artist 2'],
+  // artists_ids: ['id 1', 'id 2']
+});
+```
+
+### [Get Artists Top Songs](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks)
+
+#### Parameters
+| Field        | Type   | Description                                     |
+|--------------|--------|-------------------------------------------------|
+| artist_id?   | string | The id of the artist to retrieve top songs for  |
+| artist_name? | string | The name of the artist to search for            |
+| limit?       | number | The maximum number of results to return         |
+
+#### Example
+```javascript
+await api.spotify.artists.topSongs({
+  artist_name: 'artist name',
+  // artists_id: 'artist id',
+  limit: 5
+});
+```
+
+### [Get Artists Albums](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-albums)
+
+#### Parameters
+| Field             | Type     | Description                                                                                     |
+|-------------------|----------|-------------------------------------------------------------------------------------------------|
+| artist_id?        | string   | The id of the artist to retrieve albums for                                                     |
+| artist_name?      | string   | The name of the artist to search for                                                            |
+| limit?            | number   | The maximum number of results to return                                                         |
+| offset?           | number   | The index of the first result to return. Use with limit to get the next page of search results. |
+| include_groups? \*| string[] | One or more keywords that will be used to filter the response                                   |  
+
+\* Valid values: `album`, `single`, `appears_on`, `compilation`  
+
+#### Example
+```javascript
+await api.spotify.artists.albums({
+  artist_name: 'artist name',
+  // artists_id: 'artist id',
+  limit: 5,
+  include_groups: ['single', 'appears_on']
+});
+```
+
+### [Get Related Artists](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-related-artists)
+
+#### Parameters
+| Field         | Type     | Description                                                     |
+|---------------|----------|-----------------------------------------------------------------|
+| artist_id?    | string   | The id of the artist to get related artists for                 |
+| artist_name?  | string   | The name of the artist to search for                            |
+
+#### Example
+```javascript
+await api.spotify.artists.related({
+  artist_name: 'artist name',
+  // artists_id: 'artist id',
+});
+```
+
+### [Follow Artists or Users](https://developer.spotify.com/documentation/web-api/reference/follow-artists-users)
+
+#### Parameters
+| Field         | Type     | Description                                                |
+|---------------|----------|------------------------------------------------------------|
+| artist_ids?   | string[] | The ids of the artists or users to follow                  |
+| artist_names? | string[] | The names of the artists or users to search for and follow |
+| type?         | string   | Either `artist` or `user` (default `artist`)               |
+
+#### Example
+```javascript
+await api.spotify.artists.follow({
+  type: 'artist',
+  artist_names: [
+    'artist name',
+    'another artist name'
+  ]
+  // artist_ids: ['id 1', 'id 2']
+});
+```
+
+### [Unfollow Artists or Users](https://developer.spotify.com/documentation/web-api/reference/unfollow-artists-users)
+
+#### Parameters
+| Field         | Type     | Description                                                  |
+|---------------|----------|--------------------------------------------------------------|
+| artist_ids?   | string[] | The ids of the artists or users to unfollow                  |
+| artist_names? | string[] | The names of the artists or users to search for and unfollow |
+| type?         | string   | Either `artist` or `user` (default `artist`)                 |
+
+#### Example
+```javascript
+await api.spotify.artists.unfollow({
+  type: 'artist',
+  artist_names: [
+    'artist name',
+    'another artist name'
+  ]
+  // artist_ids: ['id 1', 'id 2']
+});
+```
+
+### [Get Followed Artists](https://developer.spotify.com/documentation/web-api/reference/get-followed)
+
+#### Parameters
+| Field  | Type   | Description                                            |
+|--------|--------|--------------------------------------------------------|
+| after? | string | The last artist ID retrieved from the previous request |
+| limit? | number | The maximum number of results to return (default 20)   |
+| sort?  | string | Sort results by: `popularity` or `followers`           |
+
+#### Example 1
+```javascript
+await api.spotify.artists.following();
+```
+
+### [Check Followed Artists or Users](https://developer.spotify.com/documentation/web-api/reference/check-current-user-follows)
+
+#### Parameters
+| Field         | Type     | Description                                                  |
+|---------------|----------|--------------------------------------------------------------|
+| artist_ids?   | string[] | The ids of the artists or users to unfollow                  |
+| artist_names? | string[] | The names of the artists or users to search for and unfollow |
+| type?         | string   | Either `artist` or `user` (default `artist`)                 |
+
+#### Example
+```javascript
+await api.spotify.artists.isFollowing({
+  type: 'artist',
+  artist_names: [
+    'artist name',
+    'another artist name'
+  ]
+  // artist_ids: ['id 1', 'id 2']
+});
+```
+
+---
+
+# Albums  
+### Methods
+
+| Method                                 | Description                                                                                      |
+|----------------------------------------|--------------------------------------------------------------------------------------------------|
+| [`retrieve`](#get-album)               | Get Spotify catalog information for a single album                                               |
+| [`retrieveMany`](#get-several-albums)  | Get Spotify catalog information for multiple albums                                              |
+| [`songs`](#get-album-songs)            | Get Spotify catalog information about an album’s tracks                                          |
+| [`new`](#new-releases)                 | Get a list of new album releases featured in Spotify                                             |
+| [`save`](#save-album)                  | Save one or more albums to the current user's 'Your Music' library                               |
+| [`unsave`](#remove-album)              | Remove one or more albums from the current user's 'Your Music' library                           |
+| [`saved`](#get-users-saved-albums)     | Get a list of the albums saved in the current Spotify user's 'Your Music' library                |
+| [`isSaved`](#check-users-saved-albums) | Check if one or more albums is already saved in the current Spotify user's 'Your Music' library  |
+
+### [Get Album](https://developer.spotify.com/documentation/web-api/reference/get-an-album)
+
+#### Parameters
+| Field       | Type   | Description                         |
+|-------------|--------|-------------------------------------|
+| album_id?   | string | The id of the album to retrieve     |
+| album_name? | string | The name of the album to search for |
+ 
+
+#### Example
+```javascript
+await api.spotify.albums.retrieve({
+  album_name: 'album name'
+  // album_id: '0uZ8zQLHru4BiNTL2PQY91'
+});
+```
+
+### [Get Several Albums](https://developer.spotify.com/documentation/web-api/reference/get-multiple-albums)
+
+#### Parameters
+| Field         | Type     | Description                                   |
+|---------------|----------|-----------------------------------------------|
+| album_ids?    | string[] | The ids of the albums to retrieve             |
+| album_names?  | string[] | The names of the albums to search for         |
+| sort?         | string   | Sort results by: `popularity`, or `followers` |
+
+#### Example
+```javascript
+await api.spotify.albums.retrieveMany({
+  album_names: ['album 1', 'album 2'],
+  // album_ids: ['id 1', 'id 2']
+});
+```
+
+### [Get Album Songs](https://developer.spotify.com/documentation/web-api/reference/get-an-album)
+
+#### Parameters
+| Field       | Type   | Description                                                                                     |
+|-------------|--------|-------------------------------------------------------------------------------------------------|
+| album_id?   | string | The id of the album to retrieve                                                                 |
+| album_name? | string | The name of the album to search for                                                             |
+| limit?      | number | The maximum number of results to return                                                         |
+| offset?     | number | The index of the first result to return. Use with limit to get the next page of search results. |
+
+#### Example
+```javascript
+await api.spotify.albums.songs({
+  album_name: 'album name'
+  // album_id: '0uZ8zQLHru4BiNTL2PQY91'
+});
+```
+
+### [Get New Releases](https://developer.spotify.com/documentation/web-api/reference/get-new-releases)
+
+#### Parameters
+| Field   | Type   | Description                                                                                     |
+|---------|--------|-------------------------------------------------------------------------------------------------|
+| limit?  | number | The maximum number of results to return                                                         |
+| offset? | number | The index of the first result to return. Use with limit to get the next page of search results. |
+
+#### Example 1
+```javascript
+await api.spotify.albums.new();
+```
+
+#### Example 2
+```javascript
+await api.spotify.albums.new({
+  limit: 5
+});
+```
+
+### [Save Album](https://developer.spotify.com/documentation/web-api/reference/save-albums-user)
+
+#### Parameters
+| Field        | Type     | Description                                    |
+|--------------|----------|------------------------------------------------|
+| album_names? | string[] | Album names to search and save to your library |
+| album_ids?   | string[] | Album IDs of songs to save to your library     |
+
+#### Example
+```javascript
+await api.spotify.albums.save({
+  album_names: [
+    'album name',
+    'another album name'
+  ]
+  // album_ids: ['id 1', 'id 2']
+});
+```
+
+### [Remove Album](https://developer.spotify.com/documentation/web-api/reference/remove-albums-user)
+
+#### Parameters
+| Field        | Type     | Description                                        |
+|--------------|----------|----------------------------------------------------|
+| album_names? | string[] | Album names to search and remove from your library |
+| album_ids?   | string[] | Album IDs of albums to remove from your library    |
+
+#### Example
+```javascript
+await api.spotify.albums.unsave({
+  album_names: [
+    'album name',
+    'another album name'
+  ]
+  // album_ids: ['id 1', 'id 2']
+});
+```
+
+### [Get User's Saved Albums](https://developer.spotify.com/documentation/web-api/reference/get-users-saved-albums)
+
+#### Parameters
+| Field   | Type   | Description                                                                                     |
+|---------|--------|-------------------------------------------------------------------------------------------------|
+| limit?  | number | The maximum number of results to return                                                         |
+| offset? | number | The index of the first result to return. Use with limit to get the next page of search results. |
+| sort?   | string | Sort results by: `popularity` or `followers`                                                    |
+
+#### Example
+```javascript
+await api.spotify.albums.saved();
+```
+
+### [Check User's Saved Albums](https://developer.spotify.com/documentation/web-api/reference/check-users-saved-albums)
+
+#### Parameters
+| Field        | Type     | Description                                     |
+|--------------|----------|-------------------------------------------------|
+| album_names? | string[] | Album names to search and check if user follows |
+| album_ids?   | string[] | Album IDs of albums to check if user follows    |
+
+#### Example
+```javascript
+await api.spotify.albums.isSaved({
+  album_names: [
+    'album name',
+    'another album name'
+  ]
+  // album_ids: ['id 1', 'id 2']
+});
+```
+
+---
+
+# Playlists
+### Methods
+
+| Method                                            | Description                                                                         |
+|---------------------------------------------------|-------------------------------------------------------------------------------------|
+| [`featured`](#get-featured-playlists)             | Get a list of Spotify featured playlists                                            |
+| [`category`](#get-categories-playlists)           | Get a list of Spotify playlists tagged with a particular category                   |
+| [`create`](#create-playlist)                      | Create a playlist for a Spotify user                                                |
+| [`update`](#change-playlist-details)              | Change a playlist's name and public/private state                                   |
+| [`addSongs`](#add-songs-to-playlist)              | Add one or more items to a user's playlist                                          |
+| [`updateSongs`](#update-playlist-songs)           | Either reorder or replace items in a playlist depending on the request's parameters |
+| [`removeSongs`](#remove-songs-from-playlist)      | Remove one or more items from a user's playlist                                     |
+| [`retrieveSongs`](#get-playlist-songs)            | Get full details of the items of a playlist owned by a Spotify user                 |
+| [`created`](#get-current-users-created-playlists) | Get a list of Spotify playlists that the user has created                           |
+| [`following`](#get-current-users-playlists)       | Get a list of the playlists owned or followed by the current Spotify user           |
+| [`user`](#get-users-playlists)                    | Get a list of the playlists owned or followed by a Spotify user                     |
+| [`isFollowing`](#check-if-user-follows-playlists) | Check to see if one or more Spotify users are following a specified playlist        |
+| [`follow`](#follow-playlist)                      | Add the current user as a follower of a playlist                                    |
+| [`unfollow`](#unfollow-playlist)                  | Remove the current user as a follower of a playlist                                 |
+| [`getCover`](#get-playlists-cover-image)          | Get the current image associated with a specific playlist                           |
+| [`updateCover`](#add-playlist-cover-image)        | Replace the image used to represent a specific playlist                             |
+
+### [Get Featured Playlists](https://developer.spotify.com/documentation/web-api/reference/get-featured-playlists)
+
+#### Parameters
+| Field   | Type   | Description                                                                                     |
+|---------|--------|-------------------------------------------------------------------------------------------------|
+| limit?  | number | The maximum number of results to return                                                         |
+| offset? | number | The index of the first result to return. Use with limit to get the next page of search results. |
+
+#### Example 1
+```javascript
+await api.spotify.playlists.featured();
+```
+
+#### Example 2
+```javascript
+await api.spotify.playlists.featured({
+  limit: 5
+});
+```
+
+### [Get Categories Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-categories-playlists)
+
+#### Parameters
+| Field    | Type   | Description                                                                                     |
+|----------|--------|-------------------------------------------------------------------------------------------------|
+| category | string | The category to get playlists for                                                               |
+| limit?   | number | The maximum number of results to return                                                         |
+| offset?  | number | The index of the first result to return. Use with limit to get the next page of search results. |
+
+#### Example 1
+```javascript
+await api.spotify.playlists.featured('party');
+```
+
+#### Example 2
+```javascript
+await api.spotify.playlists.featured('party', {
+  limit: 5
+});
+```
+
+### [Create Playlist](https://developer.spotify.com/documentation/web-api/reference/create-playlist)
+
+#### Parameters
+| Field          | Type    | Description                                         |
+|----------------|---------|-----------------------------------------------------|
+| name           | string  | The name for the new playlist                       |
+| description?   | string  | The description for the new playlist                |
+| public?        | boolean | Whether or not the playlist should be public        |
+| collaborative? | boolean | Whether or not the playlist should be collaborative |
+
+#### Example
+```javascript
+await api.spotify.playlists.create({
+  name: 'My new playlist',
+  public: false
+});
+```
+
+### [Change Playlist Details](https://developer.spotify.com/documentation/web-api/reference/change-playlist-details)
+
+#### Parameters
+| Field          | Type    | Description                                         |
+|----------------|---------|-----------------------------------------------------|
+| playlist_id    | string  | The Spotify ID of the playlist                      |
+| name?          | string  | The name for the new playlist                       |
+| description?   | string  | The description for the new playlist                |
+| public?        | boolean | Whether or not the playlist should be public        |
+| collaborative? | boolean | Whether or not the playlist should be collaborative |
+
+#### Example
+```javascript
+await api.spotify.playlists.update({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  name: 'My new old playlist',
+  public: true
+});
+```
+
+### [Add Songs To Playlist](https://developer.spotify.com/documentation/web-api/reference/add-tracks-to-playlist)
+
+#### Parameters
+| Field          | Type    | Description                                           |
+|----------------|---------|-------------------------------------------------------|
+| playlist_id    | string   | The Spotify ID of the playlist                       |
+| uris?          | string[] | An array of Spotify URIs to add                      |
+| position?      | number   | The position to insert the items, a zero-based index |
+
+#### Example
+```javascript
+await api.spotify.playlists.addSongs({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  uris: [
+    '4iV5W9uYEdYUVa79Axb7Rh',
+    '1301WleyT98MSxVHPZCA6M'
+  ]
+});
+```
+
+### [Update Playlist Songs](https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks)
+
+#### Parameters
+| Field          | Type     | Description                                                           |
+|----------------|----------|-----------------------------------------------------------------------|
+| playlist_id    | string   | The Spotify ID of the playlist                                        |
+| uris?          | string[] | An array of Spotify URIs to add                                       |
+| range_start?   | number   | The position of the first item to be reordered                        |
+| range_length?  | number   | The amount of items to be reordered                                   |
+| insert_before? | number   | The position where the items should be inserted                       |
+| snapshot_id?   | string   | The playlist's snapshot ID against which you want to make the changes |
+
+#### Example
+```javascript
+await api.spotify.playlists.updateSongs({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  uris: [
+    '4iV5W9uYEdYUVa79Axb7Rh',
+    '1301WleyT98MSxVHPZCA6M'
+  ]
+});
+```
+
+### [Remove Songs From Playlist](https://developer.spotify.com/documentation/web-api/reference/remove-tracks-playlist)
+
+#### Parameters
+| Field          | Type     | Description                                                           |
+|----------------|----------|-----------------------------------------------------------------------|
+| playlist_id    | string   | The Spotify ID of the playlist                                        |
+| uris?          | string[] | An array of Spotify URIs to remove                                    |
+| snapshot_id?   | string   | The playlist's snapshot ID against which you want to make the changes |
+
+#### Example
+```javascript
+await api.spotify.playlists.removeSongs({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  uris: [
+    '4iV5W9uYEdYUVa79Axb7Rh',
+    '1301WleyT98MSxVHPZCA6M'
+  ]
+});
+```
+
+### [Get Playlist Songs](https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks)
+
+#### Parameters
+| Field       | Type   | Description                                                                                     |
+|-------------|--------|-------------------------------------------------------------------------------------------------|
+| playlist_id | string | The Spotify ID of the playlist                                                                  |
+| fields?     | any[]  | Filters for the query                                                                           |
+| limit?      | number | The maximum number of results to return                                                         |
+| offset?     | number | The index of the first result to return. Use with limit to get the next page of search results. |
+
+#### Example 1
+```javascript
+// Get just the `name` and `description`
+await api.spotify.playlists.retrieveSongs({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  fields: ['name', 'description']
+});
+```
+
+#### Example 2
+```javascript
+// Get just the `added_at` field of the track
+await api.spotify.playlists.retrieveSongs({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  fields: {
+    tracks: {
+      items: ['added_at']
+    }
+  }
+});
+```
+
+#### Example 3
+```javascript
+// Get the `name` and `id` of the track and the `name` and `artists` of the album that the track is on
+await api.spotify.playlists.retrieveSongs({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  fields: {
+    tracks: {
+      items: [{
+        track: ['name', 'id', {
+          album: ['name', 'artists']
+        }]
+      }]
+    }
+  }
+});
+```
+
+### [Get Current User's Created Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists)  
+**This will only return playlists created by the current user.**  
+
+#### Parameters
+| Field   | Type    | Description                                                |
+|---------|---------|------------------------------------------------------------|
+| limit?  | boolean | The maximum number of items to return (default 20, max 50) |
+| offset? | boolean | The index of the first playlist to return                  |
+
+#### Example 1
+```javascript
+await api.spotify.playlists.created();
+```
+
+#### Example 2
+```javascript
+await api.spotify.playlists.created({
+  limit: 5
+});
+```
+
+### [Get Current User's Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists)  
+**This will return all playlists the current user follows.**  
+
+#### Parameters
+| Field   | Type    | Description                                                |
+|---------|---------|------------------------------------------------------------|
+| limit?  | boolean | The maximum number of items to return (default 20, max 50) |
+| offset? | boolean | The index of the first playlist to return                  |
+
+#### Example 1
+```javascript
+await api.spotify.playlists.following();
+```
+
+#### Example 2
+```javascript
+await api.spotify.playlists.following({
+  limit: 5
+});
+```
+
+### [Get User's Playlists](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)  
+**This will return all playlists a specific user follows**  
+
+#### Parameters
+| Field   | Type    | Description                                                |
+|---------|---------|------------------------------------------------------------|
+| user_id | string  | The user's Spotify user ID                                 |                  
+| limit?  | boolean | The maximum number of items to return (default 20, max 50) |
+| offset? | boolean | The index of the first playlist to return                  |
+
+#### Example
+```javascript
+await api.spotify.playlists.following({
+  user_id: 'smedjan',
+  limit: 5
+});
+```
+
+### [Check If User Follows Playlists](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)  
+
+#### Parameters
+| Field       | Type     | Description                                                                         |
+|-------------|----------|-------------------------------------------------------------------------------------|
+| playlist_id | string   | The Spotify ID of the playlist                                                      |                  
+| user_ids    | string[] | The user_ids of the users that you want to check to see if they follow the playlist |
+
+#### Example
+```javascript
+await api.spotify.playlists.isFollowing({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  user_ids: [
+    'smedjan',
+    'jmperezperez'
+  ]
+});
+```
+
+### [Follow Playlist](https://developer.spotify.com/documentation/web-api/reference/follow-playlist)  
+
+#### Parameters
+| Field       | Type    | Description                                                                     |
+|-------------|---------|---------------------------------------------------------------------------------|
+| playlist_id | string  | The Spotify ID of the playlist                                                  |                  
+| public?     | boolean | Whether the playlist will be included in user's public playlists (default true) |
+
+#### Example
+```javascript
+await api.spotify.playlists.follow({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  public: false
+});
+```
+
+### [Unfollow Playlist](https://developer.spotify.com/documentation/web-api/reference/unfollow-playlist)  
+
+#### Parameters
+| Field       | Type    | Description                    |
+|-------------|---------|--------------------------------|
+| playlist_id | string  | The Spotify ID of the playlist |
+
+#### Example
+```javascript
+await api.spotify.playlists.unfollow({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n'
+});
+```
+
+### [Get Playlists Cover Image](https://developer.spotify.com/documentation/web-api/reference/get-playlist-cover)  
+
+#### Parameters
+| Field       | Type    | Description                    |
+|-------------|---------|--------------------------------|
+| playlist_id | string  | The Spotify ID of the playlist |
+
+#### Example
+```javascript
+await api.spotify.playlists.getCover({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n'
+});
+```
+
+### [Add Playlist Cover Image](https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover)  
+
+#### Parameters
+| Field       | Type   | Description                    |
+|-------------|--------|--------------------------------|
+| playlist_id | string | The Spotify ID of the playlist |
+| image       | string | Base64 encoded JPEG image data |
+
+#### Example
+```javascript
+await api.spotify.playlists.updateCover({
+  playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
+  image: 'image data'
+});
+```
+
+---
+
+# Playback
+
+### Methods
+
+| Method                                       | Description                                                                |
+|----------------------------------------------|----------------------------------------------------------------------------|
+| [`state`](#get-playback-state)               | Get information about the user’s current playback state                    |
+| [`currentSong`](#get-currently-playing-song) | Get the object currently being played on the user's Spotify account        |
+| [`devices`](#get-available-devices)          | Get information about a user’s available Spotify Connect devices           |
+| [`togglePlayback`](#start/resume-playback)   | Start a new context or resume current playback on the user's active device |
+| [`pause`](#pause-playback)                   | Pause playback on the user's account                                       |
+| [`skip`](#skip-to-next-song)                 | Skips to next track in the user’s queue                                    |
+| [`previous`](#skip-to-previous-song)         | Skips to previous track in the user’s queue                                |
+| [`seek`](#seek-to-position)                  | Seeks to the given position in the user’s currently playing track          |
+| [`setVolume`](#set-playback-volume)          | Set the volume for the user’s current playback device                      |
+| [`toggleShuffle`](#toggle-playback-shuffle)  | Toggle shuffle on or off for user’s playback                               |
+| [`toggleRepeat`](#set-repeat-mode)           | Set the repeat mode for the user's playback                                |
+| [`queue`](#get-users-queue)                  | Get the list of objects that make up the user's queue                      |
+| [`addToQueue`](#add-item-to-queue)           | Add an item to the end of the user's current playback queue                |
+| [`recent`](#get-recently-played-songs)       | Get tracks from the current user's recently played tracks                  |
+| [`transfer`](#transfer-playback)             | Transfer playback to a new device and optionally begin playback            |
+
+### [Get Playback State](https://developer.spotify.com/documentation/web-api/reference/get-information-about-the-users-current-playback)
+
+#### Example
+```javascript
+await api.spotify.playback.state();
+```
+
+### [Get Currently Playing Song](https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track)
+
+#### Example
+```javascript
+await api.spotify.playback.currentSong();
+```
+
+### [Get Available Devices](https://developer.spotify.com/documentation/web-api/reference/get-a-users-available-devices)
+
+#### Example
+```javascript
+await api.spotify.playback.devices();
+```
+
+### [Start/Resume Playback](https://developer.spotify.com/documentation/web-api/reference/start-a-users-playback)
+
+#### Parameters
+| Field        | Type     | Description                                                                         |
+|--------------|----------|-------------------------------------------------------------------------------------|
+| song_ids?    | string[] | Array of Spotify track IDs to play                                                  |
+| context_uri? | string   | Spotify URI of the context to play. Valid contexts are albums, artists & playlists. |
+
+#### Example 1
+```javascript
+await api.spotify.playback.togglePlayback();
+```
+
+#### Example 2
+```javascript
+await api.spotify.playback.togglePlayback({
+  song_ids: ['1301WleyT98MSxVHPZCA6M']
+})
+```
+
+#### Example 3
+```javascript
+await api.spotify.playback.togglePlayback({
+  context_uri: 'spotify:album:1Je1IMUlBXcx1Fz0WE7oPT'
+})
+```
+
+### [Pause Playback](https://developer.spotify.com/documentation/web-api/reference/pause-a-users-playback)
+
+#### Example
+```javascript
+await api.spotify.playback.pause();
+```
+
+### [Skip To Next Song](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
+
+#### Example
+```javascript
+await api.spotify.playback.skip();
+```
+
+### [Skip To Previos Song](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-previous-track)
+
+#### Example
+```javascript
+await api.spotify.playback.previos();
+```
+
+### [Seek To Position](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
+
+#### Parameters
+| Field       | Type   | Description                             |
+|-------------|--------|-----------------------------------------|
+| position_ms | number | The position in milliseconds to seek to |
+
+#### Example
+```javascript
+await api.spotify.playback.seek({
+  position_ms: 25000
+});
+```
+
+### [Set Playback Volume](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
+
+#### Parameters
+| Field          | Type   | Description               |
+|----------------|--------|---------------------------|
+| volume_percent | number | The volume to set (0-100) |
+
+#### Example
+```javascript
+await api.spotify.playback.setVolume({
+  volume_percent: 100
+});
+```
+
+### [Toggle Playback Shuffle](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
+
+#### Parameters
+\* **This endpoint takes a boolean (`true` to turn shuffle on, `false` to turn shuffle off)**  
+
+#### Example
+```javascript
+await api.spotify.playback.toggleShuffle(true);
+```
+
+### [Set Repeat Mode](https://developer.spotify.com/documentation/web-api/reference/set-repeat-mode-on-users-playback)
+
+#### Parameters
+\* **This endpoint takes a string with the mode to set**  
+**Valid values:**
+- `track`: will repeat the current track
+- `context`: will repeat the current context (album, playlist)
+- `off`: will turn repeat off
+
+#### Example
+```javascript
+await api.spotify.playback.toggleRepeat('track');
+```
+
+### [Get User's Queue](https://developer.spotify.com/documentation/web-api/reference/get-queue)
+
+#### Example
+```javascript
+await api.spotify.playback.queue();
+```
+
+### [Add Item To Queue](https://developer.spotify.com/documentation/web-api/reference/add-to-queue)
+
+#### Parameters
+| Field   | Type   | Description                                    |
+|---------|--------|------------------------------------------------|
+| song_id | string | The Spotify ID of the song to add to the queue |
+
+#### Example
+```javascript
+await api.spotify.playback.addToQueue({
+  song_id: '4iV5W9uYEdYUVa79Axb7Rh'
+});
+```
+
+### [Get Recently Played Songs](https://developer.spotify.com/documentation/web-api/reference/get-recently-played)
+
+#### Example
+```javascript
+await api.spotify.playback.recent();
+```
+
+### [Transfer Playback](https://developer.spotify.com/documentation/web-api/reference/transfer-a-users-playback)
+
+#### Parameters
+| Field     | Type    | Description                                                       |
+|-----------|---------|-------------------------------------------------------------------|
+| device_id | string  | The Spotify ID of the song to add to the queue                    |
+| play?     | boolean | Whether playback starts on new device or if current state is kept |
+
+#### Example
+```javascript
+await api.spotify.playback.transfer({
+  device_id: '74ASZWbe4lXaubB36ztrGX',
+  play: 'false'
 });
 ```
 

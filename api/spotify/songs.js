@@ -17,23 +17,33 @@ module.exports = {
    * ### [Get Track]{@link https://developer.spotify.com/documentation/web-api/reference/get-track}
    * 
    * @example
-   * await api.spotify.songs.retrieve('song name');
+   * await api.spotify.songs.retrieve({
+   *   song_name: 'song name to search for'
+   * });
+   * 
+   * @example
+   * await api.spotify.songs.retrieve({
+   *   song_id: 'ID of specific song'
+   * });
    * 
    * @function retrieve
    * @memberof module:songs#
-   * @param {string} query
+   * @param {Object} options
+   * @param {string} [options.song_name]
+   * @param {string} [options.song_id]
    * @returns {Promise<SpotifyTrack>}
    */
-  retrieve: async (query) => {
+  retrieve: async ({ song_name = undefined, song_id = undefined }) => {
 
-    const track = await find(query, 'tracks');
+    const id = song_name ? await find(song_name, 'tracks', true) : song_id;
     
     return buildTrack(await handler({
       method: 'GET',
-      endpoint: buildQueryString(`tracks/${track}`, {
+      endpoint: buildQueryString(`tracks/${id}`, {
         market: 'US'
       }),
-      handler: 'spotify'
+      handler: 'spotify',
+      errorMessage: 'Invalid song ID'
     }));
   },
 
@@ -42,30 +52,39 @@ module.exports = {
    * ### [Get Several Tracks]{@link https://developer.spotify.com/documentation/web-api/reference/get-several-tracks}
    * 
    * @example
-   * await api.spotify.songs.retrieveMany([
-   *   'song name',
-   *   'song name'
-   * ]);
+   * await api.spotify.songs.retrieveMany({
+   *   song_names: [
+   *     'song name',
+   *     'song name'
+   *   ]
+   * });
    * 
    * @example
-   * await api.spotify.songs.retrieveMany(
-   *   [ 'song name', 'song name'],
-   *   { sort: 'popularity' }
-   * );
+   * await api.spotify.songs.retrieveMany({
+   *   song_ids: [
+   *     '4B9El4lQqztivDlRUCxbZB',
+   *     '98eFl4lPrtjivlk7UCxB08'
+   *   ],
+   *   sort: 'popularity'
+   * });
    * 
    * @function retrieveMany
    * @memberof module:songs#
-   * @param {string[]} query
-   * @param {Object} [options]
+   * @param {Object} options
+   * @param {string[]} [options.song_names]
+   * @param {string[]} [options.song_ids]
    * @param {string} [options.sort]
    * @param {string[]} [songs]
    * @param {string[]} [unknowns]
-   * @returns {Promise<{total: number, found: number, message?: string, tracks: SpotifyTrack[] | undefined}>}
+   * @returns {Promise<{total: number, found: number, message?: string, tracks: SpotifyTrack[] | undefined} | undefined>}
    */
-  retrieveMany: async (query, options, songs = [], unknowns = []) => {
+  retrieveMany: async ({ song_ids = undefined, song_names = undefined, sort = undefined }, songs = [], unknowns = []) => {
 
-    for (const song of query) {
-      const id = await find(song, 'tracks');
+    if (!song_ids && !song_names) return;
+    
+    // @ts-ignore
+    for (const song of song_ids ?? song_names) {
+      const id = song_names ? await find(song, 'tracks') : song;
       id ? songs.push(id) : unknowns.push(song);
     }
 
@@ -76,10 +95,10 @@ module.exports = {
         market: 'US'
       }),
       handler: 'spotify'
-    }), options?.sort);
+    }), sort);
 
     return removeFalsyFromObject({
-      total: query.length,
+      total: song_names?.length ?? song_ids?.length,
       found: tracks?.length ?? 0,
       message: unknowns.length
         ? `Song${unknowns.length > 1 ? 's' : ''} not found: ${unknowns.join(', ')}`
@@ -205,23 +224,28 @@ module.exports = {
    * ### [Save Tracks for Current User]{@link https://developer.spotify.com/documentation/web-api/reference/save-tracks-user}
    * 
    * @example
-   * await api.spotify.songs.save([
-   *   'song name',
-   *   'song name'
-   * ]);
+   * await api.spotify.songs.save({
+   *   song_names: [
+   *     'song name',
+   *     'song name'
+   *   ]
+   * });
    * 
    * @function save
    * @memberof module:songs#
-   * @param {string[]} ids
+   * @param {Object} options
+   * @param {string[]} [options.song_names]
+   * @param {string[]} [options.song_ids]
    * @param {string[]} [songs]
    * @param {{[x: string]: string}} [mapped]
    * @param {{[x: string]: string}} [saved]
-   * @returns {Promise<{total: number, found: number, saved: {[x: string]: string}}>}
+   * @returns {Promise<{total: number|undefined, found: number, saved: {[x: string]: string}}>}
    */
-  save: async (ids, songs = [], mapped = {}, saved = {}) => {
+  save: async ({ song_ids = undefined, song_names = undefined }, songs = [], mapped = {}, saved = {}) => {
 
-    for (const song of ids) {
-      const id = await find(song, 'tracks');
+    // @ts-ignore
+    for (const song of song_ids ?? song_names) {
+      const id = song_names ? await find(song, 'tracks') : song;
       if (id) {
         mapped[id] = song;
         songs.push(id);
@@ -241,7 +265,7 @@ module.exports = {
     songs.forEach((song) => saved[mapped[song]] = 'saved');
     
     return {
-      total: ids.length,
+      total: song_names?.length ?? song_ids?.length,
       found: songs?.length ?? 0,
       saved
     };
@@ -253,27 +277,32 @@ module.exports = {
    * ### [Remove User's Saved Tracks]{@link https://developer.spotify.com/documentation/web-api/reference/remove-tracks-user}
    * 
    * @example
-   * await api.spotify.songs.unsave([
-   *   'song name',
-   *   'song name'
-   * ]);
+   * await api.spotify.songs.unsave({
+   *   song_names: [
+   *     'song name',
+   *     'song name'
+   *   ]
+   * });
    * 
    * @function unsave
    * @memberof module:songs#
-   * @param {string[]} ids
+   * @param {Object} options
+   * @param {string[]} [options.song_names]
+   * @param {string[]} [options.song_ids]
    * @param {string[]} [songs]
    * @param {{[x: string]: string}} [mapped]
-   * @param {{[x: string]: string}} [saved]
-   * @returns {Promise<{total: number, found: number, saved: {[x: string]: string}}>}
+   * @param {{[x: string]: string}} [removed]
+   * @returns {Promise<{total: number|undefined, found: number, removed: {[x: string]: string}}>}
    */
-  unsave: async (ids, songs = [], mapped = {}, saved = {}) => {
+  unsave: async ({ song_ids = undefined, song_names = undefined }, songs = [], mapped = {}, removed = {}) => {
 
-    for (const song of ids) {
-      const id = await find(song, 'tracks');
+    // @ts-ignore
+    for (const song of song_ids ?? song_names) {
+      const id = song_names ? await find(song, 'tracks') : song;
       if (id) {
         mapped[id] = song;
         songs.push(id);
-      } else saved[song] = 'not found';
+      } else removed[song] = 'not found';
     }
 
     await handler({
@@ -286,7 +315,102 @@ module.exports = {
       handler: 'spotify'
     });
 
-    songs.forEach((song) => saved[mapped[song]] = 'removed');
+    songs.forEach((song) => removed[mapped[song]] = 'removed');
+    
+    return {
+      total: song_names?.length ?? song_ids?.length,
+      found: songs?.length ?? 0,
+      removed
+    };
+  },
+
+  /**
+   * @summary
+   * ### [Get User's Saved Tracks]{@link https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks}
+   * 
+   * @example
+   * await api.spotify.songs.saved();
+   * 
+   * @example
+   * await api.spotify.songs.saved({
+   *   sort: 'popularity',
+   *   limit: 10
+   * });
+   * 
+   * @function saved
+   * @memberof module:songs#
+   * @param {Object} [options]
+   * @param {number} [options.limit] - The maximum number (1-50) of items to return (default 20)
+   * @param {string} [options.offset] - The last artist ID retrieved from the previous request
+   * @param {string} [options.sort]
+   * @returns {Promise<SpotifyReturn>}
+   */
+  saved: async (options) => {
+
+    const items = await handler({
+      method: 'GET',
+      endpoint: buildQueryString('me/tracks', {
+        market: 'US',
+        limit: options?.limit ?? 20,
+        offset: options?.offset ?? 0
+      }),
+      oauth: true,
+      scope: ['user-library-read'],
+      handler: 'spotify'
+    });
+
+    // console.log('saved tracks', items)
+    return removeFalsyFromObject({
+      total: items.total,
+      limit: items.limit,
+      offset: items.offset !== 0 ? items.offset : undefined,
+      tracks: buildTrackList(items, options?.sort)
+    });
+  },
+
+  /**
+   * @summary
+   * ### [Check User's Saved Tracks]{@link https://developer.spotify.com/documentation/web-api/reference/check-users-saved-tracks}
+   * 
+   * @example
+   * await api.spotify.songs.isSaved([
+   *   'song name',
+   *   'song name'
+   * ]);
+   * 
+   * @function isSaved
+   * @memberof module:songs#
+   * @param {string[]} ids
+   * @param {string[]} [songs]
+   * @param {{[x: string]: string}} [mapped]
+   * @param {{[x: string]: boolean|string}} [saved]
+   * @returns {Promise<{total: number, found: number, saved: {[x: string]: string|boolean}}>}
+   */
+  isSaved: async (ids, songs = [], mapped = {}, saved = {}) => {
+
+    for (const song of ids) {
+      const id = await find(song, 'tracks');
+      
+      if (id) {
+        mapped[id] = song;
+        songs.push(id);
+      } else saved[song] = 'not found';
+    }
+    
+    const items = await handler({
+      method: 'GET',
+      endpoint: buildQueryString('me/tracks/contains', {
+        ids: songs.join(',')
+      }),
+      oauth: true,
+      scope: ['user-library-read'],
+      handler: 'spotify'
+    });
+    
+    songs.forEach((song, index) => {
+      saved[mapped[song]] = items[index] || false;
+      // saved[song in saved ? song : items[index] || false] = items[index] || false;
+    });
     
     return {
       total: ids.length,
@@ -302,20 +426,28 @@ module.exports = {
    * The audio analysis describes the track’s structure and musical content, including rhythm, pitch, and timbre.
    * 
    * @example
-   * await api.spotify.songs.analyze('song name');
+   * await api.spotify.songs.analyze({
+   *   song_name: 'song name to search and analyze'
+   * });
    * 
+   * @example
+   * await api.spotify.songs.analyze({
+   *   song_id: 'ID of a specific song'
+   * });
    * @function analyze
    * @memberof module:songs#
-   * @param {string} query
+   * @param {Object} options
+   * @param {string} [options.song_id]
+   * @param {string} [options.song_name]
    * @returns {Promise<SpotifyAnalysis>}
    */
-  analyze: async (query) => {
+  analyze: async ({ song_id = undefined, song_name = undefined }) => {
 
-    const track = await find(query, 'tracks', true);
+    const id = song_name ? await find(song_name, 'tracks', true) : song_id;
     
     return handler({
       method: 'GET',
-      endpoint: `audio-analysis/${track}`,
+      endpoint: `audio-analysis/${id}`,
       handler: 'spotify'
     });
 
@@ -327,20 +459,24 @@ module.exports = {
    * Get audio feature information for a single track.
    * 
    * @example
-   * await api.spotify.songs.audioFeatures('song name');
+   * await api.spotify.songs.audioFeatures({
+   *   song_name: 'song name to search and analyze'
+   * });
    * 
    * @function audioFeatures
    * @memberof module:songs#
-   * @param {string} query
+   * @param {Object} options
+   * @param {string} [options.song_id]
+   * @param {string} [options.song_name]
    * @returns {Promise<SpotifyAudioFeatures>}
    */
-  audioFeatures: async (query) => {
+  audioFeatures: async ({ song_id = undefined, song_name = undefined }) => {
 
-    const track = await find(query, 'tracks', true);
+    const id = song_name ? await find(song_name, 'tracks', true) : song_id;
     
     return handler({
       method: 'GET',
-      endpoint: `audio-features/${track}`,
+      endpoint: `audio-features/${id}`,
       handler: 'spotify'
     });
 
@@ -352,22 +488,37 @@ module.exports = {
    * Get audio features for multiple tracks.
    * 
    * @example
-   * await api.spotify.songs.audioFeaturesMany([
-   *   'song name',
-   *   'song name'
-   * ]);
+   * await api.spotify.songs.audioFeaturesMany({
+   *   song_names: [
+   *     'song name',
+   *     'song name'
+   *   ]
+   * });
+   * 
+   * @example
+   * await api.spotify.songs.audioFeaturesMany({
+   *   song_ids: [
+   *     '4B9El4lQqztivDlRUCxbZB',
+   *     '98eFl4lPrtjivlk7UCxB08'
+   *   ]
+   * });
    * 
    * @function audioFeaturesMany
    * @memberof module:songs#
-   * @param {string[]} query
+   * @param {Object} options
+   * @param {string} [options.song_ids]
+   * @param {string} [options.song_names]
    * @param {string[]} [songs]
    * @param {string[]} [unknowns]
-   * @returns {Promise<{total: number, found: number, message: string|undefined, audio_features: SpotifyAudioFeatures[]}>}
+   * @returns {Promise<{total: number|undefined, found: number, message: string|undefined, audio_features: SpotifyAudioFeatures[]} | undefined>}
    */
-  audioFeaturesMany: async (query, songs = [], unknowns = []) => {
+  audioFeaturesMany: async ({ song_ids = undefined, song_names = undefined }, songs = [], unknowns = []) => {
     
-    for (const song of query) {
-      const id = await find(song, 'tracks');
+    if (!song_ids && !song_names) return;
+    
+    // @ts-ignore
+    for (const song of song_ids ?? song_names) {
+      const id = song_names ? await find(song, 'tracks') : song;
       id ? songs.push(id) : unknowns.push(song);
     }
 
@@ -380,7 +531,7 @@ module.exports = {
     });
 
     return {
-      total: query.length,
+      total: song_ids?.length ?? song_names?.length,
       found: tracks?.length ?? 0,
       message: unknowns.length
         ? `Song${unknowns.length > 1 ? 's' : ''} not found: ${unknowns.join(', ')}`

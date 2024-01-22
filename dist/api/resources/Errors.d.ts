@@ -29,9 +29,9 @@ export class ResponseError extends Error {
      * @param {?DiscordError} res
      * @param {?Response} response
      * @param {string} type
-     * @param {string} [content]
+     * @param {{ error?: string, hint?: string } | undefined} [content]
      */
-    constructor(res: ?DiscordError, response: ?Response, type: string, content?: string);
+    constructor(res: ?DiscordError, response: ?Response, type: string, content?: { error?: string, hint?: string } | undefined);
     type: string;
     status: number | undefined;
     statusText: string | undefined;

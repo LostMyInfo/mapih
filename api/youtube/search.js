@@ -4,7 +4,7 @@
 const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
 // const { buildTrackList, buildAlbums, buildArtists } = require('./functions');
 const { handler } = require('../resources/handlers');
-const { buildSearchResult, validateOptions } = require('./resources/functions');
+const { buildSearchReturn, validateOptions } = require('./resources/functions');
 
 /**
  * @file Search for items on Youtube
@@ -117,9 +117,9 @@ module.exports = {
         ...options
       }),
       handler: 'youtube',
-      youtubeEndpoint: 'search'
+      googleEndpoint: 'search'
     });
 
-    return buildSearchResult(result);
+    return buildSearchReturn(result);
   }
 };

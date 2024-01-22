@@ -368,7 +368,7 @@ module.exports = {
           endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
-            embeds: input.embeds && !input.embeds.length ? [] : [{
+            embeds: ('embeds' in input && !input.embeds?.length) || (!message?.embeds?.length && !embed) ? [] : [{
               title: embed?.title ?? message.embeds?.[0]?.title,
               description: embed?.description ?? message.embeds?.[0]?.description,
               color: embed?.color ?? message.embeds?.[0]?.color,
@@ -574,7 +574,7 @@ module.exports = {
           endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
-            embeds: input.embeds && !input.embeds.length ? [] : [{
+            embeds: ('embeds' in input && !input.embeds?.length) || (!message.embeds?.length && !embed) ? [] : [{
               title: embed?.title ?? message.embeds?.[0]?.title,
               description: embed?.description ?? message.embeds?.[0]?.description,
               color: embed?.color ?? message.embeds?.[0]?.color,

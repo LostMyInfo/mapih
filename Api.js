@@ -16,9 +16,9 @@ let slack_bot_token = undefined;
 let openaiKey = undefined;
 
 /**
- * @type {string | undefined}
+ * @type {{api_key: string, client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined}
  */
-let youtubeToken = undefined;
+let googleToken = undefined;
 
 /**
  * @type {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined}
@@ -48,7 +48,7 @@ module.exports = {
    * @param {string} [options.discord]
    * @param {{bot: string, user?: string, client_id?: string, client_secret?: string, team_id?: string, redirect_uri?: string, scope?: Array<string>}|undefined} [options.slack]
    * @param {string} [options.openai]
-   * @param {string} [options.youtube]
+   * @param {{api_key: string, client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} [options.google]
    * @param {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>}|undefined} [options.spotify]
    * @param {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>, access_token?: string|undefined}} [options.dropbox]
    * @param {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, restricted_to: { scope: string, object: { id: string, etag: string, type: string, sequence_id: string, name: string}}, scope?: string} | undefined} [options.box]
@@ -59,7 +59,7 @@ module.exports = {
     if (options.discord) discordToken = options.discord;
     if (options.slack) slack_bot_token = options.slack;
     if (options.openai) openaiKey = options.openai;
-    if (options.youtube) youtubeToken = options.youtube;
+    if (options.google) googleToken = options.google;
     if (options.spotify) spotifyToken = options.spotify;
     if (options.dropbox) dropboxToken = options.dropbox;
     if (options.paypal) paypalToken = options.paypal;
@@ -82,9 +82,9 @@ module.exports = {
   get_openai_token: function() { return openaiKey; },
 
   /**
-   * @returns {string|undefined}
+   * @returns {{api_key: string, client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined}
    */
-  get_youtube_token: function() { return youtubeToken; },
+  get_google_token: function() { return googleToken; },
 
   /**
    * @returns {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>}|undefined}
@@ -130,6 +130,7 @@ module.exports = {
   spotify: {
     search: require('./api/spotify/search'),
     artists: require('./api/spotify/artists'),
+    albums: require('./api/spotify/albums'),
     users: require('./api/spotify/users'),
     playlists: require('./api/spotify/playlists'),
     playback: require('./api/spotify/playback'),
@@ -154,7 +155,18 @@ module.exports = {
   },
 
   youtube: {
-    search: require('./api/youtube/search').search
+    search: require('./api/youtube/search').search,
+    videos: require('./api/youtube/videos')
+  },
+
+  google: {
+    geocoding: require('./api/google/geocoding').geocoding,
+    places: require('./api/google/places'),
+    drive: {
+      about: require('./api/google/drive/about').about
+    }
+    
+    
   },
   
   utils: {

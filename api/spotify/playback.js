@@ -34,7 +34,7 @@ module.exports = {
       }),
       oauth: true,
       scope: ['user-read-playback-state'],
-      message: 'Playback not available or active',
+      errorMessage: 'Playback not available or active',
       handler: 'spotify'
     });
     
@@ -46,16 +46,16 @@ module.exports = {
    * @summary
    * ### [Get Currently Playing Track]{@link https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track}
    * @example
-   * await api.spotify.playback.currentTrack();
+   * await api.spotify.playback.currentSong();
    * 
-   * @function currentTrack
+   * @function currentSong
    * @memberof module:playback#
    * @param {Object} [params]
    * @param {string} [params.market] - An [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. If a country code is specified, only content that is available in that market will be returned.
    * @param {string} [params.additional_types] - A comma-separated list of item types that your client supports besides the default `track` type. Valid types are: `track` and `episode`.
    * @returns {Promise<SpotifyTrack>}
    */
-  currentTrack: async (params) =>
+  currentSong: async (params) =>
     playbackStruct(await handler({
       method: 'GET',
       endpoint: buildQueryString('me/player/currently-playing', {
@@ -65,7 +65,7 @@ module.exports = {
       oauth: true,
       scope: ['user-read-currently-playing'],
       handler: 'spotify'
-    }), 'currentTrack'),
+    }), 'currentSong'),
 
   /**
    * @summary
@@ -94,12 +94,22 @@ module.exports = {
    * @example
    * await api.spotify.playback.togglePlayback();
    * 
+   * @example
+   * await api.spotify.playback.togglePlayback({
+   *   song_ids: ['1301WleyT98MSxVHPZCA6M']
+   * });
+   * 
+   * @example
+   * await api.spotify.playback.togglePlayback({
+   *   context_uri: 'spotify:album:1Je1IMUlBXcx1Fz0WE7oPT'
+   * });
+   * 
    * @function togglePlayback
    * @memberof module:playback#
    * @param {Object} [params]
    * @param {string} [params.device_id] - The id of the device this command is targeting. If not supplied, the user's currently active device is the target.
    * @param {string} [params.context_uri] - Spotify URI of the context to play. Valid contexts are albums, artists & playlists. {context_uri:"spotify:album:1Je1IMUlBXcx1Fz0WE7oPT"}
-   * @param {string[]} [params.uris] - A JSON array of the Spotify track URIs to play
+   * @param {string[]} [params.song_ids]
    * @param {number} [params.position_ms]
    * @returns {Promise<{statusText: number, type: string, message: string}>}
    */
@@ -109,12 +119,13 @@ module.exports = {
       endpoint: params?.device_id ? `me/player/play?device_id=${params.device_id}` : 'me/player/play',
       body: {
         context_uri: params?.context_uri ?? undefined,
-        uris: params?.uris ?? undefined,
+        uris: params?.song_ids?.map((uri) => `spotify:track:${uri}`).join(',') ?? undefined,
         position_ms: params?.position_ms ?? undefined
       },
       oauth: true,
       scope: ['user-modify-playback-state'],
       message: 'Started/resumed playback',
+      hint: 'Is the song already playing?',
       handler: 'spotify'
     }),
 
@@ -189,19 +200,19 @@ module.exports = {
 
   /**
    * @summary
-   * ### [Skip To Previous]{@link https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-previous-track}
+   * ### [Seek To Position]{@link https://developer.spotify.com/documentation/web-api/reference/seek-to-position-in-currently-playing-track}
    * Seeks to the given position in the user’s currently playing track. This API only works for users who have Spotify Premium.
    * 
    * @example
-   * await api.spotify.playback.seek('abcdefg', 25000);
+   * await api.spotify.playback.seek(25000);
    * 
    * @function seek
    * @memberof module:playback#
+   * @param {number} position_ms
    * @param {string} [device_id]
-   * @param {number} [position_ms]
    * @returns {Promise<{statusText: number, type: string, message: string}>}
    */
-  seek: async (device_id, position_ms) =>
+  seek: async (position_ms, device_id) =>
     handler({
       method: 'PUT',
       endpoint: buildQueryString('me/player/seek', {
@@ -325,11 +336,11 @@ module.exports = {
    * ### [Get Recently Played Tracks]{@link https://developer.spotify.com/documentation/web-api/reference/get-recently-played}
    * Get tracks from the current user's recently played tracks. Note: Currently doesn't support podcast episodes.
    * @example
-   * await api.spotify.playback.recentlyPlayed({
+   * await api.spotify.playback.recent({
    *   limit: 5
    * });
    * 
-   * @function recentlyPlayed
+   * @function recent
    * @memberof module:playback#
    * @param {Object} [options]
    * @param {number} [options.limit] - The maximum number (1-50) of items to return (default 20)
@@ -337,7 +348,7 @@ module.exports = {
    * @param {number} [options.before] - A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified.
    * @returns {Promise<SpotifyTrack[]|undefined>}
    */
-  recentlyPlayed: async (options) =>
+  recent: async (options) =>
     buildTrackList(await handler({
       method: 'GET',
       endpoint: buildQueryString('me/player/recently-played', {
@@ -356,7 +367,7 @@ module.exports = {
    * Add an item to the end of the user's current playback queue. This API only works for users who have Spotify Premium.
    * @example
    * await api.spotify.playback.addToQueue({
-   *   uri: 'spotify:track:4iV5W9uYEdYUVa79Axb7Rh'
+   *   song_id: '4iV5W9uYEdYUVa79Axb7Rh'
    * });
    * 
    * @function addToQueue

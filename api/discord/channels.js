@@ -543,12 +543,13 @@ module.exports = {
 
         const { embeds } = params;
         const embed = embeds?.[0] || undefined;
+        
         const attempt = await attemptHandler({
           method: 'PATCH',
           endpoint: `channels/${params.channel_id}/messages/${params.message_id}`,
           body: {
             content: params.content ?? message.content,
-            embeds: params.embeds && !params.embeds.length ? [] : [{
+            embeds: ('embeds' in params && !params.embeds?.length) || (!message.embeds?.length && !embed) ? [] : [{
               title: embed?.title ?? message.embeds?.[0]?.title,
               description: embed?.description ?? message.embeds?.[0]?.description,
               color: embed?.color ?? message.embeds?.[0]?.color,

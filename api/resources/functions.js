@@ -33,7 +33,6 @@ function getBadges(flags) {
 }
 
 /**
- * 
  * @param {Snowflake} userID
  * @param {?string} avatarID
  * @param {Snowflake} [guildID] 
@@ -149,17 +148,6 @@ async function isValidMedia(media, media_type = 'image') {
     if (isValidMediaBuffer(media, media_type)) return true;
   }
   return false;
-  /*
-  if (typeof media === 'string') {
-    try {
-      await isValidMediaURL(media);
-    } catch (e) { return false; }
-    return true;
-  } else if (media instanceof Buffer) {
-    if (isValidMediaBuffer(media)) return true;
-  }
-  return false;
-  */
 }
 
 /**
@@ -209,14 +197,12 @@ async function imageData(media, encoding, datastringbuffer) {
     if (encoding === 'base64string') {
       const option = Buffer.from(imageBuffer);
       data = `data:${mimetype};base64,${option.toString('base64')}`;
-      data = `data:${mimetype};base64,${option.toString('base64')}`;
       if (datastringbuffer)
         data = Buffer.from(option.toString('base64'), 'base64');
     } else if (encoding === 'binarystring')
       data = imageBuffer.toString('binary');
     else if (encoding && ['base64', 'utf-8', 'binary'].includes(encoding))
       data = Buffer.from(imageBuffer).toString(encoding);
-      // data = Buffer.from(imageBuffer, encoding);
     else
       data = Buffer.from(imageBuffer);
     
@@ -245,18 +231,13 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
     const startSize = buffer.length;
 
     if (type === 'image/png') {
-
       image = sharp(buffer);
-
       if (startHeight !== height || startWidth !== width)
         image = await image.resize({ width, height }).png().toBuffer();
-      else
-        image = await image.png().toBuffer();
+      else image = await image.png().toBuffer();
 
     } else if (type === 'image/gif') {
-
       image = sharp(buffer, { animated: true });
-      
       if (startHeight !== height || startWidth !== width)
         // @ts-ignore
         image = (await apng.sharpToApng(image, 'buffer', { height, width }))?.[0].buffer;
@@ -265,7 +246,6 @@ async function resizeImage(buffer, type, width = 320, height = 320, MAX_SIZE = 5
         image = (await apng.sharpToApng(image, 'buffer'))?.[0].buffer;
             
     } else if (type === 'image/apng') {
-      
       if (startHeight === height && startWidth === width) 
         image = buffer;
       else
@@ -301,8 +281,8 @@ async function reduceSize(buffer, type, size, MAX_SIZE = 524288) {
   
   let image = null, width = 320, height = 320;
   while (size > MAX_SIZE) {
-    width = Math.floor(width * 0.95); // Reduce width by 10%
-    height = Math.floor(height * 0.95); // Reduce height by 10%
+    width = Math.floor(width * 0.95);
+    height = Math.floor(height * 0.95);
     
     if (type === 'image/png') {
       image = await sharp(buffer).resize({ width, height }).png().toBuffer();
@@ -674,10 +654,12 @@ function buildQueryString(url, params, encode = false) {
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined) {
+      const encodedKey = encode ? encodeURIComponent(key) : key;
       const encodedValue = encode ? encodeURIComponent(value) : value;
-      queryParams.append(key, encodedValue);
+      queryParams.append(encodedKey, encodedValue);
     }
   });
+
 
   const queryString = queryParams.toString();
   return queryString ? `${url}${queryString}` : url;

@@ -11,21 +11,23 @@ class ResponseError extends Error {
    * @param {?DiscordError} res 
    * @param {?Response} response
    * @param {string} type
-   * @param {string} [content]
+   * @param {{ error?: string, hint?: string } | undefined} [content]
    */
-  constructor(res, response, type, content) {
+  constructor(res, response, type, { error, hint } = {}) {
     super();
+
+    // const { error, hint } = content || {};
 
     this.type = type;
     if (response?.status && response?.status !== 200)
-      this.status = response.status;
+      this.code = response.status;
     if (response?.statusText && response?.statusText !== 'OK')
-      this.statusText = response.statusText;
+      this.statusText = response.statusText !== 'Forbidden' ? response.statusText : undefined;
     
     if (type === 'discord_error') {
-      if (!res && !content) return;
-      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || content)
-        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : content || '' : '';
+      if (!res && !error && !hint) return;
+      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
+        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
 
       if (res) {
         if (res.message && typeof res.message === 'string') this.message = res.message;
@@ -41,42 +43,69 @@ class ResponseError extends Error {
       }
             
     } else if (type === 'slack_error') {
-      if (!res && !content) return;
-      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || content)
-        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : content || '' : '';
+      if (!res && !error && !hint) return;
+      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
+        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
       if (res && SlackError(res))
         this.details = SlackError(res);
     
     } else if (type === 'spotify_error') {
-      if (!res && !content) return;
-      if (content) this.message = content;
-            
+      if (!res && !error && !hint) return;
+      
       if (res && res.error) {
         this.message = typeof res.error !== 'string' ? res.error.message : res.error;
-        if (typeof res.error !== 'string' && res.error.reason)
-          this.reason = res.error.reason;
+        if (typeof res.error !== 'string' && res.error.reason && !/unknown/i.test(res.error.reason))
+          this.reason = res.error.reason.toLowerCase().replace(/_/g, ' ');
       }
       if (res && res.error_description)
         this.details = res.error_description;
 
+      if (error) this.message = error;
+      if (hint) this.hint = hint;
+
     } else if (type === 'dropbox_error') {
-      if (!res && !content) return;
+      if (!res && !error && !hint) return;
       // if (typeof res === 'string')
       // this.details = res;
-      if (content) this.message = content;
+      if (error) this.message = error;
+      if (hint) this.hint = hint;
       if (res && res.error_summary)
         this.details = res.error_summary;
 
     } else if (type === 'openai_error') {
       // console.log('res in error\n', res);
-      if (!res && !content) return;
-      if (content) this.message = content;
+      if (!res && !error && !hint) return;
+      if (error) this.message = error;
       else if (res && res.error) {
         this.message = typeof res.error !== 'string' ? res.error.message : '';
         this.details = typeof res.error !== 'string' && res.error.type ? res.error.type : '';
         if (typeof res.error !== 'string' && res.error.param)
           this.param = typeof res.error !== 'string' && res.error.param ? res.error.param : '';
       }
+      if (hint) this.hint = hint;
+    } else if (type === 'google_error') {
+      const reasons = [];
+      if (!res && !error && !hint) return;
+      // console.log('res in google error:', JSON.stringify(res, null, 2));
+      if (res && res.error && typeof res.error === 'object') {
+        if (typeof res.error.status === 'string')
+          this.status = res.error.status?.toLowerCase().replace(/_/g, ' ');
+        this.message = res.error.message;
+        if (res.error.errors?.length)
+          for (const error of res.error.errors) {
+            if (error.message) {
+              if (!res.error.message) this.message = error.message;
+            } else if (error.reason) reasons.push(error.reason);
+          }
+        if (res.error.details?.length)
+          for (const detail of res.error.details)
+            if (/ErrorInfo/.test(detail['@type']))
+              if (detail.reason) reasons.push(detail.reason?.toLowerCase().replace(/_/g, ' '));
+              // this.reason = detail.reason?.toLowerCase().replace(/_/g, ' ');
+      }
+      if (reasons.length) this.reason = reasons;
+      if (error) this.message = error;
+      if (hint) this.hint = hint;
     }
   }
 };
@@ -269,7 +298,7 @@ function get(obj, path, defaultValue = undefined) {
  * @typedef {Object} DiscordError
  * @property {string} message
  * @property {boolean} [ok]
- * @property {string|{status?: number, message: string, reason?: string, param?: string, code?: ?number, type?: string}} [error]
+ * @property {string|{status?: number|string, message: string, reason?: string, param?: string, code?: ?number, type?: string, errors?: Array<{message?: string, domain?: string, reason?: string, extendedHelp?: string}>, details?: Array<{'@type': string, links?: Array<{description: string, url: string}>, reason?: string, domain?: string, metadata?: { service?: string, consumer?: string}}>}} [error]
  * @property {{messages: Array<string>}} [response_metadata]
  * @property {number} [code]
  * @property {boolean} [global]

@@ -50,21 +50,23 @@ module.exports = {
    * @param {string} [options.year]
    * @param {string} [options.genre]
    * @param {string} [options.market]
-   * @returns {Promise<SpotifyReturn>}
+   * @returns {Promise<SpotifyReturn|undefined>}
   */
   advanced: async (options) => {
     
     const { song, artist, album, include } = options;
   
     const endpoint = `${song || artist || album} ` + ['song', 'artist', 'album', 'year', 'genre']
+      // @ts-ignore
       .map((param) => options[param]
+        // @ts-ignore
         ? `${param === 'song' ? 'track' : param}:${options[param]}`
         : null
       )
       .filter(Boolean)
       .join(' ');
 
-
+    // console.log('endpoint:', endpoint);
     // const type = include ? include.join(',').replace('songs', 'track') : endpoint ? 'track' : 'track,artist,album';
     /*
     
@@ -94,7 +96,7 @@ module.exports = {
       }),
       handler: 'spotify'
     });
-    // return console.log(attempt.tracks.items[0])
+    // return console.log(attempt)
   
     return removeFalsyFromObject({
       total_tracks: attempt.tracks?.total && attempt.tracks?.total !== 0 ? attempt.tracks.total : undefined,

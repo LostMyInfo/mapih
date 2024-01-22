@@ -45,9 +45,11 @@ function buildArtists(payload, sort, property, artists = []) {
  */
 function buildAlbums(payload, albums = []) {
   // log('buildAlbums', payload);
-  if (!payload.items || !payload.items?.length) return;
-  for (const album of payload.items)
+  if ((!payload.items || !payload.items?.length) && (!payload.albums?.items?.length)) return;
+  for (const album of payload.items ?? payload.albums.items) {
+    // console.log(album);
     albums.push(buildAlbum(album));
+  }
   return albums;
 }
 
@@ -99,7 +101,7 @@ const playbackStruct = (payload, method) => {
     artists: buildArtists(payload)
   });
 
-  return method === 'currentTrack'
+  return method === 'currentSong'
     ? { ...result, ...track }
     : { track, ...result };
 };
@@ -204,8 +206,9 @@ const buildTrackList = (payload, sort, tracks = []) => {
  * @returns {any}
  */
 function buildPlaylists(payload, shortTrack, playlists = []) {
-  if (((!payload.playlists || !payload.playlists?.items?.length) && payload.type !== 'playlist')/* && !payload.items?.length*/) return null;
-  // log('buildPlaylists', payload.playlists.items[0]);
+  // log('buildPlaylists', payload);
+  if ((!payload.playlists?.items?.length && payload.type !== 'playlist') && !payload.items?.length) return null;
+  // 
   /** @param {any} playlist */
   const struct = (playlist) => ({
     name: playlist.name,
@@ -395,7 +398,7 @@ function buildImages(object, item, top_tracks) {
     : object === 'images'
       ? item
       : (item.images ?? item.playlists?.items);
-  path = path.images ?? path;
+  path = path?.images ?? path;
   /*
   const path = findImagesArray(object === 'album' || top_tracks
     ? item.album?.images
@@ -442,7 +445,7 @@ function buildUser(user) {
 
 /**
  * @param {string} query
- * @param {'tracks'|'artists'} type
+ * @param {'tracks'|'artists'|'albums'} type
  * @param {boolean} [throwErr]
  * @returns {Promise<string|undefined>}
  */
@@ -450,12 +453,13 @@ async function find(query, type, throwErr = false) {
   const { advanced } = require('./search');
   const [item] = (await advanced({
     song: type === 'tracks' ? query : undefined,
-    artist: type === 'artists' ? query : undefined
-    // include: [type === 'tracks' ? 'songs' : 'artists']
+    artist: type === 'artists' ? query : undefined,
+    album: type === 'albums' ? query : undefined,
+    include: [type === 'tracks' ? 'songs' : type === 'artists' ? 'artists' : 'albums']
   }))?.[type] || [];
-  // console.log(item);
+  // console.log('item', item);
   if (!item?.id && throwErr) 
-    throw new ResponseError(null, null, 'spotify_error', `${type.slice(0, type.length - 1)} not found`);
+    throw new ResponseError(null, null, 'spotify_error', { error: `${type.slice(0, type.length - 1)} not found` });
   // console.log('item.id', item?.id);
   return item?.id || undefined;
 }
