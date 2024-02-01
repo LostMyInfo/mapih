@@ -574,7 +574,7 @@ module.exports = {
           endpoint: endpoint,
           body: {
             content: input.content ?? message.content,
-            embeds: ('embeds' in input && !input.embeds?.length) || (!message.embeds?.length && !embed) ? [] : [{
+            embeds: ('embeds' in input && !embed) || (!message.embeds?.length && !embed) ? [] : [{
               title: embed?.title ?? message.embeds?.[0]?.title,
               description: embed?.description ?? message.embeds?.[0]?.description,
               color: embed?.color ?? message.embeds?.[0]?.color,
@@ -593,7 +593,7 @@ module.exports = {
               },
               fields: embed?.fields ?? message.embeds?.[0]?.fields
             }],
-            components: input.components && !input.components.length ? [] : (message.components ?? []),
+            components: ('components' in input && !input.components?.length) || (!message.components?.length && !input.components?.length) ? [] : message.components ?? input.components,
             allowed_mentions: input.allowed_mentions,
             attachments: input.attachments ?? message.attachments ?? []
           }

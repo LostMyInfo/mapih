@@ -681,13 +681,16 @@ function buildQueryStringFromArrays([url, ...rest]) {
 
 
 /**
- * 
  * @param {*} obj
  * @returns {any}
  */
 function removeFalsyFromObject(obj) {
   return Object.fromEntries(
-    Object.entries(obj).filter(([, v]) => v !== undefined && v !== null && v !== '')
+    Object.entries(obj).filter(([, v]) => {
+      if (Array.isArray(v) && v.length === 0)
+        return false;
+      return v !== undefined && v !== null && v !== '';
+    })
   );
 }
 

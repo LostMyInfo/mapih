@@ -1,7 +1,7 @@
 // @ts-check
 
-const { ResponseError } = require('../resources/Errors');
-const { removeFalsyFromArray, removeFalsyFromObject, getPathValue } = require('../resources/functions');
+const { ResponseError } = require('../../resources/Errors');
+const { removeFalsyFromArray, removeFalsyFromObject, getPathValue } = require('../../resources/functions');
 
 
 /**
@@ -450,7 +450,7 @@ function buildUser(user) {
  * @returns {Promise<string|undefined>}
  */
 async function find(query, type, throwErr = false) {
-  const { advanced } = require('./search');
+  const { advanced } = require('../search');
   const [item] = (await advanced({
     song: type === 'tracks' ? query : undefined,
     artist: type === 'artists' ? query : undefined,

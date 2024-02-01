@@ -12,12 +12,13 @@ module.exports = {
   /**
    * @summary
    * ### [Get Information About The User]{@link https://developers.google.com/drive/api/reference/rest/v3/about/get}
+   * 
    * @example
    * await api.google.drive.about()
    * 
    * @function about
    * @memberof module:about#
-   * @returns {Promise<ChatCompletion>}
+   * @returns {Promise<GoogleDriveAbout>}
    */
   about: async () =>
     handler({

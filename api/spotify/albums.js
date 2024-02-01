@@ -3,7 +3,7 @@
 // @ts-check
 const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
 const { handler } = require('../resources/handlers');
-const { buildAlbum, buildAlbums, buildTrackList, find } = require('./functions');
+const { buildAlbum, buildAlbums, buildTrackList, find } = require('./resources/functions');
 
 /**
  * @file All Spotify API endpoints relating to albums

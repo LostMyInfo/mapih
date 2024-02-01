@@ -2,7 +2,7 @@
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
 const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
-const { buildImages, fieldsToString, buildPlaylists } = require('./functions');
+const { buildImages, fieldsToString, buildPlaylists } = require('./resources/functions');
 const { handler } = require('../resources/handlers');
 const { ResponseError } = require('../resources/Errors');
 

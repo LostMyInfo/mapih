@@ -2,7 +2,7 @@
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
 const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
-const { buildTrack, find, buildTrackList } = require('./functions');
+const { buildTrack, find, buildTrackList } = require('./resources/functions');
 const { handler } = require('../resources/handlers');
 
 /**
@@ -44,6 +44,7 @@ module.exports = {
       }),
       handler: 'spotify',
       errorMessage: 'Invalid song ID'
+      // oauth: true
     }));
   },
 
@@ -178,7 +179,7 @@ module.exports = {
    */
   recommendations: async (options, artists = [], tracks = [], genres = []) => {
 
-    const availableGenres = require('./functions').genres;
+    const availableGenres = require('./resources/functions').genres;
     
     /**
      * @param {string[]|undefined} option 

@@ -22,7 +22,7 @@ class ResponseError extends Error {
     if (response?.status && response?.status !== 200)
       this.code = response.status;
     if (response?.statusText && response?.statusText !== 'OK')
-      this.statusText = response.statusText !== 'Forbidden' ? response.statusText : undefined;
+      if (!/Forbidden|Unknown Error/gi) this.statusText = response.statusText;
     
     if (type === 'discord_error') {
       if (!res && !error && !hint) return;
@@ -86,7 +86,7 @@ class ResponseError extends Error {
     } else if (type === 'google_error') {
       const reasons = [];
       if (!res && !error && !hint) return;
-      // console.log('res in google error:', JSON.stringify(res, null, 2));
+      console.log('res in google error:', JSON.stringify(res, null, 2));
       if (res && res.error && typeof res.error === 'object') {
         if (typeof res.error.status === 'string')
           this.status = res.error.status?.toLowerCase().replace(/_/g, ' ');
@@ -95,7 +95,8 @@ class ResponseError extends Error {
           for (const error of res.error.errors) {
             if (error.message) {
               if (!res.error.message) this.message = error.message;
-            } else if (error.reason) reasons.push(error.reason);
+              if (error.reason) reasons.push(error.reason);
+            }
           }
         if (res.error.details?.length)
           for (const detail of res.error.details)
@@ -103,9 +104,33 @@ class ResponseError extends Error {
               if (detail.reason) reasons.push(detail.reason?.toLowerCase().replace(/_/g, ' '));
               // this.reason = detail.reason?.toLowerCase().replace(/_/g, ' ');
       }
-      if (reasons.length) this.reason = reasons;
+      if (reasons.length) this.reason = reasons.join(', ');
       if (error) this.message = error;
       if (hint) this.hint = hint;
+
+    } else if (type === 'imgur_error') {
+      if (!res && !error && !hint) return;
+      console.log('res in errors imgur:', res);
+      if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
+        this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
+    
+    } else if (type === 'twitter_error') {
+      if (!res && !error && !hint) return;
+      console.log('res in twitter error:\n', res);
+
+      if (res?.error && typeof res?.error === 'string') this.message = res.error;
+      else if (res?.title) this.message = res.title;
+      else if (res?.errors && res?.errors.length && res?.errors[0].label) this.message = res.errors[0].label;
+
+      if (res?.error_description) this.details = res.error_description;
+      else if (res?.detail) this.details = res.detail;
+
+      if (res?.errors && res?.errors.length) {
+        if (res.errors[0].parameters) this.parameter = Object.keys(res.errors[0].parameters)[0];
+        if (res.errors[0].message) this.reason = res.errors[0].message;//  ?? res.errors[0];
+        // console.log('res.errors', Object.keys(res.errors[0].parameters)[0]);
+      }
+      
     }
   }
 };
@@ -308,6 +333,8 @@ function get(obj, path, defaultValue = undefined) {
  * @property {Array<string>} [warnings]
  * @property {string} [error_description]
  * @property {string} [error_summary]
+ * @property {string} [title]
+ * @property {string} [detail]
  */
 
 /**

@@ -2,7 +2,7 @@
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
 const { buildQueryString } = require('../resources/functions');
-const { buildTrack, buildTrackList, playbackStruct } = require('./functions');
+const { buildTrack, buildTrackList, playbackStruct } = require('./resources/functions');
 const { handler } = require('../resources/handlers');
 
 /**

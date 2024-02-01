@@ -2,7 +2,7 @@
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
 const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
-const { buildTrackList, buildAlbums, buildArtists } = require('./functions');
+const { buildTrackList, buildAlbums, buildArtists } = require('./resources/functions');
 const { handler } = require('../resources/handlers');
 
 /**
@@ -97,7 +97,8 @@ module.exports = {
       handler: 'spotify'
     });
     // return console.log(attempt)
-  
+    if (!attempt) throw new Error('An error occured');
+
     return removeFalsyFromObject({
       total_tracks: attempt.tracks?.total && attempt.tracks?.total !== 0 ? attempt.tracks.total : undefined,
       total_artists: attempt.artists?.total && attempt.artists?.total !== 0 ? attempt.artists.total : undefined,

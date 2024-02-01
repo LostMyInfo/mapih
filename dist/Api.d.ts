@@ -1,20 +1,5 @@
 // @ts-check
-
-export function initialize(options: {
-    discord?: string | undefined;
-    slack?: string | undefined;
-    spotify?: {
-        client_id: string;
-        client_secret: string;
-    } | undefined;
-}): void;
-export function get_discord_token(): string | undefined;
-export function get_slack_token(): string | undefined;
-export function get_spotify_token(): {
-    client_id: string;
-    client_secret: string;
-} | undefined;
-export namespace discord {
+export module discord {
     const auditlog: {
         retrieve: (params: {
             guild_id: string;
@@ -1355,7 +1340,7 @@ export namespace utils {
         headers?: any;
     }, match?: string | undefined) => Promise<any>;
     const storage: {
-        put: ({ key, value, ttl, ttlCb }: {
+        set: ({ key, value, ttl, ttlCb }: {
             key: string;
             value: any;
             ttl: number | undefined;

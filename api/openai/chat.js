@@ -13,6 +13,7 @@ module.exports = {
   /**
    * @summary
    * ### [Create Chat Completion]{@link https://platform.openai.com/docs/api-reference/chat/create}
+   * 
    * @example
    * await api.openai.chat.create({
    *   model: 'gpt-4',

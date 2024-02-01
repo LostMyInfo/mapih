@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-builtins */
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable brace-style */
 // @ts-check
@@ -9,6 +10,7 @@
 const { https } = require('../utils/https');
 const { ResponseError } = require('./Errors');
 const { writeFile, readFile } = require('fs/promises');
+
 
 /**
  * @param {string} key
@@ -124,6 +126,7 @@ async function sendAttachment(params, path, method) {
  * @param {string} [options.hint]
  * @param {any} [options.payload]
  * @param {string} [options.type]
+ * @param {boolean} [options.formdata]
  * @param {string} [options.googleEndpoint]
  * @param {'json'|'text'|'arrayBuffer'|'blob'|'formData'} [options.response_type]
  * @returns {Promise<*>}
@@ -143,28 +146,41 @@ async function handler(options) {
 
     const access_token = await getToken();
     */
-    let access_token = await getTokens(options.handler === 'spotify' && !options.oauth ? 'spotifyAccessToken' : `${options.handler}Auth`);
+    const google = /drive|places|sheets|youtube/i.test(options.handler);
+    // console.log('Google service:', google);
+    let access_token = await getTokens((options.handler === 'spotify' && !options.oauth) ? 'spotifyAccessToken' : `${google ? 'google' : options.handler}Auth`);
 
-    if (access_token && access_token?.expires <= Date.now())
-      access_token.access_token = await refresh(options.handler);
+    // console.log('\naccess_token from handler()1:\n', access_token);
+
+    if ((access_token && access_token?.expires <= Date.now()) || (!access_token?.access_token && access_token?.refresh_token))
+      access_token.access_token = await refresh(!google ? options.handler : 'google', google ? 'drive' : undefined);
   
-    access_token = access_token?.access_token;
-    // console.log('\access_token from handler\n', access_token);
-    
+    access_token = typeof access_token === 'string' ? access_token : access_token?.access_token;
+    // console.log('\naccess_token from handler()2\n', access_token);
+
     /**
      * @type {{url: string, auth: (() => Promise<string>)|undefined, header?: string[]}|undefined}
      */
+    // @ts-ignore
     const { url, auth = undefined, header = undefined } = {
       spotify: {
         url: 'https://api.spotify.com/v1',
         auth: async () => `Bearer ${
-          access_token ?? (options.oauth ? await oauthToken('Spotify', options.handler, options.scope) : await spotifyAccessToken())
+        // access_token ?? (options.oauth ? await oauthToken('Spotify', options.handler, options.scope) : await spotifyAccessToken())
+          options.oauth ? (access_token ?? (await oauthToken('Spotify', options.handler, options.scope))) : await spotifyAccessToken()
+        }`
+      },
+      imgur: {
+        url: 'https://api.imgur.com/3',
+        auth: async () => `${options.oauth ? 'Bearer' : 'Client-ID'} ${
+          options.oauth ? (access_token ?? (await oauthToken('Imgur', options.handler, options.scope))) : token('imgur', options.handler)
         }`
       },
       slack: {
         url: 'https://slack.com/api',
         auth: async () => `Bearer ${
-          access_token ?? (options.oauth ? await oauthToken('Slack', options.handler, options.scope) : token('slack', options.handler))
+        // access_token ?? (options.oauth ? await oauthToken('Slack', options.handler, options.scope) : token('slack', options.handler))
+          options.oauth ? (access_token ?? (await oauthToken('Slack', options.handler, options.scope))) : token('slack', options.handler)
         }`
       },
       openai: {
@@ -174,12 +190,17 @@ async function handler(options) {
       youtube: {
         url: `https://www.googleapis.com/youtube/v3/${options.googleEndpoint}?key=${token('google', options.handler)}`,
         auth: async () => `Bearer ${
-          access_token ?? (options.oauth ? await oauthToken('Google', options.handler, options.scope) : undefined)
+        // access_token ?? (options.oauth ? await oauthToken('Google', options.handler, options.scope) : undefined)
+          options.oauth ? (access_token ?? (await oauthToken('Google', options.handler, options.scope))) : undefined
         }`
+      },
+      twitter: {
+        url: 'https://api.twitter.com/2',
+        auth: async () => `Bearer ${access_token ?? await oauthToken('Twitter', options.handler, options.scope)}`
       },
       drive: {
         url: 'https://www.googleapis.com/drive/v3',
-        auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler)}`
+        auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler, ['drive'])}`
       },
       places: {
         url: 'https://places.googleapis.com/v1', // ${options.googleEndpoint}?key=${token('google', 'google')}`,
@@ -190,6 +211,10 @@ async function handler(options) {
           // ['X-Goog-FieldMask', 'places.displayName']
         ]
         */
+      },
+      sheets: {
+        url: 'https://sheets.googleapis.com/v4',
+        auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler, ['drive'])}`
       },
       dropbox: {
         url: `https://${options.type === 'content' ? 'content' : 'api'}.dropboxapi.com`,
@@ -210,7 +235,32 @@ async function handler(options) {
       }
       // ... (other handlers)
     }[options.handler];
+
+    // console.log('\nawait auth() in handler():\n', await auth());
     
+    /*
+    console.log({
+      method: options.method,
+      url: !/youtube/i.test(options.handler) ? `${url}/${options.endpoint}` : `${url}&${options.endpoint}`,
+      headers: {
+        'Content-Type': options.type === 'content' ? 'text/plain' : 'application/json; charset=UTF-8',
+        ...(header && options.type === 'content'
+          ? { 'Dropbox-API-Arg': JSON.stringify(options.body) }
+          : options.handler === 'places'
+            ? { 'X-Goog-Api-Key': token('google', 'google') }
+            : {}),
+        ...(auth && { 'Authorization': await auth() })
+      },
+      ...(options.body && { body: options.type !== 'content' ? options.body : '' }),
+      message: options.message || '',
+      errorMessage: options.errorMessage || '',
+      hint: options.hint || '',
+      payload: options.payload || '',
+      response_type: options.response_type || undefined,
+      formdata: options.formdata || false
+    });
+    */
+    // return console.log('\nplease\n');
     const response = await https({
       method: options.method,
       url: !/youtube/i.test(options.handler) ? `${url}/${options.endpoint}` : `${url}&${options.endpoint}`,
@@ -228,10 +278,11 @@ async function handler(options) {
       errorMessage: options.errorMessage || '',
       hint: options.hint || '',
       payload: options.payload || '',
-      response_type: options.response_type || undefined
+      response_type: options.response_type || undefined,
+      formdata: options.formdata || false
     });
 
-    return response;
+    return options.handler === 'imgur' ? response.data : response;
 
     /*
     // const { url, auth = undefined, header = undefined } = handlers[options.handler];
@@ -258,9 +309,13 @@ async function handler(options) {
     });
     */
     
-  } catch (error) {
-    // console.log('error:', error);
-    throw error;
+  } catch (/** @type {*} */ error) {
+    console.log('error:', error);
+    // if (error.message.includes('expired')) return authorize(options.handler.charAt(0).toUpperCase() + options.handler.slice(1), null);
+    throw error.message?.includes('expired')
+      // @ts-ignore
+      ? await authorize(options.handler.charAt(0).toUpperCase() + options.handler.slice(1), null) + 'hello from handler()'
+      : error;
   }
 }
 
@@ -345,13 +400,13 @@ async function paypalAccessToken(refresh = false) {
 }
 
 /**
- * 
  * @returns {Promise<string>}
  */
 async function spotifyAccessToken() {
   const token = await getTokens('spotifyAccessToken');
   if (token) return token;
 
+  
   const credentials = require('../../Api').get_spotify_token();
   if (!credentials) throw new Error(
     'Spotify credentials not set. Please initialize the library first.'
@@ -385,8 +440,9 @@ async function spotifyAccessToken() {
  * @returns {string|undefined}
  */
 function token(type, handler) {
-  if (!/discord|slack|openai|google/.test(type)) return;
+  if (!/discord|slack|openai|google|imgur/.test(type)) return;
   if (type !== handler) return;
+
   const api = require('../../Api');
 
   /**
@@ -403,6 +459,11 @@ function token(type, handler) {
       env: 'slack_bot_token',
       errorMessage: 'Slack token not set. '
     },
+    imgur: {
+      getToken: () => api.get_imgur_token()?.client_id,
+      env: 'imgur_client_id',
+      errorMessage: 'Imgur client_id not set. '
+    },
     openai: {
       getToken: () => api.get_openai_token(),
       env: 'openai_api_key',
@@ -418,30 +479,31 @@ function token(type, handler) {
   const { getToken, errorMessage, env } = tokenTypes[type] || {};
 
   const token = (getToken && getToken()) || process.env[env] || null;
+  // console.log('\ntoken in token():', token, '\n');
+
   if (!token) throw new Error(errorMessage + 'Please initialize the library first.');
-  
   return token;
 }
 
 /**
  * 
- * @param {'Slack' | 'Spotify' | 'Dropbox' | 'Box' | 'Google'} type
+ * @param {'Slack' | 'Spotify' | 'Dropbox' | 'Box' | 'Google' | 'Imgur' | 'Twitter'} type
  * @param {string} handler
  * @param {string[]} [scope]
  * @param {string} [service]
  * @returns 
  */
 async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
-  if ((service !== handler) && (type === 'Google' && !/youtube|drive|places/i.test(handler))) return;
+  if ((service !== handler) && (type === 'Google' && !/youtube|drive|places|sheets/i.test(handler))) return;
   const api = require('../../Api');
   const token = await getTokens(`${service}Auth`);
   
   // console.log(type + ' token in oauthToken():', token);
   
   if (token && token.expires <= Date.now())
-    token.access_token = await refresh(service);
+    token.access_token = await refresh(service, scope?.[0]);
 
-  if (token.access_token) return token.access_token;
+  if (token && token.access_token) return token.access_token;
 
   if (token && scope && scope.length) {
     const scopes = [];
@@ -455,7 +517,6 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
   
   if (token?.access_token) return token.access_token;
   
-  
   // @ts-ignore
   const credentials = api[`get_${service}_token`]();
   // console.log('credentials from oauth()', credentials);
@@ -466,7 +527,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
 }
 
 /**
- * @param {'Slack' | 'Spotify' | 'Box' | 'Dropbox' | 'Google'} type
+ * @param {'Slack' | 'Spotify' | 'Box' | 'Dropbox' | 'Google' | 'Imgur' | 'Twitter'} type
  * @param {?{channel_id: string}} [params]
  * @param {string} [handler]
  * @param {string} [service]
@@ -474,7 +535,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
 async function authorize(type, params, handler, service = type.toLowerCase()) {
   const api = require('../../Api');
   const { buildQueryString } = require('./functions');
-
+  
   /** @type {{[x: string]: {[x: string]: string}}} */
   const configs = {
     dropbox: {
@@ -489,12 +550,19 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
       url: 'https://accounts.spotify.com/authorize',
       scope: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload'
     },
+    imgur: {
+      url: 'https://api.imgur.com/oauth2/authorize'
+    },
+    twitter: {
+      url: 'https://twitter.com/i/oauth2/authorize',
+      scope: 'tweet.read tweet.write users.read offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write'
+    },
     box: {
       url: 'https://account.box.com/api/oauth2/authorize'
     },
     google: {
       url: 'https://accounts.google.com/o/oauth2/v2/auth',
-      scope: `https://www.googleapis.com/auth/${handler}`
+      scope: `https://www.googleapis.com/auth/${handler === 'sheets' ? 'drive' : handler}`
     }
   };
 
@@ -505,35 +573,47 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
 
   const client_id = (credentials?.client_id || process.env[`${service}_client_id`])?.trim(),
     redirect_uri = (credentials?.redirect_uri || process.env[`${service}_redirect_uri`])?.trim(),
-    scope = (credentials?.scope || process.env[`${service}_scope`] || configs[service].scope)?.trim(),
-    team_id = (credentials?.team_id || process.env[`${service}_team_id`])?.trim();
+    scope = (credentials?.scope || process.env[`${service}_scope`] || configs[service].scope)?.trim() || defaultScope(service),
+    team_id = (credentials?.team_id || process.env[`${service}_team_id`])?.trim(),
+    code_verifier = getCodeVerifier(),
+    authString = `Please authorize your ${type} application`,
+    
+    url = buildQueryString(configs[service].url, {
+      response_type: 'code',
+      client_id,
+      redirect_uri,
+      team_id,
+      scope,
+      token_access_type: service === 'dropbox' ? 'offline' : undefined,
+      access_type: service === 'google' ? 'offline' : undefined,
+      include_granted_scopes: service === 'google' ? true : undefined,
+      state: service === 'twitter' ? generateRandomString(32) : undefined,
+      code_challenge: service === 'twitter' ? getCodeChallengeFromVerifier(code_verifier) : undefined
+    });
   
-  const authString = `Please authorize your ${type} application`;
-  const url = buildQueryString(configs[service].url, {
-    response_type: 'code',
-    client_id,
-    redirect_uri,
-    team_id,
-    scope,
-    token_access_type: service === 'dropbox' ? 'offline' : undefined,
-    access_type: service === 'google' ? 'offline' : undefined,
-    include_granted_scopes: service === 'google' ? true : undefined
-  });
   
+  if (service === 'google') {
+    const value = await getTokens('googleAuth');
+    // console.log('{ code_verifier, ...value }', { code_verifier, ...value });
+    await setTokens({ key: 'googleAuth', value: { code_verifier, ...value } });
+  }
+
   return params?.channel_id
     ? await api.discord.channels.messages.create({
       channel_id: params.channel_id,
       content: `**[${authString}](${url})**`
     })
-    : `\n${authString}:\n${url}`;
+    : `\n${authString}:\n${url}` + '\nhello from authorize()\n';
 }
 
 /**
- * @param {string} type 
- * @returns {Promise<string>}
+ * @param {string} type
+ * @param {string} [google]
+ * @returns {Promise<string|undefined>}
  */
-async function refresh(type) {
+async function refresh(type, google) {
     
+  // console.log('\ntype in refresh():', type);
   // @ts-ignore
   const credentials = require('../../Api')[`get_${type}_token`]();
   const token = await getTokens(`${type}Auth`);
@@ -548,12 +628,19 @@ async function refresh(type) {
       url: 'https://accounts.spotify.com/api/token',
       scope: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload'
     },
+    imgur: {
+      url: 'https://api.imgur.com/oauth2/token'
+    },
+    twitter: {
+      url: 'https://api.twitter.com/2/oauth2/token',
+      scope: 'tweet.read tweet.write users.read offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write'
+    },
     box: {
       url: 'https://account.box.com/api/oauth2/token'
     },
     google: {
-      url: 'https://accounts.google.com/o/oauth2/v2/auth',
-      scope: 'https://www.googleapis.com/auth/youtube'
+      url: 'https://oauth2.googleapis.com/token',
+      scope: `https://www.googleapis.com/auth/${google}`
     }
   };
 
@@ -569,34 +656,64 @@ async function refresh(type) {
   /** @type {{[x: string]: string}} */
   const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
-  if (type !== 'spotify')
+  if (type.toLowerCase() !== 'spotify' && type.toLowerCase() !== 'twitter')
     searchParams.client_secret = credentials?.client_secret || process.env[`${type}_client_secret`];
-  else
-    headers.Authorization = 'Basic ' + Buffer.from((credentials?.client_id || process.env.spotify_client_id) + ':' + (credentials?.client_secret || process.env.spotify_client_secret)).toString('base64');
-  
-  const refresh = await https({
-    method: 'post',
-    url: configs[type].url,
-    headers,
-    // @ts-ignore
-    body: new URLSearchParams(searchParams)
-  });
+  else {
+    headers.Authorization = 'Basic ' + Buffer.from((credentials?.client_id || process.env[`${type}_client_id`]) + ':' + (credentials?.client_secret || process.env[`${type}_client_secret`])).toString('base64');
+  }
 
-  await setTokens({
-    key: `${type}Auth`,
-    value: {
-      access_token: refresh?.access_token,
-      refresh_token: type !== 'slack' ? (refresh?.refresh_token ?? token?.refresh_token) : undefined,
-      expires: type !== 'slack' ? Date.now() + (type === 'dropbox' ? 14400000 : 3600000) : undefined,
-      restricted_to: type !== 'box' ? refresh?.restricted_to : undefined,
-      scope: refresh?.scope ?? credentials?.scope ?? configs[type].scope,
-      token_access_type: type === 'dropbox' ? 'offline' : undefined,
-      access_type: type === 'google' ? 'offline' : undefined,
-      include_granted_scopes: type === 'google' ? true : undefined
-    }
-  });
+  let refresh;
+  try {
+    refresh = await https({
+      method: 'post',
+      url: configs[type].url,
+      headers,
+      // @ts-ignore
+      body: new URLSearchParams(searchParams)
+    });
+  } catch (/** @type {*} */ error) {
+    // console.log('error.message in refresh() (use for authorize())', error.message);
+    console.log('Error in refresh():\n', error);
+    
+    throw error.message !== 'Imgur is temporarily over capacity. Please try again later.'
+      // @ts-ignore
+      ? await authorize(type.charAt(0).toUpperCase() + type.slice(1), null)
+      : error;
+  }
 
-  return refresh.access_token;
+  // console.log('\nrefresh response:\n', refresh);
+  if (refresh) {
+    await setTokens({
+      key: `${type}Auth`,
+      value: {
+        access_token: refresh?.access_token,
+        refresh_token: type !== 'slack' ? (refresh?.refresh_token ?? token?.refresh_token) : undefined,
+        expires: type !== 'slack' ? Date.now() + (type === 'dropbox' ? 14400000 : 3600000) : undefined,
+        restricted_to: type !== 'box' ? refresh?.restricted_to : undefined,
+        scope: refresh?.scope ?? credentials?.scope ?? configs[type].scope,
+        token_access_type: type === 'dropbox' ? 'offline' : undefined,
+        access_type: type === 'google' ? 'offline' : undefined,
+        include_granted_scopes: type === 'google' ? true : undefined,
+        account_username: type === 'imgur' ? refresh?.account_username : undefined
+      }
+    });
+
+    return refresh.access_token;
+  }
+}
+
+/**
+ * @param {string} service 
+ * @returns {string|undefined}
+ */
+function defaultScope(service) {
+  return {
+    spotify: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload',
+    twitter: 'tweet.read tweet.write tweet.moderate.write users.read follows.read follows.write offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write',
+    dropbox: 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
+    // google: `https://www.googleapis.com/auth/${google}`
+    // others
+  }[service];
 }
 
 /**
@@ -606,7 +723,6 @@ async function refresh(type) {
 const getTokens = async (key) => (find(key, await loadTokens()) || {}).value || null;
 
 /**
- * 
  * @param {{key: string, value: any}} param0 
  * @returns {Promise<void>}
  */
@@ -615,8 +731,9 @@ async function setTokens({ key, value }) {
   const tokens = await loadTokens();
 
   const oldValue = find(key, tokens);
+
   if (oldValue && (JSON.stringify(value) == JSON.stringify(oldValue.value))) return;
-  const entry = { key, value };
+  const entry = { key, value: Object.fromEntries(Object.entries(value).filter(([_, v]) => v !== undefined)) };
 
   const index = tokens.findIndex((i) => i.key === find(key, tokens)?.key);
   if (index !== -1) tokens[index] = entry;
@@ -645,6 +762,42 @@ async function loadTokens(tokens = []) {
   }
   return tokens;
 }
+
+/**
+ * @param {number} length 
+ * @param {string} [text] 
+ * @returns {string}
+ */
+function generateRandomString(length, text = '') {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  for (let i = 0; i < length; i++)
+    text += possible[Math.floor(Math.random() * possible.length)];
+  return text;
+}
+    
+/**
+ * @param {string} string 
+ * @returns {string}
+ */
+function escapeBase64Url(string) {
+  return string.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+function getCodeVerifier() { return generateRandomString(128); };
+
+/**
+ * @param {string} verifier 
+ * @returns {string}
+ */
+function getCodeChallengeFromVerifier(verifier) {
+  return escapeBase64Url(
+    require('crypto')
+      .createHash('sha256')
+      .update(verifier)
+      .digest('base64')
+  );
+}
+
 
 module.exports = {
   handler,

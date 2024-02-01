@@ -24,9 +24,9 @@ module.exports = {
    * @returns {Promise<GoogleGeocodingResult>}
    */
   geocoding: async (address) => 
-    https({
+    (await https({
       method: 'GET',
       url: `https://maps.googleapis.com/maps/api/geocode/json?key=${token('google', 'google')}&address=${encodeURIComponent(address)}`
-    })
+    }))?.results
 };
 

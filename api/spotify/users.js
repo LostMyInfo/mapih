@@ -4,7 +4,7 @@
 const { ResponseError } = require('../resources/Errors');
 const { buildQueryString, removeFalsyFromObject } = require('../resources/functions');
 const { handler } = require('../resources/handlers');
-const { buildUser, buildArtists, buildAlbums, buildTrackList, find } = require('./functions');
+const { buildUser, buildArtists, buildAlbums, buildTrackList, find } = require('./resources/functions');
 
 /**
  * @file All Spotify API endpoints relating to Spotify users

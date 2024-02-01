@@ -13,6 +13,7 @@ module.exports = {
   /**
    * @summary
    * ### [Create Speech]{@link https://platform.openai.com/docs/api-reference/audio/createSpeech}
+   * 
    * @example
    * await api.openai.speech.create({
    *   model: 'tts-1-hd',

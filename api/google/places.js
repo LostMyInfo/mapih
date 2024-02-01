@@ -162,6 +162,7 @@ module.exports = {
 function buildPlace(payload, places = []) {
   if (!payload || !payload.places?.length) return;
   for (const place of payload.places) {
+    // console.log(place.reviews);
     places.push(removeFalsyFromObject({
       id: place.id,
       name: place.displayName?.text,
@@ -178,7 +179,7 @@ function buildPlace(payload, places = []) {
       open: place.currentOpeningHours?.openNow,
       hours: buildHours(place),
       reviews: place.reviews ? place.reviews.map((/** @type {{ text: { text: string; }; rating: number; relativePublishTimeDescription: string; }} */ review) => removeFalsyFromObject({
-        text: review.text.text,
+        text: review.text?.text,
         rating: review.rating,
         published: review.relativePublishTimeDescription
       })) : undefined,
@@ -190,7 +191,7 @@ function buildPlace(payload, places = []) {
         : undefined,
       fuel: place.fuelOptions ? place.fuelOptions.fuelPrices?.reduce((/** @type {any} */ acc, /** @type {{type: string, price: {units: number, nanos: number}}} */ x) => ({
         ...acc,
-        [x.type]: `$${x.price.units}.${(x.price.nanos / 10000000) || '00'}`
+        [!/\d/g.test(x.type) ? x.type.toLowerCase() : x.type]: `$${x.price.units}.${(x.price.nanos / 10000000) || '00'}`
       }), {}) : undefined,
       sub_destinations: place.subDestinations,
       takeout: place.takeout,
@@ -252,4 +253,11 @@ function buildHours(payload, hours = {}) {
  * @returns {string}
  */
 const cap = (word) => word ? word.charAt(0).toUpperCase() + word.slice(1) : word;
+
+/**
+ * @param {string} word 
+ * @param {boolean} [underscore]
+ * @returns {string}
+ */
+const norm = (word, underscore) => word ? word.toLowerCase().replace(/_/g, underscore ? '_' : ' ') : word;
 
