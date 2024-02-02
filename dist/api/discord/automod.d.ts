@@ -6,6 +6,7 @@ export function getAllRules(params: {
     guild_id: string;
 }): Promise<AutoModRule[]>;
 export function createRule(params: {
+    reason?: string | undefined;
     guild_id: string;
     name: string;
     event_type: number;
@@ -19,6 +20,7 @@ export function createRule(params: {
 export function updateRule(params: {
     guild_id: string;
     auto_moderation_rule_id: string;
+    reason?: string | undefined;
     name?: string | undefined;
     event_type?: number | undefined;
     trigger_metadata?: AutoModTriggerMetadata | undefined;
@@ -30,6 +32,7 @@ export function updateRule(params: {
 export function destroyRule(params: {
     guild_id: string;
     auto_moderation_rule_id: string;
+    reason?: string | undefined;
 }): Promise<{
     statusCode: number;
     message: string;

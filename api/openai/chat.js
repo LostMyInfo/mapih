@@ -44,7 +44,7 @@ module.exports = {
    * @param {Object} [options.logit_bias]
    * @param {?boolean} [options.logprobs]
    * @param {?number} [options.top_logprobs]
-   * @param {?boolean} [options.strream]
+   * @param {?boolean} [options.stream]
    * @param {ToolCalls[]} [options.tools]
    * @param {string|{type: string, function: { name: string }}} [options.tool_choice]
    * @param {string} [options.user]

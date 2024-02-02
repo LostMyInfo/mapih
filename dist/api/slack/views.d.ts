@@ -1,11 +1,23 @@
 export function open(params: {
-    view: string;
+    view: ModalView;
     trigger_id?: string | undefined;
-    interactivity_pointer?: SlackBlock[] | undefined;
-}): Promise<SlackMessageResponse>;
+    interactivity_pointer?: (KnownBlock | SlackBlock)[] | undefined;
+}): Promise<{
+    ok: boolean;
+    view: SlackView;
+    response_metadata?: {
+        messages: string[];
+    } | undefined;
+}>;
 export function publish(params: {
     view: ModalView;
     user_id?: string | undefined;
     hash?: string | undefined;
-}): Promise<SlackViewResponse>;
+}): Promise<{
+    ok: boolean;
+    view: SlackView;
+    response_metadata?: {
+        messages: string[];
+    } | undefined;
+}>;
 //# sourceMappingURL=views.d.ts.map

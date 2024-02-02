@@ -1,8 +1,8 @@
 export function post(params: {
     channel: string;
     text?: string | undefined;
-    blocks?: SlackBlock[] | undefined;
-    attachments?: SlackAttachment[] | undefined;
+    blocks?: SlackAttachmentBlock[] | undefined;
+    attachments?: SlackMessageAttachment[] | undefined;
     icon_emoji?: string | undefined;
     icon_url?: string | undefined;
     link_names?: boolean | undefined;
@@ -19,8 +19,8 @@ export function postEphemeral(params: {
     channel: string;
     user: string;
     text?: string | undefined;
-    blocks?: SlackBlock[] | undefined;
-    attachments?: SlackAttachment[] | undefined;
+    blocks?: SlackAttachmentBlock[] | undefined;
+    attachments?: SlackMessageAttachment[] | undefined;
     icon_emoji?: string | undefined;
     icon_url?: string | undefined;
     link_names?: boolean | undefined;
@@ -37,8 +37,8 @@ export function update(params: {
     channel: string;
     timestamp: string;
     text?: string | undefined;
-    blocks?: SlackBlock[] | undefined;
-    attachments?: SlackAttachment[] | undefined;
+    blocks?: SlackAttachmentBlock[] | undefined;
+    attachments?: SlackMessageAttachment[] | undefined;
     file_ids?: string[] | undefined;
     link_names?: boolean | undefined;
     metadata?: string | undefined;
@@ -62,7 +62,39 @@ export function meMessage(params: {
     ts: string;
 }>;
 export namespace scheduled {
-    function create(params: any): Promise<any>;
-    function list(params: any): Promise<any>;
+    function create(params: {
+        channel: string;
+        post_at: number;
+        text?: string | undefined;
+        blocks?: SlackAttachmentBlock[] | undefined;
+        attachments?: SlackMessageAttachment[] | undefined;
+        as_user?: boolean | undefined;
+        link_names?: boolean | undefined;
+        parse?: string | undefined;
+        reply_broadcast?: boolean | undefined;
+        thread_ts?: string | undefined;
+        unfurl_links?: boolean | undefined;
+        unfurl_media?: boolean | undefined;
+    }): Promise<{
+        ok: boolean;
+        channel: string;
+        scheduled_message_id: string;
+        post_at: string;
+        message: SlackMessage;
+    }>;
+    function list(params: {
+        channel: string;
+        cursor?: string | undefined;
+        team_id?: boolean | undefined;
+        latest?: string | undefined;
+        limit?: number | undefined;
+        oldest?: string | undefined;
+    }): Promise<{
+        ok: boolean;
+        channel: string;
+        scheduled_message_id: string;
+        post_at: string;
+        message: SlackMessage;
+    }>;
 }
 //# sourceMappingURL=chat.d.ts.map

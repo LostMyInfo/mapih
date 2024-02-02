@@ -1332,6 +1332,31 @@ export declare const spotify: {
   }) => Promise<SpotifyReturn>;
 }
 
+export declare const openai: {
+  chat: {
+    create: (options: {
+      model: string;
+      messages: ChatCompletionMessage[];
+      max_tokens?: number;
+      temperature?: number;
+      top_p?: number;
+      frequency_penalty?: number;
+      presence_penalty?: number;
+      n?: number;
+      reponse_format?: {type: string};
+      seed?: number;
+      stop?: string | string[];
+      logit_bias?: Object;
+      logprobs?: boolean;
+      top_logprobs?: number;
+      stream?: boolean;
+      tools?: ToolCalls[];
+      tool_choice?: string | { type: string, function: { name: string; }; };
+      user?: string;
+    }) => Promise<ChatCompletion>
+  }
+}
+
 export declare const utils: {
   https: (params: {
     url?: string;

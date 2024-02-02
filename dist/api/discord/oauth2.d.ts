@@ -1,3 +1,4 @@
+export function appInfo(): Promise<Application>;
 export namespace token {
     function get(params: {
         client_id: string;

@@ -1,35 +1,35 @@
 declare namespace Locale {
-    let Indonesian: string;
-    let EnglishUS: string;
-    let EnglishGB: string;
-    let Bulgarian: string;
-    let ChineseCN: string;
-    let ChineseTW: string;
-    let Croatian: string;
-    let Czech: string;
-    let Danish: string;
-    let Dutch: string;
-    let Finnish: string;
-    let French: string;
-    let German: string;
-    let Greek: string;
-    let Hindi: string;
-    let Hungarian: string;
-    let Italian: string;
-    let Japanese: string;
-    let Korean: string;
-    let Lithuanian: string;
-    let Norwegian: string;
-    let Polish: string;
-    let PortugueseBR: string;
-    let Romanian: string;
-    let Russian: string;
-    let SpanishES: string;
-    let Swedish: string;
-    let Thai: string;
-    let Turkish: string;
-    let Ukrainian: string;
-    let Vietnamese: string;
+    const Indonesian: string;
+    const EnglishUS: string;
+    const EnglishGB: string;
+    const Bulgarian: string;
+    const ChineseCN: string;
+    const ChineseTW: string;
+    const Croatian: string;
+    const Czech: string;
+    const Danish: string;
+    const Dutch: string;
+    const Finnish: string;
+    const French: string;
+    const German: string;
+    const Greek: string;
+    const Hindi: string;
+    const Hungarian: string;
+    const Italian: string;
+    const Japanese: string;
+    const Korean: string;
+    const Lithuanian: string;
+    const Norwegian: string;
+    const Polish: string;
+    const PortugueseBR: string;
+    const Romanian: string;
+    const Russian: string;
+    const SpanishES: string;
+    const Swedish: string;
+    const Thai: string;
+    const Turkish: string;
+    const Ukrainian: string;
+    const Vietnamese: string;
 }
 type Snowflake = string;
 type ISO8601Timestamp = string;
@@ -1211,23 +1211,20 @@ type DMChannel = {
     recipients: User[];
 };
 type ModifyPositionsChannel = {
-    /**
-     * - id of the channel
-     */
     id: Snowflake;
     /**
      * - Sorting position of the channel
      */
-    position?: number | undefined;
+    position?: number | null | undefined;
     /**
      * - Syncs the permission overwrites with the new parent, if moving to a new category
      */
-    lock_permissions?: boolean | undefined;
+    lock_permissions?: boolean | null | undefined;
     /**
      * - The new channel category
      */
-    parent_id?: Snowflake | undefined;
-}
+    parent_id?: string | null | undefined;
+};
 type Message = {
     /**
      * - id of the message
@@ -1493,8 +1490,8 @@ type RPCApplicationState = number;
  * | 3     | Submitted | Application has submitted a store approval request                                    |
  * | 4     | Approved  | Application has been approved for the store                                           |
  * | 5     | Rejected  | Application has been rejected from the store                                          |
- */ 
-type StoreApplicationState = number;
+ */
+type ApplicationStoreApplicationState = number;
 /**
  * | Value | State       | Description                                           |
  * |-------|-------------|-------------------------------------------------------|
@@ -1502,7 +1499,7 @@ type StoreApplicationState = number;
  * | 2     | Unsubmitted | Application has not yet been applied for verification |
  * | 3     | Submitted   | Application has submitted a verification request      |
  * | 4     | Succeeded   | Application has been verified                         |
- */ 
+ */
 type ApplicationVerificationState = number;
 type Application = {
     /**
@@ -1525,6 +1522,10 @@ type Application = {
      * - An array of rpc origin urls, if rpc is enabled
      */
     rpc_origins?: string[] | undefined;
+    /**
+     * - Partial User object for the bot user associated with the app
+     */
+    bot?: User | undefined;
     /**
      * - When false, only app owner can join the app's bot to guilds
      */
@@ -1558,6 +1559,14 @@ type Application = {
      */
     guild_id?: string | undefined;
     /**
+     * - Partial object of the associated guild
+     */
+    guild?: Guild | undefined;
+    /**
+     * - Approximate count of guilds the app has been added to
+     */
+    approximate_guild_count?: number | undefined;
+    /**
      * - If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists
      */
     primary_sku_id?: string | undefined;
@@ -1590,11 +1599,7 @@ type Application = {
      */
     role_connections_verification_url?: string | undefined;
     /**
-     * - Approximate count of guilds the app has been added to
-     */
-    approximate_guild_count?: number | undefined;
-    /**
-     * - Array of redirect URIs for the app
+     * - Array of redirect URLs for the app
      */
     redirect_urls?: string[] | undefined;
     /**
@@ -1602,77 +1607,57 @@ type Application = {
      */
     interactions_endpoint_url?: string | undefined;
     /**
-     * - Partial User object for the bot user associated with the app
-     */
-    bot?: User | undefined;
-    /**
-     * - Partial object of the associated guild
-     */
-    guild?: Guild | undefined;
-    /**
      * - Gateway events to send to the interaction endpoint
      */
-    interactions_event_types?: string[] | undefined;
+    interactions_event_types: Array<string>;
     /**
-     * - [Interactions version](#application-interactions-version) of the application
+     * - Interactions version of the application
      */
-    interactions_version?: ApplicationInteractionsVersion | undefined;
+    interactions_version: ApplicationInteractionsVersion;
     /**
      * - [Explicit content filter level]{@link https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level}
      */
-    explicit_content_filter?: ExplicitContentFilterLevel | undefined;
+    explicit_content_filter: ExplicitContentFilterLevel;
     /**
-     * - [RPC application state](#rpc-application-state) of the application
+     * - RPC application state of the application
      */
-    rpc_application_state?: RPCApplicationState | undefined;
+    rpc_application_state: RPCApplicationState;
     /**
-     * - [Store application state](#store-application-state) of the commerce application
+     * - Store application state of the commerce application
      */
-    store_application_state?: StoreApplicationState | undefined;
+    store_application_state: ApplicationStoreApplicationState;
+    creator_monetization_state: number;
     /**
-     * - undocumented
+     * - Verification state of the application
      */
-    creator_monetization_state?: number | undefined;
+    verification_state: ApplicationVerificationState;
+    integration_public: boolean;
+    integration_require_code_grant: boolean;
     /**
-     * - [Verification state](#application-verification-state) of the application
+     * - Discoverability state of the application
      */
-    verification_state?: ApplicationVerificationState | undefined;
+    discoverability_state: ApplicationDiscoverabilityState;
     /**
-     * - Whether the integration is public
+     * - Discoverability eligibility flags for the application
      */
-    integration_public?: boolean | undefined;
+    discovery_eligibility_flags: ApplicationDiscoverabilityEligibilityFlags;
     /**
-     * - When true, the application will only join upon completion of the full OAuth2 code grant flow
+     * - Monetization state of the application
      */
-    integration_require_code_grant?: boolean | undefined;
+    monetization_state: ApplicationMonetizationState;
     /**
-     * - [Directory discoverability state](#application-discoverability-state) of the application
+     * - Monetization eligibility flags for the application
      */
-    discoverability_state?: ApplicationDiscoverabilityState | undefined;
-    /**
-     * - [Directory eligibility flags](#application-discovery-eligibility-flags) for the application
-     */
-    discovery_eligibility_flags?: ApplicationDiscoverabilityEligibilityFlags | undefined;
-    /**
-     * - [Monetization state](#application-monetization-state) of the application
-     */
-    monetization_state?: ApplicationMonetizationState | undefined;
-    /**
-     * - [Monetization eligibility flags](#application-monetization-eligibility-flags) for the application
-     */
-    monetization_eligibility_flags?: ApplicationMonetizationEligibilityFlags | undefined;
-    /**
-     * - undocumented
-     */
-    internal_guild_restriction?: number | undefined;
+    monetization_eligibility_flags: ApplicationMonetizationEligibilityFlags;
+    internal_guild_restriction: number;
     /**
      * - Whether the bot is allowed to hook into the application's game directly
      */
-    hook?: boolean | undefined;
+    hook: boolean;
     /**
      * - Whether the application has premium subscription set up
      */
-    is_monetized?: boolean | undefined;
+    is_monetized: boolean;
 };
 /**
  * | Name | Value |
@@ -2668,34 +2653,34 @@ type MessageReference = {
 };
 /**
  * | Type | Value | Description |
- * |----------------------------------|--------|-----------------------------------------------------------------------------------|
- * | Crossposted                      | 1 << 0 | This message has been published to subscribed channels (via Channel Following)    |
- * | IsCrosspost                      | 1 << 1 | This message originated from a message in another channel (via Channel Following) |
- * | SuppressEmbeds                   | 1 << 2 | Do not include any embeds when serializing this message                           |
- * | SourceMessageDeleted             | 1 << 3 | The source message for this crosspost has been deleted (via Channel Following)    |
- * | Urgent                           | 1 << 4 | This message came from the urgent message system                                  |
- * | HasThread                        | 1 << 5 | This message has an associated thread, which shares its id                        |
- * | Ephemeral                        | 1 << 6 | This message is only visible to the user who invoked the Interaction              |
- * | Loading                          | 1 << 7 | This message is an Interaction Response and the bot is "thinking"                 |
- * | FailedToMentionSomeRolesInThread | 1 << 8 | This message failed to mention some roles and add their members to the thread     |
+ * |------|-------|-------------|
+ * | Crossposted | 1 << 0 | This message has been published to subscribed channels (via Channel Following) |
+ * | IsCrosspost | 1 << 1 | This message originated from a message in another channel (via Channel Following) |
+ * | SuppressEmbeds | 1 << 2 | Do not include any embeds when serializing this message |
+ * | SourceMessageDeleted | 1 << 3 | The source message for this crosspost has been deleted (via Channel Following) |
+ * | Urgent | 1 << 4 | This message came from the urgent message system |
+ * | HasThread | 1 << 5 | This message has an associated thread, which shares its id |
+ * | Ephemeral | 1 << 6 | This message is only visible to the user who invoked the Interaction |
+ * | Loading | 1 << 7 | This message is an Interaction Response and the bot is "thinking" |
+ * | FailedToMentionSomeRolesInThread | 1 << 8 | This message failed to mention some roles and add their members to the thread |
  */
 type MessageFlags = number;
 /**
- * | Type                | Value | Description |
- * |---------------------|-------|---------------------------------------------------------------------------------------------------------------------------------------------|
- * | Guild Text          | 0     | A text channel within a guild |
- * | DM                  | 1     | A direct message between users |
- * | Guild Voice         | 2     | A voice channel within a server |
- * | Group DM            | 3     | A direct message between multiple users |
- * | Guild Category      | 4     | An organizational category that contains up to 50 channels |
- * | Guild Announcement  | 5     | A channel that users can follow and crosspost into their own server |
- * | Announcement Thread | 10    | A temporary sub-channel within a `GUILD_ANNOUNCEMENT` channel |
- * | Public Thread       | 11    | A temporary sub-channel within a `GUILD_TEXT` or `GUILD_FORUM` channel |
- * | Private Thread      | 12    | A temporary sub-channel within a `GUILD_TEXT` channel that is only viewable by those invited and those with the `MANAGE_THREADS` permission |
- * | Guild Stage Voice   | 13    | A voice channel for hosting events with an audience |
- * | Guild Directory     | 14    | The channel in a hub containing the listed servers |
- * | Guild Forum         | 15    | Channel that can only contain threads |
- * | Guild Media         | 16    | Channel that can only contain media threads |
+ * | Type | Value | Description |
+ * |------|-------|-------------|
+ * | Guild Text          | 0 | A text channel within a guild |
+ * | DM                  | 1 | A direct message between users |
+ * | Guild Voice         | 2 | A voice channel within a server |
+ * | Group DM            | 3 | A direct message between multiple users |
+ * | Guild Category      | 4 | An organizational category that contains up to 50 channels |
+ * | Guild Announcement  | 5 | A channel that users can follow and crosspost into their own server |
+ * | Announcement Thread | 10 | A temporary sub-channel within a `GUILD_ANNOUNCEMENT` channel |
+ * | Public Thread       | 11 | A temporary sub-channel within a `GUILD_TEXT` or `GUILD_FORUM` channel |
+ * | Private Thread      | 12 | A temporary sub-channel within a `GUILD_TEXT` channel that is only viewable by those invited and those with the `MANAGE_THREADS` permission |
+ * | Guild Stage Voice   | 13 | A voice channel for hosting events with an audience |
+ * | Guild Directory     | 14 | The channel in a hub containing the listed servers |
+ * | Guild Forum         | 15 | Channel that can only contain threads |
+ * | Guild Media         | 16 | Channel that can only contain media threads |
  */
 type ChannelType = number;
 /**
@@ -2790,7 +2775,7 @@ type MessageInteraction = {
     type: InteractionType;
     name: string;
     user: User;
-    member?: MemberParams | undefined;
+    member?: Member | undefined;
 };
 type Interaction = {
     id: Snowflake;

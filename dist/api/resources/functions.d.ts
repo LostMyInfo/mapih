@@ -1,4 +1,3 @@
-export type Method = 'get' | 'post' | 'put' | 'patch' | 'del';
 /**
  * @ignore
  * @param {Embed[]} embeds
@@ -6,7 +5,6 @@ export type Method = 'get' | 'post' | 'put' | 'patch' | 'del';
  */
 export function embedModifier(embeds: Embed[]): Embed[];
 /**
- *
  * @param {Snowflake} userID
  * @param {?string} avatarID
  * @param {Snowflake} [guildID]
@@ -32,13 +30,13 @@ export function parsePermissions(permissions: number): string[];
  * generateCDN(params, 'banner');
  * generateCDN(params, 'splash');
  * ```
- * @param {Guild | User | Role} object
- * @param {'icon' | 'banner' | 'splash' | 'discovery_splash'} media
- * @param {'128' | '256' | '512' | '1024' | '4096'} [size]
+ * @param {any} object
+ * @param {('icon' | 'splash' | 'banner' | 'discovery_splash')} media
+ * @param {('128' | '256' | '512' | '1024' | '4096')} [size]
  * @param {string} x
  * @returns {string | undefined} url
  */
-export function generateCDN(object: Guild | User | Role, media: 'icon' | 'banner' | 'splash' | 'discovery_splash', size?: "128" | "256" | "512" | "1024" | "4096" | undefined, x?: string): string | undefined;
+export function generateCDN(object: any, media: ('icon' | 'splash' | 'banner' | 'discovery_splash'), size?: "128" | "256" | "512" | "1024" | "4096" | undefined, x?: string): string | undefined;
 /**
  * Validates an image URL
  * @param {string|undefined} url
@@ -48,16 +46,16 @@ export function generateCDN(object: Guild | User | Role, media: 'icon' | 'banner
  */
 export function isValidMediaURL(url: string | undefined, content_type?: "audio" | "video" | "image" | undefined, timeout?: number | undefined): Promise<boolean | undefined>;
 /**
- * ### Takes an image URL or buffer of any type and returns a buffer or string.
- * - Image URL to buffer
- * - Image URL to UTF-8/binary/base64 encoded buffer
- * - Image URL to base64 encoded data string
- * - Any buffer to base64 data string
- * @param {string|Buffer|undefined} media
- * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
- * @param {boolean} [datastringbuffer]
- * @returns {Promise<{data: Buffer | string | undefined, type: string | null | undefined}>}
- */
+   * ### Takes an image URL or buffer of any type and returns a buffer or string.
+   * - Image URL to buffer
+   * - Image URL to UTF-8/binary/base64 encoded buffer
+   * - Image URL to base64 encoded data string
+   * - Any buffer to base64 data string
+   * @param {string|Buffer|undefined} media
+   * @param {'base64string'|'base64'|'utf-8'|'binary'|'binarystring'} [encoding]
+   * @param {boolean} [datastringbuffer]
+   * @returns {Promise<{data: Buffer | string | undefined, type: string | null | undefined}>}
+   */
 export function imageData(media: string | Buffer | undefined, encoding?: "utf-8" | "base64" | "binary" | "base64string" | "binarystring" | undefined, datastringbuffer?: boolean | undefined): Promise<{
     data: Buffer | string | undefined;
     type: string | null | undefined;
@@ -115,50 +113,32 @@ export function isValidJSON(payload: string): boolean;
  */
 export function extendPayload(payload: ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction): ExtendedInvite & Channel & Message & ExtendedUser & User & Member & ThreadMember & Interaction;
 /**
- * API Handler Creator
- * @param {Object} options
- * @param {Method} options.method
- * @param {string} options.endpoint
- * @param {Object} [options.body]
- * @returns {Promise<*>}
- * @private
- */
-export function slackHandler(options: {
-    method: Method;
-    endpoint: string;
-    body?: Object | undefined;
-}): Promise<any>;
-/**
- * API Handler Creator
- * @param {Object} options
- * @param {Method} options.method
- * @param {string} options.endpoint
- * @param {Object} [options.body]
- * @returns {Promise<*>}
- * @private
- */
-export function spotifyHandler(options: {
-    method: Method;
-    endpoint: string;
-    body?: Object | undefined;
-}): Promise<any>;
-/**
- * @param {string} url
- * @param {Object} params
- * @param {boolean} encode
- * @returns {string}
- */
+   * @param {string} url
+   * @param {Object} params
+   * @param {boolean} encode
+   * @returns {string}
+   */
 export function buildQueryString(url: string, params: Object, encode?: boolean): string;
-/**
- * @param {string} type
- * @returns {string}
- */
-export function token(type: string, handler: string): string;
-export declare function attemptHandler(params: {
-    method: Method;
-    endpoint: string;
-    body?: Object | undefined;
-}): Promise<any>;
-export declare function sendAttachment(params: any, path: string, method: Method): Promise<any>;
 export function getAppId(): Promise<any>;
+/**
+ * @param {Array<*>} arr
+ * @returns {any}
+ */
+export function removeFalsyFromArray(arr: Array<any>): any;
+/**
+ * @param {*} obj
+ * @returns {any}
+ */
+export function removeFalsyFromObject(obj: any): any;
+/**
+ * @param {Array<string>} param0
+ * @returns {string} - The formatted URL with query parameters.
+ */
+export function buildQueryStringFromArrays([url, ...rest]: Array<string>): string;
+/**
+ * @param {any} obj
+ * @param {string} path
+ * @returns {any}
+ */
+export function getPathValue(obj: any, path: string): any;
 //# sourceMappingURL=functions.d.ts.map
