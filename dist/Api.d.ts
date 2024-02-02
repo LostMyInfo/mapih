@@ -1,5 +1,5 @@
 // @ts-check
-declare const discord: {
+export declare const discord: {
   auditlog: {
     retrieve: (params: {
       guild_id: string;
@@ -1206,7 +1206,7 @@ declare const discord: {
       }>;
   };
 }
-declare const slack: {
+export declare const slack: {
   users: {
       info: (params: {
           user: string;
@@ -1321,7 +1321,7 @@ declare const slack: {
   };
 }
 
-declare const spotify: {
+export declare const spotify: {
   search: (options: {
     artist?: string | undefined;
     song?: string | undefined;
@@ -1332,7 +1332,7 @@ declare const spotify: {
   }) => Promise<SpotifyReturn>;
 }
 
-declare const utils: {
+export declare const utils: {
   https: (params: {
     url?: string;
     method?: string;
