@@ -1354,6 +1354,39 @@ export declare const openai: {
       tool_choice?: string | { type: string, function: { name: string; }; };
       user?: string;
     }) => Promise<ChatCompletion>
+  },
+
+  images: {
+    create: (options: {
+      prompt: string;
+      model?: string;
+      quality?: string;
+      n?: number;
+      response_format?: string;
+      size?: string;
+      style?: string;
+      user?: string;
+    }) => Promise<OpenAIImageResponse>
+  },
+
+  speech: {
+    create: (options: {
+      model: string;
+      input: string;
+      voice: string;
+      speed?: number;
+      response_format?: string;
+    }) => Promise<string>
+  },
+
+  embeddings: {
+    create: (options: {
+      model: string;
+      input: string | string[] | number[];
+      encoding_format?: string;
+      dimensions?: number;
+      user?: string;
+    }) => Promise<OpenAIEmbeddingResponse>
   }
 }
 
