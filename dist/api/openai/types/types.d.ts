@@ -1,4 +1,4 @@
-type ChatCompletion = {
+export type ChatCompletion = {
     /**
      * - A unique identifier for the chat completion
      */
@@ -6,7 +6,7 @@ type ChatCompletion = {
     /**
      * - A list of chat completion choices. Can be more than one if n is greater than 1.
      */
-    choices: ChatCompletionChoices[];
+    choices: ChatCompletionChoice[];
     /**
      * - The Unix timestamp (in seconds) of when the chat completion was created
      */
@@ -25,7 +25,7 @@ type ChatCompletion = {
      */
     usage: OpenAIUsage;
 };
-type ChatCompletionChoices = {
+export type ChatCompletionChoice = {
     /**
      * - The index of the choice in the list of choices
      */
@@ -44,7 +44,7 @@ type ChatCompletionChoices = {
      */
     logprobs: LogProbability | null;
 };
-type ChatCompletionMessage = {
+export type ChatCompletionMessage = {
     /**
      * - The contents of the message
      */
@@ -58,7 +58,7 @@ type ChatCompletionMessage = {
      */
     tool_calls: ToolCalls[];
 };
-type ToolCalls = {
+export type ToolCalls = {
     /**
      * - The ID of the tool call
      */
@@ -72,7 +72,7 @@ type ToolCalls = {
      */
     function: ToolCallsFunction;
 };
-type ToolCallsFunction = {
+export type ToolCallsFunction = {
     /**
      * - The name of the function to call
      */
@@ -84,13 +84,13 @@ type ToolCallsFunction = {
      */
     arguments: string;
 };
-type LogProbability = {
+export type LogProbability = {
     /**
      * - A list of message content tokens with log probability information
      */
     content: LogProbabilityInformation[] | null;
 };
-type LogProbabilityInformation = {
+export type LogProbabilityInformation = {
     /**
      * - The token
      */
@@ -108,7 +108,7 @@ type LogProbabilityInformation = {
      */
     top_logprobs: TopLogProbability[];
 };
-type TopLogProbability = {
+export type TopLogProbability = {
     /**
      * - The token
      */
@@ -122,7 +122,7 @@ type TopLogProbability = {
      */
     bytes: Array<number> | null;
 };
-type OpenAIUsage = {
+export type OpenAIUsage = {
     /**
      * - Number of tokens in the prompt
      */
@@ -136,11 +136,11 @@ type OpenAIUsage = {
      */
     total_tokens: number;
 };
-type OpenAIImageResponse = {
+export type OpenAIImageResponse = {
     created: number;
     data: OpenAIImage[];
 };
-type OpenAIImage = {
+export type OpenAIImage = {
     /**
      * - The base64-encoded JSON of the generated image, if `response_format` is `b64_json`.
      */

@@ -43,7 +43,7 @@ module.exports = {
       url = buildQueryStringFromArrays(url);
     }
     
-    if (!url.startsWith('http'))
+    if (!/^https?:\/\//.test(url))
       url = `https://${url}`;
 
     const headers = new Headers(params.headers || {});

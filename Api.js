@@ -196,9 +196,10 @@ module.exports = {
   },
 
   openai: {
-    chat: require('./api/openai/chat'),
-    images: require('./api/openai/images'),
-    speech: require('./api/openai/speech')
+    chat: require('./api/openai/index').chat,
+    images: require('./api/openai/index').images,
+    speech: require('./api/openai/index').speech,
+    embeddings: require('./api/openai/index').embeddings
   },
 
   dropbox: {

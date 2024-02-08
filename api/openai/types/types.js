@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} ChatCompletion
  * @property {string} id - A unique identifier for the chat completion
- * @property {ChatCompletionChoices[]} choices - A list of chat completion choices. Can be more than one if n is greater than 1.
+ * @property {ChatCompletionChoice[]} choices - A list of chat completion choices. Can be more than one if n is greater than 1.
  * @property {number} created - The Unix timestamp (in seconds) of when the chat completion was created
  * @property {string} model - The model used for the chat completion
  * @property {?string} system_fingerprint
@@ -11,7 +11,7 @@
  */
 
 /**
- * @typedef {Object} ChatCompletionChoices
+ * @typedef {Object} ChatCompletionChoice
  * @property {number} index - The index of the choice in the list of choices
  * @property {string} finish_reason
  * - The reason the model stopped generating tokens.  
@@ -66,7 +66,7 @@
 /**
  * @typedef {Object} OpenAIUsage
  * @property {number} prompt_tokens - Number of tokens in the prompt
- * @property {number} completion_tokens - Number of tokens in the generated completion
+ * @property {number} [completion_tokens] - Number of tokens in the generated completion
  * @property {number} total_tokens - Total number of tokens used in the request (prompt + completion)
  */
 
@@ -81,4 +81,18 @@
  * @property {string} [b64_json] - The base64-encoded JSON of the generated image, if `response_format` is `b64_json`.
  * @property {string} [url] - The URL of the generated image, if `response_format` is `url` (default).
  * @property {string} [revised_prompt] - The prompt that was used to generate the image, if there was any revision to the prompt
+ */
+
+/**
+ * @typedef {Object} OpenAIEmbeddingResponse
+ * @property {string} object
+ * @property {OpenAIEmbedding[]} data
+ * @property {string} model
+ * @property {OpenAIUsage} usage
+ */
+/**
+ * @typedef {Object} OpenAIEmbedding
+ * @property {number} index
+ * @property {number[]} embedding
+ * @property {string} object
  */
