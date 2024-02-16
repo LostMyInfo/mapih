@@ -1,4 +1,4 @@
-type SlackBlock = {
+export type SlackBlock = {
     type: string;
     /**
      * A string acting as a unique identifier for a block.
@@ -10,7 +10,7 @@ type SlackBlock = {
      */
     block_id?: string | undefined;
 };
-type FileBlock = {
+export type FileBlock = {
     /**
      * - The type of view. Set to `file` for files.
      */
@@ -24,7 +24,7 @@ type FileBlock = {
      */
     external_id: string;
 };
-type HeaderBlock = {
+export type HeaderBlock = {
     /**
      * - The type of block Set to `header` for header blocks.
      */
@@ -35,7 +35,7 @@ type HeaderBlock = {
      */
     text: PlainTextElement;
 };
-type ImageBlock = {
+export type ImageBlock = {
     /**
      * - The type of block Set to `image` for image blocks.
      */
@@ -53,7 +53,7 @@ type ImageBlock = {
      */
     title?: PlainTextElement | undefined;
 };
-type InputBlock = {
+export type InputBlock = {
     /**
      * - The type of block Set to `input` for input blocks.
      */
@@ -79,7 +79,7 @@ type InputBlock = {
      */
     element: Select | MultiSelect | DatePickerElement | Timepicker | DateTimePickerElement | PlainTextInput | URLInput | EmailInput | NumberInput | RadioButtons | CheckboxesElement | RichTextInput | FileInput;
 };
-type RichTextBlock = {
+export type RichTextBlock = {
     /**
      * - The type of block Set to `rich_text` for rich text blocks.
      */
@@ -89,7 +89,7 @@ type RichTextBlock = {
      */
     elements: (RichTextSection | RichTextList | RichTextQuote | RichTextPreformatted)[];
 };
-type ActionsBlock = {
+export type ActionsBlock = {
     /**
      * - The type of block Set to `actions` for actions blocks.
      */
@@ -99,13 +99,13 @@ type ActionsBlock = {
      */
     elements: (SlackButton | CheckboxesElement | DatePickerElement | DateTimePickerElement | MultiSelect | Overflow | RadioButtons | Select | Timepicker | WorkflowButton | RichTextInput)[];
 };
-type DividerBlock = {
+export type DividerBlock = {
     /**
      * - The type of block Set to `divider` for context blocks.
      */
     type: string;
 };
-type ContextBlock = {
+export type ContextBlock = {
     /**
      * - The type of block Set to `context` for context blocks.
      */
@@ -115,7 +115,7 @@ type ContextBlock = {
      */
     elements: (ImageElement | PlainTextElement | MrkdwnElement)[];
 };
-type SectionBlock = {
+export type SectionBlock = {
     /**
      * - The type of block Set to `section` for context blocks.
      */
@@ -130,8 +130,8 @@ type SectionBlock = {
     fields?: (PlainTextElement | MrkdwnElement)[] | undefined;
     accessory?: SlackButton | DatePickerElement | TimePicker | Select | MultiSelect | Actionable | ImageElement | RadioButtons | CheckboxesElement;
 };
-type KnownBlock = ImageBlock | SectionBlock | DividerBlock | ContextBlock | ActionsBlock | InputBlock | FileBlock | HeaderBlock | RichTextBlock;
-type SlackAttachmentBlock = {
+export type KnownBlock = ImageBlock | SectionBlock | DividerBlock | ContextBlock | ActionsBlock | InputBlock | FileBlock | HeaderBlock | RichTextBlock;
+export type SlackAttachmentBlock = {
     accessory?: SlackAccessory | undefined;
     alt_text?: string | undefined;
     app_collaborators?: string[] | undefined;

@@ -1,4 +1,50 @@
 // @ts-check
+
+import { _File } from '../api/utils/storage';
+import { AccessTokenResponse, AllowedMentions, Application, ApplicationCommand, ApplicationCommandOption, ApplicationCommandOptionChoice, ApplicationRoleConnection, ApplicationRoleConnectionMetadata, Attachment, AuditLog, AutoModAction, AutoModRule, AutoModTriggerMetadata, Channel, Component, Connection, DefaultReaction, Embed, Emoji, Entitlement, EventEntityMetadata, EventUser, ExtendedInvite, FollowedChannel, ForumTag, ForumThreadMessageParams, Guild, GuildApplicationCommandPermissions, GuildBan, GuildFeatures, GuildHomeSettings, GuildIntegration, GuildOnboarding, GuildPreview, GuildScheduledEvent, GuildTemplate, GuildVoiceRegion, GuildWelcomeScreen, GuildWelcomeScreenChannel, GuildWidget, GuildWidgetSettings, InteractionParams, LocalizationMap, Member, Message, MessageReference, OnboardingPrompt, Overwrite, PartialEntitlement, PartialGuild, PermissionNames, Role, SKU, StageInstance, Sticker, StickerPack, ThreadMember, User, Webhook } from './api/discord/types/types';
+import { ChatCompletion, ChatCompletionMessage, OpenAIEmbeddingResponse, OpenAIImageResponse } from './api/openai/types/types';
+import { SlackBlock } from './api/slack/types/Blocks';
+import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUser, SlackUserIdentity, SlackUserProfile } from './api/slack/types/types';
+import { SpotifyReturn } from './api/spotify/resources/types';
+
+export function initialize(options: {
+  discord: string;
+  openai?: string;
+  spotify?: {
+    client_id: string;
+    client_secret: string;
+    redirect_uri: string;
+    scope?: string;
+  },
+  slack?: {
+    user?: string;
+    bot?: string;
+    client_id: string;
+    client_secret: string;
+    redirect_uri?: string;
+    user_scope?: string;
+    bot_scope?: string;
+  },
+  google?: {
+    api_key?: string;
+    client_id?: string;
+    client_secret?: string;
+    redirect_uri?: string;
+  },
+  dropbox?: {
+    basic_token?: string;
+    access_token?: string;
+    client_id: string;
+    client_secret: string;
+    redirect_uri?: string;
+  },
+  box?: {
+    client_id: string;
+    client_secret: string;
+    redirect_uri?: string;
+  };
+}): void;
+  
 export declare const discord: {
   auditlog: {
     retrieve: (params: {
@@ -1218,11 +1264,11 @@ export declare const slack: {
           limit?: number | undefined
           team_id?: string | undefined
       }) => Promise<SlackUser[]>;
-      identify: () => Promise<UserIdentity>;
+      identify: () => Promise<SlackUserIdentity>;
       getProfile: (params?: {
           user?: string | undefined;
           include_locale?: boolean | undefined
-      } | undefined) => Promise<UserProfile>;
+      } | undefined) => Promise<SlackUserProfile>;
       lookup: ({ email }: {
           email: string;
       }) => Promise<{
@@ -1317,7 +1363,7 @@ export declare const slack: {
           view: ModalView;
           user_id?: string | undefined;
           hash?: string | undefined;
-      }) => Promise<SlackViewResponse>;
+      }) => Promise<SlackView>;
   };
 }
 

@@ -342,7 +342,7 @@ module.exports = {
    * @param {string} [params.avatar_url] - Override the default avatar of the webhook
    * @param {boolean} [params.tts]
    * @param {Embed[]} [params.embeds] - Array of up to 10 embeds
-   * @param {Attachment[]} [params.attachments]
+   * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [params.attachments]
    * @param {Component} [params.components] - Requires an application-owned webhook
    * @param {AllowedMentions} [params.allowed_mentions]
    * @param {MessageFlags} [params.flags]
@@ -416,7 +416,7 @@ module.exports = {
    * @param {Snowflake} [params.thread_id]
    * @param {string} [params.content]
    * @param {Embed[]} [params.embeds]
-   * @param {Attachment[]} [params.attachments]
+   * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [params.attachments]
    * @param {Component} [params.components]
    * @param {AllowedMentions} [params.allowed_mentions]
    * @returns {Promise<Message>} [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object

@@ -466,7 +466,7 @@ module.exports = {
      * @param {string} [params.content] - Up to 2000 characters
      * @param {Embed[]} [params.embeds] - Up to 10 embeds (up to 6000 characters)
      * @param {Component} [params.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename' | 'description'>>} [params.attachments]
+     * @param {Pick<Attachment, 'file' | 'filename' | 'description'>[] | Pick<Attachment, 'file' | 'filename'>[]} [params.attachments]
      * @param {AllowedMentions} [params.allowed_mentions]
      * @param {MessageReference} [params.message_reference] - Include to make your message a reply
      * @param {Array<Snowflake>} [params.sticker_ids] - Up to 3 stickers in the server to send in the message
@@ -527,7 +527,7 @@ module.exports = {
      * @param {string} [params.content] - Up to 2000 characters
      * @param {Embed[]} [params.embeds] - Up to 10 embeds (up to 6000 characters)
      * @param {Component} [params.components]
-     * @param {Array<Pick<Attachment, 'file' | 'filename'>>} [params.attachments]
+     * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [params.attachments]
      * @param {AllowedMentions} [params.allowed_mentions]
      * @param {MessageFlags} [params.flags] - Only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATION` can be set
      * @returns {Promise<Message>} The updated [Message]{@link https://discord.com/developers/docs/resources/channel#message-object} object

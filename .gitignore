@@ -19,3 +19,7 @@ server.js
 spotifyreadme.md
 articles.json
 pluid.js
+embeddings.csv
+state_of_the_union.txt
+weaviate.js
+weaviate2.js

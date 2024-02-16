@@ -738,7 +738,11 @@ function prepareSet(options) {
  * @returns {Array<any>}
  */
 function preparePush(oldValues, ...args) {
-  args = args.filter(arg => arg !== undefined && arg !== null);
+  // args = args.filter(arg => arg !== undefined && arg !== null);
+  args = (args.filter((x) => Array.isArray(x))).length && args.length === 1
+    ? args[0]
+    : args.filter(arg => arg !== undefined && arg !== null);
+  
   const { unique = false } = typeof args[args.length - 1] === 'object' ? args.pop() : {};
 
   if (!Array.isArray(oldValues)) throw new Error('Existing value must be an Array');

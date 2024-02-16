@@ -1,4 +1,4 @@
-type ButtonElement = {
+export type ButtonElement = {
     /**
      * - Type of element. In this case, always `button`
      */
@@ -30,7 +30,7 @@ type ButtonElement = {
      */
     accessibility_label?: string | undefined;
 };
-type CheckboxesElement = {
+export type CheckboxesElement = {
     /**
      * Type of element. In this case, always `checkboxes`
      */
@@ -57,7 +57,7 @@ type CheckboxesElement = {
      */
     focus_on_load?: boolean | undefined;
 };
-type DatePickerElement = {
+export type DatePickerElement = {
     /**
      * - Type of element. In this case, always `datepicker`
      */
@@ -84,7 +84,7 @@ type DatePickerElement = {
      */
     placeholder?: PlainTextElement | undefined;
 };
-type DateTimePickerElement = {
+export type DateTimePickerElement = {
     /**
      * - Type of element. In this case, always `datetimepicker`
      */
@@ -107,7 +107,7 @@ type DateTimePickerElement = {
      */
     focus_on_load?: boolean | undefined;
 };
-type EmailInputElement = {
+export type EmailInputElement = {
     /**
      * - Type of element. In this case, always `button`
      */
@@ -133,7 +133,7 @@ type EmailInputElement = {
      */
     placeholder?: PlainTextElement | undefined;
 };
-type SlackDescriptionElement = {
+export type SlackDescriptionElement = {
     emoji?: boolean | undefined;
     type?: string | undefined;
     text?: string | undefined;

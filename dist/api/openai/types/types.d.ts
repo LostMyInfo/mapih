@@ -154,4 +154,17 @@ export type OpenAIImage = {
      */
     revised_prompt?: string | undefined;
 };
+
+export type OpenAIEmbedding = {
+    index: number;
+    embedding: number[];
+    object: string;
+};
+
+export type OpenAIEmbeddingResponse = {
+    object: string;
+    data: OpenAIEmbedding[];
+    model: string;
+    usage: OpenAIUsage
+}
 //# sourceMappingURL=types.d.ts.map

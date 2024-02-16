@@ -1,4 +1,4 @@
-type SlackPagination = {
+export type SlackPagination = {
     first?: number | undefined;
     last?: number | undefined;
     page?: number | undefined;
@@ -6,13 +6,13 @@ type SlackPagination = {
     per_page?: number | undefined;
     total_count?: number | undefined;
 };
-type SlackPaging = {
+export type SlackPaging = {
     count?: number | undefined;
     pages?: number | undefined;
     page?: number | undefined;
     total?: number | undefined;
 };
-type PlainTextElement = {
+export type PlainTextElement = {
     /**
      * - The formatting to use for this text object. Can be one of `plain_text` or `mrkdwn`.
      */
@@ -26,7 +26,7 @@ type PlainTextElement = {
      */
     emoji?: boolean | undefined;
 };
-type MrkdwnElement = {
+export type MrkdwnElement = {
     /**
      * - The formatting to use for this text object. Can be one of `plain_text` or `mrkdwn`.
      */
@@ -37,8 +37,8 @@ type MrkdwnElement = {
     text: string;
     verbatim?: boolean | undefined;
 };
-type Text = PlainTextElement | MrkdwnElement;
-type ConfirmationDialog = {
+export type Text = PlainTextElement | MrkdwnElement;
+export type ConfirmationDialog = {
     /**
      * - A `plain_text` text object that defines the dialog's title. Maximum length for this field is 100 characters.
      */
@@ -60,7 +60,7 @@ type ConfirmationDialog = {
      */
     style?: string | undefined;
 };
-type ConversationFilter = {
+export type ConversationFilter = {
     /**
      * - Indicates which type of conversations should be included in the list. When this field is provided, any conversations that do not match will be excluded.
      * - You should provide an array of strings from the following options: `im`, `mpim`, `private`, and `public`. The array cannot be empty.
@@ -78,7 +78,7 @@ type ConversationFilter = {
      */
     exclude_bot_users?: boolean | undefined;
 };
-type Trigger = {
+export type Trigger = {
     /**
      * - A [link trigger URL]{@link https://api.slack.com/automation/triggers/link}. Must be associated with a valid trigger.
      */
@@ -96,13 +96,13 @@ type Trigger = {
      */
     verbatim?: boolean | undefined;
 };
-type Workflow = {
+export type Workflow = {
     /**
      * - A `trigger` object that contains information about a workflow's trigger.
      */
     trigger: Trigger;
 };
-type DispatchActionConfiguration = {
+export type DispatchActionConfiguration = {
     /**
      * - An array of interaction types that you would like to receive a [block_actions payload]{@link https://api.slack.com/reference/interaction-payloads/block-actions} for.
      * - Should be one or both of:
@@ -111,7 +111,7 @@ type DispatchActionConfiguration = {
      */
     trigger_actions_on?: string[] | undefined;
 };
-type Option = {
+export type Option = {
     /**
      * - A {@link Text } object that defines the text shown in the option on the menu.
      * - Overflow, select, and multi-select menus can only use `plain_text` objects, while radio buttons and checkboxes can use `mrkdwn` text objects.
@@ -135,7 +135,7 @@ type Option = {
      */
     url?: string | undefined;
 };
-type OptionGroup = {
+export type OptionGroup = {
     /**
      * - The formatting to use for this text object. Can be one of `plain_text` or `mrkdwn`.
      */
@@ -153,7 +153,7 @@ type OptionGroup = {
      */
     verbatim?: boolean | undefined;
 };
-type BotProfile = {
+export type BotProfile = {
     id: string;
     app_id: string;
     name: string;
@@ -166,7 +166,7 @@ type BotProfile = {
     updated: number;
     team_id: string;
 };
-type SlackMessage = {
+export type SlackMessage = {
     app_id?: string | undefined;
     attachments?: any[] | undefined;
     blocks?: SlackAttachmentBlock[] | undefined;
@@ -224,7 +224,7 @@ type SlackMessage = {
     wibblr?: boolean | undefined;
     x_files?: any[] | undefined;
 };
-type SlackMessageResponse = {
+export type SlackMessageResponse = {
     /**
      * - Status of the message
      */
@@ -242,7 +242,7 @@ type SlackMessageResponse = {
      */
     message: SlackMessage;
 };
-type SlackChannel = {
+export type SlackChannel = {
     /**
      * - Indicates the name of the channel-like thing, without a leading hash sign
      */
@@ -332,12 +332,12 @@ type SlackChannel = {
     topic?: SlackConversationTopic | undefined;
     purpose?: SlackConversationPurpose | undefined;
 };
-type SlackConversationTopic = {
+export type SlackConversationTopic = {
     creator: string;
     value: string;
     last_set: number;
 };
-type SlackConversationPurpose = {
+export type SlackConversationPurpose = {
     creator: string;
     value: string;
     last_set: number;
@@ -345,8 +345,8 @@ type SlackConversationPurpose = {
 /**
  * <T>
  */
-type Nullable<T> = { [P in keyof T]: T[P] | null; };
-type ModalView = {
+export type Nullable<T> = { [P in keyof T]: T[P] | null; };
+export type ModalView = {
     /**
      * - The type of view. Set to `modal` for modals.
      */
@@ -378,8 +378,8 @@ type ModalView = {
  * | zips     | Zip files   |
  * | pdfs     | PDF files   |
  */
-type SlackFileTypes = string;
-type SlackUser = {
+export type SlackFileTypes = string;
+export type SlackUser = {
     /**
      * - Identifier for this workspace user
      */
@@ -471,7 +471,7 @@ type SlackUser = {
      */
     two_factor_type?: string | undefined;
 };
-type SlackEnterpriseUser = {
+export type SlackEnterpriseUser = {
     /**
      * - A unique ID for the Enterprise Grid organization this user belongs to
      */
@@ -501,7 +501,7 @@ type SlackEnterpriseUser = {
      */
     has_2fa: boolean;
 };
-type SlackUserProfile = {
+export type SlackUserProfile = {
     avatar_hash: string;
     /**
      * - The display name the user has chosen to identify themselves by in their workspace profile. Do not use this field as a unique identifier for a user, as it may change at any time. Instead, use `id` and `team_id` in concert.
@@ -576,7 +576,7 @@ type SlackUserProfile = {
      */
     fields: SlackUserProfileCustomFields;
 };
-type SlackUserProfileCustomFields = {
+export type SlackUserProfileCustomFields = {
     /**
      * - The display name the user has chosen to identify themselves by in their workspace profile. Maximum of 80 characters.
      */
@@ -614,7 +614,7 @@ type SlackUserProfileCustomFields = {
      */
     start_date: string;
 };
-type SlackUserIdentity = {
+export type SlackUserIdentity = {
     name: string;
     email: string;
     id: string;
@@ -625,7 +625,7 @@ type SlackUserIdentity = {
     image_192?: string | undefined;
     image_512?: string | undefined;
 };
-type SlackFilesMatch = {
+export type SlackFilesMatch = {
     id: string;
     name: string | null;
     title?: string;
@@ -733,7 +733,7 @@ type SlackFilesMatch = {
     user_team?: string | undefined;
     username?: string | undefined;
 };
-type SlackMessageAttachment = {
+export type SlackMessageAttachment = {
     blocks?: (KnownBlock | SlackBlock)[] | undefined;
     fallback?: string | undefined;
     color?: string | undefined;
@@ -760,19 +760,19 @@ type SlackMessageAttachment = {
     bot_id?: string | undefined;
     preview?: SlackMessageAttachmentPreview | undefined;
 };
-type SlackAttachmentField = {
+export type SlackAttachmentField = {
     title: string;
     value: string;
     short?: boolean | undefined;
 };
-type SlackMessageAttachmentPreview = {
+export type SlackMessageAttachmentPreview = {
     type?: string | undefined;
     can_remove?: boolean | undefined;
     title?: PlainTextElement | undefined;
     subtitle?: PlainTextElement | undefined;
     iconUrl?: string | undefined;
 };
-type SlackAction = {
+export type SlackAction = {
     id?: string | undefined;
     confirm?: SlackActionConfirmation | undefined;
     data_source?: string | undefined;
@@ -790,18 +790,18 @@ type SlackAction = {
     value?: string | undefined;
     url?: string | undefined;
 };
-type SlackActionConfirmation = {
+export type SlackActionConfirmation = {
     dismiss_text?: string | undefined;
     ok_text?: string | undefined;
     text: string;
     title?: string | undefined;
 };
-type SlackOptionField = {
+export type SlackOptionField = {
     description?: string | undefined;
     text: string;
     title: string;
 };
-type SlackAttachment = {
+export type SlackAttachment = {
     action?: SlackAction[] | undefined;
     app_id?: string | undefined;
     app_unfurl_url?: string | undefined;
@@ -861,13 +861,13 @@ type SlackAttachment = {
     video_html_width?: number | undefined;
     video_url?: string | undefined;
 };
-type SlackMessageBlock = {
+export type SlackMessageBlock = {
     extension?: string | undefined;
     message?: SlackMessage | undefined;
     team?: string | undefined;
     ts?: string | undefined;
 };
-type SlackAttachmentMetadata = {
+export type SlackAttachmentMetadata = {
     extension?: string | undefined;
     format?: string | undefined;
     original_h?: number | undefined;
@@ -880,14 +880,14 @@ type SlackAttachmentMetadata = {
     thumb_80?: boolean | undefined;
     thumb_tiny?: string | undefined;
 };
-type SlackMessageIcons = {
+export type SlackMessageIcons = {
     emoji?: string | undefined;
     image_36?: string | undefined;
     image_48?: string | undefined;
     image_64?: string | undefined;
     image_72?: string | undefined;
 };
-type SlackAccessory = {
+export type SlackAccessory = {
     accessibility_label?: string | undefined;
     action_id?: string | undefined;
     alt_text?: string | undefined;
@@ -929,18 +929,18 @@ type SlackAccessory = {
     value?: string | undefined;
     workflow?: SlackWorkflow | undefined;
 };
-type SlackAccessoryConfirm = {
+export type SlackAccessoryConfirm = {
     confirm?: SlackDescriptionElement | undefined;
     deny?: SlackDescriptionElement | undefined;
     style?: string | undefined;
     text?: SlackDescriptionElement | undefined;
     title?: SlackDescriptionElement | undefined;
 };
-type SlackAccessoryOptionGroup = {
+export type SlackAccessoryOptionGroup = {
     label?: SlackDescriptionElement | undefined;
     options?: SlackInitialOptionElement[] | undefined;
 };
-type SlackAccessoryElement = {
+export type SlackAccessoryElement = {
     border?: number | undefined;
     elements?: SlackPurpleElement | undefined;
     indent?: number | undefined;
@@ -948,7 +948,7 @@ type SlackAccessoryElement = {
     style?: string | undefined;
     type?: string | undefined;
 };
-type SlackPurpleElement = {
+export type SlackPurpleElement = {
     channel_id?: string | undefined;
     name?: string | undefined;
     range?: string | undefined;
@@ -964,57 +964,57 @@ type SlackPurpleElement = {
     usergroup_id?: string | undefined;
     value?: string | undefined;
 };
-type SlackStyle = {
+export type SlackStyle = {
     bold?: boolean | undefined;
     code?: boolean | undefined;
     italic?: boolean | undefined;
     strike?: boolean | undefined;
 };
-type SlackFilter = {
+export type SlackFilter = {
     exclude_bot_users?: boolean | undefined;
     exclude_external_shared_channels?: boolean | undefined;
     include?: any[] | undefined;
 };
-type SlackInitialOptionElement = {
+export type SlackInitialOptionElement = {
     description?: SlackDescriptionElement | undefined;
     text: SlackDescriptionElement;
     url?: string | undefined;
     value?: string | undefined;
 };
-type SlackWorkflow = {
+export type SlackWorkflow = {
     trigger: SlackTrigger;
 };
-type SlackTrigger = {
+export type SlackTrigger = {
     customizable_input_parameters?: SlackCustomizableInputParameter[] | undefined;
     url?: string | undefined;
 };
-type SlackCustomizableInputParameter = {
+export type SlackCustomizableInputParameter = {
     name: string;
     value: string;
 };
-type SlackCC = {
+export type SlackCC = {
     address: string;
     name: string;
     original?: string | undefined;
 };
-type SlackDMMpdmUsersWithFileAccess = {
+export type SlackDMMpdmUsersWithFileAccess = {
     access?: string | undefined;
     user_id?: string | undefined;
 };
-type SlackFileHeaders = {
+export type SlackFileHeaders = {
     date?: string | undefined;
     in_reply_to?: string | undefined;
     reply_to?: string | undefined;
     message_id?: string | undefined;
 };
-type SlackPreview = {
+export type SlackPreview = {
     can_remove?: boolean | undefined;
     icon_url?: string | undefined;
     subtitle?: SlackDescriptionElement | undefined;
     title?: SlackDescriptionElement | undefined;
     type?: string | undefined;
 };
-type SlackInviteElement = {
+export type SlackInviteElement = {
     acceptances: SlackInviteAcceptance[];
     channel: SlackInviteChannel;
     date_late_updated: number;
@@ -1023,7 +1023,7 @@ type SlackInviteElement = {
     invite_type?: string | undefined;
     status?: string | undefined;
 };
-type SlackInviteAcceptance = {
+export type SlackInviteAcceptance = {
     accepting_team: SlackInviteAcceptingTeam;
     accepting_user: SlackInviteAcceptingUser;
     approval_status: string;
@@ -1032,7 +1032,7 @@ type SlackInviteAcceptance = {
     date_last_updated?: number | undefined;
     reviews?: SlackInviteReview[] | undefined;
 };
-type SlackInviteAcceptingTeam = {
+export type SlackInviteAcceptingTeam = {
     avatar_base_url: string;
     date_created: number;
     domain?: string | undefined;
@@ -1041,7 +1041,7 @@ type SlackInviteAcceptingTeam = {
     name: string;
     id: string;
 };
-type SlackTeamIcon = {
+export type SlackTeamIcon = {
     image_102?: string | undefined;
     image_132?: string | undefined;
     image_230?: string | undefined;
@@ -1052,7 +1052,7 @@ type SlackTeamIcon = {
     image_default?: boolean | undefined;
     image_original?: string | undefined;
 };
-type SlackInviteAcceptingUser = {
+export type SlackInviteAcceptingUser = {
     id?: string | undefined;
     name?: string | undefined;
     profile?: SlackUserProfile | undefined;
@@ -1060,18 +1060,18 @@ type SlackInviteAcceptingUser = {
     updated?: number | undefined;
     who_can_share_contact_card?: string | undefined;
 };
-type SlackInviteReview = {
+export type SlackInviteReview = {
     date_review?: number | undefined;
     reviewing_team?: SlackInviteAcceptingTeam | undefined;
     type?: string | undefined;
 };
-type SlackInviteChannel = {
+export type SlackInviteChannel = {
     id?: string | undefined;
     is_im?: boolean | undefined;
     is_private?: boolean | undefined;
     name?: string | undefined;
 };
-type SlackInviteInvite = {
+export type SlackInviteInvite = {
     date_created?: number | undefined;
     date_invalid?: number | undefined;
     id?: string | undefined;
@@ -1081,7 +1081,7 @@ type SlackInviteInvite = {
     recipient_email?: string | undefined;
     recipient_user_id?: string | undefined;
 };
-type SlackConversationsListConnectInviteResponse = {
+export type SlackConversationsListConnectInviteResponse = {
     arg: string;
     error?: string | undefined;
     invites: SlackInviteElement[];

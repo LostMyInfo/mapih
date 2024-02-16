@@ -31,9 +31,9 @@ declare namespace Locale {
     const Ukrainian: string;
     const Vietnamese: string;
 }
-type Snowflake = string;
-type ISO8601Timestamp = string;
-type PermissionNames = "ADD_REACTIONS" | "ADMINISTRATOR" | "ATTACH_FILES" | "BAN_MEMBERS" | "CHANGE NICKNAME" | "CONNECT" | "CREATE_INSTANT_INVITE" | "CREATE_PRIVATE_THREADS" | "CREATE_PUBLIC_THREADS" | "DEAFEN_MEMBERS" | "EMBED_LINKS" | "KICK_MEMBERS" | "MANAGE_CHANNELS" | "MANAGE_EMOJIS_AND_STICKERS" | "MANAGE_EVENTS" | "MANAGE_SERVER" | "MANAGE_MESSAGES" | "MANAGE_NICKNAMES" | "MANAGE_ROLES" | "MANAGE_THREADS" | "MANAGE_WEBHOOKS" | "MENTION_EVERYONE" | "MODERATE_MEMBERS" | "MOVE_MEMBERS" | "MUTE_MEMBERS" | "PRIORITY_SPEAKER" | "READ_MESSAGE_HISTORY" | "REQUEST_TO_SPEAK" | "SEND_MESSAGES" | "SEND_MESSAGES_IN_THREADS" | "SEND_TTS_MESSAGES" | "SPEAK" | "VIDEO" | "USE_APPLICATION_COMMANDS" | "USE_EMBEDDED_ACTIVITIES" | "USE_EXTERNAL_EMOJIS" | "USE_EXTERNAL_STICKERS" | "USE_VOICE_ACTIVITY" | "VIEW_AUDIT_LOG" | "VIEW_CHANNEL" | "VIEW_SERVER_INSIGHTS" | "MANAGE_GUILD_EXPRESSIONS";
+export type Snowflake = string;
+export type ISO8601Timestamp = string;
+export type PermissionNames = "ADD_REACTIONS" | "ADMINISTRATOR" | "ATTACH_FILES" | "BAN_MEMBERS" | "CHANGE NICKNAME" | "CONNECT" | "CREATE_INSTANT_INVITE" | "CREATE_PRIVATE_THREADS" | "CREATE_PUBLIC_THREADS" | "DEAFEN_MEMBERS" | "EMBED_LINKS" | "KICK_MEMBERS" | "MANAGE_CHANNELS" | "MANAGE_EMOJIS_AND_STICKERS" | "MANAGE_EVENTS" | "MANAGE_SERVER" | "MANAGE_MESSAGES" | "MANAGE_NICKNAMES" | "MANAGE_ROLES" | "MANAGE_THREADS" | "MANAGE_WEBHOOKS" | "MENTION_EVERYONE" | "MODERATE_MEMBERS" | "MOVE_MEMBERS" | "MUTE_MEMBERS" | "PRIORITY_SPEAKER" | "READ_MESSAGE_HISTORY" | "REQUEST_TO_SPEAK" | "SEND_MESSAGES" | "SEND_MESSAGES_IN_THREADS" | "SEND_TTS_MESSAGES" | "SPEAK" | "VIDEO" | "USE_APPLICATION_COMMANDS" | "USE_EMBEDDED_ACTIVITIES" | "USE_EXTERNAL_EMOJIS" | "USE_EXTERNAL_STICKERS" | "USE_VOICE_ACTIVITY" | "VIEW_AUDIT_LOG" | "VIEW_CHANNEL" | "VIEW_SERVER_INSIGHTS" | "MANAGE_GUILD_EXPRESSIONS";
 /**
  * | Permission               | Value | Description | Channel Types |
  * |--------------------------|-------|-------------|---------------|
@@ -85,7 +85,7 @@ type PermissionNames = "ADD_REACTIONS" | "ADMINISTRATOR" | "ATTACH_FILES" | "BAN
  * | Use External Sounds      | 1 << 45 | Allows the usage of custom soundboard sounds from other servers | V |
  * | Send Voice Messages      | 1 << 46 | Allows sending voice messages | T, V, S |
  */
-type PermissionFlags = number;
+export type PermissionFlags = number;
 /**
  * | Flag                         |
  * |------------------------------|
@@ -105,7 +105,7 @@ type PermissionFlags = number;
  * | Bot HTTP Interactions        |
  * | Active Developer             |
  */
-type UserFlags = string;
+export type UserFlags = string;
 /**
  * | Flag | Value | Description | Editable |
  * |----------------------|--------|-------------------------------------------------------|-------|
@@ -114,7 +114,7 @@ type UserFlags = string;
  * | Bypass Verification  | 1 << 2 | Member is exempt from guild verification requirements | true  |
  * | Started Onboarding   | 1 << 3 | Member has started onboarding                         | false |
  */
-type GuildMemberFlags = number;
+export type GuildMemberFlags = number;
 /**
  * | Name | Description |
  * |------|-------------|
@@ -147,8 +147,8 @@ type GuildMemberFlags = number;
  * | voice | allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval
  * | webhook.incoming | this generates a webhook that is returned in the oauth token response for authorization code grants
  */
-type OAuth2Scopes = string;
-type AccessTokenResponse = {
+export type OAuth2Scopes = string;
+export type AccessTokenResponse = {
     /**
      * - Type of token
      */
@@ -158,7 +158,7 @@ type AccessTokenResponse = {
     scope: OAuth2Scopes[];
     expires_in: number;
 };
-type ApplicationCommand = {
+export type ApplicationCommand = {
     id: Snowflake;
     /**
      * - [Type of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types}. Defaults to `1`.
@@ -213,7 +213,7 @@ type ApplicationCommand = {
      */
     version: Snowflake;
 };
-type ApplicationCommandOption = {
+export type ApplicationCommandOption = {
     /**
      * - [Type of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type}
      */
@@ -271,7 +271,7 @@ type ApplicationCommandOption = {
      */
     autocomplete?: boolean | undefined;
 };
-type ApplicationCommandOptionChoice = {
+export type ApplicationCommandOptionChoice = {
     /**
      * - 1-100 character choice name
      */
@@ -292,7 +292,7 @@ type ApplicationCommandOptionChoice = {
  * | User       | 2 | A UI-based command that shows up when you right click or tap on a user
  * | Message    | 3 | A UI-based command that shows up when you right click or tap on a message
  */
-type ApplicationCommandType = number;
+export type ApplicationCommandType = number;
 /**
  * | name  | type | description |
  * |-------|------|-------------|
@@ -308,13 +308,13 @@ type ApplicationCommandType = number;
  * | Number            | 10 | Any double between -2^53 and 2^53
  * | Attachment        | 11 | {@link Attachment }
  */
-type ApplicationCommandOptionType = number;
-type Presence = {
+export type ApplicationCommandOptionType = number;
+export type Presence = {
     userid: Snowflake;
     newStatus: 'online' | 'offline' | 'idle' | 'dnd';
     oldStatus?: "idle" | "offline" | "online" | "dnd" | undefined;
 };
-type ClientStatus = {
+export type ClientStatus = {
     /**
      * - User's status set for an active desktop (Windows, Linux, Mac) application session
      */
@@ -328,7 +328,7 @@ type ClientStatus = {
      */
     web?: string | undefined;
 };
-type Sticker = {
+export type Sticker = {
     /**
      * - ID of the sticker
      */
@@ -384,8 +384,8 @@ type Sticker = {
  * | Standard | 1 | Official sticker in a pack, part of Nitro or in a removed purchasable pack |
  * | Guild    | 2 | A Sticker uploaded to a guild for the guild's members |
  */
-type StickerType = number;
-type StickerPack = {
+export type StickerType = number;
+export type StickerPack = {
     /**
      * - ID of the sticker pack
      */
@@ -423,11 +423,11 @@ type StickerPack = {
  * | LOTTIE | 3 |
  * | GIF    | 4 |
  */
-type StickerFormatType = number;
+export type StickerFormatType = number;
 /**
  * Bot Partial Activity Object
  */
-type BotActivity = {
+export type BotActivity = {
     /**
      * - [Activity Type]{@link https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types}
      */
@@ -442,7 +442,7 @@ type BotActivity = {
      */
     url?: string | null | undefined;
 };
-type Activity = {
+export type Activity = {
     /**
      * - Activity's name
      */
@@ -532,15 +532,15 @@ type Activity = {
  * | 4  | Custom    | {emoji} {name}      | ":smiley: I am cool" |
  * | 5  | Competing | Competing in {name} | "Competing in Arena World Champions" |
  */
-type ActivityType = number;
+export type ActivityType = number;
 /**
  * | Name | Value |
  * |------|-------|
  * | Stream  | 1  |
  * | Embedded Application | 2  |
  */
-type InviteTargetType = number;
-type Invite = {
+export type InviteTargetType = number;
+export type Invite = {
     /**
      * - The invites code
      */
@@ -586,7 +586,7 @@ type Invite = {
      */
     guild_scheduled_event?: GuildScheduledEvent | undefined;
 };
-type ExtendedInvite = {
+export type ExtendedInvite = {
     /**
      * - The invites code
      */
@@ -656,7 +656,7 @@ type ExtendedInvite = {
      */
     created_at: ISO8601Timestamp;
 };
-type ExtendedUser = {
+export type ExtendedUser = {
     badges: UserFlags[];
     created_at: string;
     /**
@@ -734,7 +734,7 @@ type ExtendedUser = {
      */
     public_flags: number;
 };
-type User = {
+export type User = {
     badges: UserFlags[];
     created_at: string;
     /**
@@ -788,8 +788,8 @@ type User = {
  * | Nitro         | 2 |
  * | Nitro Basic   | 3 |
  */
-type NitroPremiumType = number;
-type Emoji = {
+export type NitroPremiumType = number;
+export type Emoji = {
     /**
      * - ID of the emoji
      */
@@ -823,7 +823,7 @@ type Emoji = {
      */
     available?: boolean | undefined;
 };
-type Guild = {
+export type Guild = {
     /**
      * - Guild name (2-100 characters, excluding trailing and leading whitespace)
      */
@@ -995,7 +995,7 @@ type Guild = {
     discovery_splash_url?: string | undefined;
     inventory_settings: any | null;
 };
-type VoiceState = {
+export type VoiceState = {
     /**
      * - The guild ID this voice state is for
      */
@@ -1049,7 +1049,7 @@ type VoiceState = {
      */
     request_to_speak_timestamp: ISO8601Timestamp;
 };
-type Channel = {
+export type Channel = {
     /**
      * - The ID of this channel
      */
@@ -1194,7 +1194,7 @@ type Channel = {
     created_at?: string | undefined;
     last_message_sent?: string | undefined;
 };
-type DMChannel = {
+export type DMChannel = {
     id: Snowflake;
     /**
      * - The id of the last message sent in this channel
@@ -1210,7 +1210,7 @@ type DMChannel = {
     flags: ChannelFlags;
     recipients: User[];
 };
-type ModifyPositionsChannel = {
+export type ModifyPositionsChannel = {
     id: Snowflake;
     /**
      * - Sorting position of the channel
@@ -1225,7 +1225,7 @@ type ModifyPositionsChannel = {
      */
     parent_id?: string | null | undefined;
 };
-type Message = {
+export type Message = {
     /**
      * - id of the message
      */
@@ -1345,7 +1345,7 @@ type Message = {
      */
     role_subscription_data?: RoleSubscriptionData | undefined;
 };
-type ForumThreadMessageParams = {
+export type ForumThreadMessageParams = {
     /**
      * - Message contents (up to 2000 characters)
      */
@@ -1375,8 +1375,8 @@ type ForumThreadMessageParams = {
  * | Latest Activity | 0 | Sort forum posts by activity
  * | Creation Date   | 1 | Sort forum posts by creation time (from most recent to oldest)
  */
-type SortOrderType = number;
-type PartialEmoji = {
+export type SortOrderType = number;
+export type PartialEmoji = {
     id: Snowflake | null;
     name: string;
     animated?: boolean | undefined;
@@ -1388,8 +1388,8 @@ type PartialEmoji = {
  * | List View    | 1 | Display posts as a list
  * | Gallery View | 2 | Display posts as a collection of tiles
  */
-type ForumLayoutType = number;
-type StickerItem = {
+export type ForumLayoutType = number;
+export type StickerItem = {
     /**
      * - id of the sticker
      */
@@ -1403,7 +1403,7 @@ type StickerItem = {
      */
     format_type: StickerFormatType;
 };
-type FollowedChannel = {
+export type FollowedChannel = {
     channel_id: Snowflake;
     webhook_id: Snowflake;
 };
@@ -1428,7 +1428,7 @@ type FollowedChannel = {
  * | 1 << 15 | Safe Role Connections   | Application's role connections metadata is safe for work   |
  * | 1 << 16 | Eligible                | Application is eligible for discovery                      |
  */
-type ApplicationDiscoverabilityEligibilityFlags = number;
+export type ApplicationDiscoverabilityEligibilityFlags = number;
 /**
  * | Value | State   | Description |
  * |-------|---------|-------------|
@@ -1436,7 +1436,7 @@ type ApplicationDiscoverabilityEligibilityFlags = number;
  * | 2     | Enabled | Application has monetization set up
  * | 3     | Blocked | Application has been blocked from monetizing
  */
-type ApplicationMonetizationState = number;
+export type ApplicationMonetizationState = number;
 /**
  * | Value | State            | Description |
  * |-------|------------------|-------------|
@@ -1446,14 +1446,14 @@ type ApplicationMonetizationState = number;
  * | 4     | Featureable      | Application is featureable in the application directory
  * | 5     | Blocked          | Application has been blocked from appearing in the application directory
  */
-type ApplicationDiscoverabilityState = number;
+export type ApplicationDiscoverabilityState = number;
 /**
  * | Value | Version   | Description                                                                            |
  * |-------|-----------|----------------------------------------------------------------------------------------|
  * | 1     | VERSION_1 | Only [Interaction Create](#interaction-create) events are sent as documented (default) |
  * | 2     | VERSION_2 | A selection of chosen events are sent                                                  |
  */
-type ApplicationInteractionsVersion = number;
+export type ApplicationInteractionsVersion = number;
 /**
  * | Value   | Flag                        | Description                                              |
  * |---------|-----------------------------|----------------------------------------------------------|
@@ -1471,7 +1471,7 @@ type ApplicationInteractionsVersion = number;
  * | 1 << 17 | No Blocking Issues          | Application has no issues blocking monetization          |
  * | 1 << 18 | Valid Payout Status         | Application's team has a valid payout status             |
  */
-type ApplicationMonetizationEligibilityFlags = number;
+export type ApplicationMonetizationEligibilityFlags = number;
 /**
  * | Value | State       | Description                                         |
  * |-------|-------------|-----------------------------------------------------|
@@ -1481,7 +1481,7 @@ type ApplicationMonetizationEligibilityFlags = number;
  * | 3     | Approved    | Application has been approved for RPC access        |
  * | 4     | Rejected    | Application has been rejected from RPC access       |
  */
-type RPCApplicationState = number;
+export type RPCApplicationState = number;
 /**
  * | Value | State     | Description                                                                           |
  * |-------|-----------|---------------------------------------------------------------------------------------|
@@ -1491,7 +1491,7 @@ type RPCApplicationState = number;
  * | 4     | Approved  | Application has been approved for the store                                           |
  * | 5     | Rejected  | Application has been rejected from the store                                          |
  */
-type ApplicationStoreApplicationState = number;
+export type ApplicationStoreApplicationState = number;
 /**
  * | Value | State       | Description                                           |
  * |-------|-------------|-------------------------------------------------------|
@@ -1500,8 +1500,8 @@ type ApplicationStoreApplicationState = number;
  * | 3     | Submitted   | Application has submitted a verification request      |
  * | 4     | Succeeded   | Application has been verified                         |
  */
-type ApplicationVerificationState = number;
-type Application = {
+export type ApplicationVerificationState = number;
+export type Application = {
     /**
      * - The id of the app
      */
@@ -1665,8 +1665,8 @@ type Application = {
  * | Invited | 1 |
  * | Accepted | 2 |
  */
-type MembershipState = number;
-type TeamMember = {
+export type MembershipState = number;
+export type TeamMember = {
     /**
      * - The avatar, discriminator, id, and username of the user
      */
@@ -1684,14 +1684,14 @@ type TeamMember = {
      */
     team_id: Snowflake;
 };
-type Team = {
+export type Team = {
     icon: string | null;
     id: Snowflake;
     members: TeamMember[];
     name: string;
     owner_user_id: Snowflake;
 };
-type InstallParams = {
+export type InstallParams = {
     /**
      * - The [scopes]{@link https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes} to add the application to the server with
      */
@@ -1701,7 +1701,7 @@ type InstallParams = {
      */
     permissions: string;
 };
-type MessageActivity = {
+export type MessageActivity = {
     /**
      * - [Type of Message Activity]{@link https://discord.com/developers/docs/resources/channel#message-object-message-activity-types}
      */
@@ -1718,8 +1718,8 @@ type MessageActivity = {
  * | Listen | 3 |
  * | Join Request | 5 |
  */
-type MessageActivityType = number;
-type ChannelMention = {
+export type MessageActivityType = number;
+export type ChannelMention = {
     /**
      * - id of the channel
      */
@@ -1737,7 +1737,7 @@ type ChannelMention = {
      */
     name: string;
 };
-type Reaction = {
+export type Reaction = {
     /**
      * - Times this emoji has been used to react
      */
@@ -1751,7 +1751,7 @@ type Reaction = {
      */
     emoji: PartialEmoji;
 };
-type ThreadMember = {
+export type ThreadMember = {
     /**
      * - ID of the thread
      */
@@ -1773,7 +1773,7 @@ type ThreadMember = {
      */
     member?: Member | undefined;
 };
-type StageInstance = {
+export type StageInstance = {
     id: Snowflake;
     guild_id: Snowflake;
     /**
@@ -1793,7 +1793,7 @@ type StageInstance = {
      */
     guild_scheduled_event_id: Snowflake | null;
 };
-type GuildScheduledEvent = {
+export type GuildScheduledEvent = {
     statusName: string;
     entityTypeName: string;
     /**
@@ -1861,7 +1861,7 @@ type GuildScheduledEvent = {
      */
     image?: string | null | undefined;
 };
-type Connection = {
+export type Connection = {
     /**
      * - ID of the conncetion account
      */
@@ -1915,8 +1915,8 @@ type Connection = {
  * BOOLEAN_EQUAL | 7 | The metadata value (`integer`) is equal to the guild's configured value (`integer`; 1) |
  * BOOLEAN_NOT_EQUAL | 8 | The metadata value (`integer`) is not equal to the guild's configured value (``integer``; 1) |
  */
-type ApplicationRoleConnectionMetadataType = number;
-type ApplicationRoleConnectionMetadata = {
+export type ApplicationRoleConnectionMetadataType = number;
+export type ApplicationRoleConnectionMetadata = {
     /**
      * - [Type of metadata] value
      */
@@ -1942,7 +1942,7 @@ type ApplicationRoleConnectionMetadata = {
      */
     description_localizations?: LocalizationMap;
 };
-type ApplicationRoleConnection = {
+export type ApplicationRoleConnection = {
     /**
      * - The vanity name of the platform a bot has connected (max 50 characters)
      */
@@ -1963,8 +1963,8 @@ type ApplicationRoleConnection = {
  * | User    | 2 |
  * | Channel | 3 |
  */
-type ApplicationCommandPermissionType = number;
-type GuildApplicationCommandPermissions = {
+export type ApplicationCommandPermissionType = number;
+export type GuildApplicationCommandPermissions = {
     /**
      * - ID of the command or the application ID
      */
@@ -1982,7 +1982,7 @@ type GuildApplicationCommandPermissions = {
      */
     permissions: ApplicationCommandPermissions[];
 };
-type ApplicationCommandPermissions = {
+export type ApplicationCommandPermissions = {
     /**
      * - ID of the command or the application ID
      */
@@ -2001,7 +2001,7 @@ type ApplicationCommandPermissions = {
  * |------------|-------|-------------|
  * | Message Send | 1 | When a member sends or edits a message in the guild |
  */
-type AutoModEventType = number;
+export type AutoModEventType = number;
 /**
  * | Trigger Type | Value | Description |
  * |--------------|-------|-------------|
@@ -2010,7 +2010,7 @@ type AutoModEventType = number;
  * | Keyword Preset | 4 | Check if content contains words from internal pre-defined wordsets |
  * | Mention Spam   | 5 | Check if content contains more unique mentions than allowed |
  */
-type AutoModTriggerType = number;
+export type AutoModTriggerType = number;
 /**
  * | Preset Type | Value | Description |
  * |--------------|-------|-------------|
@@ -2018,8 +2018,8 @@ type AutoModTriggerType = number;
  * | Sexual Content | 2 | Words that refer to sexually explicit behavior or activity |
  * | Slurs          | 3 | Personal insults or words that may be considered hate speech |
  */
-type AutoModKeywordPresetTypes = number;
-type AutoModTriggerMetadata = {
+export type AutoModKeywordPresetTypes = number;
+export type AutoModTriggerMetadata = {
     /**
      * - Substrings which will be searched for in content (Maximum of 1000)
      */
@@ -2048,8 +2048,8 @@ type AutoModTriggerMetadata = {
  * | Send Alert Message | 2 | Logs user content to a specified channel |
  * | Timeout            | 3 | Timeout user for a specified duration |
  */
-type AutoModActionType = number;
-type AutoModActionMetadata = {
+export type AutoModActionType = number;
+export type AutoModActionMetadata = {
     /**
      * - Channel to which user content should be logged
      */
@@ -2063,14 +2063,14 @@ type AutoModActionMetadata = {
      */
     custom_message?: string | undefined;
 };
-type AutoModAction = {
+export type AutoModAction = {
     type: AutoModActionType;
     /**
      * - Additional metadata needed during execution for this specific action type
      */
     metadata?: AutoModActionMetadata | undefined;
 };
-type AutoModRule = {
+export type AutoModRule = {
     id: Snowflake;
     guild_id: Snowflake;
     /**
@@ -2110,7 +2110,7 @@ type AutoModRule = {
      */
     exempt_channels: Snowflake[];
 };
-type AuditLogChange = {
+export type AuditLogChange = {
     /**
      * - New value of the key
      */
@@ -2124,7 +2124,7 @@ type AuditLogChange = {
      */
     key: string;
 };
-type OptionalAuditEntryInfo = {
+export type OptionalAuditEntryInfo = {
     /**
      * - ID of the app whose permissions were targeted // APPLICATION_COMMAND_PERMISSION_UPDATE
      */
@@ -2170,7 +2170,7 @@ type OptionalAuditEntryInfo = {
      */
     type?: string | undefined;
 };
-type AuditLogEntry = {
+export type AuditLogEntry = {
     /**
      * - ID of the affected entity (webhook, user, role, etc.)
      */
@@ -2201,7 +2201,7 @@ type AuditLogEntry = {
      */
     reason?: string | undefined;
 };
-type AuditLog = {
+export type AuditLog = {
     /**
      * - List of application commands referenced in the audit log
      */
@@ -2293,7 +2293,7 @@ type AuditLog = {
  * | Auto Moderation Flag To Channel | 144 | Message was flagged by Auto Moderation
  * | Auto Moderation User Communication Disabled | 145 | Member was timed out by Auto Moderation
  */
-type AuditLogEventType = number;
+export type AuditLogEventType = number;
 /**
  * | Name | Value | Description |
  * |-------|------|-------------|
@@ -2301,8 +2301,8 @@ type AuditLogEventType = number;
  * | Channel Follower | 2 | Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels
  * | Application | 3 | Application webhooks are webhooks used with Interactions
  */
-type WebhookType = number;
-type Webhook = {
+export type WebhookType = number;
+export type Webhook = {
     /**
      * - The ID of the webhook
      */
@@ -2360,7 +2360,7 @@ type Webhook = {
      */
     url?: string | undefined;
 };
-type PartialChannel = {
+export type PartialChannel = {
     /**
      * - The id of the channel
      */
@@ -2380,8 +2380,8 @@ type PartialChannel = {
  * | Pinned | 1 << 1 | This thread is pinned to the top of its parent `GUILD_FORUM` channel
  * | Required Tag | 1 << 4 | Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field.
  */
-type ChannelFlags = number;
-type ThreadMetadata = {
+export type ChannelFlags = number;
+export type ThreadMetadata = {
     /**
      * - Whether the thread is archived
      */
@@ -2407,7 +2407,7 @@ type ThreadMetadata = {
      */
     create_timestamp?: string | null | undefined;
 };
-type ForumTag = {
+export type ForumTag = {
     /**
      * - The id of the tag
      */
@@ -2429,11 +2429,11 @@ type ForumTag = {
      */
     emoji_name: string | null;
 };
-type DefaultReaction = {
+export type DefaultReaction = {
     emoji_id: Snowflake | null;
     emoji_name: string | null;
 };
-type Embed = {
+export type Embed = {
     type?: string | undefined;
     /**
      * - 256 character limit
@@ -2490,7 +2490,7 @@ type Embed = {
 /**
  * Embed Field
  */
-type EmbedField = {
+export type EmbedField = {
     /**
      * - Name of the field (256 character limit)
      */
@@ -2504,7 +2504,7 @@ type EmbedField = {
      */
     inline?: boolean | undefined;
 };
-type Attachment = {
+export type Attachment = {
     /**
      * - Attachment ID
      */
@@ -2558,7 +2558,7 @@ type Attachment = {
      */
     waveform?: string | undefined;
 };
-type RecurrenceRule = {
+export type RecurrenceRule = {
     start: ISO8601Timestamp;
     end: ISO8601Timestamp | null;
     frequency: RecurrenceRuleFrequency;
@@ -2577,7 +2577,7 @@ type RecurrenceRule = {
  * | Weekly  | 2 |
  * | Daily   | 3 |
  */
-type RecurrenceRuleFrequency = number;
+export type RecurrenceRuleFrequency = number;
 /**
  * | Type | Value |
  * |------|-------|
@@ -2594,7 +2594,7 @@ type RecurrenceRuleFrequency = number;
  * | November  | 11 |
  * | December  | 12 |
  */
-type RecurrenceRuleMonths = number;
+export type RecurrenceRuleMonths = number;
 /**
  * | Type | Value |
  * |------|-------|
@@ -2606,7 +2606,7 @@ type RecurrenceRuleMonths = number;
  * | Saturday  | 5 |
  * | Sunday    | 6 |
  */
-type RecurrenceRuleWeekdays = number;
+export type RecurrenceRuleWeekdays = number;
 /**
  * | Type | Value | Description |
  * |------|-------|-------------|
@@ -2614,8 +2614,8 @@ type RecurrenceRuleWeekdays = number;
  * | User Mentions     | 'users'    | Controls user mentions |
  * | Everyone Mentions | 'everyone' | Controls `@everyone` and `@here` mentions |
  */
-type AllowedMentionsType = 'roles' | 'users' | 'everyone';
-type AllowedMentions = {
+export type AllowedMentionsType = 'roles' | 'users' | 'everyone';
+export type AllowedMentions = {
     /**
      * - An array of [allowed mention types]{@link https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types} to parse from the content.
      */
@@ -2633,7 +2633,7 @@ type AllowedMentions = {
      */
     replied_user: boolean;
 };
-type MessageReference = {
+export type MessageReference = {
     /**
      * - ID of the originating message
      */
@@ -2664,7 +2664,7 @@ type MessageReference = {
  * | Loading | 1 << 7 | This message is an Interaction Response and the bot is "thinking" |
  * | FailedToMentionSomeRolesInThread | 1 << 8 | This message failed to mention some roles and add their members to the thread |
  */
-type MessageFlags = number;
+export type MessageFlags = number;
 /**
  * | Type | Value | Description |
  * |------|-------|-------------|
@@ -2682,7 +2682,7 @@ type MessageFlags = number;
  * | Guild Forum         | 15 | Channel that can only contain threads |
  * | Guild Media         | 16 | Channel that can only contain media threads |
  */
-type ChannelType = number;
+export type ChannelType = number;
 /**
  * | Type | Value |
  * |------|-------|
@@ -2722,7 +2722,7 @@ type ChannelType = number;
  * | Guild Incident Report Raid | 38 |
  * | Guild Incident Report False Alarm | 39 |
  */
-type MessageType = number;
+export type MessageType = number;
 /**
  * | Type | Name | Description |
  * |------|------|-------------|
@@ -2735,7 +2735,7 @@ type MessageType = number;
  * | 7 | Mentionable Select | Select menu for mentionables (users and roles) |
  * | 8 | Channel Select | Select menu for channels |
  */
-type ComponentType = number;
+export type ComponentType = number;
 /**
  * | Name | Value | Color |
  * |------|-------|-------|
@@ -2745,15 +2745,15 @@ type ComponentType = number;
  * | Danger    | 4 | red |
  * | Link      | 5 | grey, navigates to a URL |
  */
-type ButtonStyle = number;
+export type ButtonStyle = number;
 /**
  * | Name | Value | Description |
  * |------|-------|-------------|
  * | Short | 1 | Single-line input |
  * | Paragraph | 2 | Multi-line input |
  */
-type TextInputStyle = number;
-type MemberParams = {
+export type TextInputStyle = number;
+export type MemberParams = {
     roles: Snowflake[];
     hexColor: number;
     unusual_dm_activity_until: ISO8601Timestamp | null;
@@ -2770,14 +2770,14 @@ type MemberParams = {
     displayName: string;
     displayAvatar: string;
 };
-type MessageInteraction = {
+export type MessageInteraction = {
     id: Snowflake;
     type: InteractionType;
     name: string;
     user: User;
     member?: Member | undefined;
 };
-type Interaction = {
+export type Interaction = {
     id: Snowflake;
     application_id: Snowflake;
     /**
@@ -2827,9 +2827,9 @@ type Interaction = {
     channel: Channel;
     guild: GuildParams;
 };
-type PartialInviteGuild = Pick<Guild, 'id' | 'name' | 'description' | 'splash' | 'banner' | 'icon' | 'features' | 'nsfw_level' | 'vanity_url_code' | 'premium_subscription_count' | 'verification_level'>;
-type PartialGuild = Pick<Guild, 'id' | 'name' | 'icon' | 'owner' | 'permissions' | 'features'>;
-type Member = {
+export type PartialInviteGuild = Pick<Guild, 'id' | 'name' | 'description' | 'splash' | 'banner' | 'icon' | 'features' | 'nsfw_level' | 'vanity_url_code' | 'premium_subscription_count' | 'verification_level'>;
+export type PartialGuild = Pick<Guild, 'id' | 'name' | 'icon' | 'owner' | 'permissions' | 'features'>;
+export type Member = {
     displayName: string;
     displayAvatar: string;
     hexColor?: number | undefined;
@@ -2883,7 +2883,7 @@ type Member = {
     communication_disabled_until: ISO8601Timestamp;
     permission_names: PermissionNames[];
 };
-type Role = {
+export type Role = {
     /**
      * - Role id
      */
@@ -2933,7 +2933,7 @@ type Role = {
     flags: number;
     permission_names: PermissionNames[];
 };
-type RoleTags = {
+export type RoleTags = {
     /**
      * - The id of the bot this role belongs to
      */
@@ -2959,7 +2959,7 @@ type RoleTags = {
      */
     guild_connection: null;
 };
-type RoleSubscriptionData = {
+export type RoleSubscriptionData = {
     /**
      * - The id of the SKU and listing that the user is subscribed to
      */
@@ -2977,7 +2977,7 @@ type RoleSubscriptionData = {
      */
     is_renewal: boolean;
 };
-type Overwrite = {
+export type Overwrite = {
     id: Snowflake;
     allow: string;
     deny: string;
@@ -2992,7 +2992,7 @@ type Overwrite = {
  * | Auto | 1 | Discord chooses the quality for optimal performance |
  * | Full | 2 | 720p |
  */
-type VideoQualityMode = number;
+export type VideoQualityMode = number;
 /**
  * | Level | Integer | Description |
  * |-------|---------|-------------|
@@ -3002,14 +3002,14 @@ type VideoQualityMode = number;
  * | High      | 3 | Must be a member of the server for longer than 10 minutes |
  * | Very High | 4 | Must have a verified phone number |
  */
-type GuildVerificationLevel = number;
+export type GuildVerificationLevel = number;
 /**
  * | Key | Value | Description |
  * |-----|-------|-------------|
  * | All Messages  | 0 | Members will receive notifications for all messages by default |
  * | Only Mentions | 1 | Members will receive notifications only for messages that `@mention` them by default |
  */
-type DefaultMessageNotificationLevel = number;
+export type DefaultMessageNotificationLevel = number;
 /**
  * | Level | Integer | Description |
  * |-------|---------|-------------|
@@ -3017,14 +3017,14 @@ type DefaultMessageNotificationLevel = number;
  * | Members without roles | 1 | Media content sent by members without roles will be scanned |
  * | All members           | 2 | Media content sent by all members will be scanned |
  */
-type ExplicitContentFilterLevel = number;
+export type ExplicitContentFilterLevel = number;
 /**
  * | Level | Integer | Description |
  * |-------|---------|-------------|
  * | None     | 0 | Guild has no MFA/2FA requirement for moderation actions |
  * | Elevated | 1 | Guild has a 2FA requirement for moderation actions |
  */
-type GuildMFALevel = number;
+export type GuildMFALevel = number;
 /**
  * | Level | Value |
  * |-------|-------|
@@ -3033,7 +3033,7 @@ type GuildMFALevel = number;
  * | Safe           | 2 |
  * | Age-Restricted | 3 |
  */
-type GuildNSFWLevel = number;
+export type GuildNSFWLevel = number;
 /**
  * | Flag | Value | Description |
  * |------|-------|-------------|
@@ -3044,7 +3044,7 @@ type GuildNSFWLevel = number;
  * SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS | 1 << 4 | Suppress role subscription purchase and renewal notifications |
  * SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES | 1 << 5 | Hide role subscription sticker reply buttons |
  */
-type SystemChannelFlags = number;
+export type SystemChannelFlags = number;
 /**
  * | Feature | Description |
  * |---------|-------------|
@@ -3075,7 +3075,7 @@ type SystemChannelFlags = number;
  * | VIP Regions | guild has access to set 384kbps bitrate in voice (previously VIP voice servers) |
  * | Welcome Screen Enabled | guild has enabled the welcome screen |
  */
-type GuildFeatures = 'ANIMATED_BANNER' | 'ANIMATED_ICON' | 'APPLICATION_COMMAND_PERMISSIONS_V2' | 'AUTO_MODERATION' | 'BANNER' | 'COMMUNITY' | 'CREATOR_MONETIZABLE_PROVISIONAL' | 'CREATOR_STORE_PAGE' | 'DEVELOPER_SUPPORT_SERVER' | 'DISCOVERABLE' | 'FEATURABLE' | 'INVITES_DISABLED' | 'INVITE_SPLASH' | 'MEMBER_VERIFICATION_GATE_ENABLED' | 'MORE_STICKERS' | 'NEWS' | 'PARTNERED' | 'PREVIEW_ENABLED' | 'ROLE_ICONS' | 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE' | 'ROLE_SUBSCRIPTIONS_ENABLED' | 'TICKETED_EVENTS_ENABLED' | 'VANITY_URL' | 'VERIFIED' | 'VIP_REGIONS' | 'WELCOME_SCREEN_ENABLED';
+export type GuildFeatures = 'ANIMATED_BANNER' | 'ANIMATED_ICON' | 'APPLICATION_COMMAND_PERMISSIONS_V2' | 'AUTO_MODERATION' | 'BANNER' | 'COMMUNITY' | 'CREATOR_MONETIZABLE_PROVISIONAL' | 'CREATOR_STORE_PAGE' | 'DEVELOPER_SUPPORT_SERVER' | 'DISCOVERABLE' | 'FEATURABLE' | 'INVITES_DISABLED' | 'INVITE_SPLASH' | 'MEMBER_VERIFICATION_GATE_ENABLED' | 'MORE_STICKERS' | 'NEWS' | 'PARTNERED' | 'PREVIEW_ENABLED' | 'ROLE_ICONS' | 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE' | 'ROLE_SUBSCRIPTIONS_ENABLED' | 'TICKETED_EVENTS_ENABLED' | 'VANITY_URL' | 'VERIFIED' | 'VIP_REGIONS' | 'WELCOME_SCREEN_ENABLED';
 /**
  * | Feature | Required Permissions | Effects |
  * |---------|----------------------|---------|
@@ -3084,8 +3084,8 @@ type GuildFeatures = 'ANIMATED_BANNER' | 'ANIMATED_ICON' | 'APPLICATION_COMMAND_
  * | Invites Disabled | Manage Guild | Pauses all invites/access to the server |
  * | Raid Alerts Disabled | Manage Guild | Disables alerts for join raids |
  */
-type MutableGuildFeatures = 'COMMUNITY' | 'DISCOVERABLE' | 'INVITES_DISABLED' | 'RAID_ALERTS_DISABLED';
-type GuildWelcomeScreen = {
+export type MutableGuildFeatures = 'COMMUNITY' | 'DISCOVERABLE' | 'INVITES_DISABLED' | 'RAID_ALERTS_DISABLED';
+export type GuildWelcomeScreen = {
     /**
      * - The server description shown in the welcome screen
      */
@@ -3095,7 +3095,7 @@ type GuildWelcomeScreen = {
      */
     welcome_channels: GuildWelcomeScreenChannel[];
 };
-type GuildWelcomeScreenChannel = {
+export type GuildWelcomeScreenChannel = {
     /**
      * - The channel's ID
      */
@@ -3119,13 +3119,13 @@ type GuildWelcomeScreenChannel = {
  * | Public  | 1  |
  * | Private | 2  |
  */
-type StagePrivacyLevel = number;
+export type StagePrivacyLevel = number;
 /**
  * Name | Value
  * -----|------
  * Guild Only | 2
  */
-type EventPrivacyLevel = number;
+export type EventPrivacyLevel = number;
 /**
  * | Name | Value |
  * |------|-------|
@@ -3145,8 +3145,8 @@ type EventPrivacyLevel = number;
  *
  * SCHEDULED --> CANCELED
  */
-type EventStatus = number;
-type EventEntityMetadata = {
+export type EventStatus = number;
+export type EventEntityMetadata = {
     /**
      * - Location of the event (1-100 characters)
      */
@@ -3156,7 +3156,7 @@ type EventEntityMetadata = {
      */
     speaker_ids: Snowflake[];
 };
-type EventUser = {
+export type EventUser = {
     /**
      * - The scheduled event id which the user subscribed to
      */
@@ -3177,8 +3177,8 @@ type EventUser = {
  * | Voice    | 2 |
  * | External  | 3 |
  */
-type EventEntityType = number;
-type GuildPreview = {
+export type EventEntityType = number;
+export type GuildPreview = {
     /**
      * - Guild ID
      */
@@ -3224,7 +3224,7 @@ type GuildPreview = {
      */
     description: string;
 };
-type GuildBan = {
+export type GuildBan = {
     /**
      * - The reason for the ban
      */
@@ -3234,7 +3234,7 @@ type GuildBan = {
      */
     user: User;
 };
-type GuildVoiceRegion = {
+export type GuildVoiceRegion = {
     /**
      * - Unique ID for the region
      */
@@ -3262,8 +3262,8 @@ type GuildVoiceRegion = {
  * | Kick | 0 |
  * | Remove Role | 1 |
  */
-type GuildIntegrationExpireBehavior = number;
-type GuildIntegrationAccount = {
+export type GuildIntegrationExpireBehavior = number;
+export type GuildIntegrationAccount = {
     /**
      * - ID of the account
      */
@@ -3273,7 +3273,7 @@ type GuildIntegrationAccount = {
      */
     name: string;
 };
-type GuildIntegrationApplication = {
+export type GuildIntegrationApplication = {
     /**
      * - The ID of the app
      */
@@ -3295,7 +3295,7 @@ type GuildIntegrationApplication = {
      */
     bot?: User | undefined;
 };
-type GuildIntegration = {
+export type GuildIntegration = {
     /**
      * - Integration ID
      */
@@ -3357,7 +3357,7 @@ type GuildIntegration = {
      */
     application?: GuildIntegrationApplication | undefined;
 };
-type GuildWidget = {
+export type GuildWidget = {
     /**
      * - Guild ID
      */
@@ -3383,7 +3383,7 @@ type GuildWidget = {
      */
     presence_count: number;
 };
-type GuildWidgetSettings = {
+export type GuildWidgetSettings = {
     /**
      * - Whether the widget is enabled
      */
@@ -3393,8 +3393,8 @@ type GuildWidgetSettings = {
      */
     channel_id: Snowflake;
 };
-type GuildWidgetStyleOptions = string;
-type GuildWidgetUser = {
+export type GuildWidgetStyleOptions = string;
+export type GuildWidgetUser = {
     /**
      * - Anonymized to prevent abuse
      */
@@ -3414,7 +3414,7 @@ type GuildWidgetUser = {
     status: string;
     avatar_url: string;
 };
-type GuildTemplate = {
+export type GuildTemplate = {
     /**
      * - Template name
      */
@@ -3460,7 +3460,7 @@ type GuildTemplate = {
      */
     is_dirty: boolean | null;
 };
-type GuildOnboarding = {
+export type GuildOnboarding = {
     /**
      * - ID of the guild this onboarding is part of
      */
@@ -3478,7 +3478,7 @@ type GuildOnboarding = {
      */
     enabled: boolean;
 };
-type OnboardingPrompt = {
+export type OnboardingPrompt = {
     /**
      * - ID of the prompt
      */
@@ -3509,7 +3509,7 @@ type OnboardingPrompt = {
      */
     in_onboarding: boolean;
 };
-type OnboardingPromptOption = {
+export type OnboardingPromptOption = {
     /**
      * - ID of the prompt option
      */
@@ -3541,33 +3541,33 @@ type OnboardingPromptOption = {
  * | Multiple Choice | 0  |
  * | Dropdown        | 1  |
  */
-type OnboardingPromptType = number;
+export type OnboardingPromptType = number;
 /**
  * | Name | Value |
  * |------|-------|
  * | Onboarding Default  | 0  |
  * | Onboarding Advanced | 1  |
  */
-type OnboardingMode = number;
-type GuildHomeSettings = {
+export type OnboardingMode = number;
+export type GuildHomeSettings = {
     guild_id: Snowflake;
     enabled: boolean;
     welcome_message?: WelcomeMessage | undefined;
     new_member_actions?: NewMemberAction | undefined;
     resource_channels?: ResourceChannel[] | undefined;
 };
-type WelcomeMessage = {
+export type WelcomeMessage = {
     author_ids: Snowflake[];
     message: string;
 };
-type ResourceChannel = {
+export type ResourceChannel = {
     channel_id: Snowflake;
     title: string;
     description: string;
     emoji?: PartialEmoji | null | undefined;
     icon?: string | null | undefined;
 };
-type NewMemberAction = {
+export type NewMemberAction = {
     channel_id: Snowflake;
     action_type: NewMemberActionType;
     title: string;
@@ -3581,15 +3581,15 @@ type NewMemberAction = {
  * | View | 0  |
  * | Talk | 1  |
  */
-type NewMemberActionType = number;
-type GuildPresenceParams = {
+export type NewMemberActionType = number;
+export type GuildPresenceParams = {
     user: Pick<User, 'id'>;
     guild_id: Snowflake;
     status: 'online' | 'offline' | 'idle' | 'dnd';
     activities: Activity[];
     client_status: ClientStatus;
 };
-type GuildParams = {
+export type GuildParams = {
     id: Snowflake;
     name: string;
     created_at: string;
@@ -3662,7 +3662,7 @@ type GuildParams = {
     splash_url?: string | undefined;
     discovery_splash_url?: string | undefined;
 };
-type MessageCreateMentions = {
+export type MessageCreateMentions = {
     username: string;
     global_name: string | null;
     display_name?: string | undefined;
@@ -3672,7 +3672,7 @@ type MessageCreateMentions = {
     public_flags: number;
     member: MemberParams;
 };
-type GuildHashes = {
+export type GuildHashes = {
     version: number;
     roles: {
         omitted: boolean;
@@ -3687,7 +3687,7 @@ type GuildHashes = {
         hash: string;
     };
 };
-type PresenceUpdate = {
+export type PresenceUpdate = {
     user: User;
     member: MemberParams;
     guild_id: Snowflake;
@@ -3700,7 +3700,7 @@ type PresenceUpdate = {
  * [Soundboard Sound]{@link  }
  * - undocumented soundboard object
  */
-type SoundboardSound = {
+export type SoundboardSound = {
     volume: number;
     user_id: Snowflake;
     sound_id: Snowflake;
@@ -3710,7 +3710,7 @@ type SoundboardSound = {
     emoji_id: Snowflake | null;
     available: boolean;
 };
-type SKU = {
+export type SKU = {
     /**
      * - ID of SKU
      */
@@ -3772,13 +3772,13 @@ type SKU = {
  * | User Subscription  | 1 << 8      | Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server
  * - The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
  */
-type SKUFlags = number;
+export type SKUFlags = number;
 /**
  * ### For subscriptions, there are two types of access levels you can offer to users:
  * - Guild Subscriptions: A subscription purchased by a user and applied to a single server. Everyone in that server gets your premium benefits.
  * - User Subscriptions: A subscription purchased by a user for themselves. They get access to your premium benefits in every server.
  */
-type SKUAccessType = number;
+export type SKUAccessType = number;
 /**
  * - For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type: 6`.
  * - For any current implementations, you will want to use the SKU defined by `type: 5`.
@@ -3789,8 +3789,8 @@ type SKUAccessType = number;
  * | Subscription    | 5 | Represents a recurring subscription |
  * | Scription_Group | 6 | System-generated group for each SUBSCRIPTION SKU created |
  */
-type SKUType = number;
-type SkuPrice = {
+export type SKUType = number;
+export type SkuPrice = {
     Amount: Uint32Array;
     Currency: string;
 };
@@ -3799,8 +3799,8 @@ type SkuPrice = {
  * |------|-------|-------------|
  * | Application Subscription| 8 | Entitlement was purchased as an app subscription |
  */
-type EntitlementType = number;
-type PartialEntitlement = {
+export type EntitlementType = number;
+export type PartialEntitlement = {
     /**
      * - ID of the entitlement
      */
@@ -3833,7 +3833,7 @@ type PartialEntitlement = {
      */
     consumed: boolean;
 };
-type Entitlement = {
+export type Entitlement = {
     /**
      * - ID of the entitlement
      */
@@ -3911,16 +3911,16 @@ type Entitlement = {
  * * uk (Ukrainian)
  * * vi (Vietnamese)
  */
-type locale = string;
+export type locale = string;
 /**
  * A type alias representing a locale string, which is one of the available Discord locales
  */
-type LocaleString = locale;
+export type LocaleString = locale;
 /**
  * A type alias representing a partial localization map, which maps Discord locales to localized strings
  */
-type LocalizationMap = any;
-type ExtendedPayload = {
+export type LocalizationMap = any;
+export type ExtendedPayload = {
     user?: User | undefined;
     member?: Member | undefined;
     interaction?: Interaction | undefined;
@@ -3945,7 +3945,7 @@ type ExtendedPayload = {
     max_age?: number | undefined;
     temporary?: boolean | undefined;
 };
-type Button = {
+export type Button = {
     /**
      * - The type of the component (2 for button).
      */
@@ -3975,7 +3975,7 @@ type Button = {
      */
     disabled?: boolean | undefined;
 };
-type SelectMenu = {
+export type SelectMenu = {
     /**
      * - The [type]{@link ComponentType } of the component (3-8 for select menus).
      */
@@ -4009,7 +4009,7 @@ type SelectMenu = {
      */
     disabled?: boolean | undefined;
 };
-type SelectOption = {
+export type SelectOption = {
     /**
      * - User-facing name of the option; max 100 characters
      */
@@ -4031,7 +4031,7 @@ type SelectOption = {
      */
     default?: boolean | undefined;
 };
-type Modal = {
+export type Modal = {
     /**
      * - The type of the component (`4` for text input)
      */
@@ -4069,7 +4069,7 @@ type Modal = {
      */
     placeholder?: string | undefined;
 };
-type ActionRow<C extends Modal | MessageActionRow> = {
+export type ActionRow<C extends Modal | MessageActionRow> = {
     /**
      * - Placeholder for components
      */
@@ -4084,17 +4084,17 @@ type ActionRow<C extends Modal | MessageActionRow> = {
  * - [Button]{@link Button }
  * - [Select Menu]{@link SelectMenu }
  */
-type MessageActionRow = Button | SelectMenu;
-type Component = Array<ActionRow<Button | SelectMenu | Modal>>;
-type InteractionType = number;
-type ApplicationCommandInteractionDataOption = {
+export type MessageActionRow = Button | SelectMenu;
+export type Component = Array<ActionRow<Button | SelectMenu | Modal>>;
+export type InteractionType = number;
+export type ApplicationCommandInteractionDataOption = {
     name: string;
     type: ApplicationCommandOptionType;
     value?: string | number | boolean | undefined;
     options?: ApplicationCommandInteractionDataOption[] | undefined;
     focused?: boolean | undefined;
 };
-type ApplicationCommandInteractionData = {
+export type ApplicationCommandInteractionData = {
     id: Snowflake;
     name: string;
     type: ApplicationCommandType;
@@ -4103,7 +4103,7 @@ type ApplicationCommandInteractionData = {
     guild_id: Snowflake;
     target_id?: string | undefined;
 };
-type ResolvedData = {
+export type ResolvedData = {
     /**
      * - The ids and [User]{@link https://discord.com/developers/docs/resources/user#user-object} objects
      */
@@ -4129,12 +4129,12 @@ type ResolvedData = {
      */
     attachments?: any;
 };
-type MessageComponentInteractionData = {
+export type MessageComponentInteractionData = {
     custom_id: string;
     component_type: ComponentType;
     values?: string[] | undefined;
 };
-type ModalSubmitComponentData = {
+export type ModalSubmitComponentData = {
     /**
      * - Input value for text input
      */
@@ -4148,12 +4148,12 @@ type ModalSubmitComponentData = {
      */
     custom_id: string;
 };
-type ModalSubmitInteractionData = {
+export type ModalSubmitInteractionData = {
     custom_id: string;
     components?: ActionRow<ModalSubmitComponentData>[] | undefined;
 };
-type InteractionData = ModalSubmitInteractionData | ApplicationCommandInteractionData | MessageComponentInteractionData;
-type InteractionParams = {
+export type InteractionData = ModalSubmitInteractionData | ApplicationCommandInteractionData | MessageComponentInteractionData;
+export type InteractionParams = {
     timestamp: number;
     id: Snowflake;
     application_id: Snowflake;

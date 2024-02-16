@@ -1,4 +1,4 @@
-type SpotifyReturn = {
+export type SpotifyReturn = {
     /**
      * - The maximum number of items in the response
      */
@@ -37,7 +37,7 @@ type SpotifyReturn = {
     albums?: SpotifyAlbum[] | undefined;
     device?: SpotifyDevice[] | undefined;
 };
-type SpotifyArtist = {
+export type SpotifyArtist = {
     name: string;
     id: string;
     popularity: number;
@@ -50,7 +50,7 @@ type SpotifyArtist = {
     spotify_url: string;
     uri: string;
 };
-type SpotifyTrack = {
+export type SpotifyTrack = {
     name: string;
     id: string;
     popularity: number;
@@ -81,7 +81,7 @@ type SpotifyTrack = {
         followers?: number | undefined;
     } | null | undefined;
 };
-type SpotifyAlbum = {
+export type SpotifyAlbum = {
     name: string;
     id: string;
     /**
@@ -104,7 +104,7 @@ type SpotifyAlbum = {
     artists: SpotifyPartialArtist[];
     images?: SpotifyImages | undefined;
 };
-type SpotifyPartialArtist = {
+export type SpotifyPartialArtist = {
     name: string;
     id: string;
     /**
@@ -113,7 +113,7 @@ type SpotifyPartialArtist = {
     spotify_url: string;
     uri: string;
 };
-type SpotifyRecommendationSeed = {
+export type SpotifyRecommendationSeed = {
     /**
      * - The number of tracks available after min_* and max_* filters have been applied
      */
@@ -135,12 +135,12 @@ type SpotifyRecommendationSeed = {
      */
     type: string;
 };
-type SpotifyImageObject = {
+export type SpotifyImageObject = {
     height: number | null;
     width: number | null;
     url: string;
 };
-type SpotifyImages = {
+export type SpotifyImages = {
     /**
      * - 160x160 image url
      */
@@ -154,7 +154,7 @@ type SpotifyImages = {
      */
     large?: string | undefined;
 };
-type SpotifyUser = {
+export type SpotifyUser = {
     display_name: string;
     id: string;
     /**
@@ -171,7 +171,7 @@ type SpotifyUser = {
     subscription?: string | undefined;
     profile_image?: string | undefined;
 };
-type ExplicitContent = {
+export type ExplicitContent = {
     /**
      * - When true, indicates that explicit content should not be played
      */
@@ -181,7 +181,7 @@ type ExplicitContent = {
      */
     filter_locked: boolean;
 };
-type SpotifyPlayback = {
+export type SpotifyPlayback = {
     /**
      * - The device that is currently active
      */
@@ -214,7 +214,7 @@ type SpotifyPlayback = {
      */
     actions: SpotifyActions;
 };
-type SpotifyDevice = {
+export type SpotifyDevice = {
     /**
      * - The device ID
      */
@@ -248,11 +248,11 @@ type SpotifyDevice = {
      */
     volume_percent: number;
 };
-type SpotifyActions = {
+export type SpotifyActions = {
     allows?: SpotifyActionsOptions | undefined;
     disallows?: SpotifyActionsOptions | undefined;
 };
-type SpotifyActionsOptions = {
+export type SpotifyActionsOptions = {
     /**
      * - Interrupting playback
      */
@@ -294,7 +294,7 @@ type SpotifyActionsOptions = {
      */
     transferring_playback?: boolean | undefined;
 };
-type SpotifyPlaylist = {
+export type SpotifyPlaylist = {
     /**
      * - The name of the playlist
      */
@@ -349,7 +349,7 @@ type SpotifyPlaylist = {
      */
     tracks: SpotifyTrack[];
 };
-type SpotifyPlaylistReturn = {
+export type SpotifyPlaylistReturn = {
     /**
      * - The maximum number of items in the response
      */
@@ -367,7 +367,7 @@ type SpotifyPlaylistReturn = {
      */
     playlists: SpotifySimplifiedPaylist[];
 };
-type SpotifySimplifiedPaylist = {
+export type SpotifySimplifiedPaylist = {
     /**
      * - The name of the playlist
      */
@@ -414,7 +414,7 @@ type SpotifySimplifiedPaylist = {
      */
     total_tracks: number;
 };
-type SpotifyPlaylistOwner = {
+export type SpotifyPlaylistOwner = {
     /**
      * - The name displayed on the user's profile
      */
@@ -437,7 +437,7 @@ type SpotifyPlaylistOwner = {
     spotify_url: string;
     followers?: number | undefined;
 };
-type SpotifyAnalysisMeta = {
+export type SpotifyAnalysisMeta = {
     /**
      * - The version of the Analyzer used to analyze this track
      */
@@ -467,7 +467,7 @@ type SpotifyAnalysisMeta = {
      */
     input_process: string;
 };
-type SpotifyAnalysisTrack = {
+export type SpotifyAnalysisTrack = {
     /**
      * - The exact number of audio samples analyzed from this track
      */
@@ -572,7 +572,7 @@ type SpotifyAnalysisTrack = {
 /**
  * - bars, beats, tatums
  */
-type SpotifyAnalysisTimeIntervals = {
+export type SpotifyAnalysisTimeIntervals = {
     /**
      * - The starting point (in seconds) of the time interval
      */
@@ -586,7 +586,7 @@ type SpotifyAnalysisTimeIntervals = {
      */
     confidence: number;
 };
-type SpotifyAnalysisSections = {
+export type SpotifyAnalysisSections = {
     /**
      * - The starting point (in seconds) of the section
      */
@@ -636,7 +636,7 @@ type SpotifyAnalysisSections = {
      */
     time_signature_confidence: number;
 };
-type SpotifyAnalysisSegments = {
+export type SpotifyAnalysisSegments = {
     /**
      * - The starting point (in seconds) of the segment
      */
@@ -674,7 +674,7 @@ type SpotifyAnalysisSegments = {
      */
     timbre: number[];
 };
-type SpotifyAnalysis = {
+export type SpotifyAnalysis = {
     /**
      * - Metadata for the audio analysis
      */
@@ -701,7 +701,7 @@ type SpotifyAnalysis = {
      */
     segments: SpotifyAnalysisSegments[];
 };
-type SpotifyAudioFeatures = {
+export type SpotifyAudioFeatures = {
     /**
      * - A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.
      */
