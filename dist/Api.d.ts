@@ -8,7 +8,7 @@ import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUs
 import { SpotifyReturn } from './api/spotify/resources/types';
 
 export function initialize(options: {
-  discord: string;
+  discord?: string;
   openai?: string;
   spotify?: {
     client_id: string;
