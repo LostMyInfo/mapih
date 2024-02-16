@@ -37,15 +37,7 @@
   },
   "homepage": "https://github.com/lostmyinfo/mapih#readme",
   "dependencies": {
-    "@elastic/elasticsearch": "^8.12.1",
-    "@langchain/community": "^0.0.27",
-    "@langchain/openai": "^0.0.14",
-    "@pinecone-database/pinecone": "^2.0.1",
-    "axios": "^1.6.7",
-    "cheerio": "^1.0.0-rc.12",
     "gifenc": "^1.0.3",
-    "hnswlib-node": "^1.4.2",
-    "langchain": "^0.1.17",
     "sharp": "^0.32.5",
     "upng-js": "^2.1.0"
   },
