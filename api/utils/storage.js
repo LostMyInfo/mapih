@@ -255,9 +255,7 @@ const setSync = (options = { key: '', value: undefined }) => {
  *   keyname3: 'value3'
  * })
  *
- * @param {Object} entries
- * @param {string} entries.key
- * @param {any} entries.value
+ * @param {Record<string, any>} entries
  * @returns {Promise<any[]>}
  */
 const setMany = async (entries = { key: '', value: undefined }) =>

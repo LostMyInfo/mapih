@@ -1436,6 +1436,7 @@ export declare const openai: {
   }
 }
 
+
 export declare const utils: {
   https: (params: {
     url?: string;
@@ -1445,6 +1446,21 @@ export declare const utils: {
   }, match?: string) => Promise<any>;
   
   storage: {
+    /**
+     * @example
+     * await api.utils.storage.get('keyname');
+     * 
+     * @example
+     * await api.utils.storage.get('keyname', { default: [] });
+     * 
+     * @param key
+     * @param options 
+     * @param options.default - The default value to return if the key does not exist.
+     * @param options.delete - Whether the key-value pair is deleted from the storage after retrieval.
+     * @param options.keep_history - Whether the history for this key is kept. For use only when `deleted` is true.
+     * @param options.keep_listeners - Whether the listeners attached to this key are kept. For use only when `deleted` is true.
+     * @returns A Promise that resolves to the value associated with the key, or the default value if specified and the key is not found.
+     */
     get: (key: string, options?: {
       default?: any;
       delete?: boolean;
@@ -1452,6 +1468,21 @@ export declare const utils: {
       keep_listeners?: boolean;
     }) => Promise<any>;
     
+    /**
+     * @example
+     * api.utils.storage.getSync('keyname');
+     * 
+     * @example
+     * api.utils.storage.getSync('keyname', { default: [] });
+     * 
+     * @param key
+     * @param options 
+     * @param options.default - The default value to return if the key does not exist.
+     * @param options.delete - Whether the key-value pair is deleted from the storage after retrieval.
+     * @param options.keep_history - Whether the history for this key is kept. For use only when `deleted` is true.
+     * @param options.keep_listeners - Whether the listeners attached to this key are kept. For use only when `deleted` is true.
+     * @returns The value associated with the key, or the default value if specified and the key is not found.
+     */
     getSync: (key: string, options?: {
       default?: any;
       delete?: boolean;
@@ -1459,8 +1490,52 @@ export declare const utils: {
       keep_listeners?: boolean;
     }) => any;
     
+    /**
+     * @example
+     * await api.utils.storage.getMany(['key1', 'key2', 'key3']);
+     * // { key1: 'value1', key2: 'value2', key3: 'value3' }
+     * 
+     * @param keys - An array of keys
+     * @returns - An object with they key-value pairs
+     */
     getMany: (keys: string[]) => Promise<{[x: string]: any}>;
     
+    /**
+     * @example
+     * await api.utils.storage.set({
+     *   key: 'password',
+     *   value: 'abcd1234'
+     * });
+     * 
+     * @example
+     * await api.utils.storage.set({
+     *   key: 'password',
+     *   value: 'abcd1234',
+     *   ttl: 5000, // 5 seconds
+     *   ttlCb: () => console.log('password expired')
+     * });
+     * 
+     * @example
+     * await api.utils.storage.set({
+     *   key: 'DontChangeMe',
+     *   value: 'abcd1234',
+     *   allow_overwrite: false
+     * });
+     * 
+     * await api.utils.storage.set({
+     *   key: 'DontChangeMe',
+     *   value: 'new value'
+     * }); // => error
+     * 
+     * @param options 
+     * @param options.key
+     * @param options.value
+     * @param options.ttl - Amount of time in ms that this value will be stored
+     * @param options.ttlCb - A function to invoke upon expiration
+     * @param options.allow_overwrite - Whether to allow this key's value to be overwritten
+     * @param options.on_change - A function to invoke when key is modified
+     * @returns A Promise that resolves to the value set
+     */
     set: (options: {
       key: string;
       value: any;
@@ -1470,6 +1545,42 @@ export declare const utils: {
       on_change?: Function;
     }) => Promise<any>;
     
+    /**
+     * @example
+     * api.utils.storage.setSync({
+     *   key: 'password',
+     *   value: 'abcd1234'
+     * });
+     * 
+     * @example
+     * api.utils.storage.setSync({
+     *   key: 'password',
+     *   value: 'abcd1234',
+     *   ttl: 5000, // 5 seconds
+     *   ttlCb: () => console.log('password expired')
+     * });
+     * 
+     * @example
+     * api.utils.storage.setSync({
+     *   key: 'DontChangeMe',
+     *   value: 'abcd1234',
+     *   allow_overwrite: false
+     * });
+     * 
+     * api.utils.storage.setSync({
+     *   key: 'DontChangeMe',
+     *   value: 'new value'
+     * }); // => error
+     * 
+     * @param options 
+     * @param options.key
+     * @param options.value
+     * @param options.ttl - Amount of time in ms that this value will be stored
+     * @param options.ttlCb - A function to invoke upon expiration
+     * @param options.allow_overwrite - Whether to allow this key's value to be overwritten
+     * @param options.on_change - A function to invoke when key is modified
+     * @returns The value set
+     */
     setSync: (options: {
       key: string;
       value: any;
@@ -1479,18 +1590,65 @@ export declare const utils: {
       on_change?: Function;
     }) => any;
     
-    setMany: (options: {[key: string]: any}) => Promise<any[]>;
+    /**
+     * @example
+     * await api.utils.storage.setMany({
+     *   keyname1: 'value1',
+     *   keyname2: 'value2',
+     *   keyname3: 'value3'
+     * });
+     * 
+     * @param options - An object where each property represents a key and its corresponding value to be stored
+     * @returns 
+     */
+    setMany: (options: Record<string, any>) => Promise<any[]>;
     
+    /**
+     * @example
+     * await api.utils.storage.delete('password'); //=> true
+     *
+     * await api.utils.storage.delete('password', {
+     *   keep_history: true
+     * });
+     * 
+     * @param key
+     * @param options
+     * @param options.keep_history - Whether the history for this key is kept. Default `false`.
+     * @param options.keep_listeners - Whether the listeners attached to this key are kept. Default `false`.
+     * @returns
+     */
     delete: (key: string, options?: {
       keep_history?: boolean;
       keep_listeners?: boolean
     }) => Promise<boolean>;
     
+    /**
+     * @example
+     * api.utils.storage.deleteSync('password'); //=> true
+     *
+     * api.utils.storage.deleteSync('password', {
+     *   keep_history: true
+     * });
+     * 
+     * @param key
+     * @param options
+     * @param options.keep_history - Whether the history for this key is kept. Default `false`.
+     * @param options.keep_listeners - Whether the listeners attached to this key are kept. Default `false`.
+     * @returns
+     */
     deleteSync: (key: string, options?: {
       keep_history?: boolean;
       keep_listeners?: boolean
     }) => boolean;
     
+    /**
+     * @example
+     * await api.utils.storage.deleteMany(['key1', 'key2']);
+     * //=> [true, true]
+     * 
+     * @param keys
+     * @returns A promise resolving to an array of booleans indicating success or failure for each deletion operation
+     */
     deleteMany: (keys: string[]) => Promise<boolean[]>;
     
     each: (callback: Function) => Promise<any>;
