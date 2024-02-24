@@ -23,3 +23,5 @@ embeddings.csv
 state_of_the_union.txt
 weaviate.js
 weaviate2.js
+zepUserSessionsMemories.js
+zepDocumentsVectors.js

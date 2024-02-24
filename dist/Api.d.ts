@@ -2,6 +2,7 @@
 
 import { _File } from '../api/utils/storage';
 import { AccessTokenResponse, AllowedMentions, Application, ApplicationCommand, ApplicationCommandOption, ApplicationCommandOptionChoice, ApplicationRoleConnection, ApplicationRoleConnectionMetadata, Attachment, AuditLog, AutoModAction, AutoModRule, AutoModTriggerMetadata, Channel, Component, Connection, DefaultReaction, Embed, Emoji, Entitlement, EventEntityMetadata, EventUser, ExtendedInvite, FollowedChannel, ForumTag, ForumThreadMessageParams, Guild, GuildApplicationCommandPermissions, GuildBan, GuildFeatures, GuildHomeSettings, GuildIntegration, GuildOnboarding, GuildPreview, GuildScheduledEvent, GuildTemplate, GuildVoiceRegion, GuildWelcomeScreen, GuildWelcomeScreenChannel, GuildWidget, GuildWidgetSettings, InteractionParams, LocalizationMap, Member, Message, MessageReference, OnboardingPrompt, Overwrite, PartialEntitlement, PartialGuild, PermissionNames, Role, SKU, StageInstance, Sticker, StickerPack, ThreadMember, User, Webhook } from './api/discord/types/types';
+// import { create1, create2, create3 } from './api/openai';
 import { ChatCompletion, ChatCompletionMessage, OpenAIEmbeddingResponse, OpenAIImageResponse } from './api/openai/types/types';
 import { SlackBlock } from './api/slack/types/Blocks';
 import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUser, SlackUserIdentity, SlackUserProfile } from './api/slack/types/types';
@@ -1435,7 +1436,6 @@ export declare const openai: {
     }) => Promise<OpenAIEmbeddingResponse>
   }
 }
-
 
 export declare const utils: {
   https: (params: {

@@ -310,6 +310,16 @@ mapih.initialize({
 &nbsp; &nbsp; ◦ [Audit Log](#audit-log)  
 &nbsp; &nbsp; ◦ [Auto Moderation](#auto-moderation-1)  
 
+### [OpenAI Methods](#openai)
+**• [Chat](#chat)**  
+&nbsp; &nbsp; ◦ [create](#chat-create)  
+**• [Images](#images)**  
+&nbsp; &nbsp; ◦ [create](#images-create)  
+**• [Speech](#speech)**  
+&nbsp; &nbsp; ◦ [create](#speech-create)  
+**• [Embeddings](#embeddings)**  
+&nbsp; &nbsp; ◦ [create](#embeddings-create)  
+
 ### [Slack Methods](#slack)
 Docs coming soon
 
@@ -4165,6 +4175,57 @@ await api.discord.stageInstance.destroy({
 });
 ```
 ---
+# OpenAI
+---
+# Chat  
+### Methods
+
+| Method                              | Description             |
+|-------------------------------------|-------------------------|
+| [`create`](#create-chat-completion) | Creat a chat completion |
+
+### [Create Chat Completion](https://platform.openai.com/docs/api-reference/chat/create)
+
+#### Parameters
+| Field          | Type   | Description                                                                                     |
+|----------------|--------|-------------------------------------------------------------------------------------------------|
+| model              | string                  | ID of the model to use                                                     |
+| messages           | [ChatCompletionMessage](#chat-completion-message)[] | A list of messages comprising the conversation so far                        |
+| max_tokens?        | number                  | The maximum number of tokens that can be generated in the chat completion                        |
+| temperature?       | number                  | What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. |  
+| top_p?             | number                  | An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.               |
+| frequency_penalty? | number                  | Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. | 
+| presence_penalty?  | number                  | Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.       |
+| n?                 | number                  | How many chat completion choices to generate for each input message | 
+| response_format?   | string                  | An object specifying the format that the model must output. Setting to { "type": "json_object" } enables JSON mode, which guarantees the message the model generates is valid JSON. |
+| seed?              | number                  | This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result. | 
+| stop?              | string                  | Up to 4 sequences where the API will stop generating further tokens                                                         |
+| logit_bias?        | Object                  | Modify the likelihood of specified tokens appearing in the completion. Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. | 
+| logprobs?          | boolean                 | Whether to return log probabilities of the output tokens or not                                                         |
+| top_logprobs?      | number                  | An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability | 
+| stream?            | boolean                 | If set, partial message deltas will be sent, like in ChatGPT.                                           |
+| tools?             | [ToolCalls](#ToolCalls)[] | A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. | 
+| tool_choice?       | ToolChoice              | Controls which (if any) function is called by the model. See [tool_choice](https://platform.openai.com/docs/api-reference/chat/create#chat-create-tool_choice) |
+| user?              | string                  | A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse | 
+
+#### Example
+```javascript
+await api.openai.chat.create({
+  model: 'gpt-4',
+  messages: [
+    {
+      role: 'system',
+      content: 'You are a chatbot'
+    },
+    {
+      role: 'user',
+      content: 'hello!'
+    }
+  ],
+  max_tokens: 1024,
+  temperature: 0.7
+});
+```
 
 ---
 # Spotify

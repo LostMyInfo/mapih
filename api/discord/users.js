@@ -2,6 +2,7 @@
 'use strict';
 const { attemptHandler, sendAttachment } = require('../resources/handlers');
 const { imageData, getBadges, retrieveDate, avatarFromObject, generateCDN } = require('../resources/functions');
+const { removeFalsyFromObject } = require('../resources/functions');
 
 // Users
 // https://discord.com/developers/docs/resources/user#users-resource
@@ -136,12 +137,12 @@ module.exports = {
    */
   updateCurrent: async (params) =>
     attemptHandler({
-      method: 'POST',
+      method: 'PATCH',
       endpoint: 'users/@me',
-      body: {
+      body: removeFalsyFromObject({
         username: params.username ?? null,
         avatar: params.avatar ? (await imageData(params.avatar, 'base64string')).data : null
-      }
+      })
     }), // End of Modify Current User
   
   /** 
@@ -202,11 +203,11 @@ module.exports = {
     attemptHandler({
       method: 'PUT',
       endpoint: `users/@me/applications/${params.application_id}/role-connection`,
-      body: {
+      body: removeFalsyFromObject({
         platform_name: params.platform_name ?? null,
         platform_username: params.platform_username ?? null,
         metadata: params.metadata ?? null
-      }
+      })
     }), // End of Update User Application Role Connection
   
   /**

@@ -1,3 +1,5 @@
+import { ChatCompletion, ChatCompletionMessage, ToolCalls } from './types/types';
+
 export function create(options: {
     model: string;
     messages: ChatCompletionMessage[];
