@@ -643,11 +643,11 @@ function embedModifier(embeds) {
 
 
 /**
-   * @param {string} url
-   * @param {Object} params
-   * @param {boolean} encode
-   * @returns {string}
-   */
+ * @param {string} url
+ * @param {Object} params
+ * @param {boolean} encode
+ * @returns {string}
+ */
 function buildQueryString(url, params, encode = false) {
   url = url === 'null' ? '' : `${url}?`;
   const queryParams = new URLSearchParams();

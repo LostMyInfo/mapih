@@ -37,12 +37,10 @@
   },
   "homepage": "https://github.com/lostmyinfo/mapih#readme",
   "dependencies": {
-    "@getzep/zep-js": "^2.0.0-rc.2",
-    "@langchain/core": "^0.1.30",
     "gifenc": "^1.0.3",
+    "mysql2": "^3.9.2",
     "sharp": "^0.32.5",
-    "upng-js": "^2.1.0",
-    "uuid": "^9.0.1"
+    "upng-js": "^2.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.1",

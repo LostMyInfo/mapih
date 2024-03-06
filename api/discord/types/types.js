@@ -462,6 +462,9 @@
  * @property {boolean} [system] - Whether the user is an Official Discord System user
  * @property {number} public_flags - The public flags on a user's account
  * @property {NitroPremiumType} [premium_type] - The [type of Nitro subscription]{@link https://discord.com/developers/docs/resources/user#user-object-premium-types} on a user's account
+ * @property {string} [bannerURL]
+ * @property {string} [banner_color]
+ * @property {string} [accent_color]
  */
 
 /**
@@ -602,6 +605,8 @@
  * @property {ForumLayoutType} [default_forum_layout] - The [Default Forum Layout]{@link https://discord.com/developers/docs/resources/channel#channel-object-forum-layout-types} view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin
  * @property {string} [created_at]
  * @property {string} [last_message_sent]
+ * @property {?string} theme_color
+ * @property {{ name: string; id: ?string }} [icon_emoji]
  */
 
 /**
@@ -1411,9 +1416,9 @@
  * @property {string | string[]} [description] - 4096 character limit
  * @property {?number} [color] - 0xhex or integer
  * @property {string} [url] - URL for the title of the embed
- * @property {number | ISO8601Timestamp} [timestamp] - Timestamp of embed content
+ * @property {number | ISO8601Timestamp | Date} [timestamp] - Timestamp of embed content
  * @property {?{text: string, icon_url: string|undefined}} [footer] - Footer information for the bottom of the embed
- * @property {?{name: string, url: ?string | undefined, icon_url: ?string | undefined}} [author] - Author information for the top of the embed
+ * @property {?{name: string, url?: ?string | undefined, icon_url?: ?string | undefined}} [author] - Author information for the top of the embed
  * @property {{url: string}} [image] - Image information
  * @property {{url: string}} [thumbnail] - Thumbnail image for top right of the embed
  * @property {EmbedField[]} [fields] - Up to 25 field objects

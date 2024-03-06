@@ -11,9 +11,11 @@ module.exports = {
 
   /**
    * @summary
-   * ### [Post A Tweet]{@link https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create}
+   * ### [Post A Tweet]{@link https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets}
    * @example
-   * await api.google.drive.about()
+   * await api.twitter.tweets.create({
+   *   
+   * });
    * 
    * @function create
    * @memberof module:tweets#

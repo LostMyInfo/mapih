@@ -649,7 +649,11 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       } else if (!(attachment.file instanceof Blob))
         throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
   
-      form.append(`files[${params.attachments.indexOf(attachment)}]`, attachment.file, attachment.filename);
+      form.append(
+        `files[${params.attachments.indexOf(attachment)}]`,
+        attachment.file instanceof Blob ? attachment.file : new Blob([attachment.file]),
+        attachment.filename
+      );
     }
 
     params.flags = flags;

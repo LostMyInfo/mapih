@@ -25,3 +25,4 @@ weaviate.js
 weaviate2.js
 zepUserSessionsMemories.js
 zepDocumentsVectors.js
+zepMemories.js

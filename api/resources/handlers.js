@@ -11,7 +11,6 @@ const { https } = require('../utils/https');
 const { ResponseError } = require('./Errors');
 const { writeFile, readFile } = require('fs/promises');
 
-
 /**
  * @param {string} key
  * @param {Array<any>} file
@@ -232,6 +231,10 @@ async function handler(options) {
       paypal: {
         url: 'https://api-m.sandbox.paypal.com',
         auth: async () => `Basic ${access_token ?? await paypalAccessToken()}`
+      },
+      promptPerfect: {
+        url: 'https://api.promptperfect.jina.ai',
+        auth: async () => `token ${token('promptPerfect', options.handler)}`
       }
       // ... (other handlers)
     }[options.handler];
@@ -310,7 +313,7 @@ async function handler(options) {
     */
     
   } catch (/** @type {*} */ error) {
-    console.log('error:', error);
+    // console.log('error:', error);
     // if (error.message.includes('expired')) return authorize(options.handler.charAt(0).toUpperCase() + options.handler.slice(1), null);
     throw error.message?.includes('expired')
       // @ts-ignore
@@ -440,7 +443,7 @@ async function spotifyAccessToken() {
  * @returns {string|undefined}
  */
 function token(type, handler) {
-  if (!/discord|slack|openai|google|imgur/.test(type)) return;
+  if (!/discord|slack|openai|google|imgur|promptPerfect/.test(type)) return;
   if (type !== handler) return;
 
   const api = require('../../Api');
@@ -473,6 +476,11 @@ function token(type, handler) {
       getToken: () => api.get_google_token()?.api_key,
       env: 'google_api_key',
       errorMessage: 'Google API key not set. '
+    },
+    promptPerfect: {
+      getToken: () => api.get_prompt_perfect_token(),
+      env: 'prompt_perfect_api_key',
+      errorMessage: 'Prompt Perfect API key not set'
     }
   };
 
@@ -534,7 +542,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
  */
 async function authorize(type, params, handler, service = type.toLowerCase()) {
   const api = require('../../Api');
-  const { buildQueryString } = require('./functions');
+  const { removeFalsyFromObject } = require('./functions');
   
   /** @type {{[x: string]: {[x: string]: string}}} */
   const configs = {
@@ -578,7 +586,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
     code_verifier = getCodeVerifier(),
     authString = `Please authorize your ${type} application`,
     
-    url = buildQueryString(configs[service].url, {
+    url = `${configs[service].url}?` + require('querystring').stringify(removeFalsyFromObject({
       response_type: 'code',
       client_id,
       redirect_uri,
@@ -588,14 +596,16 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
       access_type: service === 'google' ? 'offline' : undefined,
       include_granted_scopes: service === 'google' ? true : undefined,
       state: service === 'twitter' ? generateRandomString(32) : undefined,
-      code_challenge: service === 'twitter' ? getCodeChallengeFromVerifier(code_verifier) : undefined
-    });
+      code_challenge: service === 'twitter' ? getCodeChallengeFromVerifier(code_verifier) : undefined,
+      code_challenge_method: service === 'twitter' ? 'S256' : undefined
+    }));
   
-  
-  if (service === 'google') {
-    const value = await getTokens('googleAuth');
+  if (service === 'twitter') {
+    console.log('code verifier:', code_verifier);
+    const { code_verifier: verifier = undefined, ...value } = await getTokens('twitterAuth') || {};
     // console.log('{ code_verifier, ...value }', { code_verifier, ...value });
-    await setTokens({ key: 'googleAuth', value: { code_verifier, ...value } });
+    await setTokens({ key: 'twitterAuth', value: { code_verifier, ...value } });
+    console.log('new code verifier:', await getTokens('twitterAuth'));
   }
 
   return params?.channel_id
@@ -729,12 +739,12 @@ const getTokens = async (key) => (find(key, await loadTokens()) || {}).value || 
 async function setTokens({ key, value }) {
   if (!key || !value) return;
   const tokens = await loadTokens();
-
+  // console.log('value:', value);
   const oldValue = find(key, tokens);
-
+  // console.log('oldvalue', oldValue);
   if (oldValue && (JSON.stringify(value) == JSON.stringify(oldValue.value))) return;
   const entry = { key, value: Object.fromEntries(Object.entries(value).filter(([_, v]) => v !== undefined)) };
-
+  // console.log('entry:', entry);
   const index = tokens.findIndex((i) => i.key === find(key, tokens)?.key);
   if (index !== -1) tokens[index] = entry;
   else tokens.push(entry);
