@@ -117,7 +117,7 @@ async function sendAttachment(params, path, method) {
  * @param {string} options.endpoint
  * @param {string} options.handler
  * @param {Headers} [options.headers]
- * @param {Object} [options.body]
+ * @param {{[key: string]: any}} [options.body]
  * @param {boolean} [options.oauth]
  * @param {string[]} [options.scope]
  * @param {string} [options.message]
@@ -128,6 +128,8 @@ async function sendAttachment(params, path, method) {
  * @param {boolean} [options.formdata]
  * @param {string} [options.googleEndpoint]
  * @param {'json'|'text'|'arrayBuffer'|'blob'|'formData'} [options.response_type]
+ * @param {string} [options.auth_type]
+ * @param {string | undefined} [options.parameters]
  * @returns {Promise<*>}
  * @private
  */
@@ -153,10 +155,10 @@ async function handler(options) {
 
     if ((access_token && access_token?.expires <= Date.now()) || (!access_token?.access_token && access_token?.refresh_token))
       access_token.access_token = await refresh(!google ? options.handler : 'google', google ? 'drive' : undefined);
-  
+    
     access_token = typeof access_token === 'string' ? access_token : access_token?.access_token;
     // console.log('\naccess_token from handler()2\n', access_token);
-
+    
     /**
      * @type {{url: string, auth: (() => Promise<string>)|undefined, header?: string[]}|undefined}
      */
@@ -195,7 +197,12 @@ async function handler(options) {
       },
       twitter: {
         url: 'https://api.twitter.com/2',
-        auth: async () => `Bearer ${access_token ?? await oauthToken('Twitter', options.handler, options.scope)}`
+        auth: async () =>
+          !options.auth_type
+            ? `Bearer ${access_token ?? await oauthToken('Twitter', options.handler, options.scope)}`
+            : options.auth_type === 'user'
+              ? createOAuthSignature('twitter', options.method, 'https://api.twitter.com/2/' + options.endpoint)
+              : undefined
       },
       drive: {
         url: 'https://www.googleapis.com/drive/v3',
@@ -241,32 +248,14 @@ async function handler(options) {
 
     // console.log('\nawait auth() in handler():\n', await auth());
     
-    /*
-    console.log({
-      method: options.method,
-      url: !/youtube/i.test(options.handler) ? `${url}/${options.endpoint}` : `${url}&${options.endpoint}`,
-      headers: {
-        'Content-Type': options.type === 'content' ? 'text/plain' : 'application/json; charset=UTF-8',
-        ...(header && options.type === 'content'
-          ? { 'Dropbox-API-Arg': JSON.stringify(options.body) }
-          : options.handler === 'places'
-            ? { 'X-Goog-Api-Key': token('google', 'google') }
-            : {}),
-        ...(auth && { 'Authorization': await auth() })
-      },
-      ...(options.body && { body: options.type !== 'content' ? options.body : '' }),
-      message: options.message || '',
-      errorMessage: options.errorMessage || '',
-      hint: options.hint || '',
-      payload: options.payload || '',
-      response_type: options.response_type || undefined,
-      formdata: options.formdata || false
-    });
-    */
-    // return console.log('\nplease\n');
+    
     const response = await https({
       method: options.method,
-      url: !/youtube/i.test(options.handler) ? `${url}/${options.endpoint}` : `${url}&${options.endpoint}`,
+      url: !/youtube/i.test(options.handler)
+        ? !options.auth_type || options.auth_type !== 'user'
+          ? `${url}/${options.endpoint}`
+          : `${url}/${options.endpoint}${options.parameters}`
+        : `${url}&${options.endpoint}`,
       headers: {
         'Content-Type': options.type === 'content' ? 'text/plain' : 'application/json; charset=UTF-8',
         ...(header && options.type === 'content'
@@ -313,11 +302,9 @@ async function handler(options) {
     */
     
   } catch (/** @type {*} */ error) {
-    // console.log('error:', error);
-    // if (error.message.includes('expired')) return authorize(options.handler.charAt(0).toUpperCase() + options.handler.slice(1), null);
-    throw error.message?.includes('expired')
+    throw error.message?.includes('expired') || error.authorize
       // @ts-ignore
-      ? await authorize(options.handler.charAt(0).toUpperCase() + options.handler.slice(1), null) + 'hello from handler()'
+      ? await authorize((error.authorize ?? options.handler).charAt(0).toUpperCase() + options.handler.slice(1), null)
       : error;
   }
 }
@@ -440,16 +427,17 @@ async function spotifyAccessToken() {
 /**
  * @param {string} type
  * @param {string} handler
+ * @param {string} [variable]
  * @returns {string|undefined}
  */
-function token(type, handler) {
-  if (!/discord|slack|openai|google|imgur|promptPerfect/.test(type)) return;
+function token(type, handler, variable) {
+  if (!/discord|slack|openai|google|imgur|promptPerfect|twitter/.test(type)) return;
   if (type !== handler) return;
 
   const api = require('../../Api');
 
   /**
-   * @type {{ [type: string]: { getToken: () => string|undefined, env: string, errorMessage: string}}}
+   * @type {{ [type: string]: { getToken: () => string|*|undefined, env: string, errorMessage: string}}}
    */
   const tokenTypes = {
     discord: {
@@ -476,6 +464,11 @@ function token(type, handler) {
       getToken: () => api.get_google_token()?.api_key,
       env: 'google_api_key',
       errorMessage: 'Google API key not set. '
+    },
+    twitter: {
+      getToken: () => api.get_twitter_token()?.[variable],
+      env: 'twitter_' + variable,
+      errorMessage: 'Twitter ' + variable + ' not set.'
     },
     promptPerfect: {
       getToken: () => api.get_prompt_perfect_token(),
@@ -601,11 +594,11 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
     }));
   
   if (service === 'twitter') {
-    console.log('code verifier:', code_verifier);
+    // console.log('code verifier:', code_verifier);
     const { code_verifier: verifier = undefined, ...value } = await getTokens('twitterAuth') || {};
     // console.log('{ code_verifier, ...value }', { code_verifier, ...value });
     await setTokens({ key: 'twitterAuth', value: { code_verifier, ...value } });
-    console.log('new code verifier:', await getTokens('twitterAuth'));
+    // console.log('new code verifier:', await getTokens('twitterAuth'));
   }
 
   return params?.channel_id
@@ -613,7 +606,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
       channel_id: params.channel_id,
       content: `**[${authString}](${url})**`
     })
-    : `\n${authString}:\n${url}` + '\nhello from authorize()\n';
+    : `\n${authString}:\n${url}`;
 }
 
 /**
@@ -724,6 +717,66 @@ function defaultScope(service) {
     // google: `https://www.googleapis.com/auth/${google}`
     // others
   }[service];
+}
+
+/**
+ * @param {string} handler
+ * @param {string} method
+ * @param {string} url
+ */
+function createOAuthSignature(handler, method, url) {
+  const crypto = require('crypto');
+
+  /** @type {{[key: string]: any}} */
+  const oauthParameters = {
+    oauth_consumer_key: token(handler, handler, 'api_key'),
+    oauth_nonce: crypto.randomBytes(32).toString('hex'),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_timestamp: Math.floor(Date.now() / 1000),
+    oauth_token: token(handler, handler, 'access_token'),
+    oauth_version: '1.0'
+  };
+  console.log('parameters:', oauthParameters);
+
+  // const combinedParameters = { ...oauthParameters, ...parameters };
+  /*
+  const parameterString = Object.keys(combinedParameters)
+    .sort()
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(combinedParameters[key])}`)
+    .join('&');
+  */
+  const parameterString = Object.keys(oauthParameters).sort().map(key => {
+    return `${encodeURIComponent(key)}=${encodeURIComponent(oauthParameters[key])}`;
+  }).join('&');
+  
+  console.log('\nparameterString:', parameterString);
+
+  const signatureBaseString = [
+    method.toUpperCase(),
+    encodeURIComponent(url),
+    encodeURIComponent(parameterString)
+  ].join('&');
+  console.log('\nsignatureBaseString:', signatureBaseString);
+  
+  const signingKey = [
+    encodeURIComponent(token(handler, handler, 'api_secret')),
+    encodeURIComponent(token(handler, handler, 'access_token_secret'))
+  ].join('&');
+  console.log('\nsigningKey:', signingKey);
+
+  const signature = crypto.createHmac('sha1', signingKey)
+    .update(signatureBaseString)
+    .digest('base64');
+  console.log('\noauthSignature:', signature);
+  
+  oauthParameters['oauth_signature'] = signature;
+
+  const authHeader = 'OAuth ' + Object.keys(oauthParameters).sort().map(key => {
+    return `${encodeURIComponent(key)}="${encodeURIComponent(oauthParameters[key])}"`;
+  }).join(', ');
+  console.log('\nauthHeader:', authHeader);
+
+  return authHeader;
 }
 
 /**

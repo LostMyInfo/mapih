@@ -66,7 +66,10 @@ module.exports = {
       return handler({
         method: 'POST',
         endpoint: 'chat/completions',
-        body: { response_format, ...options },
+        body: {
+          response_format,
+          ...options
+        },
         handler: 'openai'
       });
     }

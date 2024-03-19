@@ -2460,27 +2460,27 @@ export type Embed = {
      */
     footer?: {
         text: string;
-        icon_url: string | undefined;
+        icon_url?: string | undefined;
     } | null | undefined;
     /**
      * - Author information for the top of the embed
      */
     author?: {
         name: string;
-        url: (string | undefined) | null;
-        icon_url: (string | undefined) | null;
+        url?: (string | undefined) | null;
+        icon_url?: (string | undefined) | null;
     } | null | undefined;
     /**
      * - Image information
      */
     image?: {
-        url: string;
+        url: string | undefined;
     } | undefined;
     /**
      * - Thumbnail image for top right of the embed
      */
     thumbnail?: {
-        url: string;
+        url: string | undefined;
     } | undefined;
     /**
      * - Up to 25 field objects
@@ -2508,7 +2508,7 @@ export type Attachment = {
     /**
      * - Attachment ID
      */
-    id: Snowflake;
+    id?: Snowflake;
     /**
      * - File to send
      */
@@ -2528,15 +2528,15 @@ export type Attachment = {
     /**
      * - Size of file in bytes
      */
-    size: number;
+    size?: number;
     /**
      * - Source URL of file
      */
-    url: string;
+    url?: string;
     /**
      * - A proxied URL of file
      */
-    proxy_url: string;
+    proxy_url?: string;
     /**
      * - Height of file (if image)
      */

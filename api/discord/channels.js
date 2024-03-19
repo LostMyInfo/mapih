@@ -568,7 +568,7 @@ module.exports = {
               },
               fields: embed?.fields ?? message.embeds?.[0]?.fields
             }],
-            components: params.components && !params.components.length ? [] : (message.components ?? []),
+            components: 'components' in params ? !params.components?.length ? [] : params.components : message.components,
             allowed_mentions: params.allowed_mentions
           }
         });

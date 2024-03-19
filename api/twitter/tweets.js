@@ -1,7 +1,9 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
 /* eslint-disable node/no-unsupported-features/es-builtins */
 // @ts-check
+const { ResponseError } = require('../resources/Errors');
 const { handler } = require('../resources/handlers');
+const users = require('./users');
 
 /**
  * @module tweets
@@ -60,6 +62,46 @@ module.exports = {
         reply_settings: options.reply_settings
       },
       handler: 'twitter'
-    })
+    }),
+  
+  /**
+   * @summary
+   * ### [Find Tweets By User]{@link https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets}
+   *
+   * @example
+   * await api.twitter.tweets.timeline('1234567890');
+   *
+   * await api.twitter.users.tweets('1234567890', {
+   *   user_fields: ['name', 'id', 'created_at']
+   * });
+   * 
+   * @function timeline
+   * @memberof module:tweets#
+   * @param {Object} [options]
+   * @param {TwitterTweetFields[]} [options.tweet_fields]
+   * @param {TwitterUserFields[]} [options.user_fields]
+   * @param {TwitterMediaFields[]} [options.media_fields]
+   * @param {TwitterPlaceFields[]} [options.place_fields]
+   * @param {TwitterPollFields[]} [options.poll_fields]
+   * @param {TwitterExpansions[]} [options.expansions]
+   * @param {string[]} [options.exclude]
+   * @param {number} [options.max_results]
+   * @param {string} [options.next_token]
+   * @param {string} [options.pagination_token]
+   * @param {string} [options.since_id]
+   * @param {string} [options.until_id]
+   * @param {string} [options.start_time]
+   * @param {string} [options.end_time]
+   * @returns {Promise<TwitterTweetLookupResponse>}
+   */
+  timeline: async (options) => {
+    const me = await users.findMyID();
+    console.log('me:', me);
+    const attempt = await handler(users.request(`users/${me}/timelines/reverse_chronological`, options));
+    if (attempt.errors?.length)
+      throw new ResponseError(attempt, null, 'twitter_error');
+
+    return attempt;
+  }
 
 };

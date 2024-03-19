@@ -7,8 +7,9 @@ import { ChatCompletion, ChatCompletionMessage, OpenAIEmbeddingResponse, OpenAII
 import { SlackBlock } from './api/slack/types/Blocks';
 import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUser, SlackUserIdentity, SlackUserProfile } from './api/slack/types/types';
 import { SpotifyReturn } from './api/spotify/resources/types';
+import { TwitterExpansions, TwitterMediaFields, TwitterPlaceFields, TwitterPollFields, TwitterSingleUserLookupResponse, TwitterTweetFields, TwitterTweetLookupResponse, TwitterUserFields } from './api/twitter/resources/types';
 
-export function initialize(options: {
+export declare function initialize(options: {
   discord?: string;
   openai?: string;
   spotify?: {
@@ -20,8 +21,8 @@ export function initialize(options: {
   slack?: {
     user?: string;
     bot?: string;
-    client_id: string;
-    client_secret: string;
+    client_id?: string;
+    client_secret?: string;
     redirect_uri?: string;
     user_scope?: string;
     bot_scope?: string;
@@ -1437,6 +1438,73 @@ export declare const openai: {
   }
 }
 
+export declare const twitter: {
+  tweets: {
+    create: (options: {
+      text?: string;
+      direct_message_deep_link?: string;
+      for_super_followers_only?: boolean;
+      geo?: {
+        place_id?: string;
+      };
+      media?: {
+        media_ids?: string[];
+        tagged_user_ids?: string[];
+      };
+      poll?: {
+        duration_minutes?: number;
+        options?: string[];
+      };
+      quote_tweet_id?: string;
+      reply?: {
+        exclude_reply_user_ids?: string[];
+        in_reply_to_tweet_id?: string;
+      };
+      reply_settings?: 'everyone' | 'mentioned_users' | 'followers';
+    }) => Promise<{ id: string; text: string; }>
+
+    timeline: (options: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      media_fields?: TwitterMediaFields[];
+      place_fields?: TwitterPlaceFields[];
+      poll_fields?: TwitterPollFields[];
+      expansions?: TwitterExpansions[];
+      exclude?: 'retweets' | 'replies';
+      max_results?: number;
+      next_token?: string;
+      pagination_token?: string;
+      since_id?: string;
+      until_id?: string;
+      start_time?: string;
+      end_time?: string;
+    }) => Promise<TwitterTweetLookupResponse | undefined>
+  },
+
+  users: {
+    me: (options) => Promise<TwitterSingleUserLookupResponse>;
+    find: (options) => Promise<TwitterSingleUserLookupResponse>;
+    by_id: (options) => Promise<TwitterSingleUserLookupResponse>;
+    by_username: (options) => Promise<TwitterSingleUserLookupResponse>;
+    tweets: (options: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      media_fields?: TwitterMediaFields[];
+      place_fields?: TwitterPlaceFields[];
+      poll_fields?: TwitterPollFields[];
+      expansions?: TwitterExpansions[];
+      exclude?: 'retweets' | 'replies';
+      max_results?: number;
+      next_token?: string;
+      pagination_token?: string;
+      since_id?: string;
+      until_id?: string;
+      start_time?: string;
+      end_time?: string;
+    }) => Promise<TwitterTweetLookupResponse | undefined>
+  }
+}
+
 export declare const utils: {
   https: (params: {
     url?: string;
@@ -1689,6 +1757,14 @@ export declare const utils: {
     size: () => number;
     bytes: () => number;
     toJson: () => string;
+  },
+
+  tokens: {
+    set: (options: {
+      key: string;
+      value: any;
+    }) => Promise<any>;
+    get: (key: string) => Promise<any>
   }
 };
 //# sourceMappingURL=Api.d.ts.map

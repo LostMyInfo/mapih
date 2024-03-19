@@ -132,7 +132,7 @@ module.exports = {
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.return_date]
-     * @returns {Promise<boolean | Date>} 
+     * @returns {Promise<boolean | Date | undefined | null>} 
      */
     reply: async (params, input = {}) => {
       input.flags = input.ephemeral ? (1 << 6) : 0;
@@ -265,7 +265,7 @@ module.exports = {
      * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [input.attachments]
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
-     * @returns {Promise<?{statusCode: 204, body: undefined}>} 
+     * @returns {Promise<?{statusCode: 204, body: undefined}|undefined>} 
      */
     component_update: async (params, input = {}) => {
       const url = `interactions/${params.id}/${params.token}/callback`;
@@ -345,7 +345,7 @@ module.exports = {
      * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [input.attachments]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.ephemeral]
-     * @returns {Promise<?Message>}
+     * @returns {Promise<?Message|undefined>}
      */
     update_original: async (params, input = {}) => {
       const endpoint = `webhooks/${params.application_id}/${params.token}/messages/@original`;
@@ -387,7 +387,7 @@ module.exports = {
               },
               fields: embed?.fields ?? message.embeds?.[0]?.fields
             }],
-            components: input.components && !input.components.length ? [] : (message.components ?? []),
+            components: 'components' in input ? !input.components?.length ? [] : input.components : message.components,
             allowed_mentions: input.allowed_mentions
           }
         });
@@ -495,7 +495,7 @@ module.exports = {
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {string} [input.thread_name]
-     * @returns {Promise<?Message>}
+     * @returns {Promise<?Message|undefined>}
      */
     create: async (params, input = {}) => {
       const flags = input.ephemeral ? (1 << 6) : 0;
@@ -553,7 +553,7 @@ module.exports = {
      * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [input.attachments]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {Snowflake} [input.thread_id]
-     * @returns {Promise<?Message>}
+     * @returns {Promise<?Message|undefined>}
      */
     update: async (params, input) => {
       const flags = input.ephemeral ? (1 << 6) : 0;
@@ -593,7 +593,7 @@ module.exports = {
               },
               fields: embed?.fields ?? message.embeds?.[0]?.fields
             }],
-            components: ('components' in input && !input.components?.length) || (!message.components?.length && !input.components?.length) ? [] : message.components ?? input.components,
+            components: 'components' in input ? !input.components?.length ? [] : input.components : message.components,
             allowed_mentions: input.allowed_mentions,
             attachments: input.attachments ?? message.attachments ?? []
           }
@@ -625,7 +625,6 @@ module.exports = {
 };
 
 /**
- * 
  * @param {string} sender 
  * @param {*} params 
  * @param {string} url 
@@ -681,7 +680,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
     if (!response.ok)
       throw new ResponseError(await response.json(), response, 'discord_error');
 
-    return response.json();
+    // return response.json();
 
   } catch (e) {
     throw e;

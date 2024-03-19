@@ -115,19 +115,29 @@ class ResponseError extends Error {
         this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
     
     } else if (type === 'twitter_error') {
-      if (!res && !error && !hint) return;
       console.log('res in twitter error:\n', res);
+      if (res?.status === 429 && response?.headers.get('x-rate-limit-reset')) {
+        const reset = response.headers.get('x-rate-limit-reset');
+        if (reset) this.wait_until = new Date(parseInt(reset) * 1000).toTimeString();
+      }
+      if (!res && !error && !hint) return;
 
+      if (res?.reason) this.reason = res?.reason;
+      if (res?.required_enrollment) this.required_enrollment = res?.required_enrollment;
       if (res?.error && typeof res?.error === 'string') this.message = res.error;
       else if (res?.title) this.message = res.title;
       else if (res?.errors && res?.errors.length && res?.errors[0].label) this.message = res.errors[0].label;
+      else if (res?.errors && res?.errors.length && res?.errors[0].detail) this.message = res.errors[0].detail.split(':')[0];
 
       if (res?.error_description) this.details = res.error_description;
       else if (res?.detail) this.details = res.detail;
 
       if (res?.errors && res?.errors.length) {
         if (res.errors[0].parameters) this.parameter = Object.keys(res.errors[0].parameters)[0];
+        else if (res.errors[0].parameter) this.parameter = res.errors[0].parameter;
         if (res.errors[0].message) this.reason = res.errors[0].message;//  ?? res.errors[0];
+        if (res.errors[0].resource_type) this.resource_type = res.errors[0].resource_type;
+        if (res.errors[0].value) this.resource_value = res.errors[0].value;
         // console.log('res.errors', Object.keys(res.errors[0].parameters)[0]);
       }
       
@@ -335,6 +345,9 @@ function get(obj, path, defaultValue = undefined) {
  * @property {string} [error_summary]
  * @property {string} [title]
  * @property {string} [detail]
+ * @property {string} [reason]
+ * @property {string} [required_enrollment]
+ * @property {number} [status]
  */
 
 /**

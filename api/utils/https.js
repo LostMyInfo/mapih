@@ -141,10 +141,10 @@ module.exports = {
           error = { error_description: error_summary };
       }
       */
-      // console.log('data', data);
+      // console.log('data', response);
       if (!response.ok || (data && data.ok == false))
         throw (match = (url.match(/discord|slack|spotify|dropbox|openai|youtube|google|imgur|twitter/))?.[0])
-          ? new ResponseError(data?.data ?? /* error ??*/ data, response, `${match}_error`, params.errorMessage || params.hint ? { error: params.errorMessage, hint: params.hint } : undefined)
+          ? match === 'twitter' && response.status === 404 ? { authorize: match } : new ResponseError(data?.data ?? /* error ??*/ data, response, `${match}_error`, params.errorMessage || params.hint ? { error: params.errorMessage, hint: params.hint } : undefined)
           : new Error(`Request failed with status ${response.status}: ${response.statusText}\n${data ? JSON.stringify(data, null, 2) : ''}`);
   
       return data;
