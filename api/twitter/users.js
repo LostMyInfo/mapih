@@ -70,7 +70,7 @@ module.exports = {
     const endpoint = /^\d+$/.test(resource)
       ? 'users/' + resource
       : `users/by/username/${resource}`;
-    console.log('endpoint:', endpoint);
+    // console.log('endpoint:', endpoint);
     let attempt;
     attempt = await handler(request(endpoint, options));
     if (!attempt.errors) return attempt.data ?? attempt;
@@ -217,7 +217,7 @@ module.exports = {
         throw new ResponseError(attempt, null, 'twitter_error');
 
       const user_id = (await handler(request(`users/by/username/${resource}`)))?.data?.id;
-      console.log('user_id:', user_id);
+      // console.log('user_id:', user_id);
       if (user_id)
         attempt = await handler(request(`users/${user_id}/tweets`, options));
     }
@@ -266,7 +266,7 @@ function request(path, options, method) {
     exclude = options?.exclude?.join(',')
   } = options || {};
 
-  console.log('path:', path);
+  // console.log('path:', path);
   const parameters = buildQueryString(path === 'search' ? '' : path, removeFalsyFromObject({
     expansions: tweets
       ? exp ? exp : expansions

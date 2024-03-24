@@ -23,7 +23,7 @@ export function create(options: {
     reply_settings?: 'everyone' | 'mentioned_users' | 'followers';
 }): Promise<{ id: string; text: string; } | undefined>;
 
-export function timeline(options: {
+export function timeline(options?: {
     tweet_fields?: TwitterTweetFields[];
     user_fields?: TwitterUserFields[];
     media_fields?: TwitterMediaFields[];

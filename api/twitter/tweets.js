@@ -96,7 +96,7 @@ module.exports = {
    */
   timeline: async (options) => {
     const me = await users.findMyID();
-    console.log('me:', me);
+    // console.log('me:', me);
     const attempt = await handler(users.request(`users/${me}/timelines/reverse_chronological`, options));
     if (attempt.errors?.length)
       throw new ResponseError(attempt, null, 'twitter_error');

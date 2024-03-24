@@ -537,11 +537,11 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
   const api = require('../../Api');
   const { removeFalsyFromObject } = require('./functions');
   
-  /** @type {{[x: string]: {[x: string]: string}}} */
+  /** @type {{[x: string]: { url: string, scope?: string}}} */
   const configs = {
     dropbox: {
       url: 'https://dropbox.com/oauth2/authorize',
-      scope: 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
+      scope: defaultScope('dropbox') // 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
     },
     slack: {
       url: 'https://slack.com/openid/connect/authorize',
@@ -621,22 +621,22 @@ async function refresh(type, google) {
   const credentials = require('../../Api')[`get_${type}_token`]();
   const token = await getTokens(`${type}Auth`);
 
-  /** @type {{[x: string]: {[x: string]: string}}} */
+  /** @type {{[x: string]: {url: string, scope?: string}}} */
   const configs = {
     dropbox: {
       url: 'https://api.dropboxapi.com/oauth2/token',
-      scope: 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
+      scope: defaultScope('dropbox') // 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
     },
     spotify: {
       url: 'https://accounts.spotify.com/api/token',
-      scope: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload'
+      scope: defaultScope('spotify') // 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload'
     },
     imgur: {
       url: 'https://api.imgur.com/oauth2/token'
     },
     twitter: {
       url: 'https://api.twitter.com/2/oauth2/token',
-      scope: 'tweet.read tweet.write users.read offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write'
+      scope: defaultScope('twitter') // 'tweet.read tweet.write users.read offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write'
     },
     box: {
       url: 'https://account.box.com/api/oauth2/token'

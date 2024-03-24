@@ -118,7 +118,7 @@ class ResponseError extends Error {
       console.log('res in twitter error:\n', res);
       if (res?.status === 429 && response?.headers.get('x-rate-limit-reset')) {
         const reset = response.headers.get('x-rate-limit-reset');
-        if (reset) this.wait_until = new Date(parseInt(reset) * 1000).toTimeString();
+        if (reset) this.wait_until = new Date(parseInt(reset)).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       }
       if (!res && !error && !hint) return;
 

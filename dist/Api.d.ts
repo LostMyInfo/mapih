@@ -1463,7 +1463,7 @@ export declare const twitter: {
       reply_settings?: 'everyone' | 'mentioned_users' | 'followers';
     }) => Promise<{ id: string; text: string; }>
 
-    timeline: (options: {
+    timeline: (options?: {
       tweet_fields?: TwitterTweetFields[];
       user_fields?: TwitterUserFields[];
       media_fields?: TwitterMediaFields[];
@@ -1482,10 +1482,26 @@ export declare const twitter: {
   },
 
   users: {
-    me: (options) => Promise<TwitterSingleUserLookupResponse>;
-    find: (options) => Promise<TwitterSingleUserLookupResponse>;
-    by_id: (options) => Promise<TwitterSingleUserLookupResponse>;
-    by_username: (options) => Promise<TwitterSingleUserLookupResponse>;
+    me: (options?: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      pinned_tweet_id?: boolean
+    }) => Promise<TwitterSingleUserLookupResponse>;
+    find: (resource: string, options?: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      pinned_tweet_id?: boolean
+    }) => Promise<TwitterSingleUserLookupResponse>;
+    by_id: (id: string, options?: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      pinned_tweet_id?: boolean
+    }) => Promise<TwitterSingleUserLookupResponse>;
+    by_username: (username: string, options?: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      pinned_tweet_id?: boolean
+    }) => Promise<TwitterSingleUserLookupResponse>;
     tweets: (options: {
       tweet_fields?: TwitterTweetFields[];
       user_fields?: TwitterUserFields[];
