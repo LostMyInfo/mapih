@@ -5,6 +5,7 @@
  * @typedef {string | undefined} prompt_perfect_token
  * @typedef {{bot: string, user?: string, client_id?: string, client_secret?: string, team_id?: string, redirect_uri?: string, scope?: Array<string>}|undefined} slack_token
  * @typedef {string | undefined} openai_token
+ * @typedef {string | undefined} anthropic_token
  * @typedef {{api_key: string, client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} google_token
  * @typedef {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} spotify_token
  * @typedef {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} imgur_token
@@ -33,6 +34,11 @@ let slackToken = undefined;
  * @type {openai_token}
  */
 let openaiKey = undefined;
+
+/**
+ * @type {anthropic_token}
+ */
+let anthropicKey = undefined;
 
 /**
  * @type {prompt_perfect_token}
@@ -82,6 +88,7 @@ module.exports = {
    * @param {discord_token} [options.discord]
    * @param {slack_token} [options.slack]
    * @param {openai_token} [options.openai]
+   * @param {anthropic_token} [options.anthropic]
    * @param {prompt_perfect_token} [options.prompt_perfect]
    * @param {google_token} [options.google]
    * @param {twitter_token} [options.twitter]
@@ -98,6 +105,7 @@ module.exports = {
     if (options.discord) discordToken = options.discord;
     if (options.slack) slackToken = options.slack;
     if (options.openai) openaiKey = options.openai;
+    if (options.anthropic) anthropicKey = options.anthropic;
     if (options.prompt_perfect) promptPerfectToken = options.prompt_perfect;
     if (options.google) googleToken = options.google;
     if (options.spotify) spotifyToken = options.spotify;
@@ -124,6 +132,11 @@ module.exports = {
    * @returns {openai_token}
    */
   get_openai_token: function() { return openaiKey; },
+
+  /**
+   * @returns {anthropic_token}
+   */
+  get_anthropic_token: function() { return anthropicKey; },
 
   /**
    * @returns {prompt_perfect_token}
@@ -213,6 +226,10 @@ module.exports = {
     images: require('./api/openai/index').images,
     speech: require('./api/openai/index').speech,
     embeddings: require('./api/openai/index').embeddings
+  },
+
+  anthropic: {
+    messages: require('./api/anthropic/index').messages
   },
 
   promptPerfect: {

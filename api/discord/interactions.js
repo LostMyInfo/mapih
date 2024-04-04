@@ -154,7 +154,8 @@ module.exports = {
                 embeds: input.embeds ?? [],
                 components: input.components ?? [],
                 tts: input.tts || false,
-                allowed_mentions: input.allowed_mentions ?? null
+                allowed_mentions: input.allowed_mentions ?? null,
+                flags: input.flags
               }
             }
           });
@@ -634,10 +635,11 @@ module.exports = {
  */
 async function sendAttachment(sender, params, url, method, type, flags) {
 
-  const form = new FormData();
 
   if (!params.attachments) return null;
   try {
+    const form = new FormData();
+
     for (const attachment of params.attachments) {
       if (!attachment.file || !attachment.filename)
         throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
@@ -645,7 +647,7 @@ async function sendAttachment(sender, params, url, method, type, flags) {
       if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
         const response = await fetch(attachment.file);
         attachment.file = await response.blob();
-      } else if (!(attachment.file instanceof Blob))
+      } else if (!(attachment.file instanceof Blob) && !(attachment.file instanceof Buffer))
         throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
   
       form.append(

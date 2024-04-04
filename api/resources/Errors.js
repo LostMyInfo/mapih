@@ -118,7 +118,7 @@ class ResponseError extends Error {
       console.log('res in twitter error:\n', res);
       if (res?.status === 429 && response?.headers.get('x-rate-limit-reset')) {
         const reset = response.headers.get('x-rate-limit-reset');
-        if (reset) this.wait_until = new Date(parseInt(reset)).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        if (reset) this.wait_until = new Date(parseInt(reset) * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       }
       if (!res && !error && !hint) return;
 
@@ -141,6 +141,8 @@ class ResponseError extends Error {
         // console.log('res.errors', Object.keys(res.errors[0].parameters)[0]);
       }
       
+    } else if (type === 'anthropic_error') {
+      console.log('res from anthropic error in Errors:', res);
     }
   }
 };

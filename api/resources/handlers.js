@@ -160,7 +160,7 @@ async function handler(options) {
     // console.log('\naccess_token from handler()2\n', access_token);
     
     /**
-     * @type {{url: string, auth: (() => Promise<string>)|undefined, header?: string[]}|undefined}
+     * @type {{url: string, auth?: (() => Promise<string>)|undefined, header?: string[]}|undefined}
      */
     // @ts-ignore
     const { url, auth = undefined, header = undefined } = {
@@ -187,6 +187,10 @@ async function handler(options) {
       openai: {
         url: 'https://api.openai.com/v1',
         auth: async () => `Bearer ${access_token ?? token('openai', options.handler)}`
+      },
+      anthropic: {
+        url: 'https://api.anthropic.com/v1'
+        // auth: async () => `Bearer ${access_token ?? token('anthropic', options.handler)}`
       },
       youtube: {
         url: `https://www.googleapis.com/youtube/v3/${options.googleEndpoint}?key=${token('google', options.handler)}`,
@@ -260,10 +264,16 @@ async function handler(options) {
         'Content-Type': options.type === 'content' ? 'text/plain' : 'application/json; charset=UTF-8',
         ...(header && options.type === 'content'
           ? { 'Dropbox-API-Arg': JSON.stringify(options.body) }
-          : options.handler === 'places'
-            ? { 'X-Goog-Api-Key': token('google', 'google') }
-            : {}),
-        ...(auth && { 'Authorization': await auth() })
+          : options.handler === 'anthropic'
+            ? {
+              'anthropic-version': '2023-06-01',
+              'x-api-key': token('anthropic', 'anthropic')
+            }
+            : options.handler === 'places'
+              ? { 'X-Goog-Api-Key': token('google', 'google') }
+              : {}
+        ),
+        ...(auth && options.handler !== 'anthropic' && { 'Authorization': await auth() })
       },
       ...(options.body && { body: options.type !== 'content' ? options.body : '' }),
       message: options.message || '',
@@ -431,7 +441,7 @@ async function spotifyAccessToken() {
  * @returns {string|undefined}
  */
 function token(type, handler, variable) {
-  if (!/discord|slack|openai|google|imgur|promptPerfect|twitter/.test(type)) return;
+  if (!/discord|slack|openai|anthropic|google|imgur|promptPerfect|twitter/.test(type)) return;
   if (type !== handler) return;
 
   const api = require('../../Api');
@@ -459,6 +469,11 @@ function token(type, handler, variable) {
       getToken: () => api.get_openai_token(),
       env: 'openai_api_key',
       errorMessage: 'OpenAI API key not set. '
+    },
+    anthropic: {
+      getToken: () => api.get_anthropic_token(),
+      env: 'anthropic_api_key',
+      errorMessage: 'Anthropic API key not set. '
     },
     google: {
       getToken: () => api.get_google_token()?.api_key,
