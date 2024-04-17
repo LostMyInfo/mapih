@@ -47,7 +47,7 @@ module.exports = {
     const attempt = await attemptHandler({
       method: 'GET',
       endpoint
-    });
+    }, params);
     
     if (attempt.audit_log_entries.length)
       attempt.audit_log_entries.forEach((/** @type {AuditLogEntry} */ log) => {

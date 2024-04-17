@@ -12,8 +12,9 @@ class ResponseError extends Error {
    * @param {?Response} response
    * @param {string} type
    * @param {{ error?: string, hint?: string } | undefined} [content]
+   * @param {any | undefined} [discord_params]
    */
-  constructor(res, response, type, { error, hint } = {}) {
+  constructor(res, response, type, { error, hint } = {}, discord_params) {
     super();
 
     // const { error, hint } = content || {};
@@ -29,6 +30,15 @@ class ResponseError extends Error {
       if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
         this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
 
+      if (discord_params) {
+        if (discord_params.guild_id) this.guild_id = discord_params.guild_id;
+        if (discord_params.name) this.guild = discord_params.name;
+        if (discord_params.channel_id) this.channel_id = discord_params.channel_id;
+        if (discord_params.author?.id) this.user_id = discord_params.author.id;
+        if (discord_params.member?.user) this.user_id = discord_params.member.user.id;
+        if (discord_params.user) this.user_id = discord_params.user.id;
+      }
+      
       if (res) {
         if (res.message && typeof res.message === 'string') this.message = res.message;
         else if (res.error && typeof res.error === 'string') this.message = res.error;

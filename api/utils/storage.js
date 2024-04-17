@@ -659,7 +659,7 @@ function clearHistorySync(key, filtered = []) {
 
 /**
  * @param {string} key 
- * @param {string} [defaultVal] 
+ * @param {any} [defaultVal] 
  * @returns {{value: any, saveCache: boolean}}
  */
 function prepareGet(key, defaultVal) {
@@ -735,7 +735,7 @@ function prepareSet(options) {
  * @param {...any} args
  * @returns {Array<any>}
  */
-function preparePush(oldValues, ...args) {
+function preparePush(oldValues = [], ...args) {
   // args = args.filter(arg => arg !== undefined && arg !== null);
   args = (args.filter((x) => Array.isArray(x))).length && args.length === 1
     ? args[0]

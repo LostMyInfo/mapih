@@ -25,10 +25,11 @@ const find = (key, file) => file?.find((e) => e.key === key);
  * @param {string} params.endpoint
  * @param {Object} [params.body]
  * @param {?string} [params.reason]
+ * @param {any | undefined} [discord_params]
  * @returns {Promise<*>}
  * @private
  */
-async function attemptHandler(params) {
+async function attemptHandler(params, discord_params) {
   // console.log('params in attemptHandler:', params);
   const headers = new Headers({
     'Authorization': `Bot ${token('discord', 'discord')}`
@@ -46,7 +47,8 @@ async function attemptHandler(params) {
       method: params.method,
       url: `https://discord.com/api/v10/${params.endpoint}`,
       headers,
-      body: params.body ? JSON.stringify(params.body) : ''
+      body: params.body ? JSON.stringify(params.body) : '',
+      discord_params
     });
     // console.log('attempt in functions', attempt)
       
