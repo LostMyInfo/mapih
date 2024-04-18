@@ -38,7 +38,7 @@ class ResponseError extends Error {
         if (discord_params.member?.user) this.user_id = discord_params.member.user.id;
         if (discord_params.user) this.user_id = discord_params.user.id;
       }
-      
+
       if (res) {
         if (res.message && typeof res.message === 'string') this.message = res.message;
         else if (res.error && typeof res.error === 'string') this.message = res.error;
@@ -125,10 +125,10 @@ class ResponseError extends Error {
         this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
     
     } else if (type === 'twitter_error') {
-      console.log('res in twitter error:\n', res);
+      // console.log('res in twitter error:\n', res);
       if (res?.status === 429 && response?.headers.get('x-rate-limit-reset')) {
         const reset = response.headers.get('x-rate-limit-reset');
-        if (reset) this.wait_until = new Date(parseInt(reset) * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        if (reset) this.wait_until = `${new Date(parseInt(reset) * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} ${new Date(parseInt(reset) * 1000).toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })}`;
       }
       if (!res && !error && !hint) return;
 
