@@ -13,9 +13,9 @@
 [![view on npm](https://badgen.net/npm/v/mapih)](https://www.npmjs.org/package/mapih)
 [![npm module downloads](https://badgen.net/npm/dt/mapih)](https://www.npmjs.org/package/mapih)
 # Mapih
-#### Comprehensive collection of Discord, Slack\*, and Spotify\* API endpoint handlers  
+#### Comprehensive collection of Discord, OpenAI, Anthropic, Spotify, YouTube, Twitter, Slack, Imgur, DropBox, Box and various Google API endpoint handlers  
 
-\* These are still in very early development
+**Discord is the only completed set of handlers, the rest are still in early development**
 
 ---
 ## Authentication
@@ -467,7 +467,7 @@ Docs coming soon
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieve({
+await mapih.discord.guilds.retrieve({
   guild_id: '0000000000'
 });
 ```
@@ -492,7 +492,7 @@ await api.discord.guilds.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.create({
+await mapih.discord.guilds.create({
   name: "Eric's Server",
   icon: 'https://imgurl.png', // or buffer
   default_message_notifications: 1, // ONLY_MENTIONS
@@ -545,7 +545,7 @@ await api.discord.guilds.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.update({
+await mapih.discord.guilds.update({
   name: "Eric's New Server",
   // ...
 });
@@ -560,7 +560,7 @@ await api.discord.guilds.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.destroy({
+await mapih.discord.guilds.destroy({
   guild_id: '0000000000'
 });
 ```
@@ -575,7 +575,7 @@ await api.discord.guilds.destroy({
 
 #### Example
 ```javascript
-await api.discord.guilds.getPreview({
+await mapih.discord.guilds.getPreview({
   guild_id: '0000000000'
 });
 ```
@@ -592,7 +592,7 @@ await api.discord.guilds.getPreview({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveBan({
+await mapih.discord.guilds.retrieveBan({
   guild_id: '0000000000',
   user_id: '0000000000'
 });
@@ -610,7 +610,7 @@ await api.discord.guilds.retrieveBan({
 
 #### Example
 ```javascript
-await api.discord.guilds.getAllBans({
+await mapih.discord.guilds.getAllBans({
   guild_id: '0000000000',
   limit: 50,
   after: '0000000000'
@@ -630,7 +630,7 @@ await api.discord.guilds.getAllBans({
 
 #### Example
 ```javascript
-await api.discord.guilds.createBan({
+await mapih.discord.guilds.createBan({
   guild_id: '0000000000',
   user_id: '0000000000',
   delete_message_seconds: 604800,
@@ -650,7 +650,7 @@ await api.discord.guilds.createBan({
 
 #### Example
 ```javascript
-await api.discord.guilds.destroyBan({
+await mapih.discord.guilds.destroyBan({
   guild_id: '0000000000',
   user_id: '0000000000',
   reason: 'ok I guess you\'re alright'
@@ -668,7 +668,7 @@ await api.discord.guilds.destroyBan({
 
 #### Example
 ```javascript
-await api.discord.guilds.updateMFAlevel({
+await mapih.discord.guilds.updateMFAlevel({
   guild_id: '0000000000',
   level: 0
 });
@@ -688,7 +688,7 @@ await api.discord.guilds.updateMFAlevel({
 
 #### Example
 ```javascript
-await api.discord.guilds.getPruneCount({
+await mapih.discord.guilds.getPruneCount({
   guild_id: '0000000000',
   days: 3,
   include_roles: [
@@ -714,7 +714,7 @@ await api.discord.guilds.getPruneCount({
 
 #### Example
 ```javascript
-await api.discord.guilds.beginPrune({
+await mapih.discord.guilds.beginPrune({
   guild_id: '0000000000',
   days: 3,
   compute_prune_count: true,
@@ -733,7 +733,7 @@ await api.discord.guilds.beginPrune({
 
 #### Example
 ```javascript
-await api.discord.guilds.getVoiceRegions({
+await mapih.discord.guilds.getVoiceRegions({
   guild_id: '0000000000'
 });
 ```
@@ -749,7 +749,7 @@ await api.discord.guilds.getVoiceRegions({
 
 #### Example
 ```javascript
-await api.discord.guilds.getAllIntegrations({
+await mapih.discord.guilds.getAllIntegrations({
   guild_id: '0000000000'
 });
 ```
@@ -765,7 +765,7 @@ await api.discord.guilds.getAllIntegrations({
 
 #### Example
 ```javascript
-await api.discord.guilds.destroyIntegration({
+await mapih.discord.guilds.destroyIntegration({
   guild_id: '0000000000'
 });
 ```
@@ -779,7 +779,7 @@ await api.discord.guilds.destroyIntegration({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveWidget({
+await mapih.discord.guilds.retrieveWidget({
   guild_id: '0000000000'
 });
 ```
@@ -793,7 +793,7 @@ await api.discord.guilds.retrieveWidget({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveWidgetSettings({
+await mapih.discord.guilds.retrieveWidgetSettings({
   guild_id: '0000000000'
 });
 ```
@@ -817,7 +817,7 @@ await api.discord.guilds.retrieveWidgetSettings({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveWidgetImage({
+await mapih.discord.guilds.retrieveWidgetImage({
   guild_id: '0000000000',
   style: 'banner3'
 });
@@ -834,7 +834,7 @@ await api.discord.guilds.retrieveWidgetImage({
 
 #### Example
 ```javascript
-await api.discord.guilds.updateWidget({
+await mapih.discord.guilds.updateWidget({
   guild_id: '0000000000',
   enabled: true
 });
@@ -849,7 +849,7 @@ await api.discord.guilds.updateWidget({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveVanityURL({
+await mapih.discord.guilds.retrieveVanityURL({
   guild_id: '0000000000'
 });
 ```
@@ -863,7 +863,7 @@ await api.discord.guilds.retrieveVanityURL({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveWelcomeScreen({
+await mapih.discord.guilds.retrieveWelcomeScreen({
   guild_id: '0000000000'
 });
 ```
@@ -880,7 +880,7 @@ await api.discord.guilds.retrieveWelcomeScreen({
 
 #### Example
 ```javascript
-await api.discord.guilds.updateWelcomeScreen({
+await mapih.discord.guilds.updateWelcomeScreen({
   guild_id: '0000000000',
   enabled: true
 });
@@ -895,7 +895,7 @@ await api.discord.guilds.updateWelcomeScreen({
 
 #### Example
 ```javascript
-await api.discord.guilds.retrieveOnboarding({
+await mapih.discord.guilds.retrieveOnboarding({
   guild_id: '0000000000',
   enabled: true
 });
@@ -916,7 +916,7 @@ await api.discord.guilds.retrieveOnboarding({
 
 #### Example
 ```javascript
-await api.discord.guilds.updateOnboarding({
+await mapih.discord.guilds.updateOnboarding({
   guild_id: '0000000000',
   prompts: [{
     id: '0000000000',
@@ -965,7 +965,7 @@ await api.discord.guilds.updateOnboarding({
 
 #### Example
 ```javascript
-await api.discord.guilds.channels.getAll({
+await mapih.discord.guilds.channels.getAll({
   guild_id: '0000000000'
 });
 ```
@@ -997,7 +997,7 @@ await api.discord.guilds.channels.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.channels.create({
+await mapih.discord.guilds.channels.create({
   guild_id: '0000000000',
   name: 'my-new-channel',
   type: 0,
@@ -1019,7 +1019,7 @@ await api.discord.guilds.channels.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.channels.updatePositions({
+await mapih.discord.guilds.channels.updatePositions({
   guild_id: '0000000000',
   channels: [{
     id: '0000000000',
@@ -1056,7 +1056,7 @@ await api.discord.guilds.channels.updatePositions({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.retrieve({
+await mapih.discord.guilds.members.retrieve({
   guild_id: '0000000000',
   user_id: '0000000000'
 });
@@ -1073,7 +1073,7 @@ await api.discord.guilds.members.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.getAll({
+await mapih.discord.guilds.members.getAll({
   guild_id: '0000000000',
   limit: 1000
 });
@@ -1090,7 +1090,7 @@ await api.discord.guilds.members.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.search({
+await mapih.discord.guilds.members.search({
   guild_id: '0000000000',
   query: 'lostmyinfo',
   limit: 1
@@ -1108,7 +1108,7 @@ await api.discord.guilds.members.search({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.remove({
+await mapih.discord.guilds.members.remove({
   guild_id: '0000000000',
   user_id: '0000000000',
   reason: 'not cool enough'
@@ -1135,7 +1135,7 @@ await api.discord.guilds.members.remove({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.update({
+await mapih.discord.guilds.members.update({
   guild_id: '0000000000',
   nick: 'cool new nick'
 });
@@ -1151,7 +1151,7 @@ await api.discord.guilds.members.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.updateCurrent({
+await mapih.discord.guilds.members.updateCurrent({
   guild_id: '0000000000',
   nick: 'cool new nick'
 });
@@ -1168,7 +1168,7 @@ await api.discord.guilds.members.updateCurrent({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.addRole({
+await mapih.discord.guilds.members.addRole({
   guild_id: '0000000000',
   user_id: '0000000000',
   role_id: '0000000000'
@@ -1186,7 +1186,7 @@ await api.discord.guilds.members.addRole({
 
 #### Example
 ```javascript
-await api.discord.guilds.members.removeRole({
+await mapih.discord.guilds.members.removeRole({
   guild_id: '0000000000',
   user_id: '0000000000',
   role_id: '0000000000'
@@ -1222,14 +1222,14 @@ const permNames = getPermissionNames(x, y);
 #### Example
 ```javascript
 // timeout a member for 5 minutes
-await api.discord.guilds.members.timeout({
+await mapih.discord.guilds.members.timeout({
   guild_id: '0000000000',
   user_id: '0000000000',
   duration: 300 // 5 minutes
 });
 
 // clear a member's timeout
-await api.discord.guilds.members.timeout({
+await mapih.discord.guilds.members.timeout({
   guild_id: '0000000000',
   user_id: '0000000000'
 });
@@ -1256,7 +1256,7 @@ await api.discord.guilds.members.timeout({
 
 #### Example
 ```javascript
-await api.discord.guilds.roles.retrieve({
+await mapih.discord.guilds.roles.retrieve({
   guild_id: '0000000000',
   role_id: '0000000000'
 });
@@ -1271,7 +1271,7 @@ await api.discord.guilds.roles.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.roles.getAll({
+await mapih.discord.guilds.roles.getAll({
   guild_id: '0000000000'
 });
 ```
@@ -1293,7 +1293,7 @@ await api.discord.guilds.roles.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.roles.create({
+await mapih.discord.guilds.roles.create({
   guild_id: '0000000000',
   name: 'cool kids',
   hoist: true,
@@ -1320,7 +1320,7 @@ await api.discord.guilds.roles.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.roles.update({
+await mapih.discord.guilds.roles.update({
   guild_id: '0000000000',
   role_id: '0000000000',
   name: 'new role name',
@@ -1341,7 +1341,7 @@ await api.discord.guilds.roles.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.roles.destroy({
+await mapih.discord.guilds.roles.destroy({
   guild_id: '0000000000',
   role_id: '0000000000'
 });
@@ -1357,7 +1357,7 @@ await api.discord.guilds.roles.destroy({
 
 #### Example
 ```javascript
-await api.discord.guilds.roles.retrieve({
+await mapih.discord.guilds.roles.retrieve({
   guild_id: '0000000000',
   roles: [
     { id: '0000000000', position: 3 },
@@ -1387,7 +1387,7 @@ await api.discord.guilds.roles.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.emojis.retrieve({
+await mapih.discord.guilds.emojis.retrieve({
   guild_id: '0000000000',
   emoji_id: '0000000000'
 });
@@ -1402,7 +1402,7 @@ await api.discord.guilds.emojis.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.emojis.getAll({
+await mapih.discord.guilds.emojis.getAll({
   guild_id: '0000000000'
 });
 ```
@@ -1419,7 +1419,7 @@ await api.discord.guilds.emojis.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.emojis.create({
+await mapih.discord.guilds.emojis.create({
   guild_id: '0000000000',
   name: 'goodsie',
   image: 'https://picofgoodsie.png'
@@ -1438,7 +1438,7 @@ await api.discord.guilds.emojis.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.emojis.update({
+await mapih.discord.guilds.emojis.update({
   guild_id: '0000000000',
   emoji_id: '0000000000',
   name: 'newemojiname'
@@ -1455,7 +1455,7 @@ await api.discord.guilds.emojis.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.emojis.destroy({
+await mapih.discord.guilds.emojis.destroy({
   guild_id: '0000000000',
   emoji_id: '0000000000'
 });
@@ -1483,7 +1483,7 @@ await api.discord.guilds.emojis.destroy({
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.retrieve({
+await mapih.discord.guilds.stickers.retrieve({
   sticker_id: '0000000000'
 });
 ```
@@ -1498,7 +1498,7 @@ await api.discord.guilds.stickers.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.retrieveGuild({
+await mapih.discord.guilds.stickers.retrieveGuild({
   guild_id: '0000000000',
   sticker_id: '0000000000'
 });
@@ -1508,7 +1508,7 @@ await api.discord.guilds.stickers.retrieveGuild({
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.retrieve();
+await mapih.discord.guilds.stickers.retrieve();
 ```
 
 ### [List Guild Stickers](https://discord.com/developers/docs/resources/sticker#list-guild-stickers)
@@ -1520,7 +1520,7 @@ await api.discord.guilds.stickers.retrieve();
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.getAll({
+await mapih.discord.guilds.stickers.getAll({
   guild_id: '0000000000'
 });
 ```
@@ -1539,7 +1539,7 @@ await api.discord.guilds.stickers.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.create({
+await mapih.discord.guilds.stickers.create({
   guild_id: '0000000000',
   name: 'mynewsticker',
   description: 'cool description',
@@ -1560,7 +1560,7 @@ await api.discord.guilds.stickers.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.update({
+await mapih.discord.guilds.stickers.update({
   guild_id: '0000000000',
   name: 'mynewnewsticker',
   description: 'new cool description',
@@ -1578,7 +1578,7 @@ await api.discord.guilds.stickers.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.stickers.destroy({
+await mapih.discord.guilds.stickers.destroy({
   guild_id: '0000000000',
   sticker_id: '0000000000',
 });
@@ -1608,7 +1608,7 @@ await api.discord.guilds.stickers.destroy({
 
 #### Example
 ```javascript
-await api.discord.guilds.events.retrieve({
+await mapih.discord.guilds.events.retrieve({
   guild_id: '0000000000',
   guild_scheduled_event_id: '0000000000',
   with_user_count: true
@@ -1625,7 +1625,7 @@ await api.discord.guilds.events.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.events.getAll({
+await mapih.discord.guilds.events.getAll({
   guild_id: '0000000000',
   with_user_count: true
 });
@@ -1648,7 +1648,7 @@ await api.discord.guilds.events.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.events.getUsers({
+await mapih.discord.guilds.events.getUsers({
   guild_id: '0000000000',
   guild_scheduled_event_id: '0000000000',
   limit: 10,
@@ -1676,7 +1676,7 @@ await api.discord.guilds.events.getUsers({
 
 #### Example
 ```javascript
-await api.discord.guilds.events.create({
+await mapih.discord.guilds.events.create({
   guild_id: '0000000000',
   name: 'Cool Event Name',
   privacy_level: 2,
@@ -1711,7 +1711,7 @@ await api.discord.guilds.events.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.events.update({
+await mapih.discord.guilds.events.update({
   guild_id: '0000000000',
   guild_scheduled_event_id: '0000000000'
   name: 'Edited Event Name',
@@ -1728,7 +1728,7 @@ await api.discord.guilds.events.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.events.destroy({
+await mapih.discord.guilds.events.destroy({
   guild_id: '0000000000'
 });
 ```
@@ -1756,7 +1756,7 @@ await api.discord.guilds.events.destroy({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.retrieve({
+await mapih.discord.guilds.templates.retrieve({
   template_code: '0000000000'
 });
 ```
@@ -1770,7 +1770,7 @@ await api.discord.guilds.templates.retrieve({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.getAll({
+await mapih.discord.guilds.templates.getAll({
   guild_id: '0000000000'
 });
 ```
@@ -1786,7 +1786,7 @@ await api.discord.guilds.templates.getAll({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.create({
+await mapih.discord.guilds.templates.create({
   guild_id: '0000000000',
   name: 'fancy template'
 });
@@ -1804,7 +1804,7 @@ await api.discord.guilds.templates.create({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.update({
+await mapih.discord.guilds.templates.update({
   guild_id: '0000000000',
   template_code: '0000000000',
   name: 'new fancy template name'
@@ -1821,7 +1821,7 @@ await api.discord.guilds.templates.update({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.destroy({
+await mapih.discord.guilds.templates.destroy({
   guild_id: '0000000000',
   template_code: '0000000000'
 });
@@ -1840,7 +1840,7 @@ await api.discord.guilds.templates.destroy({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.createGuild({
+await mapih.discord.guilds.templates.createGuild({
   template_code: '0000000000',
   name: 'Eric\'s cool server template',
   icon: 'https://templateGuildIcon.png'
@@ -1857,7 +1857,7 @@ await api.discord.guilds.templates.createGuild({
 
 #### Example
 ```javascript
-await api.discord.guilds.templates.sync({
+await mapih.discord.guilds.templates.sync({
   guild_id: '0000000000',
   template_code: '0000000000'
 });
@@ -1891,7 +1891,7 @@ await api.discord.guilds.templates.sync({
 
 #### Example
 ```javascript
-await api.discord.channels.retrieve({
+await mapih.discord.channels.retrieve({
   channel_id: '0000000000'
 });
 ```
@@ -1942,7 +1942,7 @@ await api.discord.channels.retrieve({
 
 #### Example
 ```javascript
-await api.discord.channels.update({
+await mapih.discord.channels.update({
   channel_id: '0000000000',
   name: 'new-name'
 });
@@ -1957,7 +1957,7 @@ await api.discord.channels.update({
 
 #### Example
 ```javascript
-await api.discord.channels.destroy({
+await mapih.discord.channels.destroy({
   channel_id: '0000000000'
 });
 ```
@@ -1974,7 +1974,7 @@ await api.discord.channels.destroy({
 
 #### Example
 ```javascript
-await api.discord.channels.editPermissions({
+await mapih.discord.channels.editPermissions({
   channel_id: '0000000000',
   overwrite_id: '0000000000',
   type: 1, // member
@@ -1991,7 +1991,7 @@ await api.discord.channels.editPermissions({
 
 #### Example
 ```javascript
-await api.discord.channels.deletePermissions({
+await mapih.discord.channels.deletePermissions({
   channel_id: '0000000000'
 });
 ```
@@ -2005,7 +2005,7 @@ await api.discord.channels.deletePermissions({
 
 #### Example
 ```javascript
-await api.discord.channels.getInvites({
+await mapih.discord.channels.getInvites({
   channel_id: '0000000000'
 });
 ```
@@ -2024,7 +2024,7 @@ await api.discord.channels.getInvites({
 
 #### Example
 ```javascript
-await api.discord.channels.inviteCreate({
+await mapih.discord.channels.inviteCreate({
   channel_id: '0000000000',
   max_age: 7200,
   max_uses: 1
@@ -2040,7 +2040,7 @@ await api.discord.channels.inviteCreate({
 
 #### Example
 ```javascript
-await api.discord.channels.typingCreate({
+await mapih.discord.channels.typingCreate({
   channel_id: '0000000000'
 });
 ```
@@ -2055,7 +2055,7 @@ await api.discord.channels.typingCreate({
 
 #### Example
 ```javascript
-await api.discord.channels.followAnnouncementChannel({
+await mapih.discord.channels.followAnnouncementChannel({
   channel_id: '0000000000',
   webhook_channel_id: '0000000000'
 });
@@ -2073,7 +2073,7 @@ await api.discord.channels.followAnnouncementChannel({
 
 #### Example
 ```javascript
-await api.discord.channels.groupDMadd({
+await mapih.discord.channels.groupDMadd({
   channel_id: '0000000000',
   user_id: '0000000000',
   access_token: 'abcdef123456',
@@ -2091,7 +2091,7 @@ await api.discord.channels.groupDMadd({
 
 #### Example
 ```javascript
-await api.discord.channels.groupDMremove({
+await mapih.discord.channels.groupDMremove({
   channel_id: '0000000000',
   user_id: '0000000000'
 });
@@ -2124,7 +2124,7 @@ await api.discord.channels.groupDMremove({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.retrieve({
+await mapih.discord.channels.messages.retrieve({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2146,7 +2146,7 @@ await api.discord.channels.messages.retrieve({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.getAll({
+await mapih.discord.channels.messages.getAll({
   channel_id: '0000000000',
   limit: 50
 });
@@ -2174,14 +2174,14 @@ To create a message as a reply to another message, apps can include a [message_r
 
 #### Example
 ```javascript
-await api.discord.channels.messages.create({
+await mapih.discord.channels.messages.create({
   channel_id: '0000000000',
   content: 'sup'
 });
 ```  
 #### Example
 ```javascript
-await api.discord.channels.messages.create({
+await mapih.discord.channels.messages.create({
   channel_id: '0000000000',
   content: '',
   embeds: [{
@@ -2201,7 +2201,7 @@ await api.discord.channels.messages.create({
 ```  
 #### Example
 ```javascript
-await api.discord.channels.messages.create({
+await mapih.discord.channels.messages.create({
   channel_id: '0000000000',
   content: 'this will surprese all mentions',
   allowed_mentions: {
@@ -2232,7 +2232,7 @@ await api.discord.channels.messages.create({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.update({
+await mapih.discord.channels.messages.update({
   channel_id: '0000000000',
   message_id: '0000000000',
   content: 'new message'
@@ -2249,7 +2249,7 @@ await api.discord.channels.messages.update({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.destroy({
+await mapih.discord.channels.messages.destroy({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2267,7 +2267,7 @@ await api.discord.channels.messages.destroy({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.bulkDelete({
+await mapih.discord.channels.messages.bulkDelete({
   channel_id: '0000000000',
   messages: [ 
     '0000000000',
@@ -2286,7 +2286,7 @@ await api.discord.channels.messages.bulkDelete({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.crosspost({
+await mapih.discord.channels.messages.crosspost({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2302,7 +2302,7 @@ await api.discord.channels.messages.crosspost({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.pin({
+await mapih.discord.channels.messages.pin({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2318,7 +2318,7 @@ await api.discord.channels.messages.pin({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.unpin({
+await mapih.discord.channels.messages.unpin({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2333,7 +2333,7 @@ await api.discord.channels.messages.unpin({
 
 #### Example
 ```javascript
-await api.discord.channels.messages.getPinned({
+await mapih.discord.channels.messages.getPinned({
   channel_id: '0000000000'
 });
 ```
@@ -2371,7 +2371,7 @@ await api.discord.channels.messages.getPinned({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.forumThreadCreate({
+await mapih.discord.channels.threads.forumThreadCreate({
   channel_id: '0000000000',
   name: 'thread name',
   message: {
@@ -2402,7 +2402,7 @@ await api.discord.channels.threads.forumThreadCreate({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.createFromMessage({
+await mapih.discord.channels.threads.createFromMessage({
   channel_id: '0000000000',
   message_id: '0000000000',
   name: 'thread name',
@@ -2425,7 +2425,7 @@ await api.discord.channels.threads.createFromMessage({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.createWithoutMessage({
+await mapih.discord.channels.threads.createWithoutMessage({
   channel_id: '0000000000',
   type: 11, // PUBLIC_THREAD
   name: 'thread name',
@@ -2443,7 +2443,7 @@ await api.discord.channels.threads.createWithoutMessage({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.join({
+await mapih.discord.channels.threads.join({
   channel_id: '0000000000'
 });
 ```
@@ -2457,7 +2457,7 @@ await api.discord.channels.threads.join({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.leave({
+await mapih.discord.channels.threads.leave({
   channel_id: '0000000000'
 });
 ```
@@ -2472,7 +2472,7 @@ await api.discord.channels.threads.leave({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.addMember({
+await mapih.discord.channels.threads.addMember({
   channel_id: '0000000000',
   user_id: '0000000000'
 });
@@ -2488,7 +2488,7 @@ await api.discord.channels.threads.addMember({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.removeMember({
+await mapih.discord.channels.threads.removeMember({
   channel_id: '0000000000',
   user_id: '0000000000'
 });
@@ -2505,7 +2505,7 @@ await api.discord.channels.threads.removeMember({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.retrieveMember({
+await mapih.discord.channels.threads.retrieveMember({
   channel_id: '0000000000',
   user_id: '0000000000',
   with_member: true
@@ -2525,7 +2525,7 @@ await api.discord.channels.threads.retrieveMember({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.getAllMembers({
+await mapih.discord.channels.threads.getAllMembers({
   channel_id: '0000000000',
   with_member: true
 });
@@ -2545,7 +2545,7 @@ await api.discord.channels.threads.getAllMembers({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.getAllPublicArchived({
+await mapih.discord.channels.threads.getAllPublicArchived({
   channel_id: '0000000000',
   limit: 10
 });
@@ -2562,7 +2562,7 @@ await api.discord.channels.threads.getAllPublicArchived({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.getAllPrivateArchived({
+await mapih.discord.channels.threads.getAllPrivateArchived({
   channel_id: '0000000000'
 });
 ```
@@ -2578,7 +2578,7 @@ await api.discord.channels.threads.getAllPrivateArchived({
 
 #### Example
 ```javascript
-await api.discord.channels.threads.getAllJoinedPrivateArchived({
+await mapih.discord.channels.threads.getAllJoinedPrivateArchived({
   channel_id: '0000000000'
 });
 ```
@@ -2607,7 +2607,7 @@ await api.discord.channels.threads.getAllJoinedPrivateArchived({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.create({
+await mapih.discord.channels.reactions.create({
   channel_id: '0000000000',
   message_id: '0000000000',
   emoji: 'name:id'
@@ -2626,7 +2626,7 @@ await api.discord.channels.reactions.create({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.createMany({
+await mapih.discord.channels.reactions.createMany({
   channel_id: '0000000000',
   message_id: '0000000000',
   emojis: [
@@ -2649,7 +2649,7 @@ await api.discord.channels.reactions.createMany({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.deleteOwn({
+await mapih.discord.channels.reactions.deleteOwn({
   channel_id: '0000000000',
   message_id: '0000000000',
   emoji: 'name:id'
@@ -2668,7 +2668,7 @@ await api.discord.channels.reactions.deleteOwn({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.deleteUser({
+await mapih.discord.channels.reactions.deleteUser({
   channel_id: '0000000000',
   message_id: '0000000000',
   user_id: '0000000000',
@@ -2686,7 +2686,7 @@ await api.discord.channels.reactions.deleteUser({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.deleteAll({
+await mapih.discord.channels.reactions.deleteAll({
   channel_id: '0000000000',
   message_id: '0000000000'
 });
@@ -2703,7 +2703,7 @@ await api.discord.channels.reactions.deleteAll({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.deleteAllEmoji({
+await mapih.discord.channels.reactions.deleteAllEmoji({
   channel_id: '0000000000',
   message_id: '0000000000',
   emoji: ':name:id'
@@ -2723,7 +2723,7 @@ await api.discord.channels.reactions.deleteAllEmoji({
 
 #### Example
 ```javascript
-await api.discord.channels.reactions.getUsers({
+await mapih.discord.channels.reactions.getUsers({
   channel_id: '0000000000',
   message_id: '0000000000',
   emoji: ':name:id',
@@ -2759,7 +2759,7 @@ await api.discord.channels.reactions.getUsers({
 
 #### Example
 ```javascript
-await api.discord.users.retrieve({
+await mapih.discord.users.retrieve({
   user_id: '0000000000'
 });
 ```
@@ -2768,7 +2768,7 @@ await api.discord.users.retrieve({
 
 #### Example
 ```javascript
-await api.discord.users.currentUser();
+await mapih.discord.users.currentUser();
 ```
 
 ### [Get Current User Guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds)
@@ -2783,7 +2783,7 @@ await api.discord.users.currentUser();
 
 #### Example
 ```javascript
-await api.discord.users.myGuilds();
+await mapih.discord.users.myGuilds();
 ```
 
 ### [Get Current User Guild Member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member)
@@ -2795,7 +2795,7 @@ await api.discord.users.myGuilds();
 
 #### Example
 ```javascript
-await api.discord.users.currentMember({
+await mapih.discord.users.currentMember({
   guild_id: '0000000000',
 });
 ```
@@ -2810,7 +2810,7 @@ await api.discord.users.currentMember({
 
 #### Example
 ```javascript
-await api.discord.users.updateCurrent({
+await mapih.discord.users.updateCurrent({
   username: 'new username',
   avatar: 'https://imageURL.png'
 });
@@ -2820,7 +2820,7 @@ await api.discord.users.updateCurrent({
 
 #### Example
 ```javascript
-await api.discord.users.connections();
+await mapih.discord.users.connections();
 ```
 
 ### [Get User Application Role Connection](https://discord.com/developers/docs/resources/user#get-user-application-role-connection)
@@ -2832,7 +2832,7 @@ await api.discord.users.connections();
 
 #### Example
 ```javascript
-await api.discord.users.appRoleConnection();
+await mapih.discord.users.appRoleConnection();
 ```
 
 ### [Update User Application Role Connection](https://discord.com/developers/docs/resources/user#update-user-application-role-connection)
@@ -2847,7 +2847,7 @@ await api.discord.users.appRoleConnection();
 
 #### Example
 ```javascript
-await api.discord.users.updateAppRoleConnection({
+await mapih.discord.users.updateAppRoleConnection({
   platform_name: 'OnSocket',
   platform_username: 'goodsie'
 });
@@ -2873,7 +2873,7 @@ await api.discord.users.updateAppRoleConnection({
 
 #### Example
 ```javascript
-await api.discord.users.createDM({
+await mapih.discord.users.createDM({
   recipient_id: '0000000000',
   content: '<super cool message here>'
 });
@@ -2900,7 +2900,7 @@ await api.discord.users.createDM({
 
 #### Example
 ```javascript
-await api.discord.users.createGroupDM({
+await mapih.discord.users.createGroupDM({
   access_tokens: [
     '0000000000',
     '0000000000'  
@@ -2921,7 +2921,7 @@ await api.discord.users.createGroupDM({
 
 #### Example
 ```javascript
-await api.discord.users.leaveGuild({
+await mapih.discord.users.leaveGuild({
   guild_id: '0000000000'
 });
 ```
@@ -2974,7 +2974,7 @@ await api.discord.users.leaveGuild({
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.reply(params, {
+await mapih.discord.interactions.callback.reply(params, {
   ephemeral: true,
   content: 'This will respond to an interaction immediately'
 });
@@ -2990,14 +2990,14 @@ await api.discord.interactions.callback.reply(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.defer(params, {
+await mapih.discord.interactions.callback.defer(params, {
   ephemeral: true
 });
 ```
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.defer(params)
+await mapih.discord.interactions.callback.defer(params)
 ```
 
 ### [Get Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response)
@@ -3009,7 +3009,7 @@ await api.discord.interactions.callback.defer(params)
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.get_original(params);
+await mapih.discord.interactions.callback.get_original(params);
 ```
 
 ### [Edit Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response)
@@ -3026,7 +3026,7 @@ await api.discord.interactions.callback.get_original(params);
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.update_original(params, {
+await mapih.discord.interactions.callback.update_original(params, {
   content: 'This will update the original interaction response'
 });
 ```
@@ -3040,7 +3040,7 @@ await api.discord.interactions.callback.update_original(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.delete_original(params);
+await mapih.discord.interactions.callback.delete_original(params);
 ```
 
 ### Component Defer
@@ -3052,7 +3052,7 @@ await api.discord.interactions.callback.delete_original(params);
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.component_defer(params);
+await mapih.discord.interactions.callback.component_defer(params);
 ```
 
 ### Component Update
@@ -3069,7 +3069,7 @@ await api.discord.interactions.callback.component_defer(params);
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.component_update(params, {
+await mapih.discord.interactions.callback.component_update(params, {
   content: 'new stuff!'
 });
 ```
@@ -3084,7 +3084,7 @@ await api.discord.interactions.callback.component_update(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.callback.autocomplete_reply(params, {
+await mapih.discord.interactions.callback.autocomplete_reply(params, {
   choices: [
     {
       name: 'this might be wrong',
@@ -3149,7 +3149,7 @@ await callback.modal_reply(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.followup.retrieve(params, {
+await mapih.discord.interactions.followup.retrieve(params, {
   message_id: '0000000000'  
 });
 ```
@@ -3171,7 +3171,7 @@ await api.discord.interactions.followup.retrieve(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.followup.create(params, {
+await mapih.discord.interactions.followup.create(params, {
   ephemeral: true,
   content: 'followup message',
   embeds: [{
@@ -3198,7 +3198,7 @@ await api.discord.interactions.followup.create(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.followup.update(params, {
+await mapih.discord.interactions.followup.update(params, {
   message_id: '0000000000',
   content: 'followup message',
   embeds: [{
@@ -3218,7 +3218,7 @@ await api.discord.interactions.followup.update(params, {
 
 #### Example
 ```javascript
-await api.discord.interactions.followup.destroy(params, {
+await mapih.discord.interactions.followup.destroy(params, {
   message_id: '0000000000'  
 });
 ```
@@ -3255,7 +3255,7 @@ await api.discord.interactions.followup.destroy(params, {
 
 #### Example
 ```javascript
-await api.discord.webhooks.retrieve({
+await mapih.discord.webhooks.retrieve({
   webhook_id: '0000000000'
 });
 ```
@@ -3271,7 +3271,7 @@ await api.discord.webhooks.retrieve({
 
 #### Example
 ```javascript
-await api.discord.webhooks.retrieveWithToken({
+await mapih.discord.webhooks.retrieveWithToken({
   webhook_id: '0000000000',
   webhook_token: 'abcdef123456'
 });
@@ -3286,7 +3286,7 @@ await api.discord.webhooks.retrieveWithToken({
 
 #### Example
 ```javascript
-await api.discord.webhooks.retrieveChannel({
+await mapih.discord.webhooks.retrieveChannel({
   webhook_id: '0000000000'
 });
 ```
@@ -3300,7 +3300,7 @@ await api.discord.webhooks.retrieveChannel({
 
 #### Example
 ```javascript
-await api.discord.webhooks.retrieveGuild({
+await mapih.discord.webhooks.retrieveGuild({
   guild_id: '0000000000'
 });
 ```
@@ -3317,7 +3317,7 @@ await api.discord.webhooks.retrieveGuild({
 
 #### Example
 ```javascript
-await api.discord.webhooks.retrieveMessage({
+await mapih.discord.webhooks.retrieveMessage({
   webhook_id: '0000000000',
   webhook_token: 'abcdef123456',
   message_id: '0000000000'
@@ -3341,7 +3341,7 @@ await api.discord.webhooks.retrieveMessage({
 
 #### Example
 ```javascript
-await api.discord.webhooks.updateMessage({
+await mapih.discord.webhooks.updateMessage({
   webhook_id: '0000000000',
   webhook_token: 'abcdef123456',
   message_id: '0000000000',
@@ -3361,7 +3361,7 @@ await api.discord.webhooks.updateMessage({
 
 #### Example
 ```javascript
-await api.discord.webhooks.destroyMessage({
+await mapih.discord.webhooks.destroyMessage({
   webhook_id: '0000000000',
   webhook_token: 'abcdef123456',
   message_id: '0000000000'
@@ -3379,7 +3379,7 @@ await api.discord.webhooks.destroyMessage({
 
 #### Example
 ```javascript
-await api.discord.webhooks.create({
+await mapih.discord.webhooks.create({
   channel_id: '0000000000',
   name: 'myNewWebhook'
 });
@@ -3397,7 +3397,7 @@ await api.discord.webhooks.create({
 
 #### Example
 ```javascript
-await api.discord.webhooks.update({
+await mapih.discord.webhooks.update({
   webhook_id: '0000000000',
   channel_id: '0000000000',
   name: 'myNewNewWebhook'
@@ -3416,7 +3416,7 @@ await api.discord.webhooks.update({
 
 #### Example
 ```javascript
-await api.discord.webhooks.updateWithToken({
+await mapih.discord.webhooks.updateWithToken({
   webhook_id: '0000000000',
   webhook_token: 'abcd1234',
   name: 'myNewNewWebhook'
@@ -3432,7 +3432,7 @@ await api.discord.webhooks.updateWithToken({
 
 #### Example
 ```javascript
-await api.discord.webhooks.destroy({
+await mapih.discord.webhooks.destroy({
   webhook_id: '0000000000'
 });
 ```
@@ -3447,7 +3447,7 @@ await api.discord.webhooks.destroy({
 
 #### Example
 ```javascript
-await api.discord.webhooks.destroyWithToken({
+await mapih.discord.webhooks.destroyWithToken({
   webhook_id: '0000000000',
   webhook_token: 'abcdef123456'
 });
@@ -3474,7 +3474,7 @@ await api.discord.webhooks.destroyWithToken({
 
 #### Example
 ```javascript
-await api.discord.webhooks.execute({
+await mapih.discord.webhooks.execute({
   webhook_id: '0000000000',
   webhook_token: 'abcdef123456',
   content: 'message contents here',
@@ -3508,7 +3508,7 @@ await api.discord.webhooks.execute({
 
 #### Example
 ```javascript
-await api.discord.invites.retrieve({
+await mapih.discord.invites.retrieve({
   invite_code: '0vCdhLbwjZZTWZLD',
   with_counts: true,
   with_expiration: true
@@ -3523,7 +3523,7 @@ await api.discord.invites.retrieve({
 
 #### Example
 ```javascript
-await api.discord.invites.revoke({
+await mapih.discord.invites.revoke({
   invite_code: '0vCdhLbwjZZTWZLD'
 });
 ```
@@ -3549,7 +3549,7 @@ await api.discord.invites.revoke({
 
 #### Example
 ```javascript
-await api.discord.applications.getMe();
+await mapih.discord.applications.getMe();
 ```
 
 ### [Edit Current Application](https://discord.com/developers/docs/resources/application#edit-current-application)
@@ -3568,11 +3568,11 @@ await api.discord.applications.getMe();
 | interactions_endpoint_url \*\*    | string                                          | Interactions endpoint URL for the app                                |
 | tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |
 
-\* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.  
+\* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the mapih.  
 
 #### Example
 ```javascript
-await api.discord.applications.updateMe({
+await mapih.discord.applications.updateMe({
   description: 'new description',
   icon: 'https://url_to_image.png' // or buffer,
   install_params: {
@@ -3595,7 +3595,7 @@ await api.discord.applications.updateMe({
 
 #### Example
 ```javascript
-await api.discord.applications.appRoleConnectionMeta();
+await mapih.discord.applications.appRoleConnectionMeta();
 ```
 
 ### [Update Application Role Connection Metadata Records](https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records)
@@ -3607,7 +3607,7 @@ await api.discord.applications.appRoleConnectionMeta();
 
 #### Example
 ```javascript
-await api.discord.applications.updateAppRoleConnectionMeta();
+await mapih.discord.applications.updateAppRoleConnectionMeta();
 ```
 ---
 
@@ -3638,7 +3638,7 @@ await api.discord.applications.updateAppRoleConnectionMeta();
 
 #### Example
 ```javascript
-await api.discord.applications.commands.retrieve({
+await mapih.discord.applications.commands.retrieve({
   command_id: '0000000000',
   guild_id: '0000000000'
 })
@@ -3657,11 +3657,11 @@ await api.discord.applications.commands.retrieve({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.getAll();
+await mapih.discord.applications.commands.getAll();
 ```
 #### Example
 ```javascript
-await api.discord.applications.commands.getAll({
+await mapih.discord.applications.commands.getAll({
   guild_id: '0000000000'
 })
 ```
@@ -3687,7 +3687,7 @@ await api.discord.applications.commands.getAll({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.create({
+await mapih.discord.applications.commands.create({
   name: 'slashcommand',
   description: 'Command description',
   guild_id: '0000000000', // optional
@@ -3731,7 +3731,7 @@ await api.discord.applications.commands.create({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.update({
+await mapih.discord.applications.commands.update({
   name: 'slashcommand',
   description: 'Command description',
   guild_id: '0000000000', // optional
@@ -3768,7 +3768,7 @@ await api.discord.applications.commands.update({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.destroy({
+await mapih.discord.applications.commands.destroy({
   command_id: '0000000000',
   guild_id: '0000000000'
 })
@@ -3788,7 +3788,7 @@ await api.discord.applications.commands.destroy({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.bulkOverwrite({
+await mapih.discord.applications.commands.bulkOverwrite({
   command_id: '0000000000',
   guild_id: '0000000000',
   commands: [commands]
@@ -3807,7 +3807,7 @@ await api.discord.applications.commands.bulkOverwrite({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.retrievePermissions({
+await mapih.discord.applications.commands.retrievePermissions({
   command_id: '0000000000',
   guild_id: '0000000000'
 })
@@ -3824,7 +3824,7 @@ await api.discord.applications.commands.retrievePermissions({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.getAllPermissions({
+await mapih.discord.applications.commands.getAllPermissions({
   guild_id: '0000000000'
 })
 ```
@@ -3841,7 +3841,7 @@ await api.discord.applications.commands.getAllPermissions({
 
 #### Example
 ```javascript
-await api.discord.applications.commands.updatePermissions({
+await mapih.discord.applications.commands.updatePermissions({
   guild_id: '0000000000',
   permissions: [{
     id: '0000000000',
@@ -3876,7 +3876,7 @@ await api.discord.applications.commands.updatePermissions({
 
 #### Example
 ```javascript
-await api.discord.applications.entitlements.retrieve({
+await mapih.discord.applications.entitlements.retrieve({
   user_id: '0000000000',
   before: '0000000000',
   after: '0000000000',
@@ -3900,7 +3900,7 @@ await api.discord.applications.entitlements.retrieve({
 
 #### Example
 ```javascript
-await api.discord.applications.entitlements.create({
+await mapih.discord.applications.entitlements.create({
   sku_id: '0000000000',
   owner_id: '0000000000',
   owner_type: 1
@@ -3918,7 +3918,7 @@ await api.discord.applications.entitlements.create({
 
 #### Example
 ```javascript
-await api.discord.applications.entitlements.delete()
+await mapih.discord.applications.entitlements.delete()
 ```
 ## Application SKUs
 
@@ -3936,7 +3936,7 @@ await api.discord.applications.entitlements.delete()
 
 #### Example
 ```javascript
-await api.discord.applications.SKUs.getAll();
+await mapih.discord.applications.SKUs.getAll();
 ```
 
 ---
@@ -3965,7 +3965,7 @@ Omitting both `before` and `after` defaults to `before` the current timestamp an
 
 #### Example
 ```javascript
-await api.discord.auditlog.retrieve({
+await mapih.discord.auditlog.retrieve({
   guild_id: '0000000000',
   user_id: '0000000000',
   limit: 10 // default 50
@@ -3994,7 +3994,7 @@ await api.discord.auditlog.retrieve({
 
 #### Example
 ```javascript
-await api.discord.automod.retrieveRule({
+await mapih.discord.automod.retrieveRule({
   auto_moderation_rule_id: '0000000000',
   guild_id: '0000000000'
 })
@@ -4009,7 +4009,7 @@ await api.discord.automod.retrieveRule({
 
 #### Example
 ```javascript
-await api.discord.automod.getAll({
+await mapih.discord.automod.getAll({
   guild_id: '0000000000'
 })
 ```
@@ -4031,7 +4031,7 @@ await api.discord.automod.getAll({
 
 #### Example
 ```javascript
-await api.discord.automod.createRule({
+await mapih.discord.automod.createRule({
   guild_id: '0000000000',
   name: 'EricsAutoModRule',
   event_type: 1 // MESSAGE_SEND
@@ -4062,7 +4062,7 @@ await api.discord.automod.createRule({
 
 #### Example
 ```javascript
-await api.discord.automod.updateRule({
+await mapih.discord.automod.updateRule({
   guild_id: '0000000000',
   auto_moderation_rule_id: '00000',
    name: 'EricsAutoModRule',
@@ -4089,7 +4089,7 @@ await api.discord.automod.updateRule({
 
 #### Example
 ```javascript
-await api.discord.automod.destroyRule({
+await mapih.discord.automod.destroyRule({
   auto_moderation_rule_id: '0000000000',
   guild_id: '0000000000'
 })
@@ -4117,7 +4117,7 @@ await api.discord.automod.destroyRule({
 
 #### Example
 ```javascript
-await api.discord.stageInstance.retrieve({
+await mapih.discord.stageInstance.retrieve({
   channel_id: '0000000000'
 });
 ```
@@ -4137,7 +4137,7 @@ await api.discord.stageInstance.retrieve({
 
 #### Example
 ```javascript
-await api.discord.stageInstance.create({
+await mapih.discord.stageInstance.create({
   channel_id: '0000000000',
   topic: 'My super cool stage',
   send_start_notification: true
@@ -4155,7 +4155,7 @@ await api.discord.stageInstance.create({
 
 #### Example
 ```javascript
-await api.discord.stageInstance.update({
+await mapih.discord.stageInstance.update({
   channel_id: '0000000000',
   topic: 'My super duper cool stage',
 });
@@ -4170,7 +4170,7 @@ await api.discord.stageInstance.update({
 
 #### Example
 ```javascript
-await api.discord.stageInstance.destroy({
+await mapih.discord.stageInstance.destroy({
   channel_id: '0000000000'
 });
 ```
@@ -4210,7 +4210,7 @@ await api.discord.stageInstance.destroy({
 
 #### Example
 ```javascript
-await api.openai.chat.create({
+await mapih.openai.chat.create({
   model: 'gpt-4',
   messages: [
     {
@@ -4253,7 +4253,7 @@ On the other hand, providing a name might result in incorrect items depending on
 
 #### Example
 ```javascript
-await api.spotify.users.me();
+await mapih.spotify.users.me();
 ```
 
 ### [Get User's Top Items](https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks)
@@ -4273,7 +4273,7 @@ await api.spotify.users.me();
 
 #### Example
 ```javascript
-await api.spotify.users.topItems({
+await mapih.spotify.users.topItems({
   type: 'tracks',
   time_range: 'long_term',
   limit: 10
@@ -4289,7 +4289,7 @@ await api.spotify.users.topItems({
 
 #### Example
 ```javascript
-await api.spotify.users.getProfile({
+await mapih.spotify.users.getProfile({
   user_id: 'smedjan'
 });
 ```
@@ -4325,7 +4325,7 @@ await api.spotify.users.getProfile({
 
 #### Example 1
 ```javascript
-await api.spotify.search.advanced({
+await mapih.spotify.search.advanced({
   song: 'oops i did it again',
   year: '1990-1995',
   limit: 1
@@ -4334,7 +4334,7 @@ await api.spotify.search.advanced({
 
 #### Example 2
 ```javascript
-await api.spotify.search.advanced({
+await mapih.spotify.search.advanced({
   song: 'some popular song name',
   limit: 10,
   sort: 'popularity'
@@ -4343,7 +4343,7 @@ await api.spotify.search.advanced({
 
 #### Example 3
 ```javascript
-await api.spotify.search.advanced({
+await mapih.spotify.search.advanced({
   album: 'your favorite album name',
   include: ['albums'],
 });
@@ -4362,12 +4362,12 @@ await api.spotify.search.advanced({
 
 #### Example 1
 ```javascript
-await api.spotify.search.artists('artist name');
+await mapih.spotify.search.artists('artist name');
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.search.artists('artist name', {
+await mapih.spotify.search.artists('artist name', {
   limit: 10,
   sort: 'popularity'
 });
@@ -4386,12 +4386,12 @@ await api.spotify.search.artists('artist name', {
 
 #### Example 1
 ```javascript
-await api.spotify.search.songs('song name');
+await mapih.spotify.search.songs('song name');
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.search.songs('song name', {
+await mapih.spotify.search.songs('song name', {
   limit: 10,
   sort: 'popularity'
 });
@@ -4425,7 +4425,7 @@ await api.spotify.search.songs('song name', {
 
 #### Example
 ```javascript
-await api.spotify.songs.retrieve({
+await mapih.spotify.songs.retrieve({
   song_name: 'Satellites'
   // song_id: '4B9El4lQqztivDlRUCxbZB''
 });
@@ -4442,7 +4442,7 @@ await api.spotify.songs.retrieve({
 
 #### Example
 ```javascript
-await api.spotify.songs.retrieveMany({
+await mapih.spotify.songs.retrieveMany({
   song_names: ['song 1', 'song 2'],
   // song_ids: ['id 1', 'id 2']
 });
@@ -4501,7 +4501,7 @@ await api.spotify.songs.retrieveMany({
 
 #### Example
 ```javascript
-await api.spotify.songs.recommendations({
+await mapih.spotify.songs.recommendations({
   artists: ['artist name', 'another name'],
   songs: ['song name'],
   limit: 5,
@@ -4519,7 +4519,7 @@ await api.spotify.songs.recommendations({
 
 #### Example
 ```javascript
-await api.spotify.songs.save({
+await mapih.spotify.songs.save({
   song_names: [
     'song name',
     'another song name'
@@ -4538,7 +4538,7 @@ await api.spotify.songs.save({
 
 #### Example
 ```javascript
-await api.spotify.songs.unsave({
+await mapih.spotify.songs.unsave({
   song_names: [
     'song name',
     'another song name'
@@ -4558,7 +4558,7 @@ await api.spotify.songs.unsave({
 
 #### Example
 ```javascript
-await api.spotify.songs.saved();
+await mapih.spotify.songs.saved();
 ```
 
 ### [Check User's Saved Songs](https://developer.spotify.com/documentation/web-api/reference/check-users-saved-tracks)
@@ -4571,7 +4571,7 @@ await api.spotify.songs.saved();
 
 #### Example
 ```javascript
-await api.spotify.songs.isSaved({
+await mapih.spotify.songs.isSaved({
   song_names: [
     'song name',
     'another song name'
@@ -4590,7 +4590,7 @@ await api.spotify.songs.isSaved({
 
 #### Example
 ```javascript
-await api.spotify.songs.analyze({
+await mapih.spotify.songs.analyze({
   song_name: 'song name'
   // song_id: 'id 1'
 });
@@ -4606,7 +4606,7 @@ await api.spotify.songs.analyze({
 
 #### Example
 ```javascript
-await api.spotify.songs.audioFeatures({
+await mapih.spotify.songs.audioFeatures({
   song_name: 'song name'
   // song_id: 'id 1'
 });
@@ -4622,7 +4622,7 @@ await api.spotify.songs.audioFeatures({
 
 #### Example
 ```javascript
-await api.spotify.songs.audioFeaturesMany({
+await mapih.spotify.songs.audioFeaturesMany({
   song_names: [
     'song name',
     'another song name'
@@ -4659,7 +4659,7 @@ await api.spotify.songs.audioFeaturesMany({
 
 #### Example
 ```javascript
-await api.spotify.artists.retrieve({
+await mapih.spotify.artists.retrieve({
   artist_name: 'artist name'
   // artist_id: '0uZ8zQLHru4BiNTL2PQY91'
 });
@@ -4676,7 +4676,7 @@ await api.spotify.artists.retrieve({
 
 #### Example
 ```javascript
-await api.spotify.artists.retrieveMany({
+await mapih.spotify.artists.retrieveMany({
   artist_names: ['artist 1', 'artist 2'],
   // artists_ids: ['id 1', 'id 2']
 });
@@ -4693,7 +4693,7 @@ await api.spotify.artists.retrieveMany({
 
 #### Example
 ```javascript
-await api.spotify.artists.topSongs({
+await mapih.spotify.artists.topSongs({
   artist_name: 'artist name',
   // artists_id: 'artist id',
   limit: 5
@@ -4715,7 +4715,7 @@ await api.spotify.artists.topSongs({
 
 #### Example
 ```javascript
-await api.spotify.artists.albums({
+await mapih.spotify.artists.albums({
   artist_name: 'artist name',
   // artists_id: 'artist id',
   limit: 5,
@@ -4733,7 +4733,7 @@ await api.spotify.artists.albums({
 
 #### Example
 ```javascript
-await api.spotify.artists.related({
+await mapih.spotify.artists.related({
   artist_name: 'artist name',
   // artists_id: 'artist id',
 });
@@ -4750,7 +4750,7 @@ await api.spotify.artists.related({
 
 #### Example
 ```javascript
-await api.spotify.artists.follow({
+await mapih.spotify.artists.follow({
   type: 'artist',
   artist_names: [
     'artist name',
@@ -4771,7 +4771,7 @@ await api.spotify.artists.follow({
 
 #### Example
 ```javascript
-await api.spotify.artists.unfollow({
+await mapih.spotify.artists.unfollow({
   type: 'artist',
   artist_names: [
     'artist name',
@@ -4792,7 +4792,7 @@ await api.spotify.artists.unfollow({
 
 #### Example 1
 ```javascript
-await api.spotify.artists.following();
+await mapih.spotify.artists.following();
 ```
 
 ### [Check Followed Artists or Users](https://developer.spotify.com/documentation/web-api/reference/check-current-user-follows)
@@ -4806,7 +4806,7 @@ await api.spotify.artists.following();
 
 #### Example
 ```javascript
-await api.spotify.artists.isFollowing({
+await mapih.spotify.artists.isFollowing({
   type: 'artist',
   artist_names: [
     'artist name',
@@ -4843,7 +4843,7 @@ await api.spotify.artists.isFollowing({
 
 #### Example
 ```javascript
-await api.spotify.albums.retrieve({
+await mapih.spotify.albums.retrieve({
   album_name: 'album name'
   // album_id: '0uZ8zQLHru4BiNTL2PQY91'
 });
@@ -4860,7 +4860,7 @@ await api.spotify.albums.retrieve({
 
 #### Example
 ```javascript
-await api.spotify.albums.retrieveMany({
+await mapih.spotify.albums.retrieveMany({
   album_names: ['album 1', 'album 2'],
   // album_ids: ['id 1', 'id 2']
 });
@@ -4878,7 +4878,7 @@ await api.spotify.albums.retrieveMany({
 
 #### Example
 ```javascript
-await api.spotify.albums.songs({
+await mapih.spotify.albums.songs({
   album_name: 'album name'
   // album_id: '0uZ8zQLHru4BiNTL2PQY91'
 });
@@ -4894,12 +4894,12 @@ await api.spotify.albums.songs({
 
 #### Example 1
 ```javascript
-await api.spotify.albums.new();
+await mapih.spotify.albums.new();
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.albums.new({
+await mapih.spotify.albums.new({
   limit: 5
 });
 ```
@@ -4914,7 +4914,7 @@ await api.spotify.albums.new({
 
 #### Example
 ```javascript
-await api.spotify.albums.save({
+await mapih.spotify.albums.save({
   album_names: [
     'album name',
     'another album name'
@@ -4933,7 +4933,7 @@ await api.spotify.albums.save({
 
 #### Example
 ```javascript
-await api.spotify.albums.unsave({
+await mapih.spotify.albums.unsave({
   album_names: [
     'album name',
     'another album name'
@@ -4953,7 +4953,7 @@ await api.spotify.albums.unsave({
 
 #### Example
 ```javascript
-await api.spotify.albums.saved();
+await mapih.spotify.albums.saved();
 ```
 
 ### [Check User's Saved Albums](https://developer.spotify.com/documentation/web-api/reference/check-users-saved-albums)
@@ -4966,7 +4966,7 @@ await api.spotify.albums.saved();
 
 #### Example
 ```javascript
-await api.spotify.albums.isSaved({
+await mapih.spotify.albums.isSaved({
   album_names: [
     'album name',
     'another album name'
@@ -5009,12 +5009,12 @@ await api.spotify.albums.isSaved({
 
 #### Example 1
 ```javascript
-await api.spotify.playlists.featured();
+await mapih.spotify.playlists.featured();
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.playlists.featured({
+await mapih.spotify.playlists.featured({
   limit: 5
 });
 ```
@@ -5030,12 +5030,12 @@ await api.spotify.playlists.featured({
 
 #### Example 1
 ```javascript
-await api.spotify.playlists.featured('party');
+await mapih.spotify.playlists.featured('party');
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.playlists.featured('party', {
+await mapih.spotify.playlists.featured('party', {
   limit: 5
 });
 ```
@@ -5052,7 +5052,7 @@ await api.spotify.playlists.featured('party', {
 
 #### Example
 ```javascript
-await api.spotify.playlists.create({
+await mapih.spotify.playlists.create({
   name: 'My new playlist',
   public: false
 });
@@ -5071,7 +5071,7 @@ await api.spotify.playlists.create({
 
 #### Example
 ```javascript
-await api.spotify.playlists.update({
+await mapih.spotify.playlists.update({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   name: 'My new old playlist',
   public: true
@@ -5089,7 +5089,7 @@ await api.spotify.playlists.update({
 
 #### Example
 ```javascript
-await api.spotify.playlists.addSongs({
+await mapih.spotify.playlists.addSongs({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   uris: [
     '4iV5W9uYEdYUVa79Axb7Rh',
@@ -5112,7 +5112,7 @@ await api.spotify.playlists.addSongs({
 
 #### Example
 ```javascript
-await api.spotify.playlists.updateSongs({
+await mapih.spotify.playlists.updateSongs({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   uris: [
     '4iV5W9uYEdYUVa79Axb7Rh',
@@ -5132,7 +5132,7 @@ await api.spotify.playlists.updateSongs({
 
 #### Example
 ```javascript
-await api.spotify.playlists.removeSongs({
+await mapih.spotify.playlists.removeSongs({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   uris: [
     '4iV5W9uYEdYUVa79Axb7Rh',
@@ -5154,7 +5154,7 @@ await api.spotify.playlists.removeSongs({
 #### Example 1
 ```javascript
 // Get just the `name` and `description`
-await api.spotify.playlists.retrieveSongs({
+await mapih.spotify.playlists.retrieveSongs({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   fields: ['name', 'description']
 });
@@ -5163,7 +5163,7 @@ await api.spotify.playlists.retrieveSongs({
 #### Example 2
 ```javascript
 // Get just the `added_at` field of the track
-await api.spotify.playlists.retrieveSongs({
+await mapih.spotify.playlists.retrieveSongs({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   fields: {
     tracks: {
@@ -5176,7 +5176,7 @@ await api.spotify.playlists.retrieveSongs({
 #### Example 3
 ```javascript
 // Get the `name` and `id` of the track and the `name` and `artists` of the album that the track is on
-await api.spotify.playlists.retrieveSongs({
+await mapih.spotify.playlists.retrieveSongs({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   fields: {
     tracks: {
@@ -5201,12 +5201,12 @@ await api.spotify.playlists.retrieveSongs({
 
 #### Example 1
 ```javascript
-await api.spotify.playlists.created();
+await mapih.spotify.playlists.created();
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.playlists.created({
+await mapih.spotify.playlists.created({
   limit: 5
 });
 ```
@@ -5222,12 +5222,12 @@ await api.spotify.playlists.created({
 
 #### Example 1
 ```javascript
-await api.spotify.playlists.following();
+await mapih.spotify.playlists.following();
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.playlists.following({
+await mapih.spotify.playlists.following({
   limit: 5
 });
 ```
@@ -5244,7 +5244,7 @@ await api.spotify.playlists.following({
 
 #### Example
 ```javascript
-await api.spotify.playlists.following({
+await mapih.spotify.playlists.following({
   user_id: 'smedjan',
   limit: 5
 });
@@ -5260,7 +5260,7 @@ await api.spotify.playlists.following({
 
 #### Example
 ```javascript
-await api.spotify.playlists.isFollowing({
+await mapih.spotify.playlists.isFollowing({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   user_ids: [
     'smedjan',
@@ -5279,7 +5279,7 @@ await api.spotify.playlists.isFollowing({
 
 #### Example
 ```javascript
-await api.spotify.playlists.follow({
+await mapih.spotify.playlists.follow({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   public: false
 });
@@ -5294,7 +5294,7 @@ await api.spotify.playlists.follow({
 
 #### Example
 ```javascript
-await api.spotify.playlists.unfollow({
+await mapih.spotify.playlists.unfollow({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n'
 });
 ```
@@ -5308,7 +5308,7 @@ await api.spotify.playlists.unfollow({
 
 #### Example
 ```javascript
-await api.spotify.playlists.getCover({
+await mapih.spotify.playlists.getCover({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n'
 });
 ```
@@ -5323,7 +5323,7 @@ await api.spotify.playlists.getCover({
 
 #### Example
 ```javascript
-await api.spotify.playlists.updateCover({
+await mapih.spotify.playlists.updateCover({
   playlist_id: '3cEYpjA9oz9GiPac4AsH4n',
   image: 'image data'
 });
@@ -5357,21 +5357,21 @@ await api.spotify.playlists.updateCover({
 
 #### Example
 ```javascript
-await api.spotify.playback.state();
+await mapih.spotify.playback.state();
 ```
 
 ### [Get Currently Playing Song](https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track)
 
 #### Example
 ```javascript
-await api.spotify.playback.currentSong();
+await mapih.spotify.playback.currentSong();
 ```
 
 ### [Get Available Devices](https://developer.spotify.com/documentation/web-api/reference/get-a-users-available-devices)
 
 #### Example
 ```javascript
-await api.spotify.playback.devices();
+await mapih.spotify.playback.devices();
 ```
 
 ### [Start/Resume Playback](https://developer.spotify.com/documentation/web-api/reference/start-a-users-playback)
@@ -5384,19 +5384,19 @@ await api.spotify.playback.devices();
 
 #### Example 1
 ```javascript
-await api.spotify.playback.togglePlayback();
+await mapih.spotify.playback.togglePlayback();
 ```
 
 #### Example 2
 ```javascript
-await api.spotify.playback.togglePlayback({
+await mapih.spotify.playback.togglePlayback({
   song_ids: ['1301WleyT98MSxVHPZCA6M']
 })
 ```
 
 #### Example 3
 ```javascript
-await api.spotify.playback.togglePlayback({
+await mapih.spotify.playback.togglePlayback({
   context_uri: 'spotify:album:1Je1IMUlBXcx1Fz0WE7oPT'
 })
 ```
@@ -5405,21 +5405,21 @@ await api.spotify.playback.togglePlayback({
 
 #### Example
 ```javascript
-await api.spotify.playback.pause();
+await mapih.spotify.playback.pause();
 ```
 
 ### [Skip To Next Song](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
 
 #### Example
 ```javascript
-await api.spotify.playback.skip();
+await mapih.spotify.playback.skip();
 ```
 
 ### [Skip To Previos Song](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-previous-track)
 
 #### Example
 ```javascript
-await api.spotify.playback.previos();
+await mapih.spotify.playback.previos();
 ```
 
 ### [Seek To Position](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
@@ -5431,7 +5431,7 @@ await api.spotify.playback.previos();
 
 #### Example
 ```javascript
-await api.spotify.playback.seek({
+await mapih.spotify.playback.seek({
   position_ms: 25000
 });
 ```
@@ -5445,7 +5445,7 @@ await api.spotify.playback.seek({
 
 #### Example
 ```javascript
-await api.spotify.playback.setVolume({
+await mapih.spotify.playback.setVolume({
   volume_percent: 100
 });
 ```
@@ -5457,7 +5457,7 @@ await api.spotify.playback.setVolume({
 
 #### Example
 ```javascript
-await api.spotify.playback.toggleShuffle(true);
+await mapih.spotify.playback.toggleShuffle(true);
 ```
 
 ### [Set Repeat Mode](https://developer.spotify.com/documentation/web-api/reference/set-repeat-mode-on-users-playback)
@@ -5471,14 +5471,14 @@ await api.spotify.playback.toggleShuffle(true);
 
 #### Example
 ```javascript
-await api.spotify.playback.toggleRepeat('track');
+await mapih.spotify.playback.toggleRepeat('track');
 ```
 
 ### [Get User's Queue](https://developer.spotify.com/documentation/web-api/reference/get-queue)
 
 #### Example
 ```javascript
-await api.spotify.playback.queue();
+await mapih.spotify.playback.queue();
 ```
 
 ### [Add Item To Queue](https://developer.spotify.com/documentation/web-api/reference/add-to-queue)
@@ -5490,7 +5490,7 @@ await api.spotify.playback.queue();
 
 #### Example
 ```javascript
-await api.spotify.playback.addToQueue({
+await mapih.spotify.playback.addToQueue({
   song_id: '4iV5W9uYEdYUVa79Axb7Rh'
 });
 ```
@@ -5499,7 +5499,7 @@ await api.spotify.playback.addToQueue({
 
 #### Example
 ```javascript
-await api.spotify.playback.recent();
+await mapih.spotify.playback.recent();
 ```
 
 ### [Transfer Playback](https://developer.spotify.com/documentation/web-api/reference/transfer-a-users-playback)
@@ -5512,7 +5512,7 @@ await api.spotify.playback.recent();
 
 #### Example
 ```javascript
-await api.spotify.playback.transfer({
+await mapih.spotify.playback.transfer({
   device_id: '74ASZWbe4lXaubB36ztrGX',
   play: 'false'
 });
@@ -5563,7 +5563,7 @@ await api.spotify.playback.transfer({
 
 #### Example 1
 ```javascript
-await api.utils.storage.set({
+await mapih.utils.storage.set({
   key: 'password',
   value: 'abcd1234'
 });
@@ -5571,7 +5571,7 @@ await api.utils.storage.set({
 
 #### Example 2
 ```javascript
-await api.utils.storage.set({
+await mapih.utils.storage.set({
   key: 'password',
   value: 'abcd1234',
   ttl: 5000, // 5 seconds
@@ -5581,13 +5581,13 @@ await api.utils.storage.set({
 
 #### Example 3
 ```javascript
-await api.utils.storage.set({
+await mapih.utils.storage.set({
   key: 'password',
   value: 'abcd1234',
   allow_overwrite: false
 });
 
-await api.utils.storage.set({
+await mapih.utils.storage.set({
   key: 'password',
   value: 'newvalue',
 }); //=> error
@@ -5603,7 +5603,7 @@ await api.utils.storage.set({
 
 #### Example
 ```javascript
-await api.utils.storage.setMany({
+await mapih.utils.storage.setMany({
   keyname1: 'value1',
   keyname2: 'value2',
   keyname3: 'value3'
@@ -5622,23 +5622,23 @@ await api.utils.storage.setMany({
 
 #### Example
 ```javascript
-await api.utils.storage.get('password'); //=> 'abcd1234'
+await mapih.utils.storage.get('password'); //=> 'abcd1234'
 ```
 #### Example 2
 ```javascript
 // Set default value if value doesn't exist
-await api.utils.storage.get('password', {
+await mapih.utils.storage.get('password', {
   default: 'defaultValue'
 }); //=> 'defaultValue'
 ```
 #### Example 3
 ```javascript
 // Delete entry after retrieving the value
-await api.utils.storage.get('password', {
+await mapih.utils.storage.get('password', {
   delete: true
 }); //=> 'defaultValue'
 
-await api.utils.storage.get('password'); //=> null
+await mapih.utils.storage.get('password'); //=> null
 ```
 
 ### [Storage Get Many](/api/utils/storage.js#L80)
@@ -5650,7 +5650,7 @@ await api.utils.storage.get('password'); //=> null
 
 #### Example
 ```javascript
-await api.utils.storage.getMany(['password', 'password2', 'password3'])
+await mapih.utils.storage.getMany(['password', 'password2', 'password3'])
 //=> { password: 'abc123', password2: '123abc', password3: undefined }
 ```
 
@@ -5663,7 +5663,7 @@ await api.utils.storage.getMany(['password', 'password2', 'password3'])
 
 #### Example
 ```javascript
-await api.utils.storage.delete('password');
+await mapih.utils.storage.delete('password');
 ```
 
 ### [Storage Delete Many](/api/utils/storage.js#L235)
@@ -5675,7 +5675,7 @@ await api.utils.storage.delete('password');
 
 #### Example
 ```javascript
-await api.utils.storage.deleteMany(['password', 'password2', 'password3'])
+await mapih.utils.storage.deleteMany(['password', 'password2', 'password3'])
 //=> [true, true, false]
 ```
 
@@ -5691,15 +5691,15 @@ await api.utils.storage.deleteMany(['password', 'password2', 'password3'])
 
 #### Example
 ```javascript
-await api.utils.storage.set({
+await mapih.utils.storage.set({
   key: 'example',
   value: { a: 'b' }
 });
 
-await api.utils.storage.merge('example', { c: 'd' });
+await mapih.utils.storage.merge('example', { c: 'd' });
 //=> new value: { a: 'b', c: 'd' }
 
-await api.utils.storage.merge('example', { a: 'z' });
+await mapih.utils.storage.merge('example', { a: 'z' });
 //=> new value: { a: 'z', c: 'd' }
 ```
 
@@ -5713,23 +5713,23 @@ await api.utils.storage.merge('example', { a: 'z' });
 
 #### Example
 ```javascript
-await api.utils.storage.set({
+await mapih.utils.storage.set({
   key: 'array',
   value: [1, 2]
 });
 
-await api.utils.storage.push('array', 3, 4);
+await mapih.utils.storage.push('array', 3, 4);
 //=> new value: [1, 2, 3, 4]
 
-await api.utils.storage.push('array', [5, 6], 7);
+await mapih.utils.storage.push('array', [5, 6], 7);
 //=> new value: [ 1, 2, [ 5, 6 ], 7 ]
 
 // keep duplicates
-await api.utils.storage.push('array', 1, 7);
+await mapih.utils.storage.push('array', 1, 7);
 //=> new value: [ 1, 2, [ 5, 6 ], 7, 1, 7 ]
 
 // filter out duplicates
-await api.utils.storage.push('array', 1, 7, {
+await mapih.utils.storage.push('array', 1, 7, {
   unique: true
 });
 //=> new value: [ 1, 2, [ 5, 6 ], 7 ]
@@ -5739,7 +5739,7 @@ await api.utils.storage.push('array', 1, 7, {
 
 #### Example
 ```javascript
-api.utils.storage.export();
+mapih.utils.storage.export();
 //=> {"password": {"value": "abcd1234"}}
 ```
 
@@ -5752,7 +5752,7 @@ api.utils.storage.export();
 
 #### Example
 ```javascript
-api.utils.storage.filter((x) => x.key.includes('ass'));
+mapih.utils.storage.filter((x) => x.key.includes('ass'));
 //=> [{ key: 'password', value: 'abc123' }]
 ```
 
@@ -5760,7 +5760,7 @@ api.utils.storage.filter((x) => x.key.includes('ass'));
 
 #### Example
 ```javascript
-api.utils.storage.all();
+mapih.utils.storage.all();
 //=>
 // [
 //   { key: 'array', value: [ 1, 2, [Array], 7 ] },
@@ -5777,14 +5777,14 @@ api.utils.storage.all();
 
 #### Example
 ```javascript
-api.utils.storage.has('password');
+mapih.utils.storage.has('password');
 ```
 
 ### [Storage Entries](/api/utils/storage.js#L499)
 
 #### Example
 ```javascript
-api.utils.storage.entries();
+mapih.utils.storage.entries();
 //=> [ [ 'password', 'abcd1234' ], [ 'test', '4321dcba' ] ]
 ```
 
@@ -5792,7 +5792,7 @@ api.utils.storage.entries();
 
 #### Example
 ```javascript
-api.utils.storage.keys();
+mapih.utils.storage.keys();
 //=> ['password', 'stuff']
 ```
 
@@ -5800,7 +5800,7 @@ api.utils.storage.keys();
 
 #### Example
 ```javascript
-api.utils.storage.keys();
+mapih.utils.storage.keys();
 //=> ['password', 'stuff']
 ```
 
@@ -5808,21 +5808,21 @@ api.utils.storage.keys();
 
 #### Example
 ```javascript
-api.utils.storage.size(); // 3
+mapih.utils.storage.size(); // 3
 ```
 
 ### [Storage Bytes](/api/utils/storage.js#L533)
 
 #### Example
 ```javascript
-api.utils.storage.bytes(); // 23235 (bytes)
+mapih.utils.storage.bytes(); // 23235 (bytes)
 ```
 
 ### [Storage toJson](/api/utils/storage.js#L542)
 
 #### Example
 ```javascript
-api.utils.storage.toJson();
+mapih.utils.storage.toJson();
 //=> [{"key":"array","value":[1,2,[5,6],7]},{"key":"password","value":"abc123"}]
 ```
 
@@ -5830,7 +5830,7 @@ api.utils.storage.toJson();
 
 #### Example
 ```javascript
-await api.utils.storage.clear(); // undefined
+await mapih.utils.storage.clear(); // undefined
 ```
 
 ### [Storage Equals](/api/utils/storage.js#L566)
@@ -5843,7 +5843,7 @@ await api.utils.storage.clear(); // undefined
 
 #### Example
 ```javascript
-api.utils.storage.equals('password', 'abcd1234'); // true
+mapih.utils.storage.equals('password', 'abcd1234'); // true
 ```
 
 ### [Storage History](/api/utils/storage.js#L583)
@@ -5855,7 +5855,7 @@ api.utils.storage.equals('password', 'abcd1234'); // true
 
 #### Example
 ```javascript
-api.utils.storage.history('password');
+mapih.utils.storage.history('password');
 //=>
 // [
 //   { value: 'abcd1234', timestamp: 1703037628164 },
@@ -5874,10 +5874,10 @@ api.utils.storage.history('password');
 #### Example
 ```javascript
 // Clear history for a specific key
-api.utils.storage.clearHistory('password');
+mapih.utils.storage.clearHistory('password');
 
 // Clear all entries in history
-api.utils.storage.clearHistory();
+mapih.utils.storage.clearHistory();
 ```
 
 ---

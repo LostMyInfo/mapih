@@ -222,7 +222,7 @@ export interface MultipleTweetsLookupResponse {
  
 /**
  * @typedef {TwitterBaseEntity & {
- *   url: number;
+ *   url: string;
  *   expanded_url: string;
  *   display_url: string;
  *   unwound_url: string;

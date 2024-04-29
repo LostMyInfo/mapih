@@ -1741,18 +1741,18 @@ module.exports = {
     create: async (params) => {
       const form = new FormData();
       try {
-      
+    
         const file = await imageData(params.file);
         const { data, type } = file;
         if (!type || !data || !(data instanceof Buffer)) return;
         // const trueType = (imageInfo(data)).mimeType;
-      
+    
         const newFile = await resizeImage(data, type);
         if (!newFile)
           throw new Error('There was an error while converting/resizing the asset');
-        
+      
         // file = new Blob([buffer]);
-        
+      
         form.append('file', new Blob([newFile.image], { type: 'image/png' }), 'filename');
         form.append('name', params.name);
         if (params.description)
@@ -1769,9 +1769,9 @@ module.exports = {
 
         if (!response.ok)
           throw new ResponseError(await response.json(), response, 'discord_error');
-  
+
         return response.json();
-        
+      
       } catch (e) {
         throw e;
       }

@@ -20,7 +20,7 @@ export function create(options: {
         exclude_reply_user_ids?: string[];
         in_reply_to_tweet_id?: string;
     };
-    reply_settings?: 'everyone' | 'mentioned_users' | 'followers';
+    reply_settings?: string;
 }): Promise<{ id: string; text: string; } | undefined>;
 
 export function timeline(options?: {
@@ -30,7 +30,7 @@ export function timeline(options?: {
     place_fields?: TwitterPlaceFields[];
     poll_fields?: TwitterPollFields[];
     expansions?: TwitterExpansions[];
-    exclude?: 'retweets' | 'replies';
+    exclude?: string[];
     max_results?: number;
     next_token?: string;
     pagination_token?: string;
