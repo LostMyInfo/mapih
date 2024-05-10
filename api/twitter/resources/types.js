@@ -42,6 +42,13 @@ export interface MultipleTweetsLookupResponse {
  */
  
 /**
+ * @typedef {Object} TwitterTweetLookupResponseSingle
+ * @property {TwitterTweet} data
+ * @property {TwitterIncludes} [includes]
+ * @property {TwitterTweetsMeta} [meta]
+ */
+
+/**
  * @typedef {Object} TwitterSingleUserLookupResponse
  * @property {TwitterUser} data
  * @property {TwitterIncludes} [includes]

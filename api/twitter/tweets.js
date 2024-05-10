@@ -13,6 +13,29 @@ module.exports = {
 
   /**
    * @summary
+   * ### [Get Tweet]{@link https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id}
+   * @example
+   * await api.twitter.tweets.retrieve('123456', {
+   *   
+   * });
+   * 
+   * @function retrieve
+   * @memberof module:tweets#
+   * @param {string} id
+   * @param {Object} [options]
+   * @param {TwitterTweetFields[]} [options.tweet_fields]
+   * @param {TwitterUserFields[]} [options.user_fields]
+   * @param {TwitterMediaFields[]} [options.media_fields]
+   * @param {TwitterPlaceFields[]} [options.place_fields]
+   * @param {TwitterPollFields[]} [options.poll_fields]
+   * @param {TwitterExpansions[]} [options.expansions]
+   * @returns {Promise<TwitterTweetLookupResponseSingle>}
+   */
+  retrieve: async (id, options) =>
+    handler(users.request(`tweets/${id}`, options)),
+
+  /**
+   * @summary
    * ### [Post A Tweet]{@link https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets}
    * @example
    * await api.twitter.tweets.create({

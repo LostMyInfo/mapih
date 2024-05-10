@@ -1,4 +1,13 @@
-import { TwitterTweetLookupResponse } from './resources/types';
+import { TwitterExpansions, TwitterMediaFields, TwitterPlaceFields, TwitterPollFields, TwitterTweetFields, TwitterTweetLookupResponse, TwitterTweetLookupResponseSingle, TwitterUserFields } from './resources/types';
+
+export function retrieve(id: string, options?: {
+    tweet_fields?: TwitterTweetFields[];
+    user_fields?: TwitterUserFields[];
+    media_fields?: TwitterMediaFields[];
+    place_fields?: TwitterPlaceFields[];
+    poll_fields?: TwitterPollFields[];
+    expansions?: TwitterExpansions[];
+}): Promise<TwitterTweetLookupResponse | undefined>
 
 export function create(options: {
     text?: string;

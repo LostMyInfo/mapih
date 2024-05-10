@@ -7,7 +7,7 @@ import { ChatCompletion, ChatCompletionMessage, OpenAIEmbeddingResponse, OpenAII
 import { SlackBlock } from './api/slack/types/Blocks';
 import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUser, SlackUserIdentity, SlackUserProfile } from './api/slack/types/types';
 import { SpotifyReturn } from './api/spotify/resources/types';
-import { TwitterExpansions, TwitterMediaFields, TwitterPlaceFields, TwitterPollFields, TwitterSingleUserLookupResponse, TwitterTweetFields, TwitterTweetLookupResponse, TwitterUserFields } from './api/twitter/resources/types';
+import { TwitterExpansions, TwitterMediaFields, TwitterPlaceFields, TwitterPollFields, TwitterSingleUserLookupResponse, TwitterTweetFields, TwitterTweetLookupResponse, TwitterTweetLookupResponseSingle, TwitterUserFields } from './api/twitter/resources/types';
 
 export declare function initialize(options: {
   discord?: string;
@@ -1440,6 +1440,15 @@ export declare const openai: {
 
 export declare const twitter: {
   tweets: {
+    retrieve: (id: string, options?: {
+      tweet_fields?: TwitterTweetFields[];
+      user_fields?: TwitterUserFields[];
+      media_fields?: TwitterMediaFields[];
+      place_fields?: TwitterPlaceFields[];
+      poll_fields?: TwitterPollFields[];
+      expansions?: TwitterExpansions[];
+    }) => Promise<TwitterTweetLookupResponseSingle | undefined>
+
     create: (options: {
       text?: string;
       direct_message_deep_link?: string;

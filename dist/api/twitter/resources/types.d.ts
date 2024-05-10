@@ -15,6 +15,12 @@ export type TwitterTweetLookupResponse = {
     meta?: TwitterTweetsMeta;
 }
 
+export type TwitterTweetLookupResponseSingle = {
+    data: TwitterTweet;
+    includes?: TwitterIncludes;
+    meta?: TwitterTweetsMeta;
+}
+
 export type TwitterSingleUserLookupResponse = {
     data: TwitterUser;
     includes?: TwitterIncludes;
