@@ -2614,7 +2614,7 @@ const Locale = {
  * @property {ComponentType} type - The [type]{@link ComponentType} of the component (3-8 for select menus).
  * @property {string} custom_id - A unique identifier for the select menu.
  * @property {SelectOption[]} [options] - Specified choices in a select menu (only required and available for string selects (type `3`); max 25
- * @property {ChannelType} [channel_types] - List of channel types to include in the channel select component (type `8`)
+ * @property {ChannelType[]} [channel_types] - List of channel types to include in the channel select component (type `8`)
  * @property {string} [placeholder] - The text to be displayed when no option is selected.
  * @property {number} [min_values=1] - Minimum number of items that must be chosen; min 0, max 25
  * @property {number} [max_values=1] - Maximum number of items that can be chosen; max 25

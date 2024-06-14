@@ -249,7 +249,7 @@ export type ApplicationCommandOption = {
     /**
      * - If the option is a channel type, the channels shown will be restricted to these types
      */
-    channel_types?: number | undefined;
+    channel_types?: number[] | undefined;
     /**
      * - For `INTEGER` options, double for NUMBER options	If the option is an INTEGER or NUMBER type, the minimum value permitted
      */
@@ -3991,7 +3991,7 @@ export type SelectMenu = {
     /**
      * - List of channel types to include in the channel select component (type `8`)
      */
-    channel_types?: number | undefined;
+    channel_types?: number[] | undefined;
     /**
      * - The text to be displayed when no option is selected.
      */

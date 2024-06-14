@@ -820,7 +820,7 @@ module.exports = {
      * @param {?ForumLayoutType} [params.default_forum_layout] - The default forum layout view used to display posts in `GUILD_FORUM` channels
      * @param {?number} [params.default_thread_rate_limit_per_user] - The initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update.
      * @param {string} [params.reason]
-     * @returns {Promise<Channel[]>} The new [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object on success.
+     * @returns {Promise<Channel>} The new [Channel]{@link https://discord.com/developers/docs/resources/channel#channel-object} object on success.
      */
     create: async (params) =>
       attemptHandler({

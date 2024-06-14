@@ -46,7 +46,7 @@ export declare function initialize(options: {
     redirect_uri?: string;
   };
 }): void;
-  
+
 export declare const discord: {
   auditlog: {
     retrieve: (params: {
@@ -684,7 +684,7 @@ export declare const discord: {
         default_sort_order?: number | null | undefined;
         default_forum_layout?: number | null | undefined;
         default_thread_rate_limit_per_user?: number | null | undefined;
-      }) => Promise<Channel[]>;
+      }) => Promise<Channel>;
       updatePositions: (params: {
         guild_id: string;
         id: string;
@@ -1537,17 +1537,17 @@ export declare const utils: {
     body?: string | Object;
     headers?: any;
   }, match?: string) => Promise<any>;
-  
+
   storage: {
     /**
      * @example
      * await api.utils.storage.get('keyname');
-     * 
+     *
      * @example
      * await api.utils.storage.get('keyname', { default: [] });
-     * 
+     *
      * @param key
-     * @param options 
+     * @param options
      * @param options.default - The default value to return if the key does not exist.
      * @param options.delete - Whether the key-value pair is deleted from the storage after retrieval.
      * @param options.keep_history - Whether the history for this key is kept. For use only when `deleted` is true.
@@ -1560,16 +1560,16 @@ export declare const utils: {
       keep_history?: boolean;
       keep_listeners?: boolean;
     }) => Promise<any>;
-    
+
     /**
      * @example
      * api.utils.storage.getSync('keyname');
-     * 
+     *
      * @example
      * api.utils.storage.getSync('keyname', { default: [] });
-     * 
+     *
      * @param key
-     * @param options 
+     * @param options
      * @param options.default - The default value to return if the key does not exist.
      * @param options.delete - Whether the key-value pair is deleted from the storage after retrieval.
      * @param options.keep_history - Whether the history for this key is kept. For use only when `deleted` is true.
@@ -1582,24 +1582,24 @@ export declare const utils: {
       keep_history?: boolean;
       keep_listeners?: boolean;
     }) => any;
-    
+
     /**
      * @example
      * await api.utils.storage.getMany(['key1', 'key2', 'key3']);
      * // { key1: 'value1', key2: 'value2', key3: 'value3' }
-     * 
+     *
      * @param keys - An array of keys
      * @returns - An object with they key-value pairs
      */
     getMany: (keys: string[]) => Promise<{[x: string]: any}>;
-    
+
     /**
      * @example
      * await api.utils.storage.set({
      *   key: 'password',
      *   value: 'abcd1234'
      * });
-     * 
+     *
      * @example
      * await api.utils.storage.set({
      *   key: 'password',
@@ -1607,20 +1607,20 @@ export declare const utils: {
      *   ttl: 5000, // 5 seconds
      *   ttlCb: () => console.log('password expired')
      * });
-     * 
+     *
      * @example
      * await api.utils.storage.set({
      *   key: 'DontChangeMe',
      *   value: 'abcd1234',
      *   allow_overwrite: false
      * });
-     * 
+     *
      * await api.utils.storage.set({
      *   key: 'DontChangeMe',
      *   value: 'new value'
      * }); // => error
-     * 
-     * @param options 
+     *
+     * @param options
      * @param options.key
      * @param options.value
      * @param options.ttl - Amount of time in ms that this value will be stored
@@ -1637,14 +1637,14 @@ export declare const utils: {
       allow_overwrite?: boolean;
       on_change?: Function;
     }) => Promise<any>;
-    
+
     /**
      * @example
      * api.utils.storage.setSync({
      *   key: 'password',
      *   value: 'abcd1234'
      * });
-     * 
+     *
      * @example
      * api.utils.storage.setSync({
      *   key: 'password',
@@ -1652,20 +1652,20 @@ export declare const utils: {
      *   ttl: 5000, // 5 seconds
      *   ttlCb: () => console.log('password expired')
      * });
-     * 
+     *
      * @example
      * api.utils.storage.setSync({
      *   key: 'DontChangeMe',
      *   value: 'abcd1234',
      *   allow_overwrite: false
      * });
-     * 
+     *
      * api.utils.storage.setSync({
      *   key: 'DontChangeMe',
      *   value: 'new value'
      * }); // => error
-     * 
-     * @param options 
+     *
+     * @param options
      * @param options.key
      * @param options.value
      * @param options.ttl - Amount of time in ms that this value will be stored
@@ -1682,7 +1682,7 @@ export declare const utils: {
       allow_overwrite?: boolean;
       on_change?: Function;
     }) => any;
-    
+
     /**
      * @example
      * await api.utils.storage.setMany({
@@ -1690,12 +1690,12 @@ export declare const utils: {
      *   keyname2: 'value2',
      *   keyname3: 'value3'
      * });
-     * 
+     *
      * @param options - An object where each property represents a key and its corresponding value to be stored
-     * @returns 
+     * @returns
      */
     setMany: (options: Record<string, any>) => Promise<any[]>;
-    
+
     /**
      * @example
      * await api.utils.storage.delete('password'); //=> true
@@ -1703,7 +1703,7 @@ export declare const utils: {
      * await api.utils.storage.delete('password', {
      *   keep_history: true
      * });
-     * 
+     *
      * @param key
      * @param options
      * @param options.keep_history - Whether the history for this key is kept. Default `false`.
@@ -1714,7 +1714,7 @@ export declare const utils: {
       keep_history?: boolean;
       keep_listeners?: boolean
     }) => Promise<boolean>;
-    
+
     /**
      * @example
      * api.utils.storage.deleteSync('password'); //=> true
@@ -1722,7 +1722,7 @@ export declare const utils: {
      * api.utils.storage.deleteSync('password', {
      *   keep_history: true
      * });
-     * 
+     *
      * @param key
      * @param options
      * @param options.keep_history - Whether the history for this key is kept. Default `false`.
@@ -1733,44 +1733,61 @@ export declare const utils: {
       keep_history?: boolean;
       keep_listeners?: boolean
     }) => boolean;
-    
+
     /**
      * @example
      * await api.utils.storage.deleteMany(['key1', 'key2']);
      * //=> [true, true]
-     * 
+     *
      * @param keys
      * @returns A promise resolving to an array of booleans indicating success or failure for each deletion operation
      */
     deleteMany: (keys: string[]) => Promise<boolean[]>;
-    
+
+    /**
+     * @example
+     * await api.utils.storage.set({
+     *   key: 'password',
+     *   value: [1, 2, 3, 4, 5]
+     * });
+     *
+     * await api.utils.storage.filterValues('password', (x) => x !== 2);
+     *
+     * await api.utils.storage.get('password');
+     * //=> '[ 1, 3, 4, 5 ]'
+     *
+     * @param key
+     * @param  predicate
+     * @returns
+     */
+    filterValue: (key: string, predicate: (value: any) => boolean) => any;
     each: (callback: Function) => Promise<any>;
     eachSync: (callback: Function) => any;
-    
+
     merge: (key: string, value: any) => Promise<any>;
     mergeSync: (key: string, value: any) => any;
-    
+
     push: (key: string, ...args: any) => Promise<any[]>;
     pushSync: (key: string, ...args: any) => any[];
-    
+
     search: (key: string) => Promise<{[x: string]: any}>;
     searchSync: (key: string) => {[x: string]: any};
-    
+
     increment: (key: string) => Promise<any>;
     incrementSync: (key: string) => any;
-    
+
     decrement: (key: string) => Promise<any>;
     decrementSync: (key: string) => any;
-    
+
     clearHistory: (key: string) => Promise<void>;
     clearHistorySync: (key: string) => void;
-    
+
     all: () => Promise<_File[][]>;
     allSync: () => _File[][];
-    
+
     equals: (key: string, value: any) => Promise<any>;
     equalsSync: (key: string, value: any) => any;
-    
+
     filter: (callback: (file: _File) => boolean) => _File[];
     has: (key: string) => boolean;
     export: () => {[key: string]: {value: any, expire?: number}};

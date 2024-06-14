@@ -183,7 +183,7 @@ export namespace channels {
         default_forum_layout?: number | null | undefined;
         default_thread_rate_limit_per_user?: number | null | undefined;
         reason?: string | undefined;
-    }): Promise<Channel[]>;
+    }): Promise<Channel>;
     export { create_1 as create };
     export function updatePositions(params: {
         guild_id: string;
