@@ -1109,28 +1109,26 @@ module.exports = {
    *   value: [1, 2, 3, 4, 5]
    * });
    *
-   * await api.utils.storage.filterValues('password', (x) => x !== 2);
+   * await api.utils.storage.filterValue('password', (x) => x !== 2);
    *
    * await api.utils.storage.get('password');
    * //=> '[ 1, 3, 4, 5 ]'
    *
    * @param {string} key
    * @param {(value: any) => boolean} predicate
-   * @returns {?any}
+   * @returns {Promise<?any>}
    */
-  filterValue: (key, predicate) => {
-    if (!predicate || typeof predicate !== 'function') return;
+  filterValue: async (key, predicate) => {
+    if (!predicate || typeof predicate !== 'function') return null;
     const result = _cache
       .filter((x) => x.key === key)
       .map((x) => {
         if (Array.isArray(x.value)) return x.value.filter(predicate);
-        else if (typeof x.value === 'object' && x.value !== null)
-          return predicate(x.value) ? x.value : null;
         else return predicate(x.value) ? x.value : null;
       })
       .filter((x) => x !== null);
 
-    return result.length ? result[0] : null;
+    return set({ key, value: result.length ? result[0] : null });
   },
 
   /**
