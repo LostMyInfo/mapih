@@ -775,6 +775,7 @@ function prepareSet(options) {
  * @returns {Array<any>}
  */
 function preparePush(oldValues = [], ...args) {
+  oldValues = oldValues ?? [];
   // args = args.filter(arg => arg !== undefined && arg !== null);
   args = (args.filter((x) => Array.isArray(x))).length && args.length === 1
     ? args[0]
@@ -782,7 +783,7 @@ function preparePush(oldValues = [], ...args) {
 
   const { unique = false } = typeof args[args.length - 1] === 'object' ? args.pop() : {};
 
-  if (!Array.isArray(oldValues)) throw new Error('Existing value must be an Array');
+  if (oldValues && !Array.isArray(oldValues)) throw new Error('Existing value must be an Array');
   const value = unique
     ? removeDuplicates([...oldValues, ...args])
     : [...oldValues, ...args];

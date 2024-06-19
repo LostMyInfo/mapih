@@ -154,9 +154,9 @@
  * @property {Snowflake} [guild_id] - Guild ID of the command, if not global
  * @property {string} name - [Name of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming} (1-32 characters)
  * @property {LocalizationMap} [name_localizations] - Localization dictionary for `name` field. [Available locales]{@link https://discord.com/developers/docs/reference#locales}
- * @property {string} description - Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands. 
+ * @property {string} description - Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands.
  * @property {LocalizationMap} [description_localizations] - Localization dictionary for `description` field.
- * @property {ApplicationCommandOption[]} [options] - Parameters for the command, max of 25. 
+ * @property {ApplicationCommandOption[]} [options] - Parameters for the command, max of 25.
  * @property {string} default_member_permissions - Set of permissions represented as a bit set.
  * @property {boolean} [dm_permission=true] - Indicates whether the command is available in DMs with the app, only for globally-scoped commands.
  * @property {boolean} [nsfw=false] - Indicates whether the command is age-restricted.
@@ -172,7 +172,7 @@
  * @property {ApplicationCommandOptionType} type - [Type of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-type}
  * @property {string} name - [Name of command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-naming} (1-32 characters)
  * @property {LocalizationMap} [name_localizations] - Localization dictionary for `name` field. [Available locales]{@link https://discord.com/developers/docs/reference#locales}
- * @property {string} description - Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands. 
+ * @property {string} description - Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands.
  * @property {LocalizationMap} [description_localizations] - Localization dictionary for `description` field.
  * @property {boolean} [required=false] - If the parameter is required or optional
  * @property {ApplicationCommandOptionChoice} [choices] - Choices for `STRING`, `INTEGER`, and `NUMBER` types for the user to pick from, max 25
@@ -492,7 +492,7 @@
 
 /**
  * @summary [Guild]{@link https://discord.com/developers/docs/resources/guild#guild-object} Object
- * @typedef {Object} Guild 
+ * @typedef {Object} Guild
  * @property {string} name - Guild name (2-100 characters, excluding trailing and leading whitespace)
  * @property {Snowflake} id - Guild ID
  * @property {boolean} [owner] - True if [the user]{@link https://discord.com/developers/docs/resources/user#get-current-user-guilds} is the owner of the guild
@@ -627,7 +627,7 @@
  * @property {?boolean} [lock_permissions] - Syncs the permission overwrites with the new parent, if moving to a new category
  * @property {?Snowflake} [parent_id] - The new channel category
  */
-    
+
 /**
  * @summary [Message]{@link https://discord.com/developers/docs/resources/channel#message-object}
  * @typedef {Object} Message
@@ -653,7 +653,7 @@
  * @property {MessageActivity} [activity] - [Message Activity]{@link https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure} object.
  * @property {Application} [application] - [Partial Application]{@link https://discord.com/developers/docs/resources/application#application-object} object.
  * @property {Snowflake} [application_id] - If the message is an [Interaction]{@link https://discord.com/developers/docs/interactions/receiving-and-responding} or application-owned webhook, this is the id of the application
- * @property {MessageReference} [message_reference] - [Message reference]{@link https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure} object. Data showing the source of a crosspost, channel follow add, pin, or reply message. 
+ * @property {MessageReference} [message_reference] - [Message reference]{@link https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure} object. Data showing the source of a crosspost, channel follow add, pin, or reply message.
  * @property {?MessageFlags} flags - [Message flags]{@link https://discord.com/developers/docs/resources/channel#message-object-message-flags} combined as a [bitfield]{@link https://en.wikipedia.org/wiki/Bit_field}
  * @property {Message} [referenced_message] - The message associated with the message_reference
  * @property {MessageInteraction} [interaction] - Sent if the message is a response to an [Interaction]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object}
@@ -817,7 +817,7 @@
  * | 2     | Unsubmitted | Application has not yet been applied for verification |
  * | 3     | Submitted   | Application has submitted a verification request      |
  * | 4     | Succeeded   | Application has been verified                         |
- */ 
+ */
 
 /**
  * @summary [Application]{@link https://discord.com/developers/docs/resources/application#application-object}
@@ -1132,7 +1132,7 @@
  * @property {AutoModActionMetadata} [metadata] - Additional metadata needed during execution for this specific action type
  */
 
-/** 
+/**
  * @summary [Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object}
  * @example {@lang json}
  * {
@@ -1290,7 +1290,7 @@
  * | Thread Create | 110 | Thread was created in a channel
  * | Thread Update | 111 | Thread was updated
  * | Thread Delete | 112 | Thread was deleted
- * | Application Command Permission Update | 121 | Permissions were updated for a command 
+ * | Application Command Permission Update | 121 | Permissions were updated for a command
  * | Auto Moderation Rule Create | 140 | Auto Moderation rule was created
  * | Auto Moderation Rule Update | 141 | Auto Moderation rule was updated
  * | Auto Moderation Rule Delete | 142 | Auto Moderation rule was deleted
@@ -1375,7 +1375,7 @@
 
 /**
  * @summary [Thread Metadata]{@link https://discord.com/developers/docs/resources/channel#thread-metadata-object} Object
- * @description 
+ * @description
  * Contains a number of thread-specific channel fields that are not needed by other channel types
  * @typedef {Object} ThreadMetadata
  * @property {boolean} archived - Whether the thread is archived
@@ -1388,7 +1388,7 @@
 
 /**
  * @summary [Forum Tag]{@link https://discord.com/developers/docs/resources/channel#forum-tag-object} Object
- * @description 
+ * @description
  * Represents a tag that is able to be applied to a thread in a `GUILD_FORUM` channel
  * @typedef {Object} ForumTag
  * @property {Snowflake} id - The id of the tag
@@ -1413,7 +1413,7 @@
  * @typedef {Object} Embed
  * @property {string} [type]
  * @property {string} [title] - 256 character limit
- * @property {string | string[]} [description] - 4096 character limit
+ * @property {string} [description] - 4096 character limit
  * @property {?number} [color] - 0xhex or integer
  * @property {string} [url] - URL for the title of the embed
  * @property {number | ISO8601Timestamp | Date} [timestamp] - Timestamp of embed content
@@ -1462,7 +1462,7 @@
  * @property {?number} interval
  * @property {?RecurrenceRuleWeekdays[]} by_weekday
  * @property {?RecurrenceRuleMonths[]} by_month
- * @property {?number[]} by_month_day 
+ * @property {?number[]} by_month_day
  * @property {?number[]} by_year_day
  * @property {?number} count
  */
@@ -1959,11 +1959,11 @@
 * @typedef {number} EventPrivacyLevel
 * Name | Value
 * -----|------
-* Guild Only | 2 
+* Guild Only | 2
 */
 
 
-/** 
+/**
 * @summary [Guild Scheduled Event Status]{@link https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status}
 * @typedef {number} EventStatus
 * | Name | Value |
@@ -1972,14 +1972,14 @@
 * | Active    | 2 |
 * | Completd  | 3 |
 * | Canceled  | 4 |
-* 
-* 
+*
+*
 * Once status is set to `COMPLETED` or `CANCELED`, the status can no longer be updated
-* 
+*
 * Valid Guild Scheduled Event Status Transitions:
-* 
+*
 * SCHEDULED --> ACTIVE
-* 
+*
 * ACTIVE --------> COMPLETED
 *
 * SCHEDULED --> CANCELED
@@ -2104,7 +2104,7 @@
 
 /**
 * @summary [Guild Widget]{@link https://discord.com/developers/docs/resources/guild#guild-widget-object}
-* @typedef {Object} GuildWidget 
+* @typedef {Object} GuildWidget
 * @property {Snowflake} id - Guild ID
 * @property {string} name - Guild name (2-100 characters)
 * @property {?string} instant_invite - Instant invite for the guilds specified widget invite channel
@@ -2146,7 +2146,7 @@
 * @summary [Guild Template]{@link https://discord.com/developers/docs/resources/guild-template#guild-template-object}
 * @description
 * Represents a code that when used, creates a guild based on a snapshot of an existing guild
-* @typedef {Object} GuildTemplate 
+* @typedef {Object} GuildTemplate
 * @property {string} name - Template name
 * @property {string} code - The template code (unique ID)
 * @property {?string} description - The description for the template
@@ -2241,7 +2241,7 @@
 * @property {string} description
 * @property {?PartialEmoji} [emoji]
 * @property {?string} [icon]
-* 
+*
 */
 /**
 * @summary [New Member Action]{@link }
@@ -2317,7 +2317,7 @@
 * @property {Emoji[]} emojis
 * @property {Role[]} roles
 * @property {ISO8601Timestamp} joined_at
-* @property {?unknown} incidents_data 
+* @property {?unknown} incidents_data
 * @property {boolean} large
 * @property {boolean} unavailable - `true` if this guild is unavailable due to an outage
 * @property {Member[]} members
@@ -2430,7 +2430,7 @@
 * - For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type: 6`.
 * - For any current implementations, you will want to use the SKU defined by `type: 5`.
 * - A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.
-* 
+*
 * | Type | ID | Description |
 * |-----------------|---|-------------|
 * | Subscription    | 5 | Represents a recurring subscription |
@@ -2621,7 +2621,7 @@ const Locale = {
  * @property {boolean} [disabled=false] - Whether the button is disabled.
  */
 
-/** 
+/**
  * @summary [Select Menu Option]{@link https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure}
  * @typedef {Object} SelectOption
  * @property {string} label - User-facing name of the option; max 100 characters
@@ -2648,7 +2648,7 @@ const Locale = {
 /**
  * @summary [Action Rows]{@link https://discord.com/developers/docs/interactions/message-components#action-rows}
  * An Action Row is a non-interactive container component for other types of components.
- * 
+ *
  * It has a `type: 1` and a sub-array of [Message Components]{@link MessageComponent}
  * - You can have up to 5 Action Rows per message
  * - An Action Row cannot contain another Action Row
@@ -2663,7 +2663,7 @@ const Locale = {
  *   ]
  * }
  * // @property {MessageComponent[] | InteractionData[]} components
- * 
+ *
  * @template {MessageActionRow | Modal} C
  * @typedef {Object} ActionRow
  * @property {C[]} components - Placeholder for components

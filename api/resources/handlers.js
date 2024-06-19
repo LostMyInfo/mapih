@@ -40,7 +40,7 @@ async function attemptHandler(params, discord_params) {
 
   if (params.reason)
     headers.append('x-audit-log-reason', params.reason);
-    
+
   try {
 
     return https({
@@ -51,7 +51,7 @@ async function attemptHandler(params, discord_params) {
       discord_params
     });
     // console.log('attempt in functions', attempt)
-      
+
   } catch (e) {
     throw e;
   }
@@ -60,7 +60,7 @@ async function attemptHandler(params, discord_params) {
 /**
  * Handles multipart form-data for Discord attachments
  * @param {*} params
- * @param {string} path 
+ * @param {string} path
  * @param {Method} method
  * @private
  */
@@ -68,24 +68,27 @@ async function sendAttachment(params, path, method) {
   const { isValidMedia } = require('./functions');
   try {
     const form = new FormData();
-    
+
     for (const attachment of params.attachments) {
-      if (!attachment.file || !attachment.filename)
-        throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
+      if (!attachment.file)
+        throw new Error('You must provide a \'file\' property in the attachment object.');
+
+      if (!attachment.filename)
+        throw new Error('You must provide a \'filename\' property in the attachment object.');
 
       if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
         const response = await fetch(attachment.file);
         attachment.file = await response.blob();
       } else if (!(attachment.file instanceof Blob) && !(attachment.file instanceof Buffer))
         throw new Error('Invalid file type provided. Must be a Blob, Buffer, or a valid media URL.');
-  
+
       form.append(
         `files[${params.attachments.indexOf(attachment)}]`,
         attachment.file instanceof Blob ? attachment.file : new Blob([attachment.file]),
         attachment.filename
       );
     }
-    
+
     params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
       id: index,
       filename: a.filename,
@@ -106,7 +109,7 @@ async function sendAttachment(params, path, method) {
       throw new ResponseError(await response.json(), response, 'discord_error');
 
     return response.json();
-    
+
   } catch (e) {
     throw e;
   }
@@ -157,10 +160,10 @@ async function handler(options) {
 
     if ((access_token && access_token?.expires <= Date.now()) || (!access_token?.access_token && access_token?.refresh_token))
       access_token.access_token = await refresh(!google ? options.handler : 'google', google ? 'drive' : undefined);
-    
+
     access_token = typeof access_token === 'string' ? access_token : access_token?.access_token;
     // console.log('\naccess_token from handler()2\n', access_token);
-    
+
     /**
      * @type {{url: string, auth?: (() => Promise<string>)|undefined, header?: string[]}|undefined}
      */
@@ -253,8 +256,8 @@ async function handler(options) {
     }[options.handler];
 
     // console.log('\nawait auth() in handler():\n', await auth());
-    
-    
+
+
     const response = await https({
       method: options.method,
       url: !/youtube/i.test(options.handler)
@@ -296,7 +299,7 @@ async function handler(options) {
     if (header) _headers.push(header);
     if (authorization)
       _headers.push(['Authorization', authorization]);
-    
+
     return https({
       method: options.method,
       url: options.handler !== 'youtube'
@@ -312,7 +315,7 @@ async function handler(options) {
       response_type: options.response_type ?? undefined
     });
     */
-    
+
   } catch (/** @type {*} */ error) {
     throw error.message?.includes('expired') || error.authorize
       // @ts-ignore
@@ -334,7 +337,7 @@ async function handler(options) {
  */
 async function paypalHandler(options) {
   try {
-    
+
     const headers = options.headers ?? new Headers();
     headers.set('Authorization', `Basic ${await paypalAccessToken()}`);
 
@@ -357,7 +360,7 @@ async function paypalHandler(options) {
 
 
 /**
- * @param {boolean} refresh 
+ * @param {boolean} refresh
  * @returns {Promise<string>}
  */
 async function paypalAccessToken(refresh = false) {
@@ -373,7 +376,7 @@ async function paypalAccessToken(refresh = false) {
   const credentials = require('../../Api').get_paypal_token();
   if (!credentials && !process.env.paypal_client_id && !process.env.paypal_secret_key)
     throw new Error('PayPal credentials not set');
-  
+
   const client_id = credentials?.client_id || process.env.paypal_client_id;
   const secret_key = credentials?.secret_key || process.env.paypal_secret_key;
 
@@ -408,7 +411,7 @@ async function spotifyAccessToken() {
   const token = await getTokens('spotifyAccessToken');
   if (token) return token;
 
-  
+
   const credentials = require('../../Api').get_spotify_token();
   if (!credentials) throw new Error(
     'Spotify credentials not set. Please initialize the library first.'
@@ -432,7 +435,7 @@ async function spotifyAccessToken() {
       key: 'spotifyAccessToken',
       value: access_token
     });
-  
+
   return access_token;
 }
 
@@ -504,20 +507,20 @@ function token(type, handler, variable) {
 }
 
 /**
- * 
+ *
  * @param {'Slack' | 'Spotify' | 'Dropbox' | 'Box' | 'Google' | 'Imgur' | 'Twitter'} type
  * @param {string} handler
  * @param {string[]} [scope]
  * @param {string} [service]
- * @returns 
+ * @returns
  */
 async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
   if ((service !== handler) && (type === 'Google' && !/youtube|drive|places|sheets/i.test(handler))) return;
   const api = require('../../Api');
   const token = await getTokens(`${service}Auth`);
-  
+
   // console.log(type + ' token in oauthToken():', token);
-  
+
   if (token && token.expires <= Date.now())
     token.access_token = await refresh(service, scope?.[0]);
 
@@ -528,13 +531,13 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
     for (const _scope of scope)
       if (!token?.scope?.includes(_scope))
         scopes.push(_scope);
-          
+
     if (scopes.length)
       throw new ResponseError(null, null, `${service}_error`, { error: `Your app does not have the required scopes: \`${scopes.join(scopes.length > 1 ? ', ' : '')}\`` });
   }
-  
+
   if (token?.access_token) return token.access_token;
-  
+
   // @ts-ignore
   const credentials = api[`get_${service}_token`]();
   // console.log('credentials from oauth()', credentials);
@@ -553,7 +556,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
 async function authorize(type, params, handler, service = type.toLowerCase()) {
   const api = require('../../Api');
   const { removeFalsyFromObject } = require('./functions');
-  
+
   /** @type {{[x: string]: { url: string, scope?: string}}} */
   const configs = {
     dropbox: {
@@ -595,7 +598,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
     team_id = (credentials?.team_id || process.env[`${service}_team_id`])?.trim(),
     code_verifier = getCodeVerifier(),
     authString = `Please authorize your ${type} application`,
-    
+
     url = `${configs[service].url}?` + require('querystring').stringify(removeFalsyFromObject({
       response_type: 'code',
       client_id,
@@ -609,7 +612,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
       code_challenge: service === 'twitter' ? getCodeChallengeFromVerifier(code_verifier) : undefined,
       code_challenge_method: service === 'twitter' ? 'S256' : undefined
     }));
-  
+
   if (service === 'twitter') {
     // console.log('code verifier:', code_verifier);
     const { code_verifier: verifier = undefined, ...value } = await getTokens('twitterAuth') || {};
@@ -632,7 +635,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
  * @returns {Promise<string|undefined>}
  */
 async function refresh(type, google) {
-    
+
   // console.log('\ntype in refresh():', type);
   // @ts-ignore
   const credentials = require('../../Api')[`get_${type}_token`]();
@@ -694,7 +697,7 @@ async function refresh(type, google) {
   } catch (/** @type {*} */ error) {
     // console.log('error.message in refresh() (use for authorize())', error.message);
     console.log('Error in refresh():\n', error);
-    
+
     throw error.message !== 'Imgur is temporarily over capacity. Please try again later.'
       // @ts-ignore
       ? await authorize(type.charAt(0).toUpperCase() + type.slice(1), null)
@@ -723,7 +726,7 @@ async function refresh(type, google) {
 }
 
 /**
- * @param {string} service 
+ * @param {string} service
  * @returns {string|undefined}
  */
 function defaultScope(service) {
@@ -765,7 +768,7 @@ function createOAuthSignature(handler, method, url) {
   const parameterString = Object.keys(oauthParameters).sort().map(key => {
     return `${encodeURIComponent(key)}=${encodeURIComponent(oauthParameters[key])}`;
   }).join('&');
-  
+
   console.log('\nparameterString:', parameterString);
 
   const signatureBaseString = [
@@ -774,7 +777,7 @@ function createOAuthSignature(handler, method, url) {
     encodeURIComponent(parameterString)
   ].join('&');
   console.log('\nsignatureBaseString:', signatureBaseString);
-  
+
   const signingKey = [
     encodeURIComponent(token(handler, handler, 'api_secret')),
     encodeURIComponent(token(handler, handler, 'access_token_secret'))
@@ -785,7 +788,7 @@ function createOAuthSignature(handler, method, url) {
     .update(signatureBaseString)
     .digest('base64');
   console.log('\noauthSignature:', signature);
-  
+
   oauthParameters['oauth_signature'] = signature;
 
   const authHeader = 'OAuth ' + Object.keys(oauthParameters).sort().map(key => {
@@ -797,13 +800,13 @@ function createOAuthSignature(handler, method, url) {
 }
 
 /**
- * @param {string} key 
+ * @param {string} key
  * @returns {Promise<?any>}
  */
 const getTokens = async (key) => (find(key, await loadTokens()) || {}).value || null;
 
 /**
- * @param {{key: string, value: any}} param0 
+ * @param {{key: string, value: any}} param0
  * @returns {Promise<void>}
  */
 async function setTokens({ key, value }) {
@@ -818,7 +821,7 @@ async function setTokens({ key, value }) {
   const index = tokens.findIndex((i) => i.key === find(key, tokens)?.key);
   if (index !== -1) tokens[index] = entry;
   else tokens.push(entry);
-  
+
   try {
     await writeFile(process.cwd() + '/.tokens', JSON.stringify(tokens));
   } catch (e) {
@@ -827,12 +830,12 @@ async function setTokens({ key, value }) {
 }
 
 /**
- * @param {Array<any>} tokens 
+ * @param {Array<any>} tokens
  * @returns {Promise<Array<any>>}
  */
 async function loadTokens(tokens = []) {
   try {
-  
+
     // @ts-ignore
     tokens = JSON.parse(await readFile(process.cwd() + '/.tokens'));
   } catch (/** @type {any} */ error) {
@@ -844,8 +847,8 @@ async function loadTokens(tokens = []) {
 }
 
 /**
- * @param {number} length 
- * @param {string} [text] 
+ * @param {number} length
+ * @param {string} [text]
  * @returns {string}
  */
 function generateRandomString(length, text = '') {
@@ -854,9 +857,9 @@ function generateRandomString(length, text = '') {
     text += possible[Math.floor(Math.random() * possible.length)];
   return text;
 }
-    
+
 /**
- * @param {string} string 
+ * @param {string} string
  * @returns {string}
  */
 function escapeBase64Url(string) {
@@ -866,7 +869,7 @@ function escapeBase64Url(string) {
 function getCodeVerifier() { return generateRandomString(128); };
 
 /**
- * @param {string} verifier 
+ * @param {string} verifier
  * @returns {string}
  */
 function getCodeChallengeFromVerifier(verifier) {

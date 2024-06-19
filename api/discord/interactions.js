@@ -10,15 +10,15 @@ const { ResponseError } = require('../resources/Errors');
 
 /**
  * @file
- * An Interaction is the message that your application receives when a user uses an application command or a message component.  
+ * An Interaction is the message that your application receives when a user uses an application command or a message component.
  *
  * For Slash Commands, it includes the values that the user submitted.
  *
  * For User Commands and Message Commands, it includes the resolved user or message on which the action was taken.
  *
- * For Message Components it includes identifying information about the component that was used.  
- * It will also include some metadata about how the interaction was triggered: the `guild_id`, `channel`, `member` and other fields.  
- * 
+ * For Message Components it includes identifying information about the component that was used.
+ * It will also include some metadata about how the interaction was triggered: the `guild_id`, `channel`, `member` and other fields.
+ *
  * [receiving-and-responding#interactions](https://discord.com/developers/docs/interactions/receiving-and-responding#interactions)
  * @module interactions
  */
@@ -35,7 +35,7 @@ module.exports = {
      * @summary
      * ### [Get Original Interaction Response]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
      * - Returns the initial Interaction response.
-     * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage} 
+     * - Functions the same as [Get Webhook Message]{@link module:webhooks#retrieveMessage}
      * #### Example Response:
      * ```js
      * {
@@ -88,7 +88,7 @@ module.exports = {
      * await api.discord.interactions.callback.get_original(params);
      * @memberof module:interactions.callback#
      * @method get_original
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @returns {Promise<?Message>}
      */
     get_original: async (params) => {
@@ -106,9 +106,9 @@ module.exports = {
     /**
      * @summary
      * ### [Create Interaction Response]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
-     * 
+     *
      * - Used to immediately respond and reply to an interaction.
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `4` (`CHANNEL_MESSAGE_WITH_SOURCE`)
      * @example
      * await api.discord.interactions.callback.reply(params, {
@@ -132,7 +132,7 @@ module.exports = {
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
      * @param {boolean} [input.return_date]
-     * @returns {Promise<boolean | Date | undefined | null>} 
+     * @returns {Promise<boolean | Date | undefined | null>}
      */
     reply: async (params, input = {}) => {
       input.flags = input.ephemeral ? (1 << 6) : 0;
@@ -167,16 +167,16 @@ module.exports = {
         throw e;
       }
     },
-        
-        
+
+
     /**
      * @summary
      * ### Create Interaction Response (Deferred)
-     * 
+     *
      * - Used to acknowledge an interaction and wait for an update or a followup.
      * - User sees a thinking/loading state.
      * - Only accepts an ephemeral boolean
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `5` (`DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE`)
      * @example
      * await api.discord.interactions.callback.defer(params, {
@@ -208,7 +208,7 @@ module.exports = {
      * - Used to acknowledge a component interaction and wait for a followup.
      * - User does NOT see a thinking/loading state.
      * - Only accepts an ephemeral boolean
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `6` (`DEFERRED_UPDATE_MESSAGE` *for components)
      * @example
      * await api.discord.interactions.callback.component_defer(params, {
@@ -238,7 +238,7 @@ module.exports = {
      * @summary
      * ### Update Message (Components)
      * - Allows for editing of the message the component was attached to.
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `7` (`UPDATE_MESSAGE` *for components)
      * @example
      * await api.discord.interactions.callback.component_update(params, {
@@ -266,7 +266,7 @@ module.exports = {
      * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [input.attachments]
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
-     * @returns {Promise<?{statusCode: 204, body: undefined}|undefined>} 
+     * @returns {Promise<?{statusCode: 204, body: undefined}|undefined>}
      */
     component_update: async (params, input = {}) => {
       const url = `interactions/${params.id}/${params.token}/callback`;
@@ -286,11 +286,11 @@ module.exports = {
      * @summary
      * ### [Autocomplete]{@link https://discord.com/developers/docs/interactions/application-commands#autocomplete}
      * - Responds to an autocomplete interaction with suggested choices.
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `8` (`APPLICATION_COMMAND_AUTOCOMPLETE_RESULT`)
      * @memberof module:interactions.callback#
      * @method autocomplete_reply
-     * @param {Pick<InteractionParams, 'id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {object} input
      * @param {Array<Pick<ApplicationCommandOptionChoice, 'name' | 'value'>>} input.choices
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -308,11 +308,11 @@ module.exports = {
      * ### [Text Inputs (Modals)]{@link https://discord.com/developers/docs/interactions/message-components#text-inputs}
      * - Interactive component that render on modals.
      * - They can be used to collect short-form or long-form text.
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `9` (`MODAL`)
      * @memberof module:interactions.callback#
      * @method modal_reply
-     * @param {Pick<InteractionParams, 'id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {Object} input
      * @param {string} input.custom_id
      * @param {string} input.title
@@ -331,14 +331,14 @@ module.exports = {
      * @summary
      * ### [Edit Original Interaction Response]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
      * - Edits the initial Interaction response.
-     * - Functions the same as [Edit Webhook Message]{@link module:webhooks#updateMessage} 
+     * - Functions the same as [Edit Webhook Message]{@link module:webhooks#updateMessage}
      * @example
      * await api.discord.interactions.callback.update_original(params, {
      *   content: 'new content',
      * });
      * @memberof module:interactions.callback#
      * @method update_original
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @param {object} input
      * @param {string} [input.content]
      * @param {Embed[]} [input.embeds]
@@ -361,7 +361,7 @@ module.exports = {
           });
         } catch (error) {}
         if (!message) return null;
-        
+
         const { embeds } = input;
         const embed = embeds?.[0] || undefined;
         const attempt = await attemptHandler({
@@ -404,7 +404,7 @@ module.exports = {
      * await api.discord.interactions.callback.delete_original(params);
      * @memberof module:interactions.callback#
      * @method delete_original
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
     delete_original: async (params) =>
@@ -417,11 +417,11 @@ module.exports = {
      * @summary
      * ### [Premium Required]{@link https://discord.com/developers/docs/interactions/application-commands#autocomplete}
      * - Respond to an interaction with an upgrade button, only available for apps with monetization enabled.
-     * 
+     *
      * [Interaction Callback Type]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type}: `10` (`PREMIUM_REQUIRED`)
      * @memberof module:interactions.callback#
      * @method upgrade
-     * @param {Pick<InteractionParams, 'id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {object} [input]
      * @returns {Promise<{statusCode: 204, body: undefined}>}
      */
@@ -451,7 +451,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method get
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @param {Snowflake} [input.thread_id]
@@ -460,7 +460,7 @@ module.exports = {
     retrieve: async (params, input) => {
       let endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
       endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
-  
+
       const attempt = await attemptHandler({
         method: 'GET',
         endpoint
@@ -486,7 +486,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method create
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @param {object} input
      * @param {boolean} [input.ephemeral] - Whether the message should be ephemeral
      * @param {string} [input.content]
@@ -504,7 +504,7 @@ module.exports = {
       if (input.embeds?.length) {
         input.embeds = embedModifier(input.embeds);
       }
-      
+
       if (input.attachments && input.attachments.length)
         return sendAttachment('body', input, url, 'post', null, flags);
       else {
@@ -529,7 +529,7 @@ module.exports = {
      * @summary
      * ### [Edit Followup Message]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
      * - Functions the same as [Edit Webhook Message]{@link module:webhooks#updateMessage}
-     * 
+     *
      * Edits a previously-sent followup message from the same token.
      * - When the `content` field is edited:
      *   - The `mentions` array in the message object will be reconstructed from scratch based on the new content.
@@ -544,7 +544,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method edit
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @param {boolean} [input.ephemeral]
@@ -612,7 +612,7 @@ module.exports = {
      * });
      * @memberof module:interactions.followup#
      * @method del
-     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params 
+     * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @param {object} input
      * @param {Snowflake} input.message_id
      * @returns {Promise<{statusCode: 204, body: undefined}>}
@@ -626,11 +626,11 @@ module.exports = {
 };
 
 /**
- * @param {string} sender 
- * @param {*} params 
- * @param {string} url 
- * @param {string} method 
- * @param {?number} type 
+ * @param {string} sender
+ * @param {*} params
+ * @param {string} url
+ * @param {string} method
+ * @param {?number} type
  * @param {number} flags
  */
 async function sendAttachment(sender, params, url, method, type, flags) {
@@ -641,15 +641,18 @@ async function sendAttachment(sender, params, url, method, type, flags) {
     const form = new FormData();
 
     for (const attachment of params.attachments) {
-      if (!attachment.file || !attachment.filename)
-        throw new Error('\nAttachments is missing one or more required properties: \'file\' or \'filename\'\n');
-    
+      if (!attachment.file)
+        throw new Error('You must provide a \'file\' property in the attachment object.');
+
+      if (!attachment.filename)
+        throw new Error('You must provide a \'filename\' property in the attachment object.');
+
       if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
         const response = await fetch(attachment.file);
         attachment.file = await response.blob();
       } else if (!(attachment.file instanceof Blob) && !(attachment.file instanceof Buffer))
         throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
-  
+
       form.append(
         `files[${params.attachments.indexOf(attachment)}]`,
         attachment.file instanceof Blob ? attachment.file : new Blob([attachment.file]),
@@ -667,10 +670,10 @@ async function sendAttachment(sender, params, url, method, type, flags) {
     if (sender === 'data')
       form.append('payload_json', JSON.stringify({ type: type, data: params }));
     else {
-      const { attachments, ...newparams } = params;  
+      const { attachments, ...newparams } = params;
       form.append('payload_json', JSON.stringify({ data: newparams }));
     }
-  
+
     const response = await fetch(`https://discord.com/api/v10/${url}`, {
       method,
       body: form,
@@ -710,7 +713,7 @@ async function handleCallbacks(params) {
     });
 
     return r;
-    
+
   } catch (error) {
     // console.error(error);
     throw error;

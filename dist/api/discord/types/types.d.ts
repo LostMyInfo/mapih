@@ -2442,7 +2442,7 @@ export type Embed = {
     /**
      * - 4096 character limit
      */
-    description?: string | string[] | undefined;
+    description?: string | undefined;
     /**
      * - 0xhex or integer
      */
@@ -2454,7 +2454,7 @@ export type Embed = {
     /**
      * - Timestamp of embed content
      */
-    timestamp?: string | number | undefined;
+    timestamp?: string | number | Date | undefined;
     /**
      * - Footer information for the bottom of the embed
      */
