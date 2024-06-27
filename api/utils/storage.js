@@ -497,8 +497,9 @@ const mergeSync = (key, value) => {
  */
 const push = async (key, ...args) => {
   onChange(key);
-  const oldValues = await get(key);
-  const value = preparePush(oldValues, ...args);
+  const
+    oldValues = await get(key),
+    value = preparePush(oldValues, ...args);
   await saveHistory(key, value);
   return set({ key, value });
 };
@@ -534,8 +535,9 @@ const push = async (key, ...args) => {
  */
 const pushSync = (key, ...args) => {
   onChange(key);
-  const oldValues = getSync(key);
-  const value = preparePush(oldValues, ...args);
+  const
+    oldValues = getSync(key),
+    value = preparePush(oldValues, ...args);
   saveHistorySync(key, value);
   return setSync({ key, value });
 };
@@ -700,7 +702,7 @@ function clearHistorySync(key, filtered = []) {
  */
 function prepareGet(key, defaultVal) {
   // const { getPathValue } = require('../resources/functions');
-  const value = (find(key, _cache) || {}).value || null;
+  const value = (find(key, _cache) || {}).value ?? null;
 
   /*
   if (value === null && key.split('.').length > 1) {
@@ -710,9 +712,8 @@ function prepareGet(key, defaultVal) {
     value = getPathValue(value, path.join('.'));
   } else */
 
-  if (value === null && defaultVal) {
+  if (value === null && defaultVal)
     _cache.push({ key, value: defaultVal });
-  }
 
   onChange(key);
   return {
@@ -749,7 +750,7 @@ function prepareSet(options) {
       newvalue = options[k];
     }
 
-  if (!value && !newvalue) return;
+  if (!('value' in options) && !newvalue) return;
   const oldValue = find(key ?? newkey, _cache);
 
   if (oldValue && (JSON.stringify(value ?? newvalue) == JSON.stringify(oldValue.value))) return;
@@ -757,7 +758,8 @@ function prepareSet(options) {
     throw new Error(`The value for \`${key}\` is not allowed to be overwritten.`);
 
   const entry = {
-    key: newkey ?? key, value: newvalue ?? value,
+    key: newkey ?? key,
+    value: newvalue ?? value,
     expire: ttl ? ttl + Date.now() : undefined,
     allow_overwrite: allow_overwrite ? undefined : false
   };
@@ -801,7 +803,7 @@ function prepareIncrDecr(key, amount = 1, method) {
   if (!(amount = parseInt(String(amount), 10)))
     throw new Error('Amount needs to be a number or a string representation of a number.');
 
-  let value = (find(key, _cache) || {}).value || null;
+  let value = (find(key, _cache) || {}).value ?? null;
   if (!value) value = 0;
   else if (!(value = parseInt(value, 10)))
     throw new Error('Existing value needs to be a number or a string representation of a number.');
@@ -1042,7 +1044,6 @@ function validateKeyVals(options) {
     throw new Error(`Value of \`${options.key}\` is undefined`);
 
   return true;
-
 }
 
 
