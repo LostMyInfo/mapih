@@ -13,7 +13,7 @@ const { attemptHandler } = require('../resources/handlers');
  * @module automod
  */
 module.exports = {
-  
+
   /**
    * @summary
    * ### [Get Auto Moderation Rule]{@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
@@ -162,7 +162,7 @@ module.exports = {
    * @param {Snowflake} params.guild_id
    * @param {Snowflake} params.auto_moderation_rule_id
    * @param {string} [params.reason]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   destroyRule: async (params) =>
     attemptHandler({

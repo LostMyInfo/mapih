@@ -1,18 +1,16 @@
 // @ts-check
 
 /**
- * @typedef {string | undefined} discord_token
- * @typedef {string | undefined} prompt_perfect_token
- * @typedef {{bot: string, user?: string, client_id?: string, client_secret?: string, team_id?: string, redirect_uri?: string, scope?: Array<string>}|undefined} slack_token
- * @typedef {string | undefined} openai_token
- * @typedef {string | undefined} anthropic_token
- * @typedef {{api_key: string, client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} google_token
- * @typedef {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} spotify_token
- * @typedef {{client_id: string, client_secret: string, redirect_uri?: string|undefined, scope?: Array<string>} | undefined} imgur_token
- * @typedef {{api_key?: string, api_secret?: string, client_id?: string, client_secret?: string, access_token?: string, access_token_secret?: string, bearer_token?: string, scope?: Array<string>} | undefined} twitter_token
- * @typedef {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, scope?: Array<string>, access_token?: string|undefined} | undefined} dropbox_token
- * @typedef {{client_id?: string, client_secret?: string, redirect_uri?: string|undefined, restricted_to: { scope: string, object: { id: string, etag: string, type: string, sequence_id: string, name: string}}, scope?: string} | undefined} box_token
- * @typedef {{client_id: string, secret_key: string} |undefined} paypal_token
+ * @typedef {string|undefined} discord_token
+ * @typedef {string|undefined} openai_token
+ * @typedef {import('./dist/Api').twitter_token} twitter_token
+ * @typedef {import('./dist/Api').spotify_token} spotify_token
+ * @typedef {import('./dist/Api').slack_token} slack_token
+ * @typedef {import('./dist/Api').google_token} google_token
+ * @typedef {import('./dist/Api').dropbox_token} dropbox_token
+ * @typedef {import('./dist/Api').box_token} box_token
+ * @typedef {import('./dist/Api').imgur_token} imgur_token
+ * @typedef {import('./dist/Api').paypal_token} paypal_token
  */
 
 /**
@@ -99,7 +97,7 @@ module.exports = {
    * @param {paypal_token} [options.paypal]
    */
   initialize: function(options) {
-    
+
     // @ts-ignore
     token = options[token];
     if (options.discord) discordToken = options.discord;
@@ -117,7 +115,7 @@ module.exports = {
   },
 
   get_token: () => token,
-  
+
   /**
    * @returns {discord_token}
    */
@@ -142,7 +140,7 @@ module.exports = {
    * @returns {prompt_perfect_token}
    */
   get_prompt_perfect_token: function() { return promptPerfectToken; },
-  
+
   /**
    * @returns {google_token}
    */
@@ -172,7 +170,7 @@ module.exports = {
    * @returns {twitter_token}
    */
   get_twitter_token: function() { return twitterToken; },
-  
+
   /**
    * @returns {paypal_token}
    */
@@ -191,7 +189,7 @@ module.exports = {
     oauth2: require('./api/discord/oauth2'),
     users: require('./api/discord/users')
   },
-  
+
   slack: {
     chat: require('./api/slack/chat'),
     conversations: require('./api/slack/conversations'),
@@ -266,7 +264,7 @@ module.exports = {
       spreadsheets: require('./api/google/sheets/spreadsheets')
     }
   },
-  
+
   utils: {
     https: require('./api/utils/https').https,
     storage: require('./api/utils/storage'),

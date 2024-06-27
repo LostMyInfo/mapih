@@ -221,7 +221,7 @@ module.exports = {
      * @param {Pick<InteractionParams, 'id' | 'token'>} params event parameters
      * @param {object} [input] user input
      * @param {boolean} [input.ephemeral]
-     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     component_defer: async (params, input = {}) =>
       handleCallbacks({
@@ -266,7 +266,7 @@ module.exports = {
      * @param {Array<Pick<Attachment, 'file' | 'filename' | ?'description'>>} [input.attachments]
      * @param {boolean} [input.tts]
      * @param {AllowedMentions} [input.allowed_mentions]
-     * @returns {Promise<?{statusCode: 204, body: undefined}|undefined>}
+     * @returns {Promise<?{ statusCode: 204, type: 'discord', message: 'Success' }|undefined>}
      */
     component_update: async (params, input = {}) => {
       const url = `interactions/${params.id}/${params.token}/callback`;
@@ -293,7 +293,7 @@ module.exports = {
      * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {object} input
      * @param {Array<Pick<ApplicationCommandOptionChoice, 'name' | 'value'>>} input.choices
-     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     autocomplete_reply: async (params, input) =>
       handleCallbacks({
@@ -317,7 +317,7 @@ module.exports = {
      * @param {string} input.custom_id
      * @param {string} input.title
      * @param {Component} input.components
-     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     modal_reply: async (params, input) =>
       handleCallbacks({
@@ -405,7 +405,7 @@ module.exports = {
      * @memberof module:interactions.callback#
      * @method delete_original
      * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
-     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     delete_original: async (params) =>
       attemptHandler({
@@ -423,7 +423,7 @@ module.exports = {
      * @method upgrade
      * @param {Pick<InteractionParams, 'id' | 'token'>} params
      * @param {object} [input]
-     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     upgrade: async (params, input) =>
       handleCallbacks({
@@ -615,7 +615,7 @@ module.exports = {
      * @param {Pick<InteractionParams, 'application_id' | 'token'>} params
      * @param {object} input
      * @param {Snowflake} input.message_id
-     * @returns {Promise<{statusCode: 204, body: undefined}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     destroy: async (params, input) =>
       attemptHandler({

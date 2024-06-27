@@ -56,8 +56,8 @@ module.exports = {
       method: 'GET',
       endpoint: 'users/@me'
     }), // End of Get Current User
-  
-  /** 
+
+  /**
    * @summary
    * ### [Get Current User Guilds]{@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
    * - Requires the `guilds` OAuth2 scope.
@@ -99,7 +99,7 @@ module.exports = {
     return attempt;
   }, // End of Get Current User Guilds
 
-  /** 
+  /**
    * @summary
    * ### [Get Current User Guild Member]{@link https://discord.com/developers/docs/resources/user#get-current-user-guild-member}
    * - Requires the `guilds.members.read` OAuth2 scope.
@@ -144,8 +144,8 @@ module.exports = {
         avatar: params.avatar ? (await imageData(params.avatar, 'base64string')).data : null
       })
     }), // End of Modify Current User
-  
-  /** 
+
+  /**
    * @summary
    * ### [Get User Connections]{@link https://discord.com/developers/docs/resources/user#get-user-connections}
    * - Requires the `connections` OAuth2 scope.
@@ -209,7 +209,7 @@ module.exports = {
         metadata: params.metadata ?? null
       })
     }), // End of Update User Application Role Connection
-  
+
   /**
    * @summary
    * ### [Create DM]{@link https://discord.com/developers/docs/resources/user#create-dm}
@@ -260,7 +260,7 @@ module.exports = {
           flags: params.flags ?? null
         }
       });
-    }  
+    }
   }, // End of Create DM
 
   /**
@@ -270,7 +270,7 @@ module.exports = {
    * await api.discord.users.createGroupDM({
    *   access_tokens: [
    *     '0000000000',
-   *     '0000000000'  
+   *     '0000000000'
    *   ],
    *   nicks: {
    *     'user_id': 'nickname'
@@ -336,7 +336,7 @@ module.exports = {
    * @memberof module:users#
    * @param {object} params
    * @param {string} params.guild_id
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   leaveGuild: async (params) =>
     attemptHandler({

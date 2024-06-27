@@ -1029,14 +1029,20 @@ function addListenerSync(key, callback) {
  * @param {any} [options.value]
  */
 function validateKeyVals(options) {
-  if (typeof options !== 'object' || Array.isArray(options))
-    throw new Error('Parameters must be an object.');
+  if (typeof options !== 'object' || options === null || Array.isArray(options))
+    throw new Error('Parameters must be a non-null object.');
 
   if (('key' in options || 'value' in options) && !('key' in options && 'value' in options))
     throw new Error('If providing `key` or `value`, both `key` and `value` are required.');
 
-  if (!!options && typeof options === 'object' && options.constructor === Object && !options.key) return true;
-  else if (!options.value) throw new Error(`Value of \`${options.key}\` is undefined`);
+  if (Object.keys(options).length === 0 || !('key' in options))
+    return true;
+
+  if (!('value' in options))
+    throw new Error(`Value of \`${options.key}\` is undefined`);
+
+  return true;
+
 }
 
 

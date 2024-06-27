@@ -2434,33 +2434,33 @@ export type DefaultReaction = {
     emoji_name: string | null;
 };
 export type Embed = {
-    type?: string | undefined;
+    type?: string;
     /**
      * - 256 character limit
      */
-    title?: string | undefined;
+    title?: string;
     /**
      * - 4096 character limit
      */
-    description?: string | undefined;
+    description?: string;
     /**
      * - 0xhex or integer
      */
-    color?: number | null | undefined;
+    color?: number | null;
     /**
      * - URL for the title of the embed
      */
-    url?: string | undefined;
+    url?: string;
     /**
      * - Timestamp of embed content
      */
-    timestamp?: string | number | Date | undefined;
+    timestamp?: string | number | Date;
     /**
      * - Footer information for the bottom of the embed
      */
     footer?: {
         text: string;
-        icon_url?: string | undefined;
+        icon_url?: string;
     } | null | undefined;
     /**
      * - Author information for the top of the embed
@@ -2469,23 +2469,23 @@ export type Embed = {
         name: string;
         url?: (string | undefined) | null;
         icon_url?: (string | undefined) | null;
-    } | null | undefined;
+    } | null;
     /**
      * - Image information
      */
     image?: {
-        url: string | undefined;
+        url?: string;
     } | undefined;
     /**
      * - Thumbnail image for top right of the embed
      */
     thumbnail?: {
-        url: string | undefined;
-    } | undefined;
+        url?: string;
+    };
     /**
      * - Up to 25 field objects
      */
-    fields?: EmbedField[] | undefined;
+    fields?: EmbedField[];
 };
 /**
  * Embed Field
@@ -2502,7 +2502,7 @@ export type EmbedField = {
     /**
      * - Whether or not this field should display inline
      */
-    inline?: boolean | undefined;
+    inline?: boolean;
 };
 export type Attachment = {
     /**

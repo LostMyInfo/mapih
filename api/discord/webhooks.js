@@ -43,8 +43,8 @@ module.exports = {
       attempt.avatar_url = avatarFromObject(attempt.id, attempt.avatar);
     return attempt;
   }, // End of Get Webhook
-  
-  /** 
+
+  /**
    * @summary
    * ### [Get Webhook with Token]{@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
    * - Same as `webhooks.retrieve()`, except does not require authentication and returns no user in the {@link Webhook} object.
@@ -65,8 +65,8 @@ module.exports = {
       method: 'GET',
       endpoint: `webhooks/${params.webhook_id}/${params.webhook_token}`
     }), // End of Get Webhook with Token
-    
-  /** 
+
+  /**
    * @summary
    * ### [Get Channel Webhooks]{@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
    * @example
@@ -95,8 +95,8 @@ module.exports = {
     }
     return attempt;
   }, // End of Get Channel Webhooks
-  
-  /** 
+
+  /**
    * @summary
    * ### [Get Guild Webhooks]{@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
    * @example
@@ -125,8 +125,8 @@ module.exports = {
     }
     return attempt;
   }, // End of Get Guild Webhooks
-  
-  /** 
+
+  /**
    * @summary
    * ### [Get Webhook Message]{@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
    * - Returns a previously-sent webhook message from the same token
@@ -171,7 +171,7 @@ module.exports = {
    * @param {string} params.webhook_token
    * @param {Snowflake} params.message_id
    * @param {Snowflake} [params.thread_id]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   destroyMessage: async (params) => {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}/messages/${params.message_id}?`;
@@ -282,7 +282,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
    * @param {string} [params.reason]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({
@@ -304,7 +304,7 @@ module.exports = {
    * @param {Object} params
    * @param {Snowflake} params.webhook_id
    * @param {string} params.webhook_token
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   destroyWithToken: async (params) =>
     attemptHandler({
@@ -346,20 +346,20 @@ module.exports = {
    * @param {Component} [params.components] - Requires an application-owned webhook
    * @param {AllowedMentions} [params.allowed_mentions]
    * @param {MessageFlags} [params.flags]
-   * @param {Snowflake[]} [params.applied_tags] - Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) 
+   * @param {Snowflake[]} [params.applied_tags] - Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel)
    * @param {string} [params.thread_name]
    * Name of thread to create
-   * 
+   *
    * Available only if the webhook is in a forum channel and a thread is not specified in query parameter
    * @param {Snowflake} [params.thread_id]
    * Send a message to the specified thread within a webhook's channel.
-   * 
+   *
    * The thread will automatically be unarchived
    * @param {boolean} [params.wait=false]
    * Waits for server confirmation of message send before response, and returns the created message body.
-   * 
+   *
    * When `false`, a message that is not saved does not return an error
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content` response depending on the `wait` query parameter
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content` response depending on the `wait` query parameter
    */
   execute: async (params) => {
     let endpoint = `webhooks/${params.webhook_id}/${params.webhook_token}?`;

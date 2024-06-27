@@ -21,7 +21,7 @@ let members;
  */
 
 module.exports = {
-  
+
   /**
    * @summary
    * ### [Get Channel]{@link https://discord.com/developers/docs/resources/channel#get-channel}
@@ -43,12 +43,12 @@ module.exports = {
     res.typeName = channelType[res.type];
     return res;
   }, // End of Get Channel
-  
+
   /**
    * @summary
    * ### [Modify Channel]{@link https://discord.com/developers/docs/resources/channel#modify-channel}
    * - If modifying a category, individual Channel Update events will fire for each child channel that also changes.
-   * 
+   *
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
    * await api.discord.channels.update({
@@ -70,7 +70,7 @@ module.exports = {
    * @param {?number} [params.bitrate] - The bitrate (in bits) of the voice or stage channel; min 8000
    * @param {?number} [params.user_limit]
    * The user limit of the voice or stage channel.
-   * 
+   *
    * Max 99 for voice channels and 10,000 for stage channels (0 refers to no limit).
    * @param {?Overwrite[]} [params.permission_overwrites]
    * ```js
@@ -100,13 +100,13 @@ module.exports = {
       body: params,
       reason: params.reason ?? null
     }), // End of Modify Channel
-  
+
   /**
    * @summary
    * ### [Delete/Close Channel]{@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
    * - Delete a channel, or close a private message.
    * - Deleting a category does not delete its child channels; they will have their `parent_id` removed and a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event will fire for each of them.
-   * 
+   *
    * Fires a [Channel Delete]{@link https://discord.com/developers/docs/topics/gateway-events#channel-delete} Gateway event (or [Thread Delete]{@link https://discord.com/developers/docs/topics/gateway-events#thread-delete} if the channel was a thread).
    * @example
    * await api.discord.channels.destroy({
@@ -126,14 +126,14 @@ module.exports = {
       endpoint: `channels/${params.channel_id}`,
       reason: params.reason ?? null
     }), // End of Delete/Close Channel
-  
+
   /**
    * @summary
    * ### [Edit Channel Permissions]{@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
    * - Edit the channel permission overwrites for a user or role in a channel.
    * - Only usable for guild channels.
    * - Only permissions your bot has in the guild or parent channel can be allowed/denied.
-   * 
+   *
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
    * await api.discord.channels.updatePermissions({
@@ -152,9 +152,9 @@ module.exports = {
    * @param {?string} [params.allow='0'] - The bitwise value of all allowed permissions (default '0')
    * @param {?string} [params.deny='0'] - The bitwise value of all disallowed permissions (default '0')
    * @param {string} [params.reason]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
-  updatePermissions: async (params) => 
+  updatePermissions: async (params) =>
     attemptHandler({
       method: 'PUT',
       endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`,
@@ -165,13 +165,13 @@ module.exports = {
       },
       reason: params.reason ?? null
     }), // End of Edit Channel Permissions
-  
+
   /**
    * @summary
    * ### [Delete Channel Permission]{@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
    * - Delete a channel permission overwrite for a user or role in a channel.
    * - Only usable for guild channels.
-   * 
+   *
    * Fires a [Channel Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-update} Gateway event.
    * @example
    * await deletePermissions({
@@ -185,7 +185,7 @@ module.exports = {
    * @param {Snowflake} params.channel_id
    * @param {Snowflake} params.overwrite_id
    * @param {string} [params.reason]
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   deletePermissions: async (params) =>
     attemptHandler({
@@ -193,7 +193,7 @@ module.exports = {
       endpoint: `channels/${params.channel_id}/permissions/${params.overwrite_id}`,
       reason: params.reason ?? null
     }), // End of Delete Channel Permission
-  
+
   /**
    * @summary
    * ### [Get Channel Invites]{@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
@@ -216,11 +216,11 @@ module.exports = {
       a = /* await */extendPayload(a/* , params*/);
     return attempt;
   }, // End of Get Channel Invites
-  
+
   /**
    * @summary
    * ### [Create Channel Invite]{@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
-   * 
+   *
    * Fires an [Invite Create]{@link https://discord.com/developers/docs/topics/gateway-events#invite-create} Gateway event.
    * @example
    * await api.discord.channels.inviteCreate({
@@ -235,7 +235,7 @@ module.exports = {
    * @param {Snowflake} params.channel_id
    * @param {number} [params.max_age=86400]
    * Duration of invite in seconds before expiry, or 0 for never.
-   * 
+   *
    * Between 0 and 604800 (7 days)
    * @param {number} [params.max_uses=0] - Max number of uses or 0 for unlimited. Between 0 and 100.
    * @param {boolean} [params.temporary=false] - Whether this invite only grants temporary membership.
@@ -243,13 +243,13 @@ module.exports = {
    * @param {InviteTargetType} [params.target_type] - The [type of target]{@link https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types} for this voice channel invite
    * @param {Snowflake} [params.target_user_id] - The id of the user whose stream to display for this invite.
    * Required if `target_type` is 1
-   * 
+   *
    * The user must be streaming in the channel
    * @param {Snowflake} [params.target_application_id]
    * The id of the embedded application to open for this invite
-   * 
+   *
    * Required if `target_type` is 2
-   * 
+   *
    * The application must have the `EMBEDDED` flag
    * @param {string} [params.reason]
    * @returns {Promise<ExtendedInvite>} [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-object} object
@@ -281,10 +281,10 @@ module.exports = {
     }
     return attempt;
     */
-    
+
     return extendPayload(attempt/* , params*/);
   }, // End of Create Channel Invite
-  
+
   /**
    * @summary
    * ### [Trigger Typing Indicator]{@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
@@ -296,19 +296,19 @@ module.exports = {
    * @function typingCreate
    * @param {Object} params
    * @param {Snowflake} params.channel_id
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   typingCreate: async (params) =>
     attemptHandler({
       method: 'POST',
       endpoint: `channels/${params.channel_id}/typing`
     }), // End of Trigger Typing Indicator
-  
+
   /**
    * @summary
    * ### [Follow Announcement Channel]{@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
    * - Follow an Announcement Channel to send messages to a target channel.
-   * 
+   *
    * Fires a [Webhooks Update]{@link https://discord.com/developers/docs/topics/gateway-events#webhooks-update} Gateway event.
    * @example
    * await api.discord.channels.followAnnouncementChannel({
@@ -330,7 +330,7 @@ module.exports = {
         webhook_channel_id: params.webhook_channel_id
       }
     }), // End of Follow Announcement Channel
-  
+
   /**
    * @summary
    * ### [Group DM Add Recipient]{@link https://discord.com/developers/docs/resources/channel#group-dm-add-recipient}
@@ -359,7 +359,7 @@ module.exports = {
         nick: params.nick ?? null
       }
     }), // End of Group DM Add Recipient
-  
+
   /**
    * @summary
    * ### [Group DM Remove Recipient]{@link https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
@@ -381,18 +381,18 @@ module.exports = {
       endpoint: `channels/${params.channel_id}/recipients/${params.user_id}`
     }), // End of Group DM Remove Recipient
 
-  
+
   // ///////////////////////////////////////////////////////////////////
   // ////////////////////////// CHANNELS.MESSAGES /////////////////////////
   // ///////////////////////////////////////////////////////////////////
   // https://discord.com/developers/docs/resources/channel#get-channel-messages
-  
+
   /**
    * @summary All functions relating to channel messages
    * @namespace messages
    * @memberof module:channels
    */
-  
+
   messages: {
 
     /**
@@ -418,14 +418,14 @@ module.exports = {
       attempt.typeName = messageType[attempt?.type];
       return extendPayload(attempt/* , params*/);
     }, // End of Get Channel Message
-    
+
     /**
      * @summary
      * ### [Create Message]{@link https://discord.com/developers/docs/resources/channel#create-message}
      * - To create a message as a reply to another message, apps can include a [message_reference]{@link MessageReference} with a `message_id`.
      * - The `channel_id` and `guild_id` in the `message_reference` are optional, but will be validated if provided.
      * - When creating a message, apps must provide a value for at least one of `content`, `embeds`, `sticker_ids`, `components`, or `attachments`.
-     * 
+     *
      * Fires a [Message Create]{@link https://discord.com/developers/docs/topics/gateway-events#message-create} Gateway event.
      * @example
      * await api.discord.channels.messages.create({
@@ -482,7 +482,7 @@ module.exports = {
       if (params.attachments && params.attachments?.length)
         return sendAttachment(params, `channels/${params.channel_id}/messages`, 'POST');
       else {
-        
+
         const attempt = await attemptHandler({
           method: 'POST',
           endpoint: `channels/${params.channel_id}/messages`,
@@ -502,7 +502,7 @@ module.exports = {
         return extendPayload(attempt/* , params*/);
       }
     }, // End of Create Message
-    
+
     /**
      * @summary
      * ### [Edit Message]{@link https://discord.com/developers/docs/resources/channel#edit-message}
@@ -510,7 +510,7 @@ module.exports = {
      * - The allowed_mentions field of the edit request controls how this happens.
      * - If there is no explicit allowed_mentions in the edit request, the content will be parsed with default allowances, that is, without regard to whether or not an allowed_mentions was present in the request that originally created the message.
      * - The attachments array must contain all attachments that should be present after edit, including retained and new attachments provided in the request body.
-     * 
+     *
      * Fires a [Message Update]{@link https://discord.com/developers/docs/topics/gateway-events#message-update} Gateway event.
      * @example
      * await api.discord.channels.messages.update({
@@ -543,7 +543,7 @@ module.exports = {
 
         const { embeds } = params;
         const embed = embeds?.[0] || undefined;
-        
+
         const attempt = await attemptHandler({
           method: 'PATCH',
           endpoint: `channels/${params.channel_id}/messages/${params.message_id}`,
@@ -573,13 +573,13 @@ module.exports = {
           }
         });
         return extendPayload(attempt/* , params*/);
-      }  
+      }
     }, // End of Edit Message
-    
+
     /**
      * @summary
      * ### [Delete Message]{@link https://discord.com/developers/docs/resources/channel#delete-message}
-     * 
+     *
      * Fires a [Message Delete]{@link https://discord.com/developers/docs/topics/gateway-events#message-delete} Gateway event
      * @example
      * await api.discord.channels.messages.destroy({
@@ -593,7 +593,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} [params.reason]
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     destroy: async (params) =>
       attemptHandler({
@@ -601,7 +601,7 @@ module.exports = {
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}`,
         reason: params.reason ?? null
       }), // End of Delete Message
-    
+
     /**
      * @summary
      * ### [Bulk Delete Messages]{@link https://discord.com/developers/docs/resources/channel#bulk-delete-messages}
@@ -621,7 +621,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake[]} params.messages
      * @param {string} [params.reason]
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     bulkDelete: async (params) =>
       attemptHandler({
@@ -634,7 +634,7 @@ module.exports = {
     /**
      * @summary
      * ### [Crosspost Message]{@link https://discord.com/developers/docs/resources/channel#crosspost-message}
-     * 
+     *
      * Crosspost a message in an Announcement Channel to following channels.
      * @example
      * await api.discord.channels.messages.crosspost({
@@ -653,7 +653,7 @@ module.exports = {
         method: 'POST',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/crosspost`
       }), // End of Crosspost Message
-  
+
     /**
      * @summary
      * ### [Get Channel Messages]{@link https://discord.com/developers/docs/resources/channel#get-channel-messages}
@@ -690,7 +690,7 @@ module.exports = {
     /**
      * @summary
      * ### [Pin Message]{@link https://discord.com/developers/docs/resources/channel#pin-message}
-     * 
+     *
      * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
      * @example
      * await api.discord.channels.pin({
@@ -704,7 +704,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} [params.reason]
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     pin: async (params) =>
       attemptHandler({
@@ -716,7 +716,7 @@ module.exports = {
     /**
      * @summary
      * ### [Unpin Message]{@link https://discord.com/developers/docs/resources/channel#unpin-message}
-     * 
+     *
      * Fires a [Channel Pins Update]{@link https://discord.com/developers/docs/topics/gateway-events#channel-pins-update} Gateway event.
      * @example
      * await api.discord.channels.unpin({
@@ -729,7 +729,7 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} [params.reason]
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     unpin: async (params) =>
       attemptHandler({
@@ -799,7 +799,7 @@ module.exports = {
      * @param {ForumThreadMessageParams} params.message - First message in the forum thread
      * @param {60 | 1440 | 4320 | 10080} [params.auto_archive_duration]
      * Duration in minutes to automatically archive the thread after recent activity
-     * 
+     *
      * Can be set to: 60, 1440, 4320, 10080
      * @param {number} [params.rate_limit_per_user] - Amount of seconds a user has to wait before sending another message (0-21600)
      * @param {Snowflake[]} [params.applied_tags] - The IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` channel
@@ -822,12 +822,12 @@ module.exports = {
             tagsMap.set(tag.id, tag);
             tagsMap.set(tag.name, tag);
           });
-        
+
         for (const appliedTag of params.applied_tags)
           if (tagsMap.get(appliedTag))
             tag_ids.push((tagsMap.get(appliedTag)).id);
       }
-      
+
       if (params.message?.attachments && params.message?.attachments?.length)
         return sendAttachment(params, `channels/${params.channel_id}/threads`, 'POST');
       else {
@@ -876,7 +876,7 @@ module.exports = {
      * @param {string} params.name - 1-100 character channel name
      * @param {60 | 1440 | 4320 | 10080} [params.auto_archive_duration]
      * The amount of minutes to wait before automatically archiving the thread
-     * 
+     *
      * Can be set to: 60, 1440, 4320, 10080
      * @param {number} [params.rate_limit_per_user] - Amount of seconds a user has to wait before sending another message (0-21600)
      * @param {string} [params.reason]
@@ -893,7 +893,7 @@ module.exports = {
         },
         reason: params.reason ?? null
       }), // End of Start Thread from Message
-  
+
     /**
      * @summary
      * ### [Start Thread without Message]{@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
@@ -913,12 +913,12 @@ module.exports = {
      * @param {string} params.name - 1-100 character channel name
      * @param {ChannelType} [params.type=12]
      * The [type of thread]{@link https://discord.com/developers/docs/resources/channel#channel-object-channel-types} to create.
-     * 
+     *
      * Defaults to `12` - `PRIVATE_THREAD`
      * @param {boolean} [params.invitable] - Whether non-moderators can add other non-moderators to a thread; only available when creating a private thread
      * @param {60 | 1440 | 4320 | 10080} [params.auto_archive_duration]
      * The amount of minutes to wait before automatically archiving the thread
-     * 
+     *
      * Can be set to: 60, 1440, 4320, 10080
      * @param {number} [params.rate_limit_per_user] - Amount of seconds a user has to wait before sending another message (0-21600)
      * @param {string} [params.reason]
@@ -937,7 +937,7 @@ module.exports = {
         },
         reason: params.reason ?? null
       }), // End of Start Thread from Message
-  
+
     /**
      * @summary
      * ### [Join Thread]{@link https://discord.com/developers/docs/resources/channel#join-thread}
@@ -951,14 +951,14 @@ module.exports = {
      * @function join
      * @param {Object} params
      * @param {Snowflake} params.channel_id
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     join: async (params) =>
       attemptHandler({
         method: 'PUT',
         endpoint: `channels/${params.channel_id}/thread-members/@me`
       }), // End of Join Thread
-  
+
     /**
      * @summary
      * ### [Leave Thread]{@link https://discord.com/developers/docs/resources/channel#leave-thread}
@@ -973,14 +973,14 @@ module.exports = {
      * @function leave
      * @param {Object} params
      * @param {Snowflake} params.channel_id
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     leave: async (params) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `channels/${params.channel_id}/thread-members/@me`
       }), // End of Leave Thread
-  
+
     /**
      * @summary
      * ### [Add Thread Member]{@link https://discord.com/developers/docs/resources/channel#add-thread-member}
@@ -997,19 +997,19 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.user_id
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     addMember: async (params) =>
       attemptHandler({
         method: 'PUT',
         endpoint: `channels/${params.channel_id}/thread-members/${params.user_id}`
       }), // End of Add Thread Member
-  
+
     /**
      * @summary
      * ### [Remove Thread Member]{@link https://discord.com/developers/docs/resources/channel#add-thread-member}
      * Removes another member to a thread.
-     * - Requires the `MANAGE_THREADS` permission, or the creator of the thread if it is a `PRIVATE_THREAD`. 
+     * - Requires the `MANAGE_THREADS` permission, or the creator of the thread if it is a `PRIVATE_THREAD`.
      * - Requires the thread is not archived.
      * @example
      * await api.discord.channels.threads.removeMember({
@@ -1021,14 +1021,14 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.user_id
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     removeMember: async (params) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `channels/${params.channel_id}/thread-members/${params.user_id}`
       }), // End of Remove Thread Member
-  
+
     /**
      * @summary
      * ### [Get Thread Member]{@link https://discord.com/developers/docs/resources/channel#get-thread-member}
@@ -1056,7 +1056,7 @@ module.exports = {
       });
       return extendPayload(attempt/* , params*/);
     }, // End of Get Thread Member
-  
+
     /**
      * @summary
      * ### [List Thread Members]{@link https://discord.com/developers/docs/resources/channel#list-thread-members}
@@ -1090,7 +1090,7 @@ module.exports = {
       return attempt;
       // return extendUser(attempt);
     }, // End of List Thread Members
-  
+
     /**
      * @summary
      * ### [List Public Archived Threads]{@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
@@ -1121,7 +1121,7 @@ module.exports = {
         endpoint
       });
     }, // End of List Public Archived Threads
-  
+
     /**
      * @summary
      * ### [List Private Archived Threads]{@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
@@ -1150,7 +1150,7 @@ module.exports = {
         endpoint
       });
     }, // End of List Private Archived Threads
-  
+
     /**
      * @summary
      * ### [List Joined Private Archived Threads]{@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
@@ -1179,21 +1179,21 @@ module.exports = {
         endpoint
       });
     } // End of List Private Archived Threads
-  
+
   }, // End of channels.threads
-  
+
   // ///////////////////////////////////////////////////////////////////////
   // ////////////////////////// CHANNELS.REACTIONS /////////////////////////
   // ///////////////////////////////////////////////////////////////////////
   // https://discord.com/developers/docs/resources/channel#get-channel-messages
-  
+
   /**
    * @summary All functions relating to channel reactions
    * @namespace reactions
    * @memberof module:channels
    */
   reactions: {
-     
+
     /**
      * @summary
      * ### [Create Reaction]{@link https://discord.com/developers/docs/resources/channel#create-reaction}
@@ -1209,14 +1209,14 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} params.emoji
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     create: async (params) =>
       attemptHandler({
         method: 'PUT',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/@me`
       }), // End of Create Reaction
-    
+
     /**
      * @summary
      * ### [Create Multiple Reactions]{@link https://discord.com/developers/docs/resources/channel#create-reaction}
@@ -1242,7 +1242,7 @@ module.exports = {
     createMany: async (params) => {
       if (!params.emojis || !Array.isArray(params.emojis))
         throw new Error('\`emojis\` must be an array of \`emoji_name:emoji_id:\` strings');
-      
+
       for (const emoji of params.emojis) {
         await attemptHandler({
           method: 'PUT',
@@ -1268,14 +1268,14 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} params.emoji
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     deleteOwn: async (params) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/@me`
       }), // End of Delete Own Reaction
-    
+
     /**
      * @summary
      * ### [Delete User Reaction]{@link https://discord.com/developers/docs/resources/channel#delete-user-reaction}
@@ -1293,14 +1293,14 @@ module.exports = {
      * @param {Snowflake} params.message_id
      * @param {Snowflake} params.user_id
      * @param {string} params.emoji
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     deleteUser: async (params) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}/${params.user_id}`
       }), // End of Delete User Reaction
-    
+
     /**
      * @summary
      * ### [Delete All Reactions]{@link https://discord.com/developers/docs/resources/channel#delete-all-reactions}
@@ -1314,14 +1314,14 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     deleteAll: async (params) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions`
       }), // End of Delete All Reaction
-    
+
     /**
      * @summary
      * ### [Delete All Reactions for Emoji]{@link https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji}
@@ -1337,14 +1337,14 @@ module.exports = {
      * @param {Snowflake} params.channel_id
      * @param {Snowflake} params.message_id
      * @param {string} params.emoji
-     * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
      */
     deleteAllEmoji: async (params) =>
       attemptHandler({
         method: 'DELETE',
         endpoint: `channels/${params.channel_id}/messages/${params.message_id}/reactions/${params.emoji}`
       }), // End of Delete All Reactions for Emoji
-    
+
     /**
      * @summary
      * ### [Get Reactions]{@link https://discord.com/developers/docs/resources/channel#get-reactions}
@@ -1378,6 +1378,6 @@ module.exports = {
         a = /* await */extendPayload(a/* , params*/);
       return attempt;
     } // End of Get Reactions
-    
+
   }
 };

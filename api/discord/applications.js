@@ -26,7 +26,7 @@ module.exports = {
       method: 'GET',
       endpoint: 'applications/@me'
     }), // End of Get Current Application
-  
+
   /**
    * @summary
    * ### [Edit Current Application]{@link https://discord.com/developers/docs/resources/application#edit-current-application}
@@ -55,7 +55,7 @@ module.exports = {
    * @param {string} [params.role_connections_verification_url] - Role connection verification URL for the app
    * @param {InstallParams} [params.install_params] - Settings for the app's default in-app authorization link, if enabled
    * @param {number} [params.flags] - App's public [flags]{@link https://discord.com/developers/docs/resources/application#application-object-application-flags}
-   * @param {string|Buffer} [params.icon] - Icon for the app 
+   * @param {string|Buffer} [params.icon] - Icon for the app
    * @param {string|Buffer} [params.cover_image] - Default rich presence invite cover image for the app
    * @param {string[]} [params.tags] - List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags
    * @returns {Promise<Application>} The updated [Application]{@link https://discord.com/developers/docs/resources/application#application-object} object on success.
@@ -63,7 +63,7 @@ module.exports = {
   updateMe: async (params) => {
     if (params.icon) params.icon = (await imageData(params.icon, 'base64string')).data;
     if (params.cover_image) params.cover_image = (await imageData(params.cover_image, 'base64string')).data;
-    
+
     return attemptHandler({
       method: 'PATCH',
       endpoint: 'applications/@me',
@@ -87,7 +87,7 @@ module.exports = {
    */
   appRoleConnectionMeta: async (params) => {
     const application_id = params?.application_id ?? await getAppId();
-    
+
     return attemptHandler({
       method: 'GET',
       endpoint: `applications/${application_id}/role-connections/metadata`
@@ -115,14 +115,14 @@ module.exports = {
     }); // End of Update Application Role Connection Metadata Records
   },
 
-  
+
   /**
 	 * @summary All functions relating to application commands
 	 * @memberof module:applications
 	 * @namespace commands
 	 */
   commands: {
-    
+
     /**
      * @summary
      * ### [Get Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
@@ -176,7 +176,7 @@ module.exports = {
       const paths = [`applications/${application_id}`, 'commands' /* `commands/?with_localizations=${params.with_localizations || false}`*/];
       params && params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
       if (params && params.with_localizations) paths.push(`/?with_localizations=${params.with_localizations || false}`);
-      
+
       return attemptHandler({
         method: 'GET',
         endpoint: paths.join('/')
@@ -223,15 +223,15 @@ module.exports = {
      * @param {LocalizationMap | null} [params.description_localizations] - Localization dictionary for the description field.
      * @param {boolean} [params.dm_permission]
      * Indicates whether the command is available in DMs with the app
-     * 
+     *
      * Only for globally-scoped commands.
-     * 
+     *
      * By default, commands are visible
      * @param {string} [params.default_member_permissions] - Set of [permissions]{@link https://discord.com/developers/docs/topics/permissions} represented as a bit set
      * @param {boolean} [params.nsfw] - Indicates where the command is [age-restricted]{@link https://discord.com/developers/docs/interactions/application-commands#agerestricted-commands}
-     * @param {ApplicationCommandType} [params.type=1] 
+     * @param {ApplicationCommandType} [params.type=1]
      * One of [Application Command type]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types}
-     * 
+     *
      * Defaults to 1 (`CHAT_INPUT`) if not set
      * @param {ApplicationCommandOption[]} [params.options] - Array of [Application Command options]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure}
      * @returns {Promise<ApplicationCommand>} [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} object
@@ -240,7 +240,7 @@ module.exports = {
       const application_id = params?.application_id ?? await getAppId();
       const paths = [`applications/${application_id}`, 'commands'];
       params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
-      
+
       const body = {
         name: params.name,
         name_localizations: params.name_localizations ?? null,
@@ -306,9 +306,9 @@ module.exports = {
      * @param {LocalizationMap | null} [params.description_localizations] - Localization dictionary for the description field.
      * @param {boolean} [params.dm_permission]
      * Indicates whether the command is available in DMs with the app
-     * 
+     *
      * Only for globally-scoped commands.
-     * 
+     *
      * By default, commands are visible
      * @param {string} [params.default_member_permissions] - Set of [permissions]{@link https://discord.com/developers/docs/topics/permissions} represented as a bit set
      * @param {boolean} [params.nsfw] - Indicates where the command is [age-restricted]{@link https://discord.com/developers/docs/interactions/application-commands#agerestricted-commands}
@@ -348,7 +348,7 @@ module.exports = {
      * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.command_id
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
-     * @returns {Promise<{statusCode: number, message: string}>}
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>}
      */
     destroy: async (params) => {
       const application_id = params?.application_id ?? await getAppId();
@@ -367,7 +367,7 @@ module.exports = {
      * - Takes a list of application commands, overwriting the existing global command list for this application.
      * - Commands that do not already exist will count toward daily application command create limits.
      * - This will overwrite all types of application commands: slash commands, user commands, and message commands.
-     * 
+     *
      * - This is to be used for both global and guild commands.
      * - Provide a guild_id field if using for a guild command.
      * @example
@@ -381,14 +381,14 @@ module.exports = {
      * @param {Object} [params]
      * @param {Snowflake} [params.application_id]
      * @param {Snowflake} [params.guild_id] - Optional. Use for guild commands only.
-     * @param {ApplicationCommand[]} [params.application_commands] 
+     * @param {ApplicationCommand[]} [params.application_commands]
      * @returns {Promise<ApplicationCommand[]>} A list of [Application Command]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-object} objects
      */
     bulkOverwrite: async (params) => {
       const application_id = params?.application_id ?? await getAppId();
       const paths = [`applications/${application_id}`, 'commands'];
       params && params.guild_id ? paths.splice(1, 0, `guilds/${params.guild_id}`) : paths;
-      
+
       return attemptHandler({
         method: 'PUT',
         endpoint: paths.join('/'),
@@ -410,7 +410,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.guild_id
-     * @param {Snowflake} params.command_id 
+     * @param {Snowflake} params.command_id
      * @returns {Promise<GuildApplicationCommandPermissions>} [Guild Application Command Permissions]{@link https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure} object
      */
     retrievePermissions: async (params) => {
@@ -523,7 +523,7 @@ module.exports = {
         before: params.before,
         after: params.after
       });
-      
+
       return attemptHandler({
         method: 'GET',
         endpoint
@@ -576,7 +576,7 @@ module.exports = {
      * @param {Object} params
      * @param {Snowflake} [params.application_id]
      * @param {Snowflake} params.entitlement_id
-     * @returns {Promise<{statusCode: number, message: string}>} 204 on success
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} 204 on success
      */
     destroy: async (params) => {
       const application_id = params?.application_id ?? await getAppId();

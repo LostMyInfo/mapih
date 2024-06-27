@@ -8,38 +8,38 @@ const { attemptHandler } = require('../resources/handlers');
 
 /**
  * All Discord API endpoints relating to Stage Instance functions.
- * 
+ *
  * __**Below are some definitions related to stages:**__
- * 
+ *
  * **`Liveness:`**
  * - A Stage channel is considered *live* when there is an associated stage instance. Conversely, a Stage channel is *not live* when there is no associated stage instance.
- * 
+ *
  * **`Speakers:`**
  * - A participant of a Stage channel is a *speaker* when their [voice state]{@link https://discord.com/developers/docs/resources/voice#voice-state-object} is not `suppressed`, and has no `request_to_speak_timestamp`.
- * 
+ *
  * **`Moderators:`**
  * - A member of the guild is a moderator of a Stage channel if they have all of the following [permissions]{@link https://discord.com/developers/docs/topics/permissions#permissions}:
  *   - `MANAGE_CHANNELS`
  *   - `MUTE_MEMBERS`
  *   - `MOVE_MEMBERS`
- * 
+ *
  * **`Topic:`**
  * - This is the blurb that gets shown below the channel's name, among other places.
- * 
+ *
  * **`Public:`**
  * - A Stage instance is public when it has a `privacy_level` of `PUBLIC`. While a guild has a public Stage instance:
  *   - The guild will be lurkable
  *   - Lurkers may join any Stage channel with a public Stage instance
  *   - Users in the Stage can have the Stage show in their [activities]{@link https://discord.com/developers/docs/topics/gateway-events#presence}
  *   - [Invites]{@link https://discord.com/developers/docs/resources/invite#invite-object} to the Stage channel will have the `stage_instance` field
- * 
+ *
  * **`Auto Closing:`**
  * - When a Stage channel has no speakers for a certain period of time (on the order of minutes), the Stage instance will be automatically deleted
  *
  * @module stageInstance
  */
 module.exports = {
-  
+
   /**
    * @summary
    * ### [Get Stage Instance]{@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
@@ -125,7 +125,7 @@ module.exports = {
    * @function destroy
    * @param {object} params
    * @param {Snowflake} params.channel_id
-   * @returns {Promise<{statusCode: number, message: string}>} `204 No Content`
+   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
    */
   destroy: async (params) =>
     attemptHandler({

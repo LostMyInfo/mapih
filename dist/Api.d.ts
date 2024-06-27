@@ -9,43 +9,67 @@ import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUs
 import { SpotifyReturn } from './api/spotify/resources/types';
 import { TwitterExpansions, TwitterMediaFields, TwitterPlaceFields, TwitterPollFields, TwitterSingleUserLookupResponse, TwitterTweetFields, TwitterTweetLookupResponse, TwitterTweetLookupResponseSingle, TwitterUserFields } from './api/twitter/resources/types';
 
+export declare const twitter_token: {
+  api_key?: string;
+  api_secret?: string;
+  client_id: string;
+  client_secret: string;
+  redirect_uri?: string;
+  access_token?: string;
+  access_token_secret?: string;
+  bearer_token?: string;
+  scope?: Array<string>;
+}
+
+export declare const spotify_token: {
+  client_id: string;
+  client_secret: string;
+  redirect_uri: string;
+  scope?: string;
+}
+
+export declare const slack_token: {
+  user?: string;
+  bot?: string;
+  client_id?: string;
+  client_secret?: string;
+  redirect_uri?: string;
+  user_scope?: string;
+  bot_scope?: string;
+}
+
+export declare const google_token: {
+  api_key?: string;
+  client_id?: string;
+  client_secret?: string;
+  redirect_uri?: string;
+}
+
+export declare const dropbox_token: {
+  basic_token?: string;
+  access_token?: string;
+  client_id: string;
+  client_secret: string;
+  redirect_uri: string;
+}
+
+export declare const box_token: {
+  client_id: string;
+  client_secret: string;
+  redirect_uri: string;
+}
+
 export declare function initialize(options: {
   discord?: string;
   openai?: string;
-  spotify?: {
-    client_id: string;
-    client_secret: string;
-    redirect_uri: string;
-    scope?: string;
-  },
-  slack?: {
-    user?: string;
-    bot?: string;
-    client_id?: string;
-    client_secret?: string;
-    redirect_uri?: string;
-    user_scope?: string;
-    bot_scope?: string;
-  },
-  google?: {
-    api_key?: string;
-    client_id?: string;
-    client_secret?: string;
-    redirect_uri?: string;
-  },
-  dropbox?: {
-    basic_token?: string;
-    access_token?: string;
-    client_id: string;
-    client_secret: string;
-    redirect_uri?: string;
-  },
-  box?: {
-    client_id: string;
-    client_secret: string;
-    redirect_uri?: string;
-  };
+  spotify?: typeof spotify_token;
+  slack?: typeof slack_token;
+  google?: typeof google_token;
+  dropbox?: typeof dropbox_token;
+  box?: typeof box_token;
+  twitter?: typeof twitter_token;
 }): void;
+
 
 export declare const discord: {
   auditlog: {
