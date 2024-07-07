@@ -13,27 +13,27 @@
 [![view on npm](https://badgen.net/npm/v/mapih)](https://www.npmjs.org/package/mapih)
 [![npm module downloads](https://badgen.net/npm/dt/mapih)](https://www.npmjs.org/package/mapih)
 # Mapih
-#### Comprehensive collection of Discord, OpenAI, Anthropic, Spotify, YouTube, Twitter, Slack, Imgur, DropBox, Box and various Google API endpoint handlers  
+#### Comprehensive collection of Discord, OpenAI, Anthropic, Spotify, YouTube, Twitter, Slack, Imgur, DropBox, Box and various Google API endpoint handlers
 
 **Discord is the only completed set of handlers, the rest are still in early development**
 
 ---
 ## Authentication
-> Choose **one** of the following options to authenticate:  
+> Choose **one** of the following options to authenticate:
 
-#### Option 1: Using Environment Variablese  
-**If you are using OnSocket, use this file to get the valid keys but add them to OnSocket's environment variables on the website itself.**  
+#### Option 1: Using Environment Variablese
+**If you are using OnSocket, use this file to get the valid keys but add them to OnSocket's environment variables on the website itself.**
 
-Rename the provided **`.env.example`** file at the root of your project to **`.env`** and fill in any tokens/keys you wish to use.  
+Rename the provided **`.env.example`** file at the root of your project to **`.env`** and fill in any tokens/keys you wish to use.
 
-#### Option 2: Using Initialization Function  
+#### Option 2: Using Initialization Function
 ```javascript
 const mapih = require('mapih');
 
 // Minimum requirement if using this method
-mapih.initialize({ discord: 'bot_token' });  
+mapih.initialize({ discord: 'bot_token' });
 
-// All possible properties 
+// All possible properties
 mapih.initialize({
   discord: 'bot_token',
   openai: 'sk-1p7NKtCpA0sG7XLdT3L7EqW9GFefX',
@@ -75,7 +75,7 @@ mapih.initialize({
 
 ---
 
-## Basic usage  
+## Basic usage
 ```javascript
 (async() => {
 
@@ -93,334 +93,334 @@ mapih.initialize({
 ### | [Discord](#discord-methods) | [Slack](#slack-methods) | [Spotify](#spotify-methods) | [YouTube](#youtube-methods) | [Dropbox](#dropbox-methods) | [Box](#box-methods) | [Utils](#utils-methods) |
 
 ### [Discord Methods](#discord)
-**• [Applications](#applications)**  
-&nbsp; &nbsp; ◦ [getMe](#get-current-application)  
-&nbsp; &nbsp; ◦ [updateMe](#edit-current-application)  
-&nbsp; &nbsp; ◦ [appRoleConnectionMeta](#get-application-role-connection-metadata-records)  
-&nbsp; &nbsp; ◦ [updateAppRoleConnectionMeta](#update-application-role-connection-metadata-records)  
-**&nbsp; &nbsp; ◦ [commands](#application-commands)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-application-command)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-application-commands)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-application-command)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#edit-application-command)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-application-command)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [bulkOverwrite](#bulk-overwrite-application-commands)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrievePermissions](#get-application-command-permissions)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllPermissions](#get-guild-application-command-permissions)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updatePermissions](#edit-application-command-permissions)  
-**&nbsp; &nbsp; ◦ [entitlements](#application-entitlements)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-entitlements)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-test-entitlement)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-test-entitlement)  
-**&nbsp; &nbsp; ◦ [skus](#application-skus)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-skus)  
-**• [Audit Log](#audit-logs)**  
-**&nbsp; &nbsp; ◦ [retrieve](#get-guild-audit-log)**  
-**• [Auto Moderation](#auto-moderation)**  
-&nbsp; &nbsp; ◦ [retrieveRule](#get-auto-moderation-rule)  
-&nbsp; &nbsp; ◦ [getAllRules](#list-auto-moderation-rules)  
-&nbsp; &nbsp; ◦ [createRule](#create-auto-moderation-rule)  
-&nbsp; &nbsp; ◦ [updateRule](#modify-auto-moderation-rule)  
-&nbsp; &nbsp; ◦ [destroyRule](#destroy-auto-moderation-rule)  
-**• [Channels](#channels)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-channel)  
-&nbsp; &nbsp; ◦ [update](#modify-channel)  
-&nbsp; &nbsp; ◦ [destroy](#delete-channel)  
-&nbsp; &nbsp; ◦ [updatePermissions](#edit-channel-permissions)  
-&nbsp; &nbsp; ◦ [deletePermissions](#delete-channel-permissions)  
-&nbsp; &nbsp; ◦ [getinvites](#get-channel-invites)  
-&nbsp; &nbsp; ◦ [inviteCreate](#create-channel-invite)  
-&nbsp; &nbsp; ◦ [typingCreate](#trigger-typing-indicator)  
-&nbsp; &nbsp; ◦ [followAnnouncementChannel](#follow-announcement-channel)  
-&nbsp; &nbsp; ◦ [groupDMadd](#group-dm-add-recipient)  
-&nbsp; &nbsp; ◦ [groupDMremove](#group-dm-remove-recipient)  
-**&nbsp; &nbsp; ◦ [messages](#channel-messages)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-channel-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-channel-messages)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#edit-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [bulkDelete](#bulk-delete-messages)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [crosspost](#crosspost-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [pin](#pin-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [unpin](#unpin-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getPinned](#get-pinned-messages)  
-**&nbsp; &nbsp; ◦ [threads](#channel-threads)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [forumThreadCreate](#start-thread-in-forum-channel)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [createFromMessage](#start-thread-from-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [createWithoutMessage](#start-thread-without-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [join](#join-thread)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [leave](#leave-thread)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [addMember](#add-thread-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [removeMember](#remove-thread-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieveMember](#get-thread-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllMembers](#list-thread-members)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllPublicArchived](#list-public-archived-threads)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllPrivateArchived](#list-private-archived-threads)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllJoinedPrivateArchived](#list-joined-private-archived-threads)  
-**&nbsp; &nbsp; ◦ [reactions](#channel-reactions)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-reaction)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteOwn](#delete-own-reaction)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteUser](#delete-user-reaction)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteAll](#delete-all-reactions)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteAllEmoji](#delete-all-reactions-for-emoji)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getUsers](#get-reactions)  
-**• [Guilds](#guilds)**  
-&nbsp; &nbsp; ◦ [create](#create-guild)  
-&nbsp; &nbsp; ◦ [update](#modify-guild)  
-&nbsp; &nbsp; ◦ [destroy](#delete-guild)  
-&nbsp; &nbsp; ◦ [retrieve](#get-guild)  
-&nbsp; &nbsp; ◦ [destroy](#delete-guild)  
-&nbsp; &nbsp; ◦ [getPreview](#get-guild-preview)  
-&nbsp; &nbsp; ◦ [retrieveBan](#get-guild-ban)  
-&nbsp; &nbsp; ◦ [getAllBans](#get-guild-bans)  
-&nbsp; &nbsp; ◦ [createBan](#create-guild-ban)  
-&nbsp; &nbsp; ◦ [destroyBan](#remove-guild-ban)  
-&nbsp; &nbsp; ◦ [getInvites](#get-guild-invites)  
-&nbsp; &nbsp; ◦ [updateMFAlevel](#modify-guild-mfa-level)  
-&nbsp; &nbsp; ◦ [getPruneCount](#get-guild-prune-count)  
-&nbsp; &nbsp; ◦ [beginPrune](#begin-guild-prune)  
-&nbsp; &nbsp; ◦ [getVoiceRegions](#get-guild-voice-regions)  
-&nbsp; &nbsp; ◦ [getAllIntegrations](#get-guild-integrations)  
-&nbsp; &nbsp; ◦ [destroyIntegration](#delete-guild-integration)  
-&nbsp; &nbsp; ◦ [retrieveWidget](#get-guild-widget)  
-&nbsp; &nbsp; ◦ [retrieveWidgetImage](#get-guild-widget-settings)  
-&nbsp; &nbsp; ◦ [retrieveWidgetSettings](#get-guild-widget-image)  
-&nbsp; &nbsp; ◦ [updateWidget](#modify-guild-widget)  
-&nbsp; &nbsp; ◦ [retrieveVanityURL](#get-guild-vanity-url)  
-&nbsp; &nbsp; ◦ [retrieveWelcomeScreen](#get-guild-welcome-screen)  
-&nbsp; &nbsp; ◦ [updateWelcomeScreen](#modify-guild-welcome-screen)  
-&nbsp; &nbsp; ◦ [retrieveOnboarding](#get-guild-onboarding)  
-&nbsp; &nbsp; ◦ [updateOnboarding](#modify-guild-onboarding)  
-&nbsp; &nbsp; ◦ [newMemberWelcome](#new-member-welcome)  
-**&nbsp; &nbsp; ◦ [channels](#guild-channels)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-guild-channels)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-channel)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updatePositions](#modify-guild-channel-positions)  
-**&nbsp; &nbsp; ◦ [members](#guild-members)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-guild-members)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [search](#search-guild-members)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [remove](#remove-guild-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updateCurrent](#modify-current-member)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [addRole](#add-guild-member-role)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [removeRole](#remove-guild-member-role)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getPermissionNames](#get-member-permission-names)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [timeout](#timeout-guild-member)  
-**&nbsp; &nbsp; ◦ [roles](#guild-roles)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-role)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-guild-roles)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-role)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-role)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-role)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updatePositions](#modify-guild-role-positions)  
-**&nbsp; &nbsp; ◦ [emojis](#guild-emojis)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-emoji)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-guild-emojis)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-emoji)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-emoji)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-emoji)  
-**&nbsp; &nbsp; ◦ [stickers](#guild-stickers)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-sticker)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [nitroPacks](#list-nitro-sticker-packs)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-guild-stickers)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieveGuild](#get-guild-sticker)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-sticker)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-sticker)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-sticker)  
-**&nbsp; &nbsp; ◦ [events](#guild-events)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-scheduled-event)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-scheduled-events-for-guild)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getUsers](#get-guild-scheduled-event-users)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-scheduled-event)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-scheduled-event)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-scheduled-event)  
-**&nbsp; &nbsp; ◦ [templates](#guild-templates)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-template)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-guild-templates)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-template)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [createGuild](#create-guild-from-guild-template)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [sync](#sync-guild-templates)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-template)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-template)  
-**• [Interactions](#interactions)**  
-**&nbsp; &nbsp; ◦ [callback](#interaction-callbacks)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [reply](#create-interaction-response)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [defer](#defer-interaction-response)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [get_original](#get-original-interaction-response)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update_original](#edit-original-interaction-response)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [delete_original](#delete-original-interaction-response)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [component_defer](#component-defer)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [component_update](#component-update)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [autocomplete_reply](#autocomplete-reply)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [modal_reply](#modal-reply)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [upgrade](#premium-required)  
-**&nbsp; &nbsp; ◦ [followup](#interaction-followups)**  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-followup-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-followup-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#edit-followup-message)  
-&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-followup-message)  
-**• [Invites](#invites)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-invite)  
-&nbsp; &nbsp; ◦ [revoke](#delete-invite)  
-**• [OAuth 2](#oauth2)**  
-**• [Stage Instances](#stage-instance)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-stage-instance)  
-&nbsp; &nbsp; ◦ [create](#create-stage-instance)  
-&nbsp; &nbsp; ◦ [update](#modify-stage-instance)  
-&nbsp; &nbsp; ◦ [destroy](#delete-stage-instance)  
-**• [Users](#users)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-user)  
-&nbsp; &nbsp; ◦ [currentUser](#get-current-user)  
-&nbsp; &nbsp; ◦ [myGuilds](#get-current-user-guilds)  
-&nbsp; &nbsp; ◦ [currentMember](#get-current-user-guild-member)  
-&nbsp; &nbsp; ◦ [updateCurrent](#modify-current-user)  
-&nbsp; &nbsp; ◦ [connections](#get-user-connections)  
-&nbsp; &nbsp; ◦ [appRoleConnection](#get-user-application-role-connection)  
-&nbsp; &nbsp; ◦ [updateAppRoleConnection](#update-user-application-role-connection)  
-&nbsp; &nbsp; ◦ [createDM](#create-dm)  
-&nbsp; &nbsp; ◦ [createGroupDM](#create-group-dm)  
-&nbsp; &nbsp; ◦ [leaveGuild](#leave-guild)  
-**• [Webhooks](#webhooks)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-webhook)  
-&nbsp; &nbsp; ◦ [retrieveWithToken](#get-webhook-with-token)  
-&nbsp; &nbsp; ◦ [retrieveChannel](#get-channel-webhooks)  
-&nbsp; &nbsp; ◦ [retrieveGuild](#get-guild-webhooks)  
-&nbsp; &nbsp; ◦ [retrieveMessage](#get-webhook-message)  
-&nbsp; &nbsp; ◦ [updateMessage](#edit-webhook-message)  
-&nbsp; &nbsp; ◦ [destroyMessage](#delete-webhook-message)  
-&nbsp; &nbsp; ◦ [create](#create-webhook)  
-&nbsp; &nbsp; ◦ [update](#modify-webhook)  
-&nbsp; &nbsp; ◦ [updateWithToken](#modify-webhook-with-token)  
-&nbsp; &nbsp; ◦ [destroy](#delete-webhook)  
-&nbsp; &nbsp; ◦ [destroyWithToken](#delete-webhook-with-token)  
-&nbsp; &nbsp; ◦ [execute](#execute-webhook)  
-**• [Objects/Types](#objects-and-types)**  
-&nbsp; &nbsp; ◦ [Guilds](#guild)  
-&nbsp; &nbsp; ◦ [Users](#user)  
-&nbsp; &nbsp; ◦ [Channels](#channel)  
-&nbsp; &nbsp; ◦ [Interactions](#interaction)  
-&nbsp; &nbsp; ◦ [Roles](#role)  
-&nbsp; &nbsp; ◦ [Emojis/Stickers](#emojisticker)  
-&nbsp; &nbsp; ◦ [Message Components](#message-components)  
-&nbsp; &nbsp; ◦ [Webhooks](#webhook)  
-&nbsp; &nbsp; ◦ [Invites](#invite)  
-&nbsp; &nbsp; ◦ [Application](#application)  
-&nbsp; &nbsp; ◦ [Audit Log](#audit-log)  
-&nbsp; &nbsp; ◦ [Auto Moderation](#auto-moderation-1)  
+**• [Applications](#applications)**
+&nbsp; &nbsp; ◦ [getMe](#get-current-application)
+&nbsp; &nbsp; ◦ [updateMe](#edit-current-application)
+&nbsp; &nbsp; ◦ [appRoleConnectionMeta](#get-application-role-connection-metadata-records)
+&nbsp; &nbsp; ◦ [updateAppRoleConnectionMeta](#update-application-role-connection-metadata-records)
+**&nbsp; &nbsp; ◦ [commands](#application-commands)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-application-command)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-application-commands)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-application-command)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#edit-application-command)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-application-command)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [bulkOverwrite](#bulk-overwrite-application-commands)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrievePermissions](#get-application-command-permissions)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllPermissions](#get-guild-application-command-permissions)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updatePermissions](#edit-application-command-permissions)
+**&nbsp; &nbsp; ◦ [entitlements](#application-entitlements)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-entitlements)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-test-entitlement)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-test-entitlement)
+**&nbsp; &nbsp; ◦ [skus](#application-skus)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-skus)
+**• [Audit Log](#audit-logs)**
+**&nbsp; &nbsp; ◦ [retrieve](#get-guild-audit-log)**
+**• [Auto Moderation](#auto-moderation)**
+&nbsp; &nbsp; ◦ [retrieveRule](#get-auto-moderation-rule)
+&nbsp; &nbsp; ◦ [getAllRules](#list-auto-moderation-rules)
+&nbsp; &nbsp; ◦ [createRule](#create-auto-moderation-rule)
+&nbsp; &nbsp; ◦ [updateRule](#modify-auto-moderation-rule)
+&nbsp; &nbsp; ◦ [destroyRule](#destroy-auto-moderation-rule)
+**• [Channels](#channels)**
+&nbsp; &nbsp; ◦ [retrieve](#get-channel)
+&nbsp; &nbsp; ◦ [update](#modify-channel)
+&nbsp; &nbsp; ◦ [destroy](#delete-channel)
+&nbsp; &nbsp; ◦ [updatePermissions](#edit-channel-permissions)
+&nbsp; &nbsp; ◦ [deletePermissions](#delete-channel-permissions)
+&nbsp; &nbsp; ◦ [getinvites](#get-channel-invites)
+&nbsp; &nbsp; ◦ [inviteCreate](#create-channel-invite)
+&nbsp; &nbsp; ◦ [typingCreate](#trigger-typing-indicator)
+&nbsp; &nbsp; ◦ [followAnnouncementChannel](#follow-announcement-channel)
+&nbsp; &nbsp; ◦ [groupDMadd](#group-dm-add-recipient)
+&nbsp; &nbsp; ◦ [groupDMremove](#group-dm-remove-recipient)
+**&nbsp; &nbsp; ◦ [messages](#channel-messages)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-channel-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-channel-messages)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#edit-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [bulkDelete](#bulk-delete-messages)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [crosspost](#crosspost-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [pin](#pin-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [unpin](#unpin-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getPinned](#get-pinned-messages)
+**&nbsp; &nbsp; ◦ [threads](#channel-threads)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [forumThreadCreate](#start-thread-in-forum-channel)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [createFromMessage](#start-thread-from-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [createWithoutMessage](#start-thread-without-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [join](#join-thread)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [leave](#leave-thread)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [addMember](#add-thread-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [removeMember](#remove-thread-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieveMember](#get-thread-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllMembers](#list-thread-members)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllPublicArchived](#list-public-archived-threads)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllPrivateArchived](#list-private-archived-threads)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAllJoinedPrivateArchived](#list-joined-private-archived-threads)
+**&nbsp; &nbsp; ◦ [reactions](#channel-reactions)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-reaction)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteOwn](#delete-own-reaction)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteUser](#delete-user-reaction)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteAll](#delete-all-reactions)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [deleteAllEmoji](#delete-all-reactions-for-emoji)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getUsers](#get-reactions)
+**• [Guilds](#guilds)**
+&nbsp; &nbsp; ◦ [create](#create-guild)
+&nbsp; &nbsp; ◦ [update](#modify-guild)
+&nbsp; &nbsp; ◦ [destroy](#delete-guild)
+&nbsp; &nbsp; ◦ [retrieve](#get-guild)
+&nbsp; &nbsp; ◦ [destroy](#delete-guild)
+&nbsp; &nbsp; ◦ [getPreview](#get-guild-preview)
+&nbsp; &nbsp; ◦ [retrieve](#get-guild-ban)
+&nbsp; &nbsp; ◦ [getAll](#get-guild-bans)
+&nbsp; &nbsp; ◦ [create](#create-guild-ban)
+&nbsp; &nbsp; ◦ [destroy](#remove-guild-ban)
+&nbsp; &nbsp; ◦ [getInvites](#get-guild-invites)
+&nbsp; &nbsp; ◦ [updateMFAlevel](#modify-guild-mfa-level)
+&nbsp; &nbsp; ◦ [getPruneCount](#get-guild-prune-count)
+&nbsp; &nbsp; ◦ [beginPrune](#begin-guild-prune)
+&nbsp; &nbsp; ◦ [getVoiceRegions](#get-guild-voice-regions)
+&nbsp; &nbsp; ◦ [getAllIntegrations](#get-guild-integrations)
+&nbsp; &nbsp; ◦ [destroyIntegration](#delete-guild-integration)
+&nbsp; &nbsp; ◦ [retrieveWidget](#get-guild-widget)
+&nbsp; &nbsp; ◦ [retrieveWidgetImage](#get-guild-widget-settings)
+&nbsp; &nbsp; ◦ [retrieveWidgetSettings](#get-guild-widget-image)
+&nbsp; &nbsp; ◦ [updateWidget](#modify-guild-widget)
+&nbsp; &nbsp; ◦ [retrieveVanityURL](#get-guild-vanity-url)
+&nbsp; &nbsp; ◦ [retrieveWelcomeScreen](#get-guild-welcome-screen)
+&nbsp; &nbsp; ◦ [updateWelcomeScreen](#modify-guild-welcome-screen)
+&nbsp; &nbsp; ◦ [retrieveOnboarding](#get-guild-onboarding)
+&nbsp; &nbsp; ◦ [updateOnboarding](#modify-guild-onboarding)
+&nbsp; &nbsp; ◦ [newMemberWelcome](#new-member-welcome)
+**&nbsp; &nbsp; ◦ [channels](#guild-channels)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-guild-channels)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-channel)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updatePositions](#modify-guild-channel-positions)
+**&nbsp; &nbsp; ◦ [members](#guild-members)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-guild-members)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [search](#search-guild-members)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [remove](#remove-guild-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updateCurrent](#modify-current-member)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [addRole](#add-guild-member-role)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [removeRole](#remove-guild-member-role)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getPermissionNames](#get-member-permission-names)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [timeout](#timeout-guild-member)
+**&nbsp; &nbsp; ◦ [roles](#guild-roles)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-role)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-guild-roles)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-role)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-role)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-role)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [updatePositions](#modify-guild-role-positions)
+**&nbsp; &nbsp; ◦ [emojis](#guild-emojis)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-emoji)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-guild-emojis)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-emoji)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-emoji)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-emoji)
+**&nbsp; &nbsp; ◦ [stickers](#guild-stickers)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-sticker)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [nitroPacks](#list-nitro-sticker-packs)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-guild-stickers)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieveGuild](#get-guild-sticker)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-sticker)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-sticker)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-sticker)
+**&nbsp; &nbsp; ◦ [events](#guild-events)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-scheduled-event)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#list-scheduled-events-for-guild)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getUsers](#get-guild-scheduled-event-users)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-scheduled-event)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-scheduled-event)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-scheduled-event)
+**&nbsp; &nbsp; ◦ [templates](#guild-templates)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-guild-template)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [getAll](#get-guild-templates)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-guild-template)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [createGuild](#create-guild-from-guild-template)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [sync](#sync-guild-templates)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#modify-guild-template)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-guild-template)
+**• [Interactions](#interactions)**
+**&nbsp; &nbsp; ◦ [callback](#interaction-callbacks)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [reply](#create-interaction-response)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [defer](#defer-interaction-response)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [get_original](#get-original-interaction-response)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update_original](#edit-original-interaction-response)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [delete_original](#delete-original-interaction-response)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [component_defer](#component-defer)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [component_update](#component-update)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [autocomplete_reply](#autocomplete-reply)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [modal_reply](#modal-reply)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [upgrade](#premium-required)
+**&nbsp; &nbsp; ◦ [followup](#interaction-followups)**
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [retrieve](#get-followup-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [create](#create-followup-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [update](#edit-followup-message)
+&nbsp; &nbsp; &nbsp; &nbsp; ‣ [destroy](#delete-followup-message)
+**• [Invites](#invites)**
+&nbsp; &nbsp; ◦ [retrieve](#get-invite)
+&nbsp; &nbsp; ◦ [revoke](#delete-invite)
+**• [OAuth 2](#oauth2)**
+**• [Stage Instances](#stage-instance)**
+&nbsp; &nbsp; ◦ [retrieve](#get-stage-instance)
+&nbsp; &nbsp; ◦ [create](#create-stage-instance)
+&nbsp; &nbsp; ◦ [update](#modify-stage-instance)
+&nbsp; &nbsp; ◦ [destroy](#delete-stage-instance)
+**• [Users](#users)**
+&nbsp; &nbsp; ◦ [retrieve](#get-user)
+&nbsp; &nbsp; ◦ [currentUser](#get-current-user)
+&nbsp; &nbsp; ◦ [myGuilds](#get-current-user-guilds)
+&nbsp; &nbsp; ◦ [currentMember](#get-current-user-guild-member)
+&nbsp; &nbsp; ◦ [updateCurrent](#modify-current-user)
+&nbsp; &nbsp; ◦ [connections](#get-user-connections)
+&nbsp; &nbsp; ◦ [appRoleConnection](#get-user-application-role-connection)
+&nbsp; &nbsp; ◦ [updateAppRoleConnection](#update-user-application-role-connection)
+&nbsp; &nbsp; ◦ [createDM](#create-dm)
+&nbsp; &nbsp; ◦ [createGroupDM](#create-group-dm)
+&nbsp; &nbsp; ◦ [leaveGuild](#leave-guild)
+**• [Webhooks](#webhooks)**
+&nbsp; &nbsp; ◦ [retrieve](#get-webhook)
+&nbsp; &nbsp; ◦ [retrieveWithToken](#get-webhook-with-token)
+&nbsp; &nbsp; ◦ [retrieveChannel](#get-channel-webhooks)
+&nbsp; &nbsp; ◦ [retrieveGuild](#get-guild-webhooks)
+&nbsp; &nbsp; ◦ [retrieveMessage](#get-webhook-message)
+&nbsp; &nbsp; ◦ [updateMessage](#edit-webhook-message)
+&nbsp; &nbsp; ◦ [destroyMessage](#delete-webhook-message)
+&nbsp; &nbsp; ◦ [create](#create-webhook)
+&nbsp; &nbsp; ◦ [update](#modify-webhook)
+&nbsp; &nbsp; ◦ [updateWithToken](#modify-webhook-with-token)
+&nbsp; &nbsp; ◦ [destroy](#delete-webhook)
+&nbsp; &nbsp; ◦ [destroyWithToken](#delete-webhook-with-token)
+&nbsp; &nbsp; ◦ [execute](#execute-webhook)
+**• [Objects/Types](#objects-and-types)**
+&nbsp; &nbsp; ◦ [Guilds](#guild)
+&nbsp; &nbsp; ◦ [Users](#user)
+&nbsp; &nbsp; ◦ [Channels](#channel)
+&nbsp; &nbsp; ◦ [Interactions](#interaction)
+&nbsp; &nbsp; ◦ [Roles](#role)
+&nbsp; &nbsp; ◦ [Emojis/Stickers](#emojisticker)
+&nbsp; &nbsp; ◦ [Message Components](#message-components)
+&nbsp; &nbsp; ◦ [Webhooks](#webhook)
+&nbsp; &nbsp; ◦ [Invites](#invite)
+&nbsp; &nbsp; ◦ [Application](#application)
+&nbsp; &nbsp; ◦ [Audit Log](#audit-log)
+&nbsp; &nbsp; ◦ [Auto Moderation](#auto-moderation-1)
 
 ### [OpenAI Methods](#openai)
-**• [Chat](#chat)**  
-&nbsp; &nbsp; ◦ [create](#chat-create)  
-**• [Images](#images)**  
-&nbsp; &nbsp; ◦ [create](#images-create)  
-**• [Speech](#speech)**  
-&nbsp; &nbsp; ◦ [create](#speech-create)  
-**• [Embeddings](#embeddings)**  
-&nbsp; &nbsp; ◦ [create](#embeddings-create)  
+**• [Chat](#chat)**
+&nbsp; &nbsp; ◦ [create](#chat-create)
+**• [Images](#images)**
+&nbsp; &nbsp; ◦ [create](#images-create)
+**• [Speech](#speech)**
+&nbsp; &nbsp; ◦ [create](#speech-create)
+**• [Embeddings](#embeddings)**
+&nbsp; &nbsp; ◦ [create](#embeddings-create)
 
 ### [Slack Methods](#slack)
 Docs coming soon
 
-### [Spotify Methods](#spotify)  
-**• [Users](#users)**  
-&nbsp; &nbsp; ◦ [me](#get-current-users-profile)  
-&nbsp; &nbsp; ◦ [topItems](#get-users-top-items)  
-&nbsp; &nbsp; ◦ [getProfile](#get-users-profile)  
-**• [Search](#search)**  
-&nbsp; &nbsp; ◦ [advanced](#advanced-search)  
-&nbsp; &nbsp; ◦ [artists](#search-artists)  
-&nbsp; &nbsp; ◦ [songs](#search-songs)  
-&nbsp; &nbsp; ◦ [albums](#search-albums)  
-**• [Songs](#songs)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-song)  
-&nbsp; &nbsp; ◦ [retrieveMany](#get-several-songs)  
-&nbsp; &nbsp; ◦ [recommendations](#get-recommendations)  
-&nbsp; &nbsp; ◦ [save](#save-song)  
-&nbsp; &nbsp; ◦ [unsave](#remove-song)  
-&nbsp; &nbsp; ◦ [saved](#get-users-saved-songs)  
-&nbsp; &nbsp; ◦ [isSaved](#check-users-saved-songs)  
-&nbsp; &nbsp; ◦ [analyze](#analyze-song)  
-&nbsp; &nbsp; ◦ [audioFeatures](#get-audio-features)  
-&nbsp; &nbsp; ◦ [audioFeaturesMany](#get-several-audio-features)  
-**• [Artists](#artists)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-artist)  
-&nbsp; &nbsp; ◦ [retrieveMany](#get-several-artists)  
-&nbsp; &nbsp; ◦ [recommendations](#get-artists-top-songs)  
-&nbsp; &nbsp; ◦ [albums](#get-artists-albums)  
-&nbsp; &nbsp; ◦ [related](#get-related-artists)  
-&nbsp; &nbsp; ◦ [follow](#follow-artists-or-users)  
-&nbsp; &nbsp; ◦ [unfollow](#unfollow-artists-or-users)  
-&nbsp; &nbsp; ◦ [following](#get-followed-artists)  
-&nbsp; &nbsp; ◦ [isFollowing](#check-followed-artists-or-users)  
-**• [Albums](#albums)**  
-&nbsp; &nbsp; ◦ [retrieve](#get-album)  
-&nbsp; &nbsp; ◦ [retrieveMany](#get-several-albums)  
-&nbsp; &nbsp; ◦ [songs](#get-album-songs)  
-&nbsp; &nbsp; ◦ [new](#get-new-releases)  
-&nbsp; &nbsp; ◦ [save](#save-album)  
-&nbsp; &nbsp; ◦ [unsave](#remove-album)  
-&nbsp; &nbsp; ◦ [saved](#get-users-saved-albums)  
-&nbsp; &nbsp; ◦ [isSaved](#check-users-saved-albums)  
-**• [Playlists](#playlists)**  
-&nbsp; &nbsp; ◦ [featured](#get-featured-playlists)  
-&nbsp; &nbsp; ◦ [category](#get-categories-playlists)  
-&nbsp; &nbsp; ◦ [create](#create-playlist)  
-&nbsp; &nbsp; ◦ [addSongs](#add-songs-to-playlist)  
-&nbsp; &nbsp; ◦ [update](#change-playlist-details)  
-&nbsp; &nbsp; ◦ [updateSongs](#update-playlist-items)  
-&nbsp; &nbsp; ◦ [removeSongs](#remove-songs-from-playlist)  
-&nbsp; &nbsp; ◦ [retrieveSongs](#get-playlist-items)  
-&nbsp; &nbsp; ◦ [created](#get-current-users-created-playlists)  
-&nbsp; &nbsp; ◦ [following](#get-current-users-playlists)  
-&nbsp; &nbsp; ◦ [isFollowing](#check-if-user-follows-playlists)  
-&nbsp; &nbsp; ◦ [follow](#follow-playlist)  
-&nbsp; &nbsp; ◦ [unfollow](#unfollow-playlist)  
-&nbsp; &nbsp; ◦ [user](#get-users-playlists)  
-&nbsp; &nbsp; ◦ [cover](#get-playlists-cover-image)  
-&nbsp; &nbsp; ◦ [updateCover](#add-playlist-cover-image)  
-**• [Playback](#playback)**  
-&nbsp; &nbsp; ◦ [state](#get-playback-state)  
-&nbsp; &nbsp; ◦ [currentSong](#get-currently-playing-song)  
-&nbsp; &nbsp; ◦ [devices](#get-available-devices)  
-&nbsp; &nbsp; ◦ [togglePlayback](#start/resume-playback)  
-&nbsp; &nbsp; ◦ [pause](#pause-playback)  
-&nbsp; &nbsp; ◦ [skip](#skip-to-next-song)  
-&nbsp; &nbsp; ◦ [previous](#skip-to-previous-song)  
-&nbsp; &nbsp; ◦ [seek](#seek-to-position)  
-&nbsp; &nbsp; ◦ [setVolume](#set-playback-volume)  
-&nbsp; &nbsp; ◦ [toggleShuffle](#toggle-playback-shuffle)  
-&nbsp; &nbsp; ◦ [toggleRepeat](#set-repeat-mode)  
-&nbsp; &nbsp; ◦ [queue](#get-users-queue)  
-&nbsp; &nbsp; ◦ [recent](#get-recently-played-songs)  
-&nbsp; &nbsp; ◦ [addToQueue](#add-item-to-queue)  
-&nbsp; &nbsp; ◦ [transfer](#transfer-playback)  
+### [Spotify Methods](#spotify)
+**• [Users](#users)**
+&nbsp; &nbsp; ◦ [me](#get-current-users-profile)
+&nbsp; &nbsp; ◦ [topItems](#get-users-top-items)
+&nbsp; &nbsp; ◦ [getProfile](#get-users-profile)
+**• [Search](#search)**
+&nbsp; &nbsp; ◦ [advanced](#advanced-search)
+&nbsp; &nbsp; ◦ [artists](#search-artists)
+&nbsp; &nbsp; ◦ [songs](#search-songs)
+&nbsp; &nbsp; ◦ [albums](#search-albums)
+**• [Songs](#songs)**
+&nbsp; &nbsp; ◦ [retrieve](#get-song)
+&nbsp; &nbsp; ◦ [retrieveMany](#get-several-songs)
+&nbsp; &nbsp; ◦ [recommendations](#get-recommendations)
+&nbsp; &nbsp; ◦ [save](#save-song)
+&nbsp; &nbsp; ◦ [unsave](#remove-song)
+&nbsp; &nbsp; ◦ [saved](#get-users-saved-songs)
+&nbsp; &nbsp; ◦ [isSaved](#check-users-saved-songs)
+&nbsp; &nbsp; ◦ [analyze](#analyze-song)
+&nbsp; &nbsp; ◦ [audioFeatures](#get-audio-features)
+&nbsp; &nbsp; ◦ [audioFeaturesMany](#get-several-audio-features)
+**• [Artists](#artists)**
+&nbsp; &nbsp; ◦ [retrieve](#get-artist)
+&nbsp; &nbsp; ◦ [retrieveMany](#get-several-artists)
+&nbsp; &nbsp; ◦ [recommendations](#get-artists-top-songs)
+&nbsp; &nbsp; ◦ [albums](#get-artists-albums)
+&nbsp; &nbsp; ◦ [related](#get-related-artists)
+&nbsp; &nbsp; ◦ [follow](#follow-artists-or-users)
+&nbsp; &nbsp; ◦ [unfollow](#unfollow-artists-or-users)
+&nbsp; &nbsp; ◦ [following](#get-followed-artists)
+&nbsp; &nbsp; ◦ [isFollowing](#check-followed-artists-or-users)
+**• [Albums](#albums)**
+&nbsp; &nbsp; ◦ [retrieve](#get-album)
+&nbsp; &nbsp; ◦ [retrieveMany](#get-several-albums)
+&nbsp; &nbsp; ◦ [songs](#get-album-songs)
+&nbsp; &nbsp; ◦ [new](#get-new-releases)
+&nbsp; &nbsp; ◦ [save](#save-album)
+&nbsp; &nbsp; ◦ [unsave](#remove-album)
+&nbsp; &nbsp; ◦ [saved](#get-users-saved-albums)
+&nbsp; &nbsp; ◦ [isSaved](#check-users-saved-albums)
+**• [Playlists](#playlists)**
+&nbsp; &nbsp; ◦ [featured](#get-featured-playlists)
+&nbsp; &nbsp; ◦ [category](#get-categories-playlists)
+&nbsp; &nbsp; ◦ [create](#create-playlist)
+&nbsp; &nbsp; ◦ [addSongs](#add-songs-to-playlist)
+&nbsp; &nbsp; ◦ [update](#change-playlist-details)
+&nbsp; &nbsp; ◦ [updateSongs](#update-playlist-items)
+&nbsp; &nbsp; ◦ [removeSongs](#remove-songs-from-playlist)
+&nbsp; &nbsp; ◦ [retrieveSongs](#get-playlist-items)
+&nbsp; &nbsp; ◦ [created](#get-current-users-created-playlists)
+&nbsp; &nbsp; ◦ [following](#get-current-users-playlists)
+&nbsp; &nbsp; ◦ [isFollowing](#check-if-user-follows-playlists)
+&nbsp; &nbsp; ◦ [follow](#follow-playlist)
+&nbsp; &nbsp; ◦ [unfollow](#unfollow-playlist)
+&nbsp; &nbsp; ◦ [user](#get-users-playlists)
+&nbsp; &nbsp; ◦ [cover](#get-playlists-cover-image)
+&nbsp; &nbsp; ◦ [updateCover](#add-playlist-cover-image)
+**• [Playback](#playback)**
+&nbsp; &nbsp; ◦ [state](#get-playback-state)
+&nbsp; &nbsp; ◦ [currentSong](#get-currently-playing-song)
+&nbsp; &nbsp; ◦ [devices](#get-available-devices)
+&nbsp; &nbsp; ◦ [togglePlayback](#start/resume-playback)
+&nbsp; &nbsp; ◦ [pause](#pause-playback)
+&nbsp; &nbsp; ◦ [skip](#skip-to-next-song)
+&nbsp; &nbsp; ◦ [previous](#skip-to-previous-song)
+&nbsp; &nbsp; ◦ [seek](#seek-to-position)
+&nbsp; &nbsp; ◦ [setVolume](#set-playback-volume)
+&nbsp; &nbsp; ◦ [toggleShuffle](#toggle-playback-shuffle)
+&nbsp; &nbsp; ◦ [toggleRepeat](#set-repeat-mode)
+&nbsp; &nbsp; ◦ [queue](#get-users-queue)
+&nbsp; &nbsp; ◦ [recent](#get-recently-played-songs)
+&nbsp; &nbsp; ◦ [addToQueue](#add-item-to-queue)
+&nbsp; &nbsp; ◦ [transfer](#transfer-playback)
 
 ### [Utils Methods](#utils)
-**• [Storage](#storage)**  
-&nbsp; &nbsp; ◦ [get](#storage-get)  
-&nbsp; &nbsp; ◦ [getMany](#storage-get-many)  
-&nbsp; &nbsp; ◦ [set](#storage-set)  
-&nbsp; &nbsp; ◦ [setMany](#storage-set-many)  
-&nbsp; &nbsp; ◦ [delete](#storage-delete)  
-&nbsp; &nbsp; ◦ [deleteMany](#storage-delete-many)  
-&nbsp; &nbsp; ◦ [merge](#storage-merge)  
-&nbsp; &nbsp; ◦ [push](#storage-push)  
-&nbsp; &nbsp; ◦ [export](#storage-export)  
-&nbsp; &nbsp; ◦ [filter](#storage-filter)  
-&nbsp; &nbsp; ◦ [all](#storage-all)  
-&nbsp; &nbsp; ◦ [has](#storage-has)  
-&nbsp; &nbsp; ◦ [entries](#storage-entries)  
-&nbsp; &nbsp; ◦ [keys](#storage-keys)  
-&nbsp; &nbsp; ◦ [values](#storage-values)  
-&nbsp; &nbsp; ◦ [size](#storage-size)  
-&nbsp; &nbsp; ◦ [bytes](#storage-bytes)  
-&nbsp; &nbsp; ◦ [toJson](#storage-toJson)  
-&nbsp; &nbsp; ◦ [clear](#storage-clear)  
-&nbsp; &nbsp; ◦ [equals](#storage-equals)  
-&nbsp; &nbsp; ◦ [history](#storage-history)  
-&nbsp; &nbsp; ◦ [clearHistory](#storage-clear-history)  
+**• [Storage](#storage)**
+&nbsp; &nbsp; ◦ [get](#storage-get)
+&nbsp; &nbsp; ◦ [getMany](#storage-get-many)
+&nbsp; &nbsp; ◦ [set](#storage-set)
+&nbsp; &nbsp; ◦ [setMany](#storage-set-many)
+&nbsp; &nbsp; ◦ [delete](#storage-delete)
+&nbsp; &nbsp; ◦ [deleteMany](#storage-delete-many)
+&nbsp; &nbsp; ◦ [merge](#storage-merge)
+&nbsp; &nbsp; ◦ [push](#storage-push)
+&nbsp; &nbsp; ◦ [export](#storage-export)
+&nbsp; &nbsp; ◦ [filter](#storage-filter)
+&nbsp; &nbsp; ◦ [all](#storage-all)
+&nbsp; &nbsp; ◦ [has](#storage-has)
+&nbsp; &nbsp; ◦ [entries](#storage-entries)
+&nbsp; &nbsp; ◦ [keys](#storage-keys)
+&nbsp; &nbsp; ◦ [values](#storage-values)
+&nbsp; &nbsp; ◦ [size](#storage-size)
+&nbsp; &nbsp; ◦ [bytes](#storage-bytes)
+&nbsp; &nbsp; ◦ [toJson](#storage-toJson)
+&nbsp; &nbsp; ◦ [clear](#storage-clear)
+&nbsp; &nbsp; ◦ [equals](#storage-equals)
+&nbsp; &nbsp; ◦ [history](#storage-history)
+&nbsp; &nbsp; ◦ [clearHistory](#storage-clear-history)
 
 ---
 
@@ -435,10 +435,10 @@ Docs coming soon
 | [`update`](#update-existing-guild)                     | Modify a guild's settings                                        |
 | [`destroy`](#delete-guild)                             | Delete a guild                                                   |
 | [`getPreview`](#get-guild-preview)                     | Get the guild's preview                                          |
-| [`retrieveBan`](#get-guild-ban)                        | Get guild ban with given id                                      |
-| [`getAllBans`](#get-guild-bans)                        | Get a list of a guild's bans                                     |
-| [`createBan`](#create-guild-ban)                       | Create a new guild ban                                           |
-| [`destroyBan`](#remove-guild-ban)                      | Delete a guild ban                                               |
+| [`retrieve`](#get-guild-ban)                        | Get guild ban with given id                                      |
+| [`getAll`](#get-guild-bans)                        | Get a list of a guild's bans                                     |
+| [`create`](#create-guild-ban)                       | Create a new guild ban                                           |
+| [`destroy`](#remove-guild-ban)                      | Delete a guild ban                                               |
 | [`getInvites`](#get-guild-invites)                     | Get a list of a guild's invites                                  |
 | [`updateMFAlevel`](#modify-guild-mfa-level)            | Modify the guild's MFA level                                     |
 | [`getPruneCount`](#get-guild-prune-count)              | Get number of members that would be removed in a prune operation |
@@ -566,7 +566,7 @@ await mapih.discord.guilds.destroy({
 ```
 
 ### [Get Guild Preview](https://discord.com/developers/docs/resources/guild#get-guild-preview)
-• If the user is not in the guild, then the guild must be lurkable.  
+• If the user is not in the guild, then the guild must be lurkable.
 
 #### Parameters
 | Field    | Type      | Description          |
@@ -581,8 +581,8 @@ await mapih.discord.guilds.getPreview({
 ```
 
 ### [Get Guild Ban](https://discord.com/developers/docs/resources/guild#get-guild-ban)
-• Returns a ban object for the given user or a 404 not found if the ban cannot be found.  
-• Requires the `BAN_MEMBERS` permission.  
+• Returns a ban object for the given user or a 404 not found if the ban cannot be found.
+• Requires the `BAN_MEMBERS` permission.
 
 #### Parameters
 | Field    | Type      | Description                                |
@@ -592,7 +592,7 @@ await mapih.discord.guilds.getPreview({
 
 #### Example
 ```javascript
-await mapih.discord.guilds.retrieveBan({
+await mapih.discord.guilds.retrieve({
   guild_id: '0000000000',
   user_id: '0000000000'
 });
@@ -610,7 +610,7 @@ await mapih.discord.guilds.retrieveBan({
 
 #### Example
 ```javascript
-await mapih.discord.guilds.getAllBans({
+await mapih.discord.guilds.getAll({
   guild_id: '0000000000',
   limit: 50,
   after: '0000000000'
@@ -618,7 +618,7 @@ await mapih.discord.guilds.getAllBans({
 ```
 
 ### [Create Guild Ban](https://discord.com/developers/docs/resources/guild#create-guild-ban)
-• Requires the `BAN_MEMBERS` permission.  
+• Requires the `BAN_MEMBERS` permission.
 
 #### Parameters
 | Field                   | Type      | Description                                                                                |
@@ -630,7 +630,7 @@ await mapih.discord.guilds.getAllBans({
 
 #### Example
 ```javascript
-await mapih.discord.guilds.createBan({
+await mapih.discord.guilds.create({
   guild_id: '0000000000',
   user_id: '0000000000',
   delete_message_seconds: 604800,
@@ -639,7 +639,7 @@ await mapih.discord.guilds.createBan({
 ```
 
 ### [Remove Guild Ban](https://discord.com/developers/docs/resources/guild#remove-guild-ban)
-• Requires the `BAN_MEMBERS` permission.  
+• Requires the `BAN_MEMBERS` permission.
 
 #### Parameters
 | Field    | Type      | Description                  |
@@ -650,7 +650,7 @@ await mapih.discord.guilds.createBan({
 
 #### Example
 ```javascript
-await mapih.discord.guilds.destroyBan({
+await mapih.discord.guilds.destroy({
   guild_id: '0000000000',
   user_id: '0000000000',
   reason: 'ok I guess you\'re alright'
@@ -658,7 +658,7 @@ await mapih.discord.guilds.destroyBan({
 ```
 
 ### [Modify Guild MFA Level](https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level)
-• Requires guild ownership.  
+• Requires guild ownership.
 
 #### Parameters
 | Field    | Type      | Description             |
@@ -675,9 +675,9 @@ await mapih.discord.guilds.updateMFAlevel({
 ```
 
 ### [Get Guild Prune Count](https://discord.com/developers/docs/resources/guild#get-guild-prune-count)
-• By default, prune will not remove users with roles.  
-• You can optionally include specific roles in your prune by providing the `include_roles` parameter.  
-• Any inactive user that has a subset of the provided role(s) will be counted in the prune and users with additional roles will not.  
+• By default, prune will not remove users with roles.
+• You can optionally include specific roles in your prune by providing the `include_roles` parameter.
+• Any inactive user that has a subset of the provided role(s) will be counted in the prune and users with additional roles will not.
 
 #### Parameters
 | Field          | Type      | Description                                          |
@@ -698,10 +698,10 @@ await mapih.discord.guilds.getPruneCount({
 ```
 
 ### [Begin Guild Prune](https://discord.com/developers/docs/resources/guild#begin-guild-prune)
-• For large guilds it's recommended to set the `compute_prune_count` option to `false`, forcing `pruned` to `null`.  
-• By default, prune will not remove users with roles.  
-• You can optionally include specific roles in your prune by providing the `include_roles` parameter.  
-• Any inactive user that has a subset of the provided role(s) will be counted in the prune and users with additional roles will not.  
+• For large guilds it's recommended to set the `compute_prune_count` option to `false`, forcing `pruned` to `null`.
+• By default, prune will not remove users with roles.
+• You can optionally include specific roles in your prune by providing the `include_roles` parameter.
+• Any inactive user that has a subset of the provided role(s) will be counted in the prune and users with additional roles will not.
 
 #### Parameters
 | Field               | Type        | Description                                                               |
@@ -739,7 +739,7 @@ await mapih.discord.guilds.getVoiceRegions({
 ```
 
 ### [Get Guild Integrations](https://discord.com/developers/docs/resources/guild#get-guild-integrations)
-> This endpoint returns a maximum of 50 integrations.  
+> This endpoint returns a maximum of 50 integrations.
 > If a guild has more integrations, they cannot be accessed.
 
 #### Parameters
@@ -755,7 +755,7 @@ await mapih.discord.guilds.getAllIntegrations({
 ```
 
 ### [Delete Guild Integration](https://discord.com/developers/docs/resources/guild#delete-guild-integration)
-• Deletes any associated webhooks and kicks the associated bot if there is one.  
+• Deletes any associated webhooks and kicks the associated bot if there is one.
 
 #### Parameters
 | Field          | Type      | Description                         |
@@ -902,7 +902,7 @@ await mapih.discord.guilds.retrieveOnboarding({
 ```
 
 ### [Modify Guild Onboarding](https://discord.com/developers/docs/resources/guild#modify-guild-onboarding)
-• Requires the `MANAGE_GUILD` and `MANAGE_ROLES` permissions.  
+• Requires the `MANAGE_GUILD` and `MANAGE_ROLES` permissions.
 • Onboarding enforces constraints when enabled. These constraints are that there must be at least 7 Default Channels and at least 5 of them must allow sending messages to the @everyone role. The mode field modifies what is considered when enforcing these constraints.**
 
 #### Parameters
@@ -952,7 +952,7 @@ await mapih.discord.guilds.updateOnboarding({
 | Method                                               | Description                       |
 |------------------------------------------------------|-----------------------------------|
 | [`getAll`](#get-guild-channels)                      | Retrieve all channels in a guild. |
-| [`create`](#create-guild-channel)                    | Create a new guild channel.       | 
+| [`create`](#create-guild-channel)                    | Create a new guild channel.       |
 | [`updatePositions`](#modify-guild-channel-positions) | Modify the positions of channels. |
 
 ### [Get Guild Channels](https://discord.com/developers/docs/resources/guild#get-guild-channels)
@@ -1036,7 +1036,7 @@ await mapih.discord.guilds.channels.updatePositions({
 | Method                                               | Description                                    |
 |------------------------------------------------------|------------------------------------------------|
 | [`retrieve`](#get-guild-member)                      | Returns information about a user               |
-| [`getAll`](#list-guild-channel)                      | List all members of a guild                    | 
+| [`getAll`](#list-guild-channel)                      | List all members of a guild                    |
 | [`search`](#search-guild-members)                    | Search for guild members by name or nickname   |
 | [`remove`](#remove-guild-member)                     | Remove a member from a guild                   |
 | [`update`](#modify-guild-member)                     | Modify attributes of a guild member            |
@@ -1116,7 +1116,7 @@ await mapih.discord.guilds.members.remove({
 ```
 
 ### [Modify Guild Member](https://discord.com/developers/docs/resources/guild#modify-guild-member)
-• If the channel_id is set to null, this will force the target user to be disconnected from voice.  
+• If the channel_id is set to null, this will force the target user to be disconnected from voice.
 
 > All parameters to this endpoint are optional and nullable.
 
@@ -1209,7 +1209,7 @@ const permNames = getPermissionNames(x, y);
 ```
 
 ### Timeout Guild Member
-• Sets/adjusts/clears a member's timeout  
+• Sets/adjusts/clears a member's timeout
 
 #### Parameters
 | Field    | Type      | Description                                                                 |
@@ -1241,7 +1241,7 @@ await mapih.discord.guilds.members.timeout({
 | Method                          | Description                       |
 |---------------------------------|-----------------------------------|
 | [`retrieve`](#get-guild-role)   | Retrieve a role by ID             |
-| [`getAll`](#get-guild-roles)    | List all roles in a guild         | 
+| [`getAll`](#get-guild-roles)    | List all roles in a guild         |
 | [`create`](#create-guild-role)  | Create a new role in the guild    |
 | [`update`](#modify-guild-role)  | Modify properties of a guild role |
 | [`destroy`](#delete-guild-role) | Modify properties of a guild role |
@@ -1372,7 +1372,7 @@ await mapih.discord.guilds.roles.retrieve({
 | Method                           | Description                       |
 |----------------------------------|-----------------------------------|
 | [`retrieve`](#get-guild-emoji)   | Get a specific emoji from a guild |
-| [`getAll`](#list-guild-emojis)   | List all emojis in a guild        | 
+| [`getAll`](#list-guild-emojis)   | List all emojis in a guild        |
 | [`create`](#create-guild-emoji)  | Create a new emoji in the guild   |
 | [`update`](#modify-guild-emoji)  | Modify a guild emoji              |
 | [`destroy`](#delete-guild-emoji) | Delete a guild emoji              |
@@ -1468,7 +1468,7 @@ await mapih.discord.guilds.emojis.destroy({
 |----------------------------------------------|-------------------------------------|
 | [`retrieve`](#get-sticker)                   | Get a specific sticker              |
 | [`retrieveGuildSticker`](#get-guild-sticker) | Get a specific sticker from a guild |
-| [`nitroPacks`](#list-sticker-packs)          | Lists available sticker packs       | 
+| [`nitroPacks`](#list-sticker-packs)          | Lists available sticker packs       |
 | [`getAll`](#list-guild-stickers)             | List all stickers in a guild        |
 | [`create`](#create-guild-sticker)            | Create a guild sticker              |
 | [`update`](#modify-guild-sticker)            | Update a guild sticker              |
@@ -1527,7 +1527,7 @@ await mapih.discord.guilds.stickers.getAll({
 
 ### [Create Guild Sticker](https://discord.com/developers/docs/resources/sticker#create-guild-sticker)
 > **This endpoint may take time. It goes through multiple functions before returning the sticker.**
-> 
+>
 #### Parameters
 | Field       | Type       | Description                                                       |
 |-------------|------------|-------------------------------------------------------------------|
@@ -1592,7 +1592,7 @@ await mapih.discord.guilds.stickers.destroy({
 |------------------------------------------------|---------------------------------------------|
 | [`retrieve`](#get-guild-scheduled-event)       | Get a specific scheduled event in the guild |
 | [`getAll`](#list-scheduled-events-for-guild)   | List all scheduled events for the guild     |
-| [`getUsers`](#get-guild-scheduled-event-users) | Get users subscribed to a scheduled event   | 
+| [`getUsers`](#get-guild-scheduled-event-users) | Get users subscribed to a scheduled event   |
 | [`create`](#create-guild-scheduled-event)      | Create a new scheduled event in the guild   |
 | [`update`](#modify-guild-scheduled-event)      | Modify a guild scheduled event              |
 | [`destroy`](#delete-guild-scheduled-event)     | Delete a guild scheduled event              |
@@ -1643,7 +1643,7 @@ await mapih.discord.guilds.events.getAll({
 | before? *                | snowflake | consider only users before given user id      | null    |
 | after? *                 | snowflake | consider only users after given user id       | null    |
 
-\* Provide a user id to `before` and `after` for pagination. Users will always be returned in ascending order by `user_id`.  
+\* Provide a user id to `before` and `after` for pagination. Users will always be returned in ascending order by `user_id`.
 > If both `before` and `after` are provided, only `before` is respected. Fetching users in-between `before` and `after` is not supported.**
 
 #### Example
@@ -1671,8 +1671,8 @@ await mapih.discord.guilds.events.getUsers({
 | entity_type            | [event entity type](#guild-scheduled-event-entity-types)   | The entity type of the scheduled event                |
 | image?                 | url/buffer                                                 | The cover image of the scheduled event                |
 
-\* Optional for events with `'entity_type': EXTERNAL`  
-\*\* Required for events with `'entity_type': EXTERNAL`  
+\* Optional for events with `'entity_type': EXTERNAL`
+\*\* Required for events with `'entity_type': EXTERNAL`
 
 #### Example
 ```javascript
@@ -1703,7 +1703,7 @@ await mapih.discord.guilds.events.create({
 | status?               | [event status](#guild-scheduled-event-status)              | The status of the scheduled event                     |
 | image?                | url/buffer                                                 | The cover image of the scheduled event                |
 
-\* If updating `entity_type` to `EXTERNAL`:  
+\* If updating `entity_type` to `EXTERNAL`:
 
 - `channel_id` is required and [must be set to null](#field-requirements-by-entity-type)
 - `entity_metadata` with a `location` field must be provided
@@ -1922,12 +1922,12 @@ await mapih.discord.channels.retrieve({
 | default_sort_order?                 | ?number                                                  | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels                                                                                                                                | Forum, Media                                   |
 | default_forum_layout?               | number                                                   | the [default forum layout type](#forum-layout-types) used to display posts in `GUILD_FORUM` channels                                                                                                                                            | Forum                                          |
 
-\* For voice channels, normal servers can set bitrate up to 96000, servers with Boost level 1 can set up to 128000, servers with Boost level 2 can set up to 256000, and servers with Boost level 3 or the `VIP_REGIONS` [guild feature](#guild-features) can set up to 384000. For stage channels, bitrate can be set up to 64000.  
-\*\* In each overwrite object, the `allow` and `deny` keys can be omitted or set to `null`, which both default to `"0"`.  
+\* For voice channels, normal servers can set bitrate up to 96000, servers with Boost level 1 can set up to 128000, servers with Boost level 2 can set up to 256000, and servers with Boost level 3 or the `VIP_REGIONS` [guild feature](#guild-features) can set up to 384000. For stage channels, bitrate can be set up to 64000.
+\*\* In each overwrite object, the `allow` and `deny` keys can be omitted or set to `null`, which both default to `"0"`.
 
 #### Parameters (Thread)
-• When setting `archived` to `false`, when `locked` is also `false`, only the `SEND_MESSAGES` permission is required.  
-• Otherwise, requires the `MANAGE_THREADS` permission.  
+• When setting `archived` to `false`, when `locked` is also `false`, only the `SEND_MESSAGES` permission is required.
+• Otherwise, requires the `MANAGE_THREADS` permission.
 
 | Field                 | Type                | Description                                                                                                                                                                                        |
 |-----------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2142,7 +2142,7 @@ await mapih.discord.channels.messages.retrieve({
 | after?     | snowflake | Get messages after this message ID                    |
 | limit?     | number    | Max number of messages to return (1-100) (default 50) |
 
-> **The `before`, `after`, and `around` parameters are mutually exclusive, only one may be passed at a time.**  
+> **The `before`, `after`, and `around` parameters are mutually exclusive, only one may be passed at a time.**
 
 #### Example
 ```javascript
@@ -2153,8 +2153,8 @@ await mapih.discord.channels.messages.getAll({
 ```
 
 ### [Create Message](https://discord.com/developers/docs/resources/channel#create-message)
-To create a message as a reply to another message, apps can include a [message_reference](#message-reference-object) with a `message_id`.  
-• The `channel_id` and `guild_id` in the `message_reference` are optional, but will be validated if provided.  
+To create a message as a reply to another message, apps can include a [message_reference](#message-reference-object) with a `message_id`.
+• The `channel_id` and `guild_id` in the `message_reference` are optional, but will be validated if provided.
 
 #### Parameters
 | Field              | Type                                                      | Description                                                                                      |
@@ -2170,7 +2170,7 @@ To create a message as a reply to another message, apps can include a [message_r
 | attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
 | flags?             | number                                                    | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
 
-\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.  
+\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.
 
 #### Example
 ```javascript
@@ -2178,7 +2178,7 @@ await mapih.discord.channels.messages.create({
   channel_id: '0000000000',
   content: 'sup'
 });
-```  
+```
 #### Example
 ```javascript
 await mapih.discord.channels.messages.create({
@@ -2198,7 +2198,7 @@ await mapih.discord.channels.messages.create({
     }]
   }]
 });
-```  
+```
 #### Example
 ```javascript
 await mapih.discord.channels.messages.create({
@@ -2225,10 +2225,10 @@ await mapih.discord.channels.messages.create({
 | attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
 | flags?             | number                                                    | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
 
-• When the content field is edited, the mentions array in the message object will be reconstructed from scratch based on the new content.  
-• The allowed_mentions field of the edit request controls how this happens.  
-• If there is no explicit allowed_mentions in the edit request, the content will be parsed with default allowances, that is, without regard to whether or not an allowed_mentions was present in the request that originally created the message.  
-• The attachments array must contain all attachments that should be present after edit, including retained and new attachments.  
+• When the content field is edited, the mentions array in the message object will be reconstructed from scratch based on the new content.
+• The allowed_mentions field of the edit request controls how this happens.
+• If there is no explicit allowed_mentions in the edit request, the content will be parsed with default allowances, that is, without regard to whether or not an allowed_mentions was present in the request that originally created the message.
+• The attachments array must contain all attachments that should be present after edit, including retained and new attachments.
 
 #### Example
 ```javascript
@@ -2237,7 +2237,7 @@ await mapih.discord.channels.messages.update({
   message_id: '0000000000',
   content: 'new message'
 });
-```  
+```
 
 ### [Delete Message](https://discord.com/developers/docs/resources/channel#delete-message)
 
@@ -2256,8 +2256,8 @@ await mapih.discord.channels.messages.destroy({
 ```
 
 ### [Bulk Delete Messages](https://discord.com/developers/docs/resources/channel#bulk-delete-messages)
-• Any message IDs given that do not exist or are invalid will count towards the minimum and maximum message count (currently 2 and 100 respectively).  
-> This endpoint will not delete messages older than 2 weeks.  
+• Any message IDs given that do not exist or are invalid will count towards the minimum and maximum message count (currently 2 and 100 respectively).
+> This endpoint will not delete messages older than 2 weeks.
 
 #### Parameters
 | Field      | Type                | Description                               |
@@ -2269,7 +2269,7 @@ await mapih.discord.channels.messages.destroy({
 ```javascript
 await mapih.discord.channels.messages.bulkDelete({
   channel_id: '0000000000',
-  messages: [ 
+  messages: [
     '0000000000',
     '0000000000'
   ]
@@ -2386,10 +2386,10 @@ await mapih.discord.channels.threads.forumThreadCreate({
 ```
 
 ### [Start Thread from Message](https://discord.com/developers/docs/resources/channel#start-thread-from-message)
-• When called on a `GUILD_TEXT` channel, creates a `PUBLIC_THREAD`.  
-• When called on a `GUILD_ANNOUNCEMENT` channel, creates an `ANNOUNCEMENT_THREAD`.  
-• Does not work on a `GUILD_FORUM` channel.  
-• The ID of the created thread will be the same as the ID of the source message, and as such a message can only have a single thread created from it.  
+• When called on a `GUILD_TEXT` channel, creates a `PUBLIC_THREAD`.
+• When called on a `GUILD_ANNOUNCEMENT` channel, creates an `ANNOUNCEMENT_THREAD`.
+• Does not work on a `GUILD_FORUM` channel.
+• The ID of the created thread will be the same as the ID of the source message, and as such a message can only have a single thread created from it.
 
 #### Parameters
 | Field                    | Type       | Description                                                                                                         |
@@ -2421,7 +2421,7 @@ await mapih.discord.channels.threads.createFromMessage({
 | invitable? \*            | boolean    | whether non-moderators can add other non-moderators to a thread; only available when creating a private thread      |
 | rate_limit_per_user?     | ?number    | amount of seconds a user has to wait before sending another message (0-21600)                                       |
 
-\* `type` currently defaults to `PRIVATE_THREAD` in order to match the behavior when thread documentation was first published.  
+\* `type` currently defaults to `PRIVATE_THREAD` in order to match the behavior when thread documentation was first published.
 
 #### Example
 ```javascript
@@ -2532,9 +2532,9 @@ await mapih.discord.channels.threads.getAllMembers({
 ```
 
 ### [List Public Archived Threads](https://discord.com/developers/docs/resources/channel#list-public-archived-threads)
-• When called on a `GUILD_TEXT` channel, returns threads of type `PUBLIC_THREAD`.  
-• When called on a `GUILD_ANNOUNCEMENT` channel, returns threads of type `ANNOUNCEMENT_THREAD`.  
-• Threads are ordered by `archive_timestamp`, in descending order.  
+• When called on a `GUILD_TEXT` channel, returns threads of type `PUBLIC_THREAD`.
+• When called on a `GUILD_ANNOUNCEMENT` channel, returns threads of type `ANNOUNCEMENT_THREAD`.
+• Threads are ordered by `archive_timestamp`, in descending order.
 
 #### Parameters
 | Field      | Type              | Description                                    |
@@ -2801,7 +2801,7 @@ await mapih.discord.users.currentMember({
 ```
 
 ### [Modify Current User](https://discord.com/developers/docs/resources/user#modify-current-user)
-> All parameters to this endpoint are optional.  
+> All parameters to this endpoint are optional.
 
 | Field    | Type       | Description                           |
 |----------|------------|---------------------------------------|
@@ -2869,7 +2869,7 @@ await mapih.discord.users.updateAppRoleConnection({
 | attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
 | flags?             | integer                                                   | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
 
-\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.  
+\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.
 
 #### Example
 ```javascript
@@ -2896,14 +2896,14 @@ await mapih.discord.users.createDM({
 | attachments?       | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description.                                                |
 | flags?             | integer                                                   | [Message flags](#message-flags) (only `SUPPRESS_EMBEDS` and `SUPPRESS_NOTIFICATIONS` can be set) |
 
-\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.  
+\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.
 
 #### Example
 ```javascript
 await mapih.discord.users.createGroupDM({
   access_tokens: [
     '0000000000',
-    '0000000000'  
+    '0000000000'
   ],
   nicks: {
     'user_id': 'nickname'
@@ -2951,9 +2951,9 @@ await mapih.discord.users.leaveGuild({
 | [`modal_reply`](#modal-reply)\*\*                          | Respond to an interaction with a popup modal                  |
 | [`upgrade`](#premium-required)\*\*\*                       | Respond to an interaction with an upgrade button              |
 
-\* Only valid for component-based interactions.  
-\*\* Not available for `MODAL_SUBMIT` and `PING` interactions.  
-\*\*\* Only available for apps with monetization enabled.  
+\* Only valid for component-based interactions.
+\*\* Not available for `MODAL_SUBMIT` and `PING` interactions.
+\*\*\* Only available for apps with monetization enabled.
 
 
 ### [Create Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response)
@@ -2970,7 +2970,7 @@ await mapih.discord.users.leaveGuild({
 | components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
 | attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
 
-\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.  
+\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.
 
 #### Example
 ```javascript
@@ -3150,7 +3150,7 @@ await callback.modal_reply(params, {
 #### Example
 ```javascript
 await mapih.discord.interactions.followup.retrieve(params, {
-  message_id: '0000000000'  
+  message_id: '0000000000'
 });
 ```
 
@@ -3167,7 +3167,7 @@ await mapih.discord.interactions.followup.retrieve(params, {
 | components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
 | attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
 
-\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.  
+\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.
 
 #### Example
 ```javascript
@@ -3194,7 +3194,7 @@ await mapih.discord.interactions.followup.create(params, {
 | components?\*     | array of [message component](#component-object) objects   | Components to include with the message                 |
 | attachments?      | array of partial [attachment](#attachment-object) objects | Attachment objects with filename and description       |
 
-\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.  
+\* At least one of `content`, `embeds`, `sticker_ids`, `components`, or `files[n]` is required.
 
 #### Example
 ```javascript
@@ -3219,7 +3219,7 @@ await mapih.discord.interactions.followup.update(params, {
 #### Example
 ```javascript
 await mapih.discord.interactions.followup.destroy(params, {
-  message_id: '0000000000'  
+  message_id: '0000000000'
 });
 ```
 
@@ -3568,7 +3568,7 @@ await mapih.discord.applications.getMe();
 | interactions_endpoint_url \*\*    | string                                          | Interactions endpoint URL for the app                                |
 | tags                              | array of strings                                | List of tags describing the content and functionality of the app (max of 20 characters per tag). Max of 5 tags. |
 
-\* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the mapih.  
+\* Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the mapih.
 
 #### Example
 ```javascript
@@ -3626,7 +3626,7 @@ await mapih.discord.applications.updateAppRoleConnectionMeta();
 | [`updatePermissions`](#edit-application-command-permissions)      | Update a guild's application command        |
 
 ### [Get Application Command](https://discord.com/developers/docs/interactions/application-commands#get-global-application-command)
-**This is to be used for both global and guild commands.**  
+**This is to be used for both global and guild commands.**
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -3645,7 +3645,7 @@ await mapih.discord.applications.commands.retrieve({
 ```
 
 ### [Get Application Commands](https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands)
-**This is to be used for both global and guild commands.**  
+**This is to be used for both global and guild commands.**
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -3667,7 +3667,7 @@ await mapih.discord.applications.commands.getAll({
 ```
 
 ### [Create Application Command](https://discord.com/developers/docs/interactions/application-commands#create-global-application-command)
-**This is to be used for both global and guild commands.**  
+**This is to be used for both global and guild commands.**
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -3712,7 +3712,7 @@ await mapih.discord.applications.commands.create({
 ```
 
 ### [Edit Application Command](https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command)
-**This is to be used for both global and guild commands.**  
+**This is to be used for both global and guild commands.**
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -3756,7 +3756,7 @@ await mapih.discord.applications.commands.update({
 ```
 
 ### [Delete Application Command](https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command)
-**This is to be used for both global and guild commands.**  
+**This is to be used for both global and guild commands.**
 **Provide a guild_id field if using for a guild command.**
 
 #### Parameters
@@ -3775,9 +3775,9 @@ await mapih.discord.applications.commands.destroy({
 ```
 
 ### [Bulk Overwrite Application Commands](https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-command)
-**This is to be used for both global and guild commands.**  
-**Provide a guild_id field if using for a guild command.**  
-• Takes a list of application commands, overwriting the existing global command list for this application.  
+**This is to be used for both global and guild commands.**
+**Provide a guild_id field if using for a guild command.**
+• Takes a list of application commands, overwriting the existing global command list for this application.
 
 #### Parameters
 | Field           | Type                                                         | Description                                      |
@@ -3796,7 +3796,7 @@ await mapih.discord.applications.commands.bulkOverwrite({
 ```
 
 ### [Get Application Command Permissions](https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions)
-• Fetches permissions for a specific command for your application in a guild.  
+• Fetches permissions for a specific command for your application in a guild.
 
 #### Parameters
 | Field           | Type      | Description               |
@@ -3814,7 +3814,7 @@ await mapih.discord.applications.commands.retrievePermissions({
 ```
 
 ### [Get Guild Application Command Permissions](https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions)
-• Fetches permissions for all commands for your application in a guild.  
+• Fetches permissions for all commands for your application in a guild.
 
 #### Parameters
 | Field           | Type      | Description               |
@@ -3830,7 +3830,7 @@ await mapih.discord.applications.commands.getAllPermissions({
 ```
 
 ### [Edit Application Command Permissions](https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions)
-• Edits command permissions for a specific command for your application in a guild.  
+• Edits command permissions for a specific command for your application in a guild.
 
 #### Parameters
 | Field           | Type                                                                                   | Description               |
@@ -3860,7 +3860,7 @@ await mapih.discord.applications.commands.updatePermissions({
 | [`destroy`](#delete-test-entitlement) | Deletes a currently-active test entitlement                         |
 
 ### [List Entitlements](https://discord.com/developers/docs/monetization/entitlements#list-entitlements)
-• Returns all entitlements for a given app, active and expired.  
+• Returns all entitlements for a given app, active and expired.
 
 #### Parameters
 | Field           | Type                              | Description                                          |
@@ -3885,9 +3885,9 @@ await mapih.discord.applications.entitlements.retrieve({
 ```
 
 ### [Create Test Entitlement](https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement)
-• Creates a test entitlement to a given SKU for a given guild or user. Discord will act as though that user or guild has entitlement to your premium offering.  
-• This endpoint returns a partial entitlement object. It will **not** contain `subscription_id`, `starts_at`, or `ends_at`, as it's valid in perpetuity.  
-• After creating a test entitlement, you'll need to reload your Discord client. After doing so, you'll see that your server or user now has premium access.  
+• Creates a test entitlement to a given SKU for a given guild or user. Discord will act as though that user or guild has entitlement to your premium offering.
+• This endpoint returns a partial entitlement object. It will **not** contain `subscription_id`, `starts_at`, or `ends_at`, as it's valid in perpetuity.
+• After creating a test entitlement, you'll need to reload your Discord client. After doing so, you'll see that your server or user now has premium access.
 
 
 #### Parameters
@@ -3908,7 +3908,7 @@ await mapih.discord.applications.entitlements.create({
 ```
 
 ### [Delete Test Entitlement](https://discord.com/developers/docs/monetization/entitlements#delete-test-entitlement)
-• Deletes a currently-active test entitlement. Discord will act as though that user or guild _no longer has_ entitlement to your premium offering.  
+• Deletes a currently-active test entitlement. Discord will act as though that user or guild _no longer has_ entitlement to your premium offering.
 
 
 #### Parameters
@@ -3927,7 +3927,7 @@ await mapih.discord.applications.entitlements.delete()
 | [`getAll`](#list-skus) | Get all SKUs for a given application |
 
 ### [List SKUs](https://discord.com/developers/docs/monetization/skus#list-skus)
-• Because of how our SKU and subscription systems work, you will see two SKUs for your premium offering. For integration and testing entitlements, you should use the SKU with `type: 5`.  
+• Because of how our SKU and subscription systems work, you will see two SKUs for your premium offering. For integration and testing entitlements, you should use the SKU with `type: 5`.
 
 #### Parameters
 | Field           | Type      | Description               |
@@ -3948,9 +3948,9 @@ await mapih.discord.applications.SKUs.getAll();
 | [`retrieve`](#get-guild-audit-log) | Get the audit logs for the guild |
 
 ### [Get Guild Audit Log](https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log)
-The returned list of audit log entries is ordered based on whether you use `before` or `after`.  
-When using `before`, the list is ordered by the audit log entry ID **descending** (newer entries first).  
-If `after` is used, the list is reversed and appears in **ascending** order (older entries first).  
+The returned list of audit log entries is ordered based on whether you use `before` or `after`.
+When using `before`, the list is ordered by the audit log entry ID **descending** (newer entries first).
+If `after` is used, the list is reversed and appears in **ascending** order (older entries first).
 Omitting both `before` and `after` defaults to `before` the current timestamp and will show the most recent entries in descending order by ID, the opposite can be achieved using `after=0` (showing oldest entries).
 
 #### Parameters
@@ -4133,7 +4133,7 @@ await mapih.discord.stageInstance.retrieve({
 | send_start_notification? \* | boolean   | Notify @everyone that a Stage instance has started                             |
 | guild_scheduled_event_id?   | snowflake | The guild scheduled event associated with this Stage instance                  |
 
-\* The stage moderator must have the `MENTION_EVERYONE` permission for this notification to be sent.  
+\* The stage moderator must have the `MENTION_EVERYONE` permission for this notification to be sent.
 
 #### Example
 ```javascript
@@ -4177,7 +4177,7 @@ await mapih.discord.stageInstance.destroy({
 ---
 # OpenAI
 ---
-# Chat  
+# Chat
 ### Methods
 
 | Method                              | Description             |
@@ -4192,21 +4192,21 @@ await mapih.discord.stageInstance.destroy({
 | model              | string                  | ID of the model to use                                                     |
 | messages           | [ChatCompletionMessage](#chat-completion-message)[] | A list of messages comprising the conversation so far                        |
 | max_tokens?        | number                  | The maximum number of tokens that can be generated in the chat completion                        |
-| temperature?       | number                  | What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. |  
+| temperature?       | number                  | What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. |
 | top_p?             | number                  | An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.               |
-| frequency_penalty? | number                  | Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. | 
+| frequency_penalty? | number                  | Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. |
 | presence_penalty?  | number                  | Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.       |
-| n?                 | number                  | How many chat completion choices to generate for each input message | 
+| n?                 | number                  | How many chat completion choices to generate for each input message |
 | response_format?   | string                  | An object specifying the format that the model must output. Setting to { "type": "json_object" } enables JSON mode, which guarantees the message the model generates is valid JSON. |
-| seed?              | number                  | This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result. | 
+| seed?              | number                  | This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result. |
 | stop?              | string                  | Up to 4 sequences where the API will stop generating further tokens                                                         |
-| logit_bias?        | Object                  | Modify the likelihood of specified tokens appearing in the completion. Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. | 
+| logit_bias?        | Object                  | Modify the likelihood of specified tokens appearing in the completion. Accepts a JSON object that maps tokens (specified by their token ID in the tokenizer) to an associated bias value from -100 to 100. |
 | logprobs?          | boolean                 | Whether to return log probabilities of the output tokens or not                                                         |
-| top_logprobs?      | number                  | An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability | 
+| top_logprobs?      | number                  | An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability |
 | stream?            | boolean                 | If set, partial message deltas will be sent, like in ChatGPT.                                           |
-| tools?             | [ToolCalls](#ToolCalls)[] | A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. | 
+| tools?             | [ToolCalls](#ToolCalls)[] | A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. |
 | tool_choice?       | ToolChoice              | Controls which (if any) function is called by the model. See [tool_choice](https://platform.openai.com/docs/api-reference/chat/create#chat-create-tool_choice) |
-| user?              | string                  | A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse | 
+| user?              | string                  | A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse |
 
 #### Example
 ```javascript
@@ -4229,18 +4229,18 @@ await mapih.openai.chat.create({
 
 ---
 # Spotify
-> **Many of the Spotify endpoints are designed for the input of a specific Spotify ID.**  
+> **Many of the Spotify endpoints are designed for the input of a specific Spotify ID.**
 
-However, I have also incorporated the functionality to accept names.  
-Each endpoint includes options for both the ID\* and the name\*\*.  
-Utilizing a specific ID ensures the retrieval of the correct item.  
-On the other hand, providing a name might result in incorrect items depending on the uniqueness of the name.  
+However, I have also incorporated the functionality to accept names.
+Each endpoint includes options for both the ID\* and the name\*\*.
+Utilizing a specific ID ensures the retrieval of the correct item.
+On the other hand, providing a name might result in incorrect items depending on the uniqueness of the name.
 
-\* `song_id(s)`, `artist_id(s)`, `album_id(s)`, `playlist_id(s)`  
+\* `song_id(s)`, `artist_id(s)`, `album_id(s)`, `playlist_id(s)`
 \*\* `song_name(s)`, `artist_name(s)`, `album_name(s)`, `playlist_name(s)`
 
 ---
-# Users  
+# Users
 ### Methods
 
 | Method                             | Description                                             |
@@ -4264,12 +4264,12 @@ await mapih.spotify.users.me();
 | type           | string | The type of entity to return (`artists` or `tracks`)                                            |
 | time_range? \* | string | Over what time frame the affinities are computed (default `medium_term`)                        |
 | limit?         | number | The maximum number of results to return                                                         |
-| offset?        | number | The index of the first result to return. Use with limit to get the next page of search results. |  
+| offset?        | number | The index of the first result to return. Use with limit to get the next page of search results. |
 
-\* Valid values for `time_range`:  
-- `long_term`: calculated from several years of data and including all new data as it becomes available  
-- `medium_term`: approximately last 6 months  
-- `short_term`: approximately last 4 weeks  
+\* Valid values for `time_range`:
+- `long_term`: calculated from several years of data and including all new data as it becomes available
+- `medium_term`: approximately last 6 months
+- `short_term`: approximately last 4 weeks
 
 #### Example
 ```javascript
@@ -4296,7 +4296,7 @@ await mapih.spotify.users.getProfile({
 
 ---
 
-# Search  
+# Search
 ### Methods
 
 | Method                  | Description                                 |
@@ -4321,7 +4321,7 @@ await mapih.spotify.users.getProfile({
 | year?      | string   | Filter on a single year or a range (e.g. 1955-1960)                                             |
 | genre?     | string   | Filter on a single genre                                                                        |
 
-\* At least one of `song`, `artist`, `album` is required.  
+\* At least one of `song`, `artist`, `album` is required.
 
 #### Example 1
 ```javascript
@@ -4655,7 +4655,7 @@ await mapih.spotify.songs.audioFeaturesMany({
 |--------------|--------|------------------------------------|
 | artist_id?   | string | The id of the song to retrieve     |
 | artist_name? | string | The name of the song to search for |
- 
+
 
 #### Example
 ```javascript
@@ -4709,9 +4709,9 @@ await mapih.spotify.artists.topSongs({
 | artist_name?      | string   | The name of the artist to search for                                                            |
 | limit?            | number   | The maximum number of results to return                                                         |
 | offset?           | number   | The index of the first result to return. Use with limit to get the next page of search results. |
-| include_groups? \*| string[] | One or more keywords that will be used to filter the response                                   |  
+| include_groups? \*| string[] | One or more keywords that will be used to filter the response                                   |
 
-\* Valid values: `album`, `single`, `appears_on`, `compilation`  
+\* Valid values: `album`, `single`, `appears_on`, `compilation`
 
 #### Example
 ```javascript
@@ -4818,7 +4818,7 @@ await mapih.spotify.artists.isFollowing({
 
 ---
 
-# Albums  
+# Albums
 ### Methods
 
 | Method                                 | Description                                                                                      |
@@ -4839,7 +4839,7 @@ await mapih.spotify.artists.isFollowing({
 |-------------|--------|-------------------------------------|
 | album_id?   | string | The id of the album to retrieve     |
 | album_name? | string | The name of the album to search for |
- 
+
 
 #### Example
 ```javascript
@@ -5190,8 +5190,8 @@ await mapih.spotify.playlists.retrieveSongs({
 });
 ```
 
-### [Get Current User's Created Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists)  
-**This will only return playlists created by the current user.**  
+### [Get Current User's Created Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists)
+**This will only return playlists created by the current user.**
 
 #### Parameters
 | Field   | Type    | Description                                                |
@@ -5211,8 +5211,8 @@ await mapih.spotify.playlists.created({
 });
 ```
 
-### [Get Current User's Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists)  
-**This will return all playlists the current user follows.**  
+### [Get Current User's Playlists](https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists)
+**This will return all playlists the current user follows.**
 
 #### Parameters
 | Field   | Type    | Description                                                |
@@ -5232,13 +5232,13 @@ await mapih.spotify.playlists.following({
 });
 ```
 
-### [Get User's Playlists](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)  
-**This will return all playlists a specific user follows**  
+### [Get User's Playlists](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)
+**This will return all playlists a specific user follows**
 
 #### Parameters
 | Field   | Type    | Description                                                |
 |---------|---------|------------------------------------------------------------|
-| user_id | string  | The user's Spotify user ID                                 |                  
+| user_id | string  | The user's Spotify user ID                                 |
 | limit?  | boolean | The maximum number of items to return (default 20, max 50) |
 | offset? | boolean | The index of the first playlist to return                  |
 
@@ -5250,12 +5250,12 @@ await mapih.spotify.playlists.following({
 });
 ```
 
-### [Check If User Follows Playlists](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)  
+### [Check If User Follows Playlists](https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists)
 
 #### Parameters
 | Field       | Type     | Description                                                                         |
 |-------------|----------|-------------------------------------------------------------------------------------|
-| playlist_id | string   | The Spotify ID of the playlist                                                      |                  
+| playlist_id | string   | The Spotify ID of the playlist                                                      |
 | user_ids    | string[] | The user_ids of the users that you want to check to see if they follow the playlist |
 
 #### Example
@@ -5269,12 +5269,12 @@ await mapih.spotify.playlists.isFollowing({
 });
 ```
 
-### [Follow Playlist](https://developer.spotify.com/documentation/web-api/reference/follow-playlist)  
+### [Follow Playlist](https://developer.spotify.com/documentation/web-api/reference/follow-playlist)
 
 #### Parameters
 | Field       | Type    | Description                                                                     |
 |-------------|---------|---------------------------------------------------------------------------------|
-| playlist_id | string  | The Spotify ID of the playlist                                                  |                  
+| playlist_id | string  | The Spotify ID of the playlist                                                  |
 | public?     | boolean | Whether the playlist will be included in user's public playlists (default true) |
 
 #### Example
@@ -5285,7 +5285,7 @@ await mapih.spotify.playlists.follow({
 });
 ```
 
-### [Unfollow Playlist](https://developer.spotify.com/documentation/web-api/reference/unfollow-playlist)  
+### [Unfollow Playlist](https://developer.spotify.com/documentation/web-api/reference/unfollow-playlist)
 
 #### Parameters
 | Field       | Type    | Description                    |
@@ -5299,7 +5299,7 @@ await mapih.spotify.playlists.unfollow({
 });
 ```
 
-### [Get Playlists Cover Image](https://developer.spotify.com/documentation/web-api/reference/get-playlist-cover)  
+### [Get Playlists Cover Image](https://developer.spotify.com/documentation/web-api/reference/get-playlist-cover)
 
 #### Parameters
 | Field       | Type    | Description                    |
@@ -5313,7 +5313,7 @@ await mapih.spotify.playlists.getCover({
 });
 ```
 
-### [Add Playlist Cover Image](https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover)  
+### [Add Playlist Cover Image](https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover)
 
 #### Parameters
 | Field       | Type   | Description                    |
@@ -5453,7 +5453,7 @@ await mapih.spotify.playback.setVolume({
 ### [Toggle Playback Shuffle](https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track)
 
 #### Parameters
-\* **This endpoint takes a boolean (`true` to turn shuffle on, `false` to turn shuffle off)**  
+\* **This endpoint takes a boolean (`true` to turn shuffle on, `false` to turn shuffle off)**
 
 #### Example
 ```javascript
@@ -5463,7 +5463,7 @@ await mapih.spotify.playback.toggleShuffle(true);
 ### [Set Repeat Mode](https://developer.spotify.com/documentation/web-api/reference/set-repeat-mode-on-users-playback)
 
 #### Parameters
-\* **This endpoint takes a string with the mode to set**  
+\* **This endpoint takes a string with the mode to set**
 **Valid values:**
 - `track`: will repeat the current track
 - `context`: will repeat the current context (album, playlist)
@@ -5687,7 +5687,7 @@ await mapih.utils.storage.deleteMany(['password', 'password2', 'password3'])
 | key   | string | The key of the entry to alter                |
 | value | Object | The properties to merge into existing object |
 
-\* Value must be an object  
+\* Value must be an object
 
 #### Example
 ```javascript
@@ -5931,7 +5931,7 @@ mapih.utils.storage.clearHistory();
 | premium_progress_bar_enabled   | boolean                                           | whether the guild has the boost progress bar enabled                                                               |
 | safety_alerts_channel_id       | ?snowflake                                        | the id of the channel where admins and moderators of Community guilds receive safety alerts from Discord           |
 
-\* These fields are only sent when using the [GET Current User Guilds](#get-current-user-guilds) endpoint and are relative to the requested user  
+\* These fields are only sent when using the [GET Current User Guilds](#get-current-user-guilds) endpoint and are relative to the requested user
 
 #### Default Message Notification Level
 | Key           | Value | Description                                                                        |
@@ -6073,8 +6073,8 @@ mapih.utils.storage.clearHistory();
 | permissions?                  | string                      | total permissions of the member in the channel, including overwrites, returned when in the interaction object |
 | communication_disabled_until? | ?ISO8601 timestamp          | when the user's timeout will expire and the user will be able to communicate in the guild again               |
 
-• The field `user` won't be included in the member object attached to `MESSAGE_CREATE` and `MESSAGE_UPDATE` gateway events.  
-• In `GUILD_` events, `pending` will always be included as true or false. In non `GUILD_` events which can only be triggered by non-`pending` users, `pending` will not be included.  
+• The field `user` won't be included in the member object attached to `MESSAGE_CREATE` and `MESSAGE_UPDATE` gateway events.
+• In `GUILD_` events, `pending` will always be included as true or false. In non `GUILD_` events which can only be triggered by non-`pending` users, `pending` will not be included.
 
 #### Guild Member Flags
 | Flag                   | Value  | Description                                           | Editable |
@@ -6084,7 +6084,7 @@ mapih.utils.storage.clearHistory();
 | Bypasses Verification  | 1 << 2 | Member is exempt from guild verification requirements | true     |
 | Started Onboarding     | 1 << 3 | Member has started onboarding                         | false    |
 
-• BYPASSES_VERIFICATION allows a member who does not meet verification requirements to participate in a server.  
+• BYPASSES_VERIFICATION allows a member who does not meet verification requirements to participate in a server.
 
 #### Guild Scheduled Event Object
 | Field                 | Type                                                        | Description                                                                                          |
@@ -6106,7 +6106,7 @@ mapih.utils.storage.clearHistory();
 | user_count?          | number                                                      | The number of users subscribed to the scheduled event                                                |
 | image?               | ?string                                                      | The cover image hash of the scheduled event                                                          |
 
-\* `creator_id` will be null and `creator` will not be included for events created before October 25th, 2021, when the concept of `creator_id` was introduced and tracked.  
+\* `creator_id` will be null and `creator` will not be included for events created before October 25th, 2021, when the concept of `creator_id` was introduced and tracked.
 
 #### Guild Scheduled Event Privacy Level
 | Level      | Value | Description                                             |
@@ -6122,10 +6122,10 @@ mapih.utils.storage.clearHistory();
 
 #### Field Requirements By Entity Type
 
-• The following table shows field requirements based on current entity type.  
-`value`    : This field is required to be a non-null value  
-`null`     : This field is required to be null  
-`-`        : No strict requirements  
+• The following table shows field requirements based on current entity type.
+`value`    : This field is required to be a non-null value
+`null`     : This field is required to be null
+`-`        : No strict requirements
 
 | Entity Type    | channel_id | entity_metadata | scheduled_end_time |
 |----------------|------------|-----------------|--------------------|
@@ -6133,7 +6133,7 @@ mapih.utils.storage.clearHistory();
 | Voice          | value      | null            | -                  |
 | External       | null       | value *         | value              |
 
-\* `entity_metadata` with a non-null `location` must be provided  
+\* `entity_metadata` with a non-null `location` must be provided
 
 
 #### Guild Scheduled Event Status
@@ -6144,11 +6144,11 @@ mapih.utils.storage.clearHistory();
 | Completed\* | 3     |
 | Canceled\*  | 4     |
 
-\* Once `status` is set to `COMPLETED` or `CANCELED`, the `status` can no longer be updated  
+\* Once `status` is set to `COMPLETED` or `CANCELED`, the `status` can no longer be updated
 
 #### Valid Guild Scheduled Event Status Transitions
-SCHEDULED --> ACTIVE  
-ACTIVE --------> COMPLETED  
+SCHEDULED --> ACTIVE
+ACTIVE --------> COMPLETED
 SCHEDULED --> CANCELED
 
 
@@ -6157,7 +6157,7 @@ SCHEDULED --> CANCELED
 |-------------|--------|------------------------------------------|
 | location?\* | string | location of the event (1-100 characters) |
 
-\* required for events with `'entity_type': EXTERNAL`  
+\* required for events with `'entity_type': EXTERNAL`
 
 #### Guild Scheduled Event User Object
 | Field                    | Type                                 | Description                                                                       |
@@ -6362,10 +6362,10 @@ SCHEDULED --> CANCELED
 | title           | string                        | Title of the option                                               |
 | description     | ?string                       | Description of the option                                         |
 
-• When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.  
+• When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
 
 #### Onboarding Mode
-• Defines the criteria used to satisfy Onboarding constraints that are required for enabling.  
+• Defines the criteria used to satisfy Onboarding constraints that are required for enabling.
 
 | Name                | Value | Description                                               |
 |---------------------|-------|-----------------------------------------------------------|
@@ -6434,8 +6434,8 @@ SCHEDULED --> CANCELED
     "enabled": true
 }
 ```
---- 
-## User 
+---
+## User
 #### User Object
 | Field              | Type      | Description                                                                             |
 |--------------------|-----------|-----------------------------------------------------------------------------------------|
@@ -6446,7 +6446,7 @@ SCHEDULED --> CANCELED
 | avatar             | ?string   | the user's avatar hash                                                                  |
 | bot?               | boolean   | whether the user belongs to an OAuth2 application                                       |
 | system?            | boolean   | whether the user is an Official Discord System user (part of the urgent message system) |
-| mfa_enabled?       | boolean   | whether the user has two factor enabled on their account                                | 
+| mfa_enabled?       | boolean   | whether the user has two factor enabled on their account                                |
 | banner?            | ?string   | the user's banner hash                                                                  |
 | accent_color?      | ?integer  | the user's banner color encoded as an integer representation of hexadecimal color code  |
 | locale?            | string    | the user's chosen language option                                                       |
@@ -6477,7 +6477,7 @@ SCHEDULED --> CANCELED
 | 1 << 22 | Active Developer         | User is an Active Developer                                            |
 
 #### Premium Types
-• Premium types denote the level of premium a user has.  
+• Premium types denote the level of premium a user has.
 
 | Value | Name          |
 |-------|---------------|
@@ -6487,7 +6487,7 @@ SCHEDULED --> CANCELED
 | 3     | Nitro Basic   |
 
 #### Connection Object
-• The connection object that the user has attached.  
+• The connection object that the user has attached.
 
 | Field         | Type    | Description                                                                     |
 |---------------|---------|---------------------------------------------------------------------------------|
@@ -6697,8 +6697,8 @@ The role connection object that an application has attached to a user.
 ```
 ## Role
 #### Role Object
-• Roles represent a set of permissions attached to a group of users.  
-• Roles have names, colors, and can be "pinned" to the side bar, causing their members to be listed separately. Roles can have separate permission profiles for the global context (guild) and channel context.  
+• Roles represent a set of permissions attached to a group of users.
+• Roles have names, colors, and can be "pinned" to the side bar, causing their members to be listed separately. Roles can have separate permission profiles for the global context (guild) and channel context.
 > The `@everyone` role has the same ID as the guild it belongs to.
 
 | Field          | Type                                     | Description                                      |
@@ -6717,8 +6717,8 @@ The role connection object that an application has attached to a user.
 | flags          | integer                                  | [role flags](#role-flags) combined as a bitfield |
 
 #### Role Tags Structure
-• Tags with type `null` represent booleans.  
-• They will be present and set to `null` if they are "true", and will be not present if they are "false".  
+• Tags with type `null` represent booleans.
+• They will be present and set to `null` if they are "true", and will be not present if they are "false".
 
 | Field                    | Type      | Description                                        |
 |--------------------------|-----------|----------------------------------------------------|
@@ -6775,8 +6775,8 @@ The role connection object that an application has attached to a user.
 | default_sort_order?                 | ?integer                                             | the [default sort order type](#sort-order-types) used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to `null`, which indicates a preferred sort order hasn't been set by a channel admin |
 | default_forum_layout?               | integer                                              | the [default forum layout view](#forum-layout-types) used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin                        |
 
-\* `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.  
-\*\* For threads created before July 1, 2022, the message count is inaccurate when it's greater than 50.  
+\* `rate_limit_per_user` also applies to thread creation. Users can send one message and create one thread during each `rate_limit_per_user` interval.
+\*\* For threads created before July 1, 2022, the message count is inaccurate when it's greater than 50.
 
 #### Channel Types
 | Type                | ID | Description                                                                                                                             |
@@ -6795,7 +6795,7 @@ The role connection object that an application has attached to a user.
 | Guild Forum          | 15 | Channel that can only contain threads                                                                                                   |
 | Guild Media          | 16 | Channel that can only contain threads, similar to `GUILD_FORUM` channels                                                                |
 
-\* The `GUILD_MEDIA` channel type is still in active development. Avoid implementing any features that are not documented here, since they are subject to change without notice!  
+\* The `GUILD_MEDIA` channel type is still in active development. Avoid implementing any features that are not documented here, since they are subject to change without notice!
 
 #### Partial Channel Object
 | Field       | Type      | Description                                          |
@@ -6983,9 +6983,9 @@ The role connection object that an application has attached to a user.
 | resolved?                   | [resolved](#resolved-data-structure) data                       | data for users, members, channels, and roles in the message's [auto-populated select menus](#select-menu-object) |
 
 
-\* **The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the `webhook_id` on the message object.**  
-\*\* **An app will receive empty values in the `content`, `embeds`, `attachments`, and `components` fields if they have not configured (or been approved for) the `MESSAGE_CONTENT` privileged intent (`1 << 15`).**  
-\*\*\* **Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.**  
+\* **The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the `webhook_id` on the message object.**
+\*\* **An app will receive empty values in the `content`, `embeds`, `attachments`, and `components` fields if they have not configured (or been approved for) the `MESSAGE_CONTENT` privileged intent (`1 << 15`).**
+\*\*\* **Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.**
 \*\*\*\* **This field is only returned for messages with a `type` of `19` (REPLY) or `21` (THREAD_STARTER_MESSAGE). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.**
 
 #### Forum and Media Thread Message Params Object
@@ -7036,7 +7036,7 @@ The role connection object that an application has attached to a user.
 | Stage Topic                                  | 31    | true      |
 | Guild Application Premium Subscription       | 32    | false     |
 
-\* Can only be deleted by members with `MANAGE_MESSAGES` permission  
+\* Can only be deleted by members with `MANAGE_MESSAGES` permission
 
 #### Message Activity Structure
 | Field     | Type    | Description                                         |
@@ -7075,7 +7075,7 @@ The role connection object that an application has attached to a user.
 | guild_id?           | snowflake | id of the originating message's guild                                                                                                   |
 | fail_if_not_exists? | boolean   | when sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true |
 
-\* `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.  
+\* `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
 
 #### Followed Channel Structure
 | Field      | Type      | Description               |
@@ -7126,8 +7126,8 @@ The role connection object that an application has attached to a user.
 | flags          | integer                                     | Any user-thread settings, currently only used for notifications |
 | member? \*\*   | [guild member](#guild-member-object) object | Additional information about the user                           |
 
-\* These fields are omitted on the member sent within each thread in the GUILD_CREATE event.  
-\*\* The `member` field is only present when `with_member` is set to `true` when calling [List Thread Members](#list-thread-members) or [Get Thread Member](#get-thread-member).  
+\* These fields are omitted on the member sent within each thread in the GUILD_CREATE event.
+\*\* The `member` field is only present when `with_member` is set to `true` when calling [List Thread Members](#list-thread-members) or [Get Thread Member](#get-thread-member).
 
 #### Default Reaction Object
 | Field      | Type       | Description                        |
@@ -7144,7 +7144,7 @@ The role connection object that an application has attached to a user.
 | emoji_id   | ?snowflake | the id of a guild's custom emoji \*                                                                            |
 | emoji_name | ?string    | the unicode character of the emoji \*                                                                          |
 
-\* At most one of `emoji_id` and `emoji_name` may be set to a non-null value.  
+\* At most one of `emoji_id` and `emoji_name` may be set to a non-null value.
 
 #### Embed Object
 | Field        | Type                                                   | Description                                                      |
@@ -7226,9 +7226,9 @@ The role connection object that an application has attached to a user.
 | [footer.text](#embed-footer-structure) | 2048 characters                                  |
 | [author.name](#embed-author-structure) | 256 characters                                   |
 
-• Additionally, the combined sum of characters in all `title`, `description`, `field.name`, `field.value`, `footer.text`, and `author.name` fields across all embeds attached to a message must not exceed 6000 characters.  
-• Violating any of these constraints will result in a `Bad Request` response.  
-• Embeds are deduplicated by URL. If a message contains multiple embeds with the same URL, only the first is shown.  
+• Additionally, the combined sum of characters in all `title`, `description`, `field.name`, `field.value`, `footer.text`, and `author.name` fields across all embeds attached to a message must not exceed 6000 characters.
+• Violating any of these constraints will result in a `Bad Request` response.
+• Embeds are deduplicated by URL. If a message contains multiple embeds with the same URL, only the first is shown.
 
 #### Attachment Object
 | Field          | Type      | Description                                                                             |
@@ -7247,7 +7247,7 @@ The role connection object that an application has attached to a user.
 | waveform?      | string    | base64 encoded bytearray representing a sampled waveform (currently for voice messages) |
 | flags?         | number    | [attachment flags](#attachment-flags) combined as a bitfield                            |
 
-\* Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.  
+\* Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
 
 #### Attachment Flags
 | Flag     | Value  | Description                                                       |
@@ -7278,9 +7278,9 @@ The role connection object that an application has attached to a user.
 | Everyone Mentions | "everyone" | Controls @everyone and @here mentions |
 
 #### Allowed Mentions Reference
-• If `allowed_mentions` is _not_ passed in (i.e. the key does not exist), the mentions will be parsed via the content. This corresponds with existing behavior.  
+• If `allowed_mentions` is _not_ passed in (i.e. the key does not exist), the mentions will be parsed via the content. This corresponds with existing behavior.
 
-**In the example below we would ping @here (and also @role124 and @user123)**  
+**In the example below we would ping @here (and also @role124 and @user123)**
 ```json
 {
   "content": "@here Hi there from <@123>, cc <@&124>"
@@ -7300,8 +7300,8 @@ The role connection object that an application has attached to a user.
 
 **This will suppress _all_ mentions in the message (no @everyone or user mention).**
 
-• The `parse` field is mutually exclusive with the other fields.  
-**In the example below, we would ping users `123` and role `124`, but _not_ @everyone.**  
+• The `parse` field is mutually exclusive with the other fields.
+**In the example below, we would ping users `123` and role `124`, but _not_ @everyone.**
 > **Note that passing a `Falsy` value ([], null) into the "users" field does not trigger a validation error.**
 
 ```json
@@ -7373,8 +7373,8 @@ The role connection object that an application has attached to a user.
 | max_values?           | integer                                                           | Maximum number of items that can be chosen (defaults to 1); max 25                                                                                       |
 | disabled?             | boolean                                                           | Whether select menu is disabled (defaults to `false`)                                                                                                    |
 
-\* **`options` is required for string select menus (component type `3`), and unavailable for all other select menu components.**  
-\*\* **`channel_types` can only be used for channel select menu components.**  
+\* **`options` is required for string select menus (component type `3`), and unavailable for all other select menu components.**
+\*\* **`channel_types` can only be used for channel select menu components.**
 \*\*\* **`default_values` is only available for auto-populated select menu components, which include user (`5`), role (`6`), mentionable (`7`), and channel (`8`) [components](#component-types).**
 
 #### Select Option Structure
@@ -7428,7 +7428,7 @@ The role connection object that an application has attached to a user.
 | source_channel? \* | partial [channel](#channel-object) object | the channel that this webhook is following (returned for Channel Follower Webhooks)              |
 | url?               | string                                    | the url used for executing the webhook (returned by the webhooks OAuth2 flow)                    |
 
-\* These fields will be absent if the webhook creator has since lost access to the guild where the followed channel resides  
+\* These fields will be absent if the webhook creator has since lost access to the guild where the followed channel resides
 
 #### Webhook Types
 | Value | Name             | Description                                                                                                    |
@@ -7458,8 +7458,8 @@ The role connection object that an application has attached to a user.
 | guild_locale?    | string                                              | [Guild's preferred locale](#guild-object), if invoked in a guild                                               |
 | entitlements     | array of [entitlement](#entitlement-object) objects | For monetized apps, any entitlements for the invoking user, representing access to premium [SKUs](#sku-object) |
 
-\* This is always present on application command, message component, and modal submit interaction types.  
-\*\* `member` is sent when the interaction is invoked in a guild, and `user` is sent when invoked in a DM  
+\* This is always present on application command, message component, and modal submit interaction types.
+\*\* `member` is sent when the interaction is invoked in a guild, and `user` is sent when invoked in a DM
 \*\*\* This is available on all interaction types except PING
 
 #### Interaction Type
@@ -7484,7 +7484,7 @@ The role connection object that an application has attached to a user.
 | guild_id?  | snowflake                                                                                  | the id of the guild the command is registered to                                |
 | target_id? | snowflake                                                                                  | id of the user or message targeted by a [user](#user-commands) or [message](#message-commands) command |
 
-\* This [can be partial](#autocomplete) when in response to `APPLICATION_COMMAND_AUTOCOMPLETE`  
+\* This [can be partial](#autocomplete) when in response to `APPLICATION_COMMAND_AUTOCOMPLETE`
 
 #### Message Component Data Structure
 | Field          | Type                                                      | Description                                                                |
@@ -7494,7 +7494,7 @@ The role connection object that an application has attached to a user.
 | values?\*      | array of [select option values](#select-option-structure) | values the user selected in a [select menu](#select-menu-object) component |
 | resolved?      | [resolved data](#resolved-data-structure)                 | resolved entities from selected options                                    |
 
-\* This is always present for select menu components  
+\* This is always present for select menu components
 
 #### Modal Submit Data Structure
 | Field      | Type                                               | Description                                |
@@ -7512,8 +7512,8 @@ The role connection object that an application has attached to a user.
 | messages?     | Map of Snowflakes to [partial messages](#message-object) objects    | the ids and partial Message objects |
 | attachments?  | Map of Snowflakes to [attachment](#attachment-object) objects       | the ids and attachment objects      |
 
-\* Partial `Member` objects are missing `user`, `deaf` and `mute` fields  
-\*\* Partial `Channel` objects only have `id`, `name`, `type` and `permissions` fields. Threads will also have `thread_metadata` and `parent_id` fields.  
+\* Partial `Member` objects are missing `user`, `deaf` and `mute` fields
+\*\* Partial `Channel` objects only have `id`, `name`, `type` and `permissions` fields. Threads will also have `thread_metadata` and `parent_id` fields.
 
 #### Application Command Interaction Data Option Structure
 | Field    |  Type                                                                                      | Description                                                                  |
@@ -7551,9 +7551,9 @@ The role connection object that an application has attached to a user.
 | Modal\*\*                               | 9     | respond to an interaction with a popup modal                                                                  |
 | Premium Required\*\*\*                  | 10    | respond to an interaction with an upgrade button, only available for apps with monetization enabled           |
 
-\* Only valid for component-based interactions.  
-\*\* Not available for `MODAL_SUBMIT` and `PING` interactions.  
-\*\*\* Not available for `APPLICATION_COMMAND_AUTOCOMPLETE` and `PING` interactions.  
+\* Only valid for component-based interactions.
+\*\* Not available for `MODAL_SUBMIT` and `PING` interactions.
+\*\*\* Not available for `APPLICATION_COMMAND_AUTOCOMPLETE` and `PING` interactions.
 
 #### Interaction Callback Data Structure
 
@@ -7764,7 +7764,7 @@ The role connection object that an application has attached to a user.
 
 
 #### Application Command Option Structure
-> Required `options` must be listed before optional options  
+> Required `options` must be listed before optional options
 
 | Field                      | Type                                                                                       | Description                                                                                               |
 |----------------------------|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
@@ -7783,8 +7783,8 @@ The role connection object that an application has attached to a user.
 | max_length?                | number                                                                                     | For option type `STRING`, the maximum allowed length (minimum of `1`, maximum of `6000`)                  |
 | autocomplete? \*           | boolean                                                                                    | If autocomplete interactions are enabled for this `STRING`, `INTEGER`, or `NUMBER` type option            |
 
-\* `autocomplete` may not be set to true if `choices` are present.  
-• Options using `autocomplete` are not confined to only use choices given by the application.  
+\* `autocomplete` may not be set to true if `choices` are present.
+• Options using `autocomplete` are not confined to only use choices given by the application.
 
 #### Application Command Option Type
 | Name              | Value | Note                                    |
@@ -7802,7 +7802,7 @@ The role connection object that an application has attached to a user.
 | Attachment        | 11    | [attachment](#attachment-object) object |
 
 #### Application Command Option Choice Structure
-• If you specify `choices` for an option, they are the *only* valid values for a user to pick  
+• If you specify `choices` for an option, they are the *only* valid values for a user to pick
 
 | Field               | Type                                       | Description                                                                                 |
 |---------------------|--------------------------------------------|---------------------------------------------------------------------------------------------|
@@ -7810,10 +7810,10 @@ The role connection object that an application has attached to a user.
 | name_localizations? | ?dictionary with keys in available locales | Localization dictionary for the `name` field. Values follow the same restrictions as `name` |
 | value               | string, integer, or double \*              | Value for the choice, up to 100 characters if string                                        |
 
-\* Type of `value` depends on the [option type](#application-command-option-type) that the choice belongs to.  
+\* Type of `value` depends on the [option type](#application-command-option-type) that the choice belongs to.
 
 #### Application Command Permissions Object
-• Returned when fetching the permissions for an app's command(s) in a guild.  
+• Returned when fetching the permissions for an app's command(s) in a guild.
 
 | Field          | Type                                                                                   | Description                                          |
 |----------------|----------------------------------------------------------------------------------------|------------------------------------------------------|
@@ -7822,10 +7822,10 @@ The role connection object that an application has attached to a user.
 | guild_id       | snowflake                                                                              | ID of the guild                                      |
 | permissions    | array of [application command permissions](#application-command-permissions-structure) | Permissions for the command in the guild, max of 100 |
 
-• When the `id` field is the application ID instead of a command ID, the permissions apply to all commands that do not contain explicit overwrites.  
+• When the `id` field is the application ID instead of a command ID, the permissions apply to all commands that do not contain explicit overwrites.
 
 #### Application Command Permissions Structure
-• Application command permissions allow you to enable or disable commands for specific users, roles, or channels within a guild.  
+• Application command permissions allow you to enable or disable commands for specific users, roles, or channels within a guild.
 
 | Field      | Type                                                                        | Description                                      |
 |------------|-----------------------------------------------------------------------------|--------------------------------------------------|
@@ -7834,7 +7834,7 @@ The role connection object that an application has attached to a user.
 | permission | boolean                                                                     | `true` to allow, `false`, to disallow            |
 
 #### Application Command Permissions Constants
-• The following constants can be used in the `id` field for command permissions payloads.  
+• The following constants can be used in the `id` field for command permissions payloads.
 
 | Permission   | Value          | Type      | Description             |
 |--------------|----------------|-----------|-------------------------|
@@ -7923,9 +7923,9 @@ The role connection object that an application has attached to a user.
 ```
 
 #### SKU Types
-• For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type:6`.  
-• For any current implementations, you will want to use the SKU defined by `type: 5`.  
-• A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.  
+• For subscriptions, SKUs will have a type of either `SUBSCRIPTION` represented by `type: 5` or `SUBSCRIPTION_GROUP` represented by `type:6`.
+• For any current implementations, you will want to use the SKU defined by `type: 5`.
+• A `SUBSCRIPTION_GROUP` is automatically created for each `SUBSCRIPTION` SKU and are not used at this time.
 
 | Type               | Value | Description                                              |
 |--------------------|-------|----------------------------------------------------------|
@@ -7933,12 +7933,12 @@ The role connection object that an application has attached to a user.
 | Subscription Group | 6     | System-generated group for each SUBSCRIPTION SKU created |
 
 #### SKU Flags
-• For subscriptions, there are two types of access levels you can offer to users:  
+• For subscriptions, there are two types of access levels you can offer to users:
 
 -   **Guild Subscriptions**: A subscription purchased by a user and applied to a single server. Everyone in that server gets your premium benefits.
 -   **User Subscriptions**: A subscription purchased by a user for themselves. They get access to your premium benefits in every server.
 
-• The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.  
+• The `flags` field can be used to differentiate user and server subscriptions with a bitwise `&&` operator.
 
 | Type               | Value  | Description                                                                                                               |
 |--------------------|--------|---------------------------------------------------------------------------------------------------------------------------|
@@ -7959,7 +7959,7 @@ The role connection object that an application has attached to a user.
 | users                  | array of [user](#user-object) objects                                   | List of users referenced in the audit log                   |
 | webhooks               | array of [webhook](#webhook-object) objects                             | List of webhooks referenced in the audit log                |
 
-\* Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.  
+\* Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
 
 ###### Example Partial Integration Object
 ```json
@@ -7986,16 +7986,16 @@ The role connection object that an application has attached to a user.
 | options?    | [optional audit entry info](#optional-audit-entry-info)       | Additional info for certain event types               |
 | reason?     | string                                                        | Reason for the change (1-512 characters)              |
 
-• For `APPLICATION_COMMAND_PERMISSION_UPDATE` events, the `target_id` is the command ID or the app ID since the `changes` array represents the entire `permissions` property on the [guild permissions](#application-command-permissions-structure) object.  
+• For `APPLICATION_COMMAND_PERMISSION_UPDATE` events, the `target_id` is the command ID or the app ID since the `changes` array represents the entire `permissions` property on the [guild permissions](#application-command-permissions-structure) object.
 
 #### Audit Log Events
-• The table below lists audit log events and values (the `action_type` field) that your app may receive.  
+• The table below lists audit log events and values (the `action_type` field) that your app may receive.
 
-• The *Object Changed* column notes which object's values may be included in the entry.  
-• Though there are exceptions, possible keys in the `changes` array typically correspond to the object's fields.  
-• The descriptions and types for those fields can be found in the linked documentation for the object.  
+• The *Object Changed* column notes which object's values may be included in the entry.
+• Though there are exceptions, possible keys in the `changes` array typically correspond to the object's fields.
+• The descriptions and types for those fields can be found in the linked documentation for the object.
 
-• If no object is noted, there won't be a `changes` array in the entry, though other fields like the `target_id` still exist and many have fields in the [`options` array](#optional-audit-entry-info).  
+• If no object is noted, there won't be a `changes` array in the entry, though other fields like the `target_id` still exist and many have fields in the [`options` array](#optional-audit-entry-info).
 
 | Event                                       | Value | Description                                               | Object Changed                                                            |
 |---------------------------------------------|-------|-----------------------------------------------------------|---------------------------------------------------------------------------|
@@ -8056,7 +8056,7 @@ The role connection object that an application has attached to a user.
 | Creator Monetization Request Created        | 150   | Creator monetization request was created                  |                                                                           |
 | Creator Monetization Terms Accepted         | 151   | Creator monetization terms were accepted                  |                                                                           |
 
-\* Object has exception(s) to available keys. See the [exceptions](#audit-log-change-exceptions) section below for details.  
+\* Object has exception(s) to available keys. See the [exceptions](#audit-log-change-exceptions) section below for details.
 
 #### Optional Audit Entry Info
 | Field                             | Type      | Description                                                      | Event Types                                                                                                                                                                                                                                        |
@@ -8075,13 +8075,13 @@ The role connection object that an application has attached to a user.
 | integration_type                  | string    | The type of integration which performed the action               | MEMBER_KICK & MEMBER_ROLE_UPDATE                                                                                                                                                                                                                   |
 
 #### Audit Log Change Object
-• Many audit log events include a `changes` array in their [entry object](#audit-log-entry-structure).  
-• The [structure for the individual changes](#audit-log-change-structure) varies based on the event type and its changed objects, so apps shouldn't depend on a single pattern of handling audit log events.  
+• Many audit log events include a `changes` array in their [entry object](#audit-log-entry-structure).
+• The [structure for the individual changes](#audit-log-change-structure) varies based on the event type and its changed objects, so apps shouldn't depend on a single pattern of handling audit log events.
 
 #### Audit Log Change Structure
-• Some events don't follow the same pattern as other audit log events.  
+• Some events don't follow the same pattern as other audit log events.
 
-**If `new_value` is not present in the change object while `old_value` is, it indicates that the property has been reset or set to `null`.**  
+**If `new_value` is not present in the change object while `old_value` is, it indicates that the property has been reset or set to `null`.**
 **If `old_value` isn't included, it indicated that the property was previously `null`.**
 
 
@@ -8092,7 +8092,7 @@ The role connection object that an application has attached to a user.
 | key        | string                              | Name of the changed entity, with a few [exceptions](#audit-log-change-exceptions) |
 
 #### Audit Log Change Exceptions
-• For most objects, the change keys may be any field on the changed object. The following table details the exceptions to this pattern.  
+• For most objects, the change keys may be any field on the changed object. The following table details the exceptions to this pattern.
 
 | Object Changed                                                          | Change Key Exceptions                                          | Change Object Exceptions                                                                                                                                                                                                                                    |
 |-------------------------------------------------------------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -8151,7 +8151,7 @@ The role connection object that an application has attached to a user.
 ```
 
 #### Trigger Types
-• Characterizes the type of content which can trigger the rule.  
+• Characterizes the type of content which can trigger the rule.
 
 | Trigger Type   | Value | Description                                                          | Max per Guild |
 |----------------|-------|----------------------------------------------------------------------|---------------|
@@ -8161,8 +8161,8 @@ The role connection object that an application has attached to a user.
 | Mention Spam   | 5     | check if content contains more unique mentions than allowed          | 1             |
 
 #### Trigger Metadata
-• Additional data used to determine whether a rule should be triggered.  
-• Different fields are relevant based on the value of [trigger_type](#trigger-types).  
+• Additional data used to determine whether a rule should be triggered.
+• Different fields are relevant based on the value of [trigger_type](#trigger-types).
 
 | Field                           | Type                                                   | Associated Trigger Types | Description                                                                       |
 |---------------------------------|--------------------------------------------------------|--------------------------|-----------------------------------------------------------------------------------|
@@ -8173,9 +8173,9 @@ The role connection object that an application has attached to a user.
 | mention_total_limit             | integer                                                | MENTION_SPAM             | total number of unique role and user mentions allowed per message (Maximum of 50) |
 | mention_raid_protection_enabled | boolean                                                | MENTION_SPAM             | whether to automatically detect mention raids                                     |
 
-\* A keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Each keyword must be 60 characters or less.  
-\*\* Only Rust flavored regex is currently supported, which can be tested in online editors such as Rustexp. Each regex pattern must be 260 characters or less.  
-\*\*\* Each `allow_list` keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Rules with `KEYWORD` [trigger_type](#trigger-types) accept a maximum of 100 keywords. Rules with `KEYWORD_PRESET` [trigger_type](#trigger-types) accept a maximum of 1000 keywords.  
+\* A keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Each keyword must be 60 characters or less.
+\*\* Only Rust flavored regex is currently supported, which can be tested in online editors such as Rustexp. Each regex pattern must be 260 characters or less.
+\*\*\* Each `allow_list` keyword can be a phrase which contains multiple words. [Wildcard symbols](#keyword-matching-strategies) can be used to customize how each keyword will be matched. Rules with `KEYWORD` [trigger_type](#trigger-types) accept a maximum of 100 keywords. Rules with `KEYWORD_PRESET` [trigger_type](#trigger-types) accept a maximum of 1000 keywords.
 
 #### Trigger Metadata Field Limits
 | Field          | Trigger Type   | MAX ARRAY LENGTH | MAX CHARACTERS PER STRING |
@@ -8195,7 +8195,7 @@ The role connection object that an application has attached to a user.
 
 
 #### Event Types
-• Indicates in what event context a rule should be checked.  
+• Indicates in what event context a rule should be checked.
 
 | Event Type   | Value | Description                                         |
 |--------------|-------|-----------------------------------------------------|
@@ -8203,9 +8203,9 @@ The role connection object that an application has attached to a user.
 
 
 ##### Keyword Matching Strategies
-• Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how it should be matched. All keywords are case insensitive.  
+• Use the wildcard symbol (`*`) at the beginning or end of a keyword to define how it should be matched. All keywords are case insensitive.
 
-**Prefix** - word must start with the keyword  
+**Prefix** - word must start with the keyword
 | Keyword   | Matches                               |
 |-----------|---------------------------------------|
 | cat\*     | **cat**ch, **Cat**apult, **CAt**tLE   |
@@ -8213,7 +8213,7 @@ The role connection object that an application has attached to a user.
 | the mat\* | **the mat**rix                        |
 
 
-**Suffix** - word must end with the keyword  
+**Suffix** - word must end with the keyword
 | Keyword   | Matches                             |
 |-----------|-------------------------------------|
 | \*cat     | wild**cat**, copy**Cat**            |
@@ -8221,7 +8221,7 @@ The role connection object that an application has attached to a user.
 | \*the mat | brea**the mat**                     |
 
 
-**Anywhere** - keyword can appear anywhere in the content  
+**Anywhere** - keyword can appear anywhere in the content
 | Keyword     | Matches                     |
 |-------------|-----------------------------|
 | \*cat\*     | lo**cat**ion, edu**Cat**ion |
@@ -8229,7 +8229,7 @@ The role connection object that an application has attached to a user.
 | \*the mat\* | brea**the mat**ter          |
 
 
-**Whole Word** - keyword is a full word or phrase and must be surrounded by whitespace  
+**Whole Word** - keyword is a full word or phrase and must be surrounded by whitespace
 | Keyword | Matches     |
 |---------|-------------|
 | cat     | **cat**     |
@@ -8238,14 +8238,14 @@ The role connection object that an application has attached to a user.
 
 
 #### Auto Moderation Action Object
-• An action which will execute whenever a rule is triggered.  
+• An action which will execute whenever a rule is triggered.
 
 | Field       | Type                                | Description                                                               |
 |-------------|-------------------------------------|---------------------------------------------------------------------------|
 | type        | [action type](#action-types)        | the type of action                                                        |
 | metadata? * | [action metadata](#action-metadata) | additional metadata needed during execution for this specific action type |
 
-\* Can be omitted based on `type`. See the `Associated Action Types` column in [action metadata](#action-metadata) to understand which `type` values require `metadata` to be set.  
+\* Can be omitted based on `type`. See the `Associated Action Types` column in [action metadata](#action-metadata) to understand which `type` values require `metadata` to be set.
 
 #### Action Types
 | Action Type        | Value | Description                                                                                                                                                |
@@ -8254,11 +8254,11 @@ The role connection object that an application has attached to a user.
 | Send Alert Message | 2     | logs user content to a specified channel                                                                                                                   |
 | Timeout            | 3     | timeout user for a specified duration *                                                                                                                    |
 
-\* A `TIMEOUT` action can only be set up for `KEYWORD` and `MENTION_SPAM` rules. The `MODERATE_MEMBERS` permission is required to use the `TIMEOUT` action type.  
+\* A `TIMEOUT` action can only be set up for `KEYWORD` and `MENTION_SPAM` rules. The `MODERATE_MEMBERS` permission is required to use the `TIMEOUT` action type.
 
 #### Action Metadata
-• Additional data used when an action is executed.  
-• Different fields are relevant based on the value of [action type](#action-types).  
+• Additional data used when an action is executed.
+• Different fields are relevant based on the value of [action type](#action-types).
 
 | Field            | Type      | Associated Action Types | Description                                                                            | Constraints                          |
 |------------------|-----------|-------------------------|----------------------------------------------------------------------------------------|--------------------------------------|

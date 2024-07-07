@@ -6,9 +6,9 @@ const { SlackErrorCodes, Messages } = require('./ErrorMessages');
 // DELETE `| string` from DiscordError
 
 class ResponseError extends Error {
-  
+
   /**
-   * @param {?DiscordError} res 
+   * @param {?ErrorParams} res
    * @param {?Response} response
    * @param {string} type
    * @param {{ error?: string, hint?: string } | undefined} [content]
@@ -24,7 +24,7 @@ class ResponseError extends Error {
       this.code = response.status;
     if (response?.statusText && response?.statusText !== 'OK')
       if (!/Forbidden|Unknown Error/gi) this.statusText = response.statusText;
-    
+
     if (type === 'discord_error') {
       if (!res && !error && !hint) return;
       if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
@@ -47,21 +47,21 @@ class ResponseError extends Error {
         if (res.code && res.code !== 0) this.code = res.code;
         if (res.retry_after) this.retry_after = res.retry_after;
         if (res.global) this.global = res.global;
-          
+
         if (DiscordError(res))
           this.details = DiscordError(res);
       }
-            
+
     } else if (type === 'slack_error') {
       if (!res && !error && !hint) return;
       if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
         this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
       if (res && SlackError(res))
         this.details = SlackError(res);
-    
+
     } else if (type === 'spotify_error') {
       if (!res && !error && !hint) return;
-      
+
       if (res && res.error) {
         this.message = typeof res.error !== 'string' ? res.error.message : res.error;
         if (typeof res.error !== 'string' && res.error.reason && !/unknown/i.test(res.error.reason))
@@ -79,8 +79,13 @@ class ResponseError extends Error {
       // this.details = res;
       if (error) this.message = error;
       if (hint) this.hint = hint;
-      if (res && res.error_summary)
-        this.details = res.error_summary;
+      if (res && res.error_summary) {
+        const split = res.error_summary.split(/[/_]/g);
+        // console.log('split', split);
+        if (/\.|\.\.\.$/.test(split[split.length - 1])) split.pop();
+        this.details = split.join(' ').trim();
+      }
+
 
     } else if (type === 'openai_error') {
       // console.log('res in error\n', res);
@@ -123,7 +128,7 @@ class ResponseError extends Error {
       console.log('res in errors imgur:', res);
       if ((res && (res.message || (res.error && typeof res.error === 'string'))) || error)
         this.message = res ? res.message && typeof res.message === 'string' ? res.message : res.error && typeof res.error === 'string' ? res.error : error || '' : '';
-    
+
     } else if (type === 'twitter_error') {
       // console.log('res in twitter error:\n', res);
       if (res?.status === 429 && response?.headers.get('x-rate-limit-reset')) {
@@ -150,7 +155,7 @@ class ResponseError extends Error {
         if (res.errors[0].value) this.resource_value = res.errors[0].value;
         // console.log('res.errors', Object.keys(res.errors[0].parameters)[0]);
       }
-      
+
     } else if (type === 'anthropic_error') {
       console.log('res from anthropic error in Errors:', res);
     }
@@ -178,7 +183,7 @@ function message(code, args) {
 }
 
 /**
- * @param {DiscordError} err 
+ * @param {ErrorParams} err
  */
 function DiscordError(err) {
   // console.log('error from discordError', JSON.stringify(err, null, 2));
@@ -186,30 +191,30 @@ function DiscordError(err) {
    * @type {{ [s: string]: string|number|boolean; }}
    */
   const errinfo = {};
-  
-  /** @type {(k: string) => boolean} */ 
+
+  /** @type {(k: string) => boolean} */
   const ignore = (k) => k !== 'errors' && k !== '_errors' && k !== 'code';
 
-  /** @type {(v: any) => boolean} */ 
+  /** @type {(v: any) => boolean} */
   const isObj = (v) => v && typeof v === 'object';
-  
-  /** @type {(k: Object) => Array<any>} */ 
+
+  /** @type {(k: Object) => Array<any>} */
   const entries = (obj) => Object.entries(obj);
-  
-  /** @type {(k: string) => boolean} */  
+
+  /** @type {(k: string) => boolean} */
   const isIndex = (key) => /\d/.test(key);
-  
-  /** @type {(k: DiscordErrorErrors) => boolean} */ 
+
+  /** @type {(k: DiscordErrorErrors) => boolean} */
   const has = (v) => v && (v?.['_errors']?.[0]?.['message'] || Object.entries(v)?.[0]?.[1]?.['_errors']?.[0]?.['message']);
 
   /**
-   * @param {string} k 
-   * @param {*} v 
+   * @param {string} k
+   * @param {*} v
    * @returns {boolean}
    */
   const check = (k, v) => !isIndex(k) && ignore(k) && has(v);
   /**
-   * @param {DiscordError} obj
+   * @param {ErrorParams} obj
    */
   function parseErrors(obj) {
     for (const [, value] of Object.entries(obj))
@@ -217,26 +222,26 @@ function DiscordError(err) {
         for (const [key1, value1] of entries(value)) {
           if (check(key1, value1))
             errinfo[key1] = has(value1);
-            
-          if (isObj(value1)) 
-            for (const [key2, value2] of entries(value1)) 
-              if (isObj(value2)) 
+
+          if (isObj(value1))
+            for (const [key2, value2] of entries(value1))
+              if (isObj(value2))
                 for (const [key3, value3] of entries(value2)) {
                   if (check(key3, value3))
                     errinfo[`${key1}[${key2}].${key3}`] = has(value3);
-                    
-                  if (isObj(value3)) 
+
+                  if (isObj(value3))
                     for (const [key4, value4] of entries(value3)) {
                       if (check(key4, value4))
                         errinfo[`${key1}.${key2}[${key3}].${key4}`] = value4?.['_errors']?.[0]?.['message'];
-                        
-                      if (isObj(value4)) 
+
+                      if (isObj(value4))
                         for (const [key5, value5] of entries(value4)) {
                           if (check(key5, value5))
                             errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}`] = value5?.['_errors']?.[0]?.['message'];
-                            
+
                           // deep components
-                          if (isObj(value5)) 
+                          if (isObj(value5))
                             for (const [key6, value6] of entries(value5))
                               if (isObj(value6))
                                 for (const [key7, value7] of entries(value6))
@@ -255,9 +260,9 @@ function DiscordError(err) {
 }
 
 /**
- * 
- * @param {DiscordError} err 
- * @returns 
+ *
+ * @param {ErrorParams} err
+ * @returns
  */
 function SlackError(err) {
   console.log('err in parseSlackError:\n', err);
@@ -266,7 +271,7 @@ function SlackError(err) {
   if (!err.errors && !err.response_metadata && !err.warnings) {
     return err.needed ? errs : null; // { message: err.error };
   }
-  
+
 
   for (const e of err.errors ?? err.response_metadata?.messages) {
     // console.log('e of err.errors:', e);
@@ -292,7 +297,7 @@ function SlackError(err) {
       for (const p of path.split('/')) {
         newPath += /\d/.test(p) ? `[${p}]` : `.${p}`;
       }
-    
+
     // path = path.slice(2).join('.');
     newPath = path ? newPath.slice(1) : specificProp ? specificProp : 'error';
     // console.log('newPath:', newPath);
@@ -342,7 +347,7 @@ function get(obj, path, defaultValue = undefined) {
 }
 
 /**
- * @typedef {Object} DiscordError
+ * @typedef {Object} ErrorParams
  * @property {string} message
  * @property {boolean} [ok]
  * @property {string|{status?: number|string, message: string, reason?: string, param?: string, code?: ?number, type?: string, errors?: Array<{message?: string, domain?: string, reason?: string, extendedHelp?: string}>, details?: Array<{'@type': string, links?: Array<{description: string, url: string}>, reason?: string, domain?: string, metadata?: { service?: string, consumer?: string}}>}} [error]

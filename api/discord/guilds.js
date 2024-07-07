@@ -215,122 +215,6 @@ module.exports = {
 
   /**
    * @summary
-   * ### [Get Guild Ban]{@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
-   * Returns a ban object for the given user or a 404 not found if the ban cannot be found.
-   * - Requires the `BAN_MEMBERS` permission.
-   * @example
-   * await api.discord.guilds.retrieveBan({
-   *   guild_id: '0000000000',
-   *   user_id: '0000000000'
-   * });
-   * @function retrieveBan
-   * @memberof module:guilds#
-   * @param {Object} params
-   * @param {Snowflake} params.guild_id
-   * @param {Snowflake} params.user_id
-   * @returns {Promise<GuildBan>} [Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object} object for the given user or a `404 not found`.
-   */
-  retrieveBan: async (params) => {
-    const attempt = await attemptHandler({
-      method: 'GET',
-      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`
-    });
-    attempt.user.created_at = retrieveDate(attempt.user.id, true);
-    attempt.user.badges = getBadges(attempt.user.public_flags);
-    return attempt;
-  }, // End of Get Guild Ban
-
-  /**
-   * @summary
-   * ### [Get Guild Bans]{@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
-   * @example
-   * await api.discord.guilds.getAllBans({
-   *   guild_id: '0000000000',
-   *   limit: 50,
-   *   after: '0000000000'
-   * });
-   * @function getAllBans
-   * @memberof module:guilds#
-   * @param {Object} params
-   * @param {Snowflake} params.guild_id
-   * @param {number} [params.limit=1000] - Number of users to return (1-1000)
-   * @param {Snowflake} [params.before=null] - Consider only users before given user ID
-   * @param {Snowflake} [params.after=null] - Consider only users after given user ID
-   * @returns {Promise<GuildBan[]>} List of [Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object} objects for the users banned from this guild.
-   */
-  getAllBans: async (params) => {
-    let endpoint = `guilds/${params.guild_id}/bans?`;
-    endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
-    endpoint += `${params.before ? `&before=${params.before}` : ''}`;
-    endpoint += `${params.after ? `&after=${params.after}` : ''}`;
-
-    const attempt = await attemptHandler({
-      method: 'GET',
-      endpoint
-    });
-    for (const ban of attempt) {
-      ban.user.created_at = retrieveDate(attempt.user.id, true);
-      ban.user.badges = getBadges(attempt.user.public_flags);
-    }
-    return attempt;
-  }, // End of Get Guild Bans
-
-  /**
-   * @summary
-   * ### [Create Guild Ban]{@link https://discord.com/developers/docs/resources/guild#create-guild-ban}, and optionally delete previous messages sent by the banned user.
-   * - Requires the `BAN_MEMBERS` permission.
-   * @example
-   * await api.discord.guilds.createBan({
-   *   guild_id: '0000000000',
-   *   user_id: '0000000000',
-   *   delete_message_seconds: 604800
-   * });
-   * @function createBan
-   * @fires guilds#ban_add
-   * @memberof module:guilds#
-   * @param {Object} params
-   * @param {Snowflake} params.guild_id
-   * @param {Snowflake} params.user_id
-   * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
-   * @param {string} [params.reason]
-   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
-   */
-  createBan: async (params) => attemptHandler({
-    method: 'PUT',
-    endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
-    body: {
-      delete_message_seconds: params.delete_message_seconds ?? 0
-    },
-    reason: params.reason ?? null
-  }), // End of Create Guild Ban
-
-  /**
-   * @summary
-   * ### [Remove Guild Ban]{@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
-   * - Requires the `BAN_MEMBERS` permission.
-   * @example
-   * await api.discord.guilds.destroyBan({
-   *   guild_id: '0000000000',
-   *   user_id: '0000000000'
-   * });
-   * @function destroyBan
-   * @fires guilds#ban_remove
-   * @memberof module:guilds#
-   * @param {Object} params
-   * @param {Snowflake} params.guild_id
-   * @param {Snowflake} params.user_id
-   * @param {string} [params.reason]
-   * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
-   */
-  destroyBan: async (params) =>
-    attemptHandler({
-      method: 'PUT',
-      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
-      reason: params.reason ?? null
-    }), // End of Create Guild Ban
-
-  /**
-   * @summary
    * ### [Get Guild Invites]{@link https://discord.com/developers/docs/resources/guild#get-guild-invites}
    * @function getInvites
    * @memberof module:guilds#
@@ -1429,6 +1313,164 @@ module.exports = {
         reason: params.reason ?? null
       }) // End of Modify Guild Role Positions
 
+  },
+
+  // ///////////////////////////////////////////////////////////////////
+  // /////////////////////////// GUILDS.BANS ///////////////////////////
+  // ///////////////////////////////////////////////////////////////////
+  /**
+   * @summary All functions relating to guild bans
+   * @memberof module:guilds
+   * @namespace bans
+   */
+  bans: {
+
+    /**
+     * @summary
+     * ### [Get Guild Ban]{@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
+     * Returns a ban object for the given user or a 404 not found if the ban cannot be found.
+     * - Requires the `BAN_MEMBERS` permission.
+     * @example
+     * await api.discord.guilds.retrieve({
+     *   guild_id: '0000000000',
+     *   user_id: '0000000000'
+     * });
+     * @function retrieve
+     * @memberof module:guilds#
+     * @param {Object} params
+     * @param {Snowflake} params.guild_id
+     * @param {Snowflake} params.user_id
+     * @returns {Promise<GuildBan>} [Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object} object for the given user or a `404 not found`.
+     */
+    retrieve: async (params) => {
+      const attempt = await attemptHandler({
+        method: 'GET',
+        endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`
+      });
+      attempt.user.created_at = retrieveDate(attempt.user.id, true);
+      attempt.user.badges = getBadges(attempt.user.public_flags);
+      return attempt;
+    }, // End of Get Guild Ban
+
+    /**
+     * @summary
+     * ### [Get Guild Bans]{@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
+     * @example
+     * await api.discord.guilds.getAll({
+     *   guild_id: '0000000000',
+     *   limit: 50,
+     *   after: '0000000000'
+     * });
+     * @function getAll
+     * @memberof module:guilds#
+     * @param {Object} params
+     * @param {Snowflake} params.guild_id
+     * @param {number} [params.limit=1000] - Number of users to return (1-1000)
+     * @param {Snowflake} [params.before=null] - Consider only users before given user ID
+     * @param {Snowflake} [params.after=null] - Consider only users after given user ID
+     * @returns {Promise<GuildBan[]>} List of [Ban]{@link https://discord.com/developers/docs/resources/guild#ban-object} objects for the users banned from this guild.
+     */
+    getAll: async (params) => {
+      let endpoint = `guilds/${params.guild_id}/bans?`;
+      endpoint += `${params.limit ? `&limit=${params.limit}` : ''}`;
+      endpoint += `${params.before ? `&before=${params.before}` : ''}`;
+      endpoint += `${params.after ? `&after=${params.after}` : ''}`;
+
+      const attempt = await attemptHandler({
+        method: 'GET',
+        endpoint
+      });
+      for (const ban of attempt) {
+        ban.user.created_at = retrieveDate(attempt.user.id, true);
+        ban.user.badges = getBadges(attempt.user.public_flags);
+      }
+      return attempt;
+    }, // End of Get Guild Bans
+
+    /**
+     * @summary
+     * ### [Create Guild Ban]{@link https://discord.com/developers/docs/resources/guild#create-guild-ban}, and optionally delete previous messages sent by the banned user.
+     * - Requires the `BAN_MEMBERS` permission.
+     * @example
+     * await api.discord.guilds.create({
+     *   guild_id: '0000000000',
+     *   user_id: '0000000000',
+     *   delete_message_seconds: 604800
+     * });
+     * @function create
+     * @fires guilds#ban_add
+     * @memberof module:guilds#
+     * @param {Object} params
+     * @param {Snowflake} params.guild_id
+     * @param {Snowflake} params.user_id
+     * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
+     * @param {string} [params.reason]
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
+     */
+    create: async (params) => attemptHandler({
+      method: 'PUT',
+      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
+      body: {
+        delete_message_seconds: params.delete_message_seconds ?? 0
+      },
+      reason: params.reason ?? null
+    }), // End of Create Guild Ban
+
+    /**
+     * @summary
+     * ### [Bulk Guild Ban]{@link https://discord.com/developers/docs/resources/guild#bulk-guild-ban}, and optionally delete previous messages sent by the banned user.
+     * - Requires the `BAN_MEMBERS` permission.
+     * @example
+     * await api.discord.guilds.createBulk({
+     *   guild_id: '0000000000',
+     *   user_ids: ['0000000000', '0000000000'],
+     *   delete_message_seconds: 604800
+     * });
+     * @function createBulk
+     * @fires guilds#ban_add
+     * @memberof module:guilds#
+     * @param {Object} params
+     * @param {Snowflake} params.guild_id
+     * @param {Snowflake[]} params.user_ids
+     * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
+     * @param {string} [params.reason]
+     * @returns {Promise<{ banned_users: Snowflake[], failed_users: Snowflake[] }>}
+     * @throws {Error} 500000: Failed to ban users is returned instead.
+     */
+    createBulk: async (params) => attemptHandler({
+      method: 'POST',
+      endpoint: `guilds/${params.guild_id}/bulk-ban`,
+      body: {
+        user_ids: params.user_ids,
+        delete_message_seconds: params.delete_message_seconds ?? 0
+      },
+      reason: params.reason ?? null
+    }), // End of Bulk Guild Ban
+
+    /**
+     * @summary
+     * ### [Remove Guild Ban]{@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
+     * - Requires the `BAN_MEMBERS` permission.
+     * @example
+     * await api.discord.guilds.destroy({
+     *   guild_id: '0000000000',
+     *   user_id: '0000000000'
+     * });
+     * @function destroy
+     * @fires guilds#ban_remove
+     * @memberof module:guilds#
+     * @param {Object} params
+     * @param {Snowflake} params.guild_id
+     * @param {Snowflake} params.user_id
+     * @param {string} [params.reason]
+     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
+     */
+    destroy: async (params) =>
+      attemptHandler({
+        method: 'PUT',
+        endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
+        reason: params.reason ?? null
+      }) // End of Create Guild Ban
   },
 
   // ///////////////////////////////////////////////////////////////////

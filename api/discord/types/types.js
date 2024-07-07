@@ -1437,7 +1437,7 @@
  * For the `attachments` array in Message Create/Edit requests, only the `id` is required.
  * @typedef {Object} Attachment
  * @property {Snowflake} id - Attachment ID
- * @property {Buffer | string} file - File to send
+ * @property {ArrayBuffer | Buffer | string} file - File to send
  * @property {string} filename - Name of file attached
  * @property {string} [description] - Description for the file (max 1024 characters)
  * @property {string} [content_type] - The attachment's media type
@@ -2808,32 +2808,5 @@ const Locale = {
  * @property {Snowflake[]} entitlement_sku_ids
  * @property {Channel} channel
  * @property {GuildParams} guild
- * @property {import('../../Api')} api
+ * @property {import('../../../Api')} api
  */
-
-/**
- * @typedef {Object} ExtendedPayload
- * @property {User} [user]
- * @property {Member} [member]
- * @property {Interaction} [interaction]
- * @property {Message} [message]
- * @property {Channel} channel
- * @property {string} [username]
- * @property {Snowflake} [guild_id]
- * @property {Snowflake} [user_id]
- * @property {Snowflake} [id]
- * @property {User} [author]
- * @property {User} [inviter]
- * @property {User} [target_user]
- * @property {ISO8601Timestamp} [created_at]
- * @property {Message[]} [mentions]
- * @property {string[]} [badges]
- * @property {string} [nick]
- * @property {ResolvedData} [data]
- * @property {string} [url]
- * @property {number} [uses]
- * @property {number} [max_uses]
- * @property {number} [max_age]
- * @property {boolean} [temporary]
- */
-

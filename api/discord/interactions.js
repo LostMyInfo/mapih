@@ -1,3 +1,6 @@
+/* eslint-disable max-statements-per-line */
+/* eslint-disable brace-style */
+/* eslint-disable node/no-unsupported-features/es-builtins */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 // @ts-check
 'use-strict';
@@ -271,15 +274,26 @@ module.exports = {
     component_update: async (params, input = {}) => {
       const url = `interactions/${params.id}/${params.token}/callback`;
       input.flags = input.ephemeral ? (1 << 6) : 0;
-      if (input.attachments && input.attachments.length)
-        return sendAttachment('data', input, url, 'post', 7, input.flags);
-      else
+      if (input.attachments && input.attachments.length) {
+        const
+          attachmentPayload = {
+            content: input.content,
+            embeds: input.embeds,
+            components: input.components,
+            allowed_mentions: input.allowed_mentions,
+            attachments: input.attachments
+          },
+          result = await sendAttachment('data', attachmentPayload, url, 'POST', 7, input.flags);
+        // console.log('Attachment component_update result:', result);
+        return result;
+      } else {
         return handleCallbacks({
           method: 'POST',
           path: url,
           type: 7,
           data: input
         });
+      }
     },
 
     /**
@@ -350,9 +364,24 @@ module.exports = {
      */
     update_original: async (params, input = {}) => {
       const endpoint = `webhooks/${params.application_id}/${params.token}/messages/@original`;
-      if (input.attachments && input.attachments.length)
-        return sendAttachment('body', input, endpoint, 'patch', null, 0);
-      else {
+      if (input.attachments && input.attachments.length) {
+        try {
+          const attachmentPayload = {
+            content: input.content,
+            embeds: input.embeds,
+            components: input.components,
+            allowed_mentions: input.allowed_mentions,
+            attachments: input.attachments
+          };
+
+          const result = await sendAttachment('body', attachmentPayload, endpoint, 'PATCH', null, 0);
+          // console.log('Attachment update_original result:', result);
+          return result;
+        } catch (error) {
+          console.error('Error updating message with attachments:', error);
+          throw error;
+        }
+      } else {
         let message;
         try {
           message = await attemptHandler({
@@ -505,9 +534,19 @@ module.exports = {
         input.embeds = embedModifier(input.embeds);
       }
 
-      if (input.attachments && input.attachments.length)
-        return sendAttachment('body', input, url, 'post', null, flags);
-      else {
+      if (input.attachments && input.attachments.length) {
+        const
+          attachmentPayload = {
+            content: input.content,
+            embeds: input.embeds,
+            components: input.components,
+            allowed_mentions: input.allowed_mentions,
+            attachments: input.attachments
+          },
+          result = await sendAttachment('body', attachmentPayload, url, 'POST', null, flags);
+        // console.log('Attachment followup.create result:', result);
+        return result;
+      } else {
         const attempt = await attemptHandler({
           method: 'POST',
           endpoint: url,
@@ -560,9 +599,19 @@ module.exports = {
       const flags = input.ephemeral ? (1 << 6) : 0;
       let endpoint = `webhooks/${params.application_id}/${params.token}/messages/${input.message_id}?`;
       endpoint += `${input.thread_id ? `&thread_id=${input.thread_id}` : ''}`;
-      if (input.attachments && input.attachments.length)
-        return sendAttachment('body', input, endpoint, 'patch', null, flags);
-      else {
+      if (input.attachments && input.attachments.length) {
+        const
+          attachmentPayload = {
+            content: input.content,
+            embeds: input.embeds,
+            components: input.components,
+            allowed_mentions: input.allowed_mentions,
+            attachments: input.attachments
+          },
+          result = await sendAttachment('body', attachmentPayload, endpoint, 'PATCH', null, flags);
+        // console.log('Attachment followup.update result:', result);
+        return result;
+      } else {
         const message = await attemptHandler({
           method: 'GET',
           endpoint: endpoint
@@ -627,67 +676,58 @@ module.exports = {
 
 /**
  * @param {string} sender
- * @param {*} params
+ * @param {{[key: string]: any}} params
  * @param {string} url
  * @param {string} method
  * @param {?number} type
  * @param {number} flags
  */
 async function sendAttachment(sender, params, url, method, type, flags) {
-
-
   if (!params.attachments) return null;
+
+  const
+    form = new FormData(),
+    attachments = [];
+
+  for (const [index, { file, filename, description }] of params.attachments.entries()) {
+    if (!file || !filename) throw new Error('Each attachment must have "file" and "filename" properties.');
+
+    const blob = typeof file === 'string' && await isValidMedia(file)
+      ? await (await fetch(file)).blob()
+      : file instanceof Blob ? file : new Blob([file]);
+
+    form.append(`files[${index}]`, blob, filename.replace(/[^a-z0-9_\-\.]/gi, '_'));
+    attachments.push({ id: index, filename, description: description || '' });
+  }
+
+  const payload = sender === 'data'
+    ? { type, data: { ...params, flags, attachments } }
+    : { ...params, flags, attachments };
+
+  form.append('payload_json', JSON.stringify(payload));
+
   try {
-    const form = new FormData();
-
-    for (const attachment of params.attachments) {
-      if (!attachment.file)
-        throw new Error('You must provide a \'file\' property in the attachment object.');
-
-      if (!attachment.filename)
-        throw new Error('You must provide a \'filename\' property in the attachment object.');
-
-      if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
-        const response = await fetch(attachment.file);
-        attachment.file = await response.blob();
-      } else if (!(attachment.file instanceof Blob) && !(attachment.file instanceof Buffer))
-        throw new Error('Invalid file type provided. Must be a Blob or a valid media URL.');
-
-      form.append(
-        `files[${params.attachments.indexOf(attachment)}]`,
-        attachment.file instanceof Blob ? attachment.file : new Blob([attachment.file]),
-        attachment.filename
+    const
+      response = await fetch(`https://discord.com/api/v10/${url}`, {
+        method,
+        body: form,
+        headers: {
+          'Authorization': `Bot ${token('discord', 'discord')}`
+        }
+      }),
+      data = await response.text().then(text =>
+        (() => { try { return JSON.parse(text); } catch { return text; } })()
       );
-    }
-
-    params.flags = flags;
-    params.attachments = params.attachments.map((/** @type {{ filename: string, description: string }} */ a, /** @type {number} */ index) => ({
-      id: index,
-      filename: a.filename,
-      description: a.description || ''
-    }));
-
-    if (sender === 'data')
-      form.append('payload_json', JSON.stringify({ type: type, data: params }));
-    else {
-      const { attachments, ...newparams } = params;
-      form.append('payload_json', JSON.stringify({ data: newparams }));
-    }
-
-    const response = await fetch(`https://discord.com/api/v10/${url}`, {
-      method,
-      body: form,
-      headers: {
-        'Authorization': `Bot ${token('discord', 'discord')}`
-      }
-    });
-
-    if (!response.ok)
-      throw new ResponseError(await response.json(), response, 'discord_error');
-
-    // return response.json();
-
+      /*
+      data = await response.text().then(text => {
+        try { return JSON.parse(text); }
+        catch { return text; }
+      });
+      */
+    if (!response.ok) throw new ResponseError(data, response, 'discord_error');
+    return data;
   } catch (e) {
+    console.log('Error in sendAttachment:', e);
     throw e;
   }
 };
@@ -715,7 +755,7 @@ async function handleCallbacks(params) {
     return r;
 
   } catch (error) {
-    // console.error(error);
+    // console.log(error);
     throw error;
   }
 }

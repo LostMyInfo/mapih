@@ -48,17 +48,17 @@ export function retrieve(params: {
 export function getPreview(params: {
     guild_id: string;
 }): Promise<GuildPreview>;
-export function retrieveBan(params: {
+export function retrieve(params: {
     guild_id: string;
     user_id: string;
 }): Promise<GuildBan>;
-export function getAllBans(params: {
+export function getAll(params: {
     guild_id: string;
     limit?: number | undefined;
     before?: string | undefined;
     after?: string | undefined;
 }): Promise<GuildBan[]>;
-export function createBan(params: {
+export function create(params: {
     guild_id: string;
     user_id: string;
     delete_message_seconds?: number | undefined;
@@ -67,7 +67,7 @@ export function createBan(params: {
     statusCode: number;
     message: string;
 }>;
-export function destroyBan(params: {
+export function destroy(params: {
     guild_id: string;
     user_id: string;
     reason?: string | undefined;

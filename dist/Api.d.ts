@@ -581,31 +581,6 @@ export declare const discord: {
     getPreview: (params: {
       guild_id: string;
     }) => Promise<GuildPreview>;
-    retrieveBan: (params: {
-      guild_id: string;
-      user_id: string;
-    }) => Promise<GuildBan>;
-    getAllBans: (params: {
-      guild_id: string;
-      limit?: number | undefined;
-      before?: string | undefined;
-      after?: string | undefined;
-    }) => Promise<GuildBan[]>;
-    createBan: (params: {
-      guild_id: string;
-      user_id: string;
-      delete_message_seconds?: number | undefined;
-    }) => Promise<{
-      statusCode: number;
-      message: string;
-    }>;
-    destroyBan: (params: {
-      guild_id: string;
-      user_id: string;
-    }) => Promise<{
-      statusCode: number;
-      message: string;
-    }>;
     getInvites: (params: {
       guild_id: string;
     }) => Promise<ExtendedInvite[]>;
@@ -783,49 +758,84 @@ export declare const discord: {
       }) => Promise<Member>;
     };
     roles: {
-        retrieve: (params: {
-            guild_id: string;
-            role_id: string;
-        }) => Promise<Role>;
-        getAll: (params: {
-            guild_id: string;
-        }) => Promise<Role[]>;
-        create: (params: {
-            guild_id: string;
-            name?: string | undefined;
-            permissions?: string | undefined;
-            color?: number | undefined;
-            hoist?: boolean | undefined;
-            icon?: string | undefined;
-            unicode_emoji?: string | undefined;
-            mentionable?: boolean | undefined;
-        }) => Promise<Role>;
-        update: (params: {
-            guild_id: string;
-            role_id: string;
-            name?: string | undefined;
-            permissions?: string | undefined;
-            color?: number | undefined;
-            hoist?: boolean | undefined;
-            icon?: string | Buffer | undefined;
-            unicode_emoji?: string | undefined;
-            mentionable?: boolean | undefined;
-        }) => Promise<Role>;
-        destroy: (params: {
-            guild_id: string;
-            role_id: string;
-        }) => Promise<{
-            statusCode: number;
-            message: string;
-        }>;
-        updatePositions: (params: {
-            guild_id: string;
-            roles: {
-                id: string;
-                position?: number | undefined;
-            }[];
-        }) => Promise<Role[]>;
+      retrieve: (params: {
+        guild_id: string;
+        role_id: string;
+      }) => Promise<Role>;
+      getAll: (params: {
+        guild_id: string;
+      }) => Promise<Role[]>;
+      create: (params: {
+        guild_id: string;
+        name?: string | undefined;
+        permissions?: string | undefined;
+        color?: number | undefined;
+        hoist?: boolean | undefined;
+        icon?: string | undefined;
+        unicode_emoji?: string | undefined;
+        mentionable?: boolean | undefined;
+      }) => Promise<Role>;
+      update: (params: {
+        guild_id: string;
+        role_id: string;
+        name?: string | undefined;
+        permissions?: string | undefined;
+        color?: number | undefined;
+        hoist?: boolean | undefined;
+        icon?: string | Buffer | undefined;
+        unicode_emoji?: string | undefined;
+        mentionable?: boolean | undefined;
+      }) => Promise<Role>;
+      destroy: (params: {
+        guild_id: string;
+        role_id: string;
+      }) => Promise<{
+        statusCode: number;
+        message: string;
+      }>;
+      updatePositions: (params: {
+        guild_id: string;
+        roles: {
+            id: string;
+            position?: number | undefined;
+        }[];
+      }) => Promise<Role[]>;
     };
+    bans: {
+      retrieve: (params: {
+        guild_id: string;
+        user_id: string;
+      }) => Promise<GuildBan>;
+      getAll: (params: {
+        guild_id: string;
+        limit?: number | undefined;
+        before?: string | undefined;
+        after?: string | undefined;
+      }) => Promise<GuildBan[]>;
+      create: (params: {
+        guild_id: string;
+        user_id: string;
+        delete_message_seconds?: number | undefined;
+      }) => Promise<{
+        statusCode: number;
+        message: string;
+      }>;
+      createBulk: (params: {
+        guild_id: string;
+        user_ids: string[];
+        delete_message_seconds?: number | undefined;
+      }) => Promise<{
+        banned_users?: string[];
+        failed_users?: string[];
+      }>;
+      destroy: (params: {
+        guild_id: string;
+        user_id: string;
+      }) => Promise<{
+        statusCode: number;
+        message: string;
+      }>;
+    }
     emojis: {
         retrieve: (params: {
             guild_id: string;
