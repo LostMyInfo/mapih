@@ -344,6 +344,16 @@
  */
 
 /**
+ * @summary [Invite Type]{@link https://discord.com/developers/docs/resources/invite#invite-object-invite-types}
+ * @typedef {number} InviteType
+ * | Name | Value |
+ * |------|-------|
+ * | Guild  | 0  |
+ * | Group DM | 1  |
+ * | Friend | 2  |
+ */
+
+/**
  * @summary [Invite]{@link https://discord.com/developers/docs/resources/invite#invite-metadata-object} Object
  * @example
  * {
@@ -383,6 +393,7 @@
  *   }
  * }
  * @typedef {Object} Invite
+ * @property {InviteType} type - The [type of invite]{@link https://discord.com/developers/docs/resources/invite#invite-object-invite-types}
  * @property {string} code - The invites code
  * @property {PartialInviteGuild} [guild] - The guild the invite originated from
  * @property {PartialChannel} channel - The channel the invite is for
@@ -399,6 +410,7 @@
 /**
  * @summary [Extended Invite]{@link https://discord.com/developers/docs/resources/invite#invite-metadata-object} Object
  * @typedef {Object} ExtendedInvite
+ * @property {InviteType} type - The [type of invite]{@link https://discord.com/developers/docs/resources/invite#invite-object-invite-types}
  * @property {string} code - The invites code
  * @property {string} url - The invite link
  * @property {PartialInviteGuild} [guild] - The guild the invite originated from
@@ -662,6 +674,12 @@
  * @property {StickerItem[]} [sticker_items] - Sent if the message contains stickers
  * @property {number} [position]
  * @property {RoleSubscriptionData} [role_subscription_data] - Data of the role subscription purchase or renewal that prompted this `ROLE_SUBSCRIPTION_PURCHASE` message
+ */
+
+/**
+ * @typedef {Object} MessageCall
+ * @property {Snowflake[]} participants - An array of user ids that are participating in the call
+ * @property {ISO8601Timestamp} [ended_timestamp] - The time at which the call was ended
  */
 
 /**
@@ -1601,41 +1619,42 @@
  * @typedef {number} MessageType
  * | Type | Value |
  * |------|-------|
- * | Default | 0 |
- * | Recipient Add | 1 |
- * | Recipient Remove | 2 |
- * | Call | 3 |
- * | Channel Name Change | 4 |
- * | Channel Icon Change | 5 |
- * | Channel Pinned Message | 6 |
- * | User Join | 7 |
- * | Guild Boost | 8 |
- * | Guild Boost Tier 1 | 9 |
- * | Guild Boost Tier 2 | 10 |
- * | Guild Boost Tier 3 | 11 |
- * | Channel Follow Add | 12 |
- * | Guild Discovery Disqualified | 14 |
- * | Guild Discovery Requalified | 15 |
+ * | Default                                      | 0 |
+ * | Recipient Add                                | 1 |
+ * | Recipient Remove                             | 2 |
+ * | Call                                         | 3 |
+ * | Channel Name Change                          | 4 |
+ * | Channel Icon Change                          | 5 |
+ * | Channel Pinned Message                       | 6 |
+ * | User Join                                    | 7 |
+ * | Guild Boost                                  | 8 |
+ * | Guild Boost Tier 1                           | 9 |
+ * | Guild Boost Tier 2                           | 10 |
+ * | Guild Boost Tier 3                           | 11 |
+ * | Channel Follow Add                           | 12 |
+ * | Guild Discovery Disqualified                 | 14 |
+ * | Guild Discovery Requalified                  | 15 |
  * | Guild Discovery Grace Period Initial Warning | 16 |
- * | Guild Discovery Grace Period Final Warning | 17 |
- * | Thread Created | 18 |
- * | Reply | 19 |
- * | Chat Input Command | 20 |
- * | Thread Starter Message | 21 |
- * | Guild Invite Reminder | 22 |
- * | Context Menu Command | 23 |
- * | Auto Moderation Action | 24 |
- * | Role Subscription Purchase | 25 |
- * | Interaction Premium Upsell | 26 |
- * | Stage Start | 27 |
- * | Stage End | 28 |
- * | Stage Speaker | 29 |
- * | Stage Topic | 31 |
- * | Guild Application Premium Subscription | 32 |
- * | Guild Incident Alert Mode Enabled | 36 |
- * | Guild Incident Alert Mode Disabled | 37 |
- * | Guild Incident Report Raid | 38 |
- * | Guild Incident Report False Alarm | 39 |
+ * | Guild Discovery Grace Period Final Warning   | 17 |
+ * | Thread Created                               | 18 |
+ * | Reply                                        | 19 |
+ * | Chat Input Command                           | 20 |
+ * | Thread Starter Message                       | 21 |
+ * | Guild Invite Reminder                        | 22 |
+ * | Context Menu Command                         | 23 |
+ * | Auto Moderation Action                       | 24 |
+ * | Role Subscription Purchase                   | 25 |
+ * | Interaction Premium Upsell                   | 26 |
+ * | Stage Start                                  | 27 |
+ * | Stage End                                    | 28 |
+ * | Stage Speaker                                | 29 |
+ * | Stage Topic                                  | 31 |
+ * | Guild Application Premium Subscription       | 32 |
+ * | Guild Incident Alert Mode Enabled            | 36 |
+ * | Guild Incident Alert Mode Disabled           | 37 |
+ * | Guild Incident Report Raid                   | 38 |
+ * | Guild Incident Report False Alarm            | 39 |
+ * | Purchase Notification                        | 44 |
  */
 /**
  * @summary [Component Types]{@link https://discord.com/developers/docs/interactions/message-components#component-object-component-types}
@@ -1695,6 +1714,22 @@
 
 // @property {import('../../../../../../src/enums/enum').PERMISSION_NAMES[]} permission_names
 
+/**
+ * @typedef {Object} ApplicationIntegrationTypeConfiguration
+ * @property {InstallParams} [oauth2_install_params] - Install params for each installation context's default in-app authorization link
+ */
+
+/**
+ * @typedef {number} ApplicationIntegrationType
+ * | Type          | ID | Description                       |
+ * |---------------|----|-----------------------------------|
+ * | GUILD_INSTALL | 0  | App is installable to servers
+ * | USER_INSTALL  | 1  | App is installable to users
+ */
+
+/**
+ * @typedef {Record<ApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>} ApplicationIntegrationTypesDictionary
+ */
 
 /**
  * @typedef {Object} MessageInteraction
@@ -1703,6 +1738,18 @@
  * @property {string} name
  * @property {User} user
  * @property {Member} [member]
+ */
+
+/**
+ * @summary [Message Interaction Metadata]{@link https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object-message-interaction-metadata-structure}
+ * @typedef {Object} MessageInteractionMetadata
+ * @property {Snowflake} id - ID of the interaction
+ * @property {InteractionType} type - Type of interaction
+ * @property {User} user - User who triggered the interaction
+ * @property {ApplicationIntegrationTypesDictionary} authorizing_integration_owners - IDs for installation context(s) related to an interaction. Details in [Authorizing Integration Owners Object]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object}.
+ * @property {string} [original_response_message_id] - ID of the original response message, present only on follow-up messages
+ * @property {string} [interacted_message_id] - ID of the message that contained interactive component, present only on messages created from component interactions
+ * @property {MessageInteractionMetadata} [triggering_interaction_metadata] - Metadata for the interaction that was used to open the modal, present only on modal submit interactions
  */
 
 /**

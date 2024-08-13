@@ -363,65 +363,73 @@ module.exports = {
      * @returns {Promise<?Message|undefined>}
      */
     update_original: async (params, input = {}) => {
-      const endpoint = `webhooks/${params.application_id}/${params.token}/messages/@original`;
-      if (input.attachments && input.attachments.length) {
-        try {
-          const attachmentPayload = {
-            content: input.content,
-            embeds: input.embeds,
-            components: input.components,
-            allowed_mentions: input.allowed_mentions,
-            attachments: input.attachments
-          };
+      try {
+        if (!params || typeof params !== 'object') throw new Error('Missing or Invalid params provided.');
 
-          const result = await sendAttachment('body', attachmentPayload, endpoint, 'PATCH', null, 0);
-          // console.log('Attachment update_original result:', result);
-          return result;
-        } catch (error) {
-          console.error('Error updating message with attachments:', error);
-          throw error;
-        }
-      } else {
-        let message;
-        try {
-          message = await attemptHandler({
-            method: 'GET',
-            endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
-          });
-        } catch (error) {}
-        if (!message) return null;
+        const endpoint = `webhooks/${params.application_id}/${params.token}/messages/@original`;
+        if (input.attachments && input.attachments.length) {
 
-        const { embeds } = input;
-        const embed = embeds?.[0] || undefined;
-        const attempt = await attemptHandler({
-          method: 'PATCH',
-          endpoint: endpoint,
-          body: {
-            content: input.content ?? message.content,
-            embeds: ('embeds' in input && !input.embeds?.length) || (!message?.embeds?.length && !embed) ? [] : [{
-              title: embed?.title ?? message.embeds?.[0]?.title,
-              description: embed?.description ?? message.embeds?.[0]?.description,
-              color: embed?.color ?? message.embeds?.[0]?.color,
-              url: embed?.url ?? message.embeds?.[0]?.url,
-              timestamp: embed?.timestamp ?? message.embeds?.[0]?.timestamp,
-              image: { url: embed?.image?.url ?? message.embeds?.[0]?.image?.url },
-              thumbnail: { url: embed?.thumbnail?.url ?? message.embeds?.[0]?.thumbnail?.url },
-              author: {
-                name: embed?.author?.name ?? message.embeds?.[0]?.author?.name,
-                icon_url: embed?.author?.icon_url ?? message.embeds?.[0]?.author?.icon_url,
-                url: embed?.author?.url ?? message.embeds?.[0]?.author?.url
-              },
-              footer: {
-                text: embed?.footer?.text ?? message.embeds?.[0]?.footer?.text,
-                icon_url: embed?.footer?.icon_url ?? message.embeds?.[0]?.footer?.icon_url
-              },
-              fields: embed?.fields ?? message.embeds?.[0]?.fields
-            }],
-            components: 'components' in input ? !input.components?.length ? [] : input.components : message.components,
-            allowed_mentions: input.allowed_mentions
+          try {
+            const attachmentPayload = {
+              content: input.content,
+              embeds: input.embeds,
+              components: input.components,
+              allowed_mentions: input.allowed_mentions,
+              attachments: input.attachments
+            };
+
+            const result = await sendAttachment('body', attachmentPayload, endpoint, 'PATCH', null, 0);
+            // console.log('Attachment update_original result:', result);
+            return result;
+          } catch (error) {
+            console.log('Error updating message with attachments:', error);
+            throw error;
           }
-        });
-        return extendPayload(attempt/* , params*/);
+        } else {
+          let message;
+          try {
+            message = await attemptHandler({
+              method: 'GET',
+              endpoint: `webhooks/${params.application_id}/${params.token}/messages/@original`
+            });
+          } catch (error) {}
+          if (!message) return null;
+
+          const { embeds } = input;
+          const embed = embeds?.[0] || undefined;
+          const attempt = await attemptHandler({
+            method: 'PATCH',
+            endpoint: endpoint,
+            body: {
+              content: input.content ?? message.content,
+              embeds: ('embeds' in input && !input.embeds?.length) || (!message?.embeds?.length && !embed) ? [] : [{
+                title: embed?.title ?? message.embeds?.[0]?.title,
+                description: embed?.description ?? message.embeds?.[0]?.description,
+                color: embed?.color ?? message.embeds?.[0]?.color,
+                url: embed?.url ?? message.embeds?.[0]?.url,
+                timestamp: embed?.timestamp ?? message.embeds?.[0]?.timestamp,
+                image: { url: embed?.image?.url ?? message.embeds?.[0]?.image?.url },
+                thumbnail: { url: embed?.thumbnail?.url ?? message.embeds?.[0]?.thumbnail?.url },
+                author: {
+                  name: embed?.author?.name ?? message.embeds?.[0]?.author?.name,
+                  icon_url: embed?.author?.icon_url ?? message.embeds?.[0]?.author?.icon_url,
+                  url: embed?.author?.url ?? message.embeds?.[0]?.author?.url
+                },
+                footer: {
+                  text: embed?.footer?.text ?? message.embeds?.[0]?.footer?.text,
+                  icon_url: embed?.footer?.icon_url ?? message.embeds?.[0]?.footer?.icon_url
+                },
+                fields: embed?.fields ?? message.embeds?.[0]?.fields
+              }],
+              components: 'components' in input ? !input.components?.length ? [] : input.components : message.components,
+              allowed_mentions: input.allowed_mentions
+            }
+          });
+          return extendPayload(attempt/* , params*/);
+        }
+      } catch (error) {
+        console.log('Error in update_original:', error);
+        throw error;
       }
     },
 

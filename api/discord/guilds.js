@@ -1051,7 +1051,7 @@ module.exports = {
           }
         }
       } catch (e) {
-        console.error(e);
+        console.log(e);
       }
       return names;
     }, // End Get Permission Names
@@ -1380,9 +1380,10 @@ module.exports = {
         method: 'GET',
         endpoint
       });
+
       for (const ban of attempt) {
-        ban.user.created_at = retrieveDate(attempt.user.id, true);
-        ban.user.badges = getBadges(attempt.user.public_flags);
+        ban.user.created_at = retrieveDate(ban.user.id, true);
+        ban.user.badges = getBadges(ban.user.public_flags);
       }
       return attempt;
     }, // End of Get Guild Bans
@@ -1405,16 +1406,30 @@ module.exports = {
      * @param {Snowflake} params.user_id
      * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
      * @param {string} [params.reason]
-     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type?: 'discord', message: string }>} `204 No Content`
      */
-    create: async (params) => attemptHandler({
-      method: 'PUT',
-      endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
-      body: {
-        delete_message_seconds: params.delete_message_seconds ?? 0
-      },
-      reason: params.reason ?? null
-    }), // End of Create Guild Ban
+    create: async (params) => {
+      const storage = require('../utils/storage');
+      if (new Set((await attemptHandler({
+        method: 'GET',
+        endpoint: `guilds/${params.guild_id}/bans`
+      }))?.map((/** @type {GuildBan} */ban) => ban?.user?.id) || []).has(params.user_id))
+        return { statusCode: 204, message: 'User already banned' };
+
+      const attempt = await attemptHandler({
+        method: 'PUT',
+        endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
+        body: {
+          delete_message_seconds: params.delete_message_seconds ?? 0
+        },
+        reason: params.reason ?? null
+      });
+
+      if (attempt.statusCode === 204)
+        await storage.push(`${params.guild_id}_bans_internal`, params.user_id, { unique: true });
+
+      return attempt;
+    }, // End of Create Guild Ban
 
     /**
      * @summary
@@ -1434,18 +1449,61 @@ module.exports = {
      * @param {Snowflake[]} params.user_ids
      * @param {number} [params.delete_message_seconds=0] Number of seconds to delete messages for, between 0 and 604800 (7 days).
      * @param {string} [params.reason]
-     * @returns {Promise<{ banned_users: Snowflake[], failed_users: Snowflake[] }>}
+     * @returns {Promise<{ banned_users: Snowflake[], failed_users: Snowflake[], already_banned: Snowflake[], invalid_ids: Snowflake[] }>}
      * @throws {Error} 500000: Failed to ban users is returned instead.
      */
-    createBulk: async (params) => attemptHandler({
-      method: 'POST',
-      endpoint: `guilds/${params.guild_id}/bulk-ban`,
-      body: {
-        user_ids: params.user_ids,
-        delete_message_seconds: params.delete_message_seconds ?? 0
-      },
-      reason: params.reason ?? null
-    }), // End of Bulk Guild Ban
+    createBulk: async (params) => {
+      let attempt = null;
+
+      const
+        storage = require('../utils/storage'),
+        // guild_bans = new Set(await storage.get(`${params.guild_id}_bans_internal`) || []),
+        guild_bans = new Set((await attemptHandler({
+          method: 'GET',
+          endpoint: `guilds/${params.guild_id}/bans`
+        }))?.map((/** @type {GuildBan} */ban) => ban?.user?.id) || []),
+        invalid_ids = new Set(params.user_ids.filter((id) => !/^\d{16,23}$/.test(id)) || []),
+        users = params.user_ids.filter((id) => !guild_bans.has(id) && !invalid_ids.has(id)),
+        already_banned = params.user_ids.filter((id) => guild_bans.has(id));
+
+      if (users.length > 0) {
+        try {
+          attempt = await attemptHandler({
+            method: 'POST',
+            endpoint: `guilds/${params.guild_id}/bulk-ban`,
+            body: {
+              user_ids: users,
+              delete_message_seconds: params.delete_message_seconds ?? 0
+            },
+            reason: params.reason ?? null
+          });
+
+        } catch (/** @type {any} */ error) {
+          if (error.code === 500000) {
+            console.log('Received error code 500000');
+            users?.forEach((user_id) => guild_bans.add(user_id));
+          } else if (error.code === 429) {
+            console.log('Rate limited. Retry after:', error.retry_after);
+            throw { code: 429, retry_after: error.retry_after };
+          } else {
+            console.log('Error in createBulk:', error);
+            throw error;
+          }
+        }
+      }
+
+      await storage.set({
+        key: `${params.guild_id}_bans_internal`,
+        value: Array.from(new Set([...guild_bans, ...attempt?.banned_users || [], ...attempt?.already_banned || []]))
+      });
+
+      return {
+        banned_users: attempt?.banned_users || [],
+        failed_users: attempt?.failed_users || [],
+        already_banned,
+        invalid_ids: Array.from(invalid_ids)
+      };
+    }, // End of Bulk Guild Ban
 
     /**
      * @summary
@@ -1463,14 +1521,122 @@ module.exports = {
      * @param {Snowflake} params.guild_id
      * @param {Snowflake} params.user_id
      * @param {string} [params.reason]
-     * @returns {Promise<{ statusCode: 204, type: 'discord', message: 'Success' }>} `204 No Content`
+     * @returns {Promise<{ statusCode: 204, type?: 'discord', message: string }>} `204 No Content`
      */
-    destroy: async (params) =>
-      attemptHandler({
-        method: 'PUT',
+    destroy: async (params) => {
+      const storage = require('../utils/storage');
+      if (!(new Set((await attemptHandler({
+        method: 'GET',
+        endpoint: `guilds/${params.guild_id}/bans`
+      }))?.map((/** @type {GuildBan} */ban) => ban?.user?.id) || []).has(params.user_id)))
+        return { statusCode: 204, message: 'User not banned' };
+
+      const attempt = await attemptHandler({
+        method: 'DELETE',
         endpoint: `guilds/${params.guild_id}/bans/${params.user_id}`,
+        body: {},
         reason: params.reason ?? null
-      }) // End of Create Guild Ban
+      });
+
+      if (attempt.statusCode === 204)
+        await storage.filterValue(`${params.guild_id}_bans_internal`, (x) => x !== params.user_id);
+
+      return attempt;
+    }, // End of Remove Guild Ban
+
+    /**
+     * @summary
+     * ### [Remove Guild Ban]{@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
+     * - Requires the `BAN_MEMBERS` permission.
+     *
+     * @example
+     * await api.discord.guilds.destroyBulk({
+     *   guild_id: '0000000000',
+     *   user_ids: ['0000000000', '0000000000']
+     * });
+     *
+     * @function destroyBulk
+     * @fires guilds#ban_remove
+     * @memberof module:guilds#
+     * @param {Object} params
+     * @param {Snowflake} params.guild_id
+     * @param {Snowflake[]} params.user_ids
+     * @param {string} [params.reason]
+     * @returns {Promise<{ unbanned_users: Snowflake[], failed_users: Snowflake[], already_unbanned: Snowflake[], invalid_ids: Snowflake[] }>}
+     */
+    destroyBulk: async (params) => {
+      const
+        storage = require('../utils/storage'),
+        banned = new Set((await attemptHandler({
+          method: 'GET',
+          endpoint: `guilds/${params.guild_id}/bans`
+        }))?.map((/** @type {GuildBan} */ban) => ban?.user?.id) || []),
+
+        /** @type {Set<string>} */
+        unbanned_users = new Set(),
+
+        /** @type {Set<string>} */
+        failed_users = new Set(),
+
+        /** @type {Set<string>} */
+        already_unbanned = new Set(),
+
+        /** @type {Set<string>} */
+        invalid_ids = new Set(params.user_ids.filter(id => !/^\d{17,23}$/.test(id))),
+
+        users = params.user_ids.filter((id) => banned.has(id));
+
+      if (users.length === 0)
+        return {
+          unbanned_users: [],
+          failed_users: [],
+          already_unbanned: Array.from(params.user_ids.filter((id) => !invalid_ids.has(id))),
+          invalid_ids: Array.from(invalid_ids)
+        };
+
+      const unban_promises = users.map(async (user_id) => {
+        try {
+          const attempt = await attemptHandler({
+            method: 'DELETE',
+            endpoint: `guilds/${params.guild_id}/bans/${user_id}`,
+            body: {},
+            reason: params.reason ?? null
+          });
+
+          // console.log('attempt:', attempt);
+          if (attempt.statusCode === 204) {
+            if (banned.has(user_id)) {
+              unbanned_users.add(user_id);
+              banned.delete(user_id);
+            } else already_unbanned.add(user_id);
+          } else {
+            // console.log('\nattempt with statusCode !== 204 in destroyBulk:', attempt);
+            failed_users.add(user_id);
+          }
+
+        } catch (/** @type {any} */ error) {
+          console.log('error in unbanMap:', error);
+          console.log('error.details.user_id:', error.details?.user_id);
+          failed_users.add(user_id);
+        }
+      });
+
+      await Promise.all(unban_promises);
+
+      if (unbanned_users.size > 0)
+        await storage.set({
+          key: `${params.guild_id}_bans_internal`,
+          value: Array.from(banned)
+        });
+        // await storage.filterValue(`${params.guild_id}_bans_internal`, (id) => !unbanned_users.has(id));
+
+      return {
+        unbanned_users: Array.from(unbanned_users),
+        failed_users: Array.from(failed_users),
+        already_unbanned: Array.from(already_unbanned),
+        invalid_ids: Array.from(invalid_ids)
+      };
+    } // End of Bulk Guild Remove Ban
   },
 
   // ///////////////////////////////////////////////////////////////////

@@ -9,7 +9,7 @@ import { ModalView, SlackAttachment, SlackChannel, SlackMessageResponse, SlackUs
 import { SpotifyReturn } from './api/spotify/resources/types';
 import { TwitterExpansions, TwitterMediaFields, TwitterPlaceFields, TwitterPollFields, TwitterSingleUserLookupResponse, TwitterTweetFields, TwitterTweetLookupResponse, TwitterTweetLookupResponseSingle, TwitterUserFields } from './api/twitter/resources/types';
 
-export declare const twitter_token: {
+interface twitter_token {
   api_key?: string;
   api_secret?: string;
   client_id: string;
@@ -21,14 +21,14 @@ export declare const twitter_token: {
   scope?: Array<string>;
 }
 
-export declare const spotify_token: {
+interface spotify_token {
   client_id: string;
   client_secret: string;
   redirect_uri: string;
   scope?: string;
 }
 
-export declare const slack_token: {
+interface slack_token {
   user?: string;
   bot?: string;
   client_id?: string;
@@ -38,14 +38,14 @@ export declare const slack_token: {
   bot_scope?: string;
 }
 
-export declare const google_token: {
+interface google_token {
   api_key?: string;
   client_id?: string;
   client_secret?: string;
   redirect_uri?: string;
 }
 
-export declare const dropbox_token: {
+interface dropbox_token {
   basic_token?: string;
   access_token?: string;
   client_id: string;
@@ -53,7 +53,7 @@ export declare const dropbox_token: {
   redirect_uri: string;
 }
 
-export declare const box_token: {
+interface box_token {
   client_id: string;
   client_secret: string;
   redirect_uri: string;
@@ -62,12 +62,12 @@ export declare const box_token: {
 export declare function initialize(options: {
   discord?: string;
   openai?: string;
-  spotify?: typeof spotify_token;
-  slack?: typeof slack_token;
-  google?: typeof google_token;
-  dropbox?: typeof dropbox_token;
-  box?: typeof box_token;
-  twitter?: typeof twitter_token;
+  spotify?: spotify_token;
+  slack?: slack_token;
+  google?: google_token;
+  dropbox?: dropbox_token;
+  box?: box_token;
+  twitter?: twitter_token;
 }): void;
 
 
@@ -332,7 +332,7 @@ export declare const discord: {
         channel_id: string | undefined;
         content?: string | undefined;
         embeds?: Embed[] | undefined;
-        components?: Component | undefined;
+        components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
         attachments?: Pick<Attachment, "filename" | "file">[] | undefined;
         allowed_mentions?: AllowedMentions | undefined;
         message_reference?: MessageReference | undefined;
@@ -346,7 +346,7 @@ export declare const discord: {
         message_id: string;
         content?: string | undefined;
         embeds?: Embed[] | undefined;
-        components?: Component | undefined;
+        components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
         attachments?: Pick<Attachment, "filename" | "file">[] | undefined;
         allowed_mentions?: AllowedMentions | undefined;
         flags?: number | undefined;
@@ -802,38 +802,109 @@ export declare const discord: {
       }) => Promise<Role[]>;
     };
     bans: {
+
+      /**
+       * @example
+       * await api.discord.guilds.bans.retrieve({
+       *   guild_id: '0000000000',
+       *   user_id: '0000000000'
+       * });
+       */
       retrieve: (params: {
         guild_id: string;
         user_id: string;
       }) => Promise<GuildBan>;
+
+      /**
+       * @example
+       * await api.discord.guilds.bans.getAll({
+       *   guild_id: '0000000000',
+       *   limit: 50,
+       *   before: '0000000000',
+       *   after: '0000000000'
+       * });
+       */
       getAll: (params: {
         guild_id: string;
         limit?: number | undefined;
         before?: string | undefined;
         after?: string | undefined;
       }) => Promise<GuildBan[]>;
+
+      /**
+       * @example
+       * await api.discord.guilds.bans.create({
+       *   guild_id: '0000000000',
+       *   user_id: '0000000000',
+       *   delete_message_seconds: 604800,
+       *   reason: 'reason'
+       * });
+       */
       create: (params: {
         guild_id: string;
         user_id: string;
         delete_message_seconds?: number | undefined;
+        reason?: string | null | undefined;
       }) => Promise<{
         statusCode: number;
         message: string;
       }>;
+
+      /**
+       * @example
+       * await api.discord.guilds.bans.createBulk({
+       *   guild_id: '0000000000',
+       *   user_ids: ['0000000000', '0000000000'],
+       *   delete_message_seconds: 604800,
+       *   reason: 'reason'
+       * });
+       */
       createBulk: (params: {
         guild_id: string;
         user_ids: string[];
         delete_message_seconds?: number | undefined;
+        reason?: string | undefined;
       }) => Promise<{
-        banned_users?: string[];
-        failed_users?: string[];
+        banned_users: string[];
+        failed_users: string[];
+        already_banned: string[];
+        invalid_ids: string[];
       }>;
+
+      /**
+       * @example
+       * await api.discord.guilds.bans.destroy({
+       *   guild_id: '0000000000',
+       *   user_id: '0000000000',
+       *   reason: 'reason'
+       * });
+       */
       destroy: (params: {
         guild_id: string;
         user_id: string;
+        reason?: string | undefined;
       }) => Promise<{
         statusCode: number;
         message: string;
+      }>;
+
+      /**
+       * @example
+       * await api.discord.guilds.bans.destroyBulk({
+       *   guild_id: '0000000000',
+       *   user_ids: ['0000000000', '0000000000'],
+       *   reason: 'reason'
+       * });
+       */
+      destroyBulk: (params: {
+        guild_id: string;
+        user_ids: string[];
+        reason?: string | undefined;
+      }) => Promise<{
+        unbanned_users: string[];
+        failed_users: string[];
+        already_unbanned: string[];
+        invalid_ids: string[];
       }>;
     }
     emojis: {
@@ -1051,7 +1122,7 @@ export declare const discord: {
           tts?: boolean | undefined;
           embeds?: Embed[] | undefined;
           attachments?: Attachment[] | undefined;
-          components?: Component | undefined;
+          components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
           allowed_mentions?: AllowedMentions | undefined;
           flags?: number | undefined;
           thread_name?: string | undefined;
@@ -1069,7 +1140,7 @@ export declare const discord: {
           content?: string | undefined;
           embeds?: Embed[] | undefined;
           attachments?: Attachment[] | undefined;
-          components?: Component | undefined;
+          components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
           allowed_mentions?: AllowedMentions | undefined;
       }) => Promise<Message>;
   };
@@ -1103,7 +1174,7 @@ export declare const discord: {
               flags?: number | undefined;
               content?: string | undefined;
               embeds?: Embed[] | undefined;
-              components?: Component | undefined;
+              components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
               attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
               tts?: boolean | undefined;
               allowed_mentions?: AllowedMentions | undefined;
@@ -1123,7 +1194,7 @@ export declare const discord: {
               flags?: number | undefined;
               content?: string | undefined;
               embeds?: Embed[] | undefined;
-              components?: Component | undefined;
+              components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
               attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
               tts?: boolean | undefined;
               allowed_mentions?: AllowedMentions | undefined;
@@ -1148,7 +1219,7 @@ export declare const discord: {
           update_original: (params: Pick<InteractionParams, "token" | "application_id">, input?: {
               content?: string | undefined;
               embeds?: Embed[] | undefined;
-              components?: Component | undefined;
+              components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
               attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
               allowed_mentions?: AllowedMentions | undefined;
               ephemeral?: boolean | undefined;
@@ -1171,7 +1242,7 @@ export declare const discord: {
               ephemeral?: boolean | undefined;
               content?: string | undefined;
               embeds?: Embed[] | undefined;
-              components?: Component | undefined;
+              components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
               attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
               tts?: boolean | undefined;
               allowed_mentions?: AllowedMentions | undefined;
@@ -1182,7 +1253,7 @@ export declare const discord: {
               ephemeral?: boolean | undefined;
               content?: string | undefined;
               embeds?: Embed[] | undefined;
-              components?: Component | undefined;
+              components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
               attachments?: Omit<Attachment, "height" | "width" | "size" | "proxy_url">[] | undefined;
               allowed_mentions?: AllowedMentions | undefined;
               thread_id?: string | undefined;
@@ -1256,7 +1327,7 @@ export declare const discord: {
           recipient_id: string;
           content?: string | undefined;
           embeds?: Embed[] | undefined;
-          components?: Component | undefined;
+          components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
           attachments?: Pick<Attachment, "filename" | "file">[] | undefined;
           allowed_mentions?: AllowedMentions | undefined;
           message_reference?: MessageReference | undefined;
@@ -1271,7 +1342,7 @@ export declare const discord: {
           };
           content?: string | undefined;
           embeds?: Embed[] | undefined;
-          components?: Component | undefined;
+          components?: ActionRow<Button | SelectMenu | Modal>[] | undefined;
           attachments?: Attachment[] | undefined;
           allowed_mentions?: AllowedMentions | undefined;
           message_reference?: MessageReference | undefined;
@@ -1564,13 +1635,62 @@ export declare const twitter: {
   }
 }
 
+export declare const google: {
+  drive: {
+    about: {
+
+    },
+    apps: {
+
+    },
+    changes: {
+
+    },
+    drives: {
+
+    },
+    comments: {
+
+    },
+    files: {
+
+    }
+  },
+  sheets: {
+    spreadsheets: {
+      create: (options: typeof GoogleSheetsSpreadSheet) => Promise<GoogleSheetsSpreadSheet>;
+      retrieve: (spreadsheet_id: string, options?: {
+        ranges?: string;
+        include_grid_data?: boolean;
+        fields?: {[x: string]: any};
+      }) => Promise<GoogleSheetsSpreadSheet>;
+    }
+  },
+  geocoding: {
+
+  },
+  places: {
+
+  }
+
+}
+
 export declare const utils: {
   https: (params: {
-    url?: string;
+    url?: string | string[];
     method?: string;
-    body?: string | Object;
-    headers?: any;
-  }, match?: string) => Promise<any>;
+    body?: any;
+    headers?: HeadersInit;
+    formdata?: FormData;
+    message?: string;
+    errorMessage?: string;
+    hint?: string;
+    payload?: any;
+    response_type?: 'json' | 'text' | 'arrayBuffer' | 'blob' | 'formData';
+    discord_params?: Record<string, any>;
+    dropbox_content?: boolean;
+    file?: any;
+  } | string) => Promise<any>;
 
   storage: {
     /**
@@ -1663,14 +1783,14 @@ export declare const utils: {
      * @param options.on_change - A function to invoke when key is modified
      * @returns A Promise that resolves to the value set
      */
-    set: (options: {
+    set: (options: string | {
       key: string;
       value: any;
       ttl?: number;
       ttlCb?: Function;
       allow_overwrite?: boolean;
       on_change?: Function;
-    }) => Promise<any>;
+    }, value?: any) => Promise<any>;
 
     /**
      * @example

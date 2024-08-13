@@ -210,7 +210,7 @@ async function handler(options) {
   } catch (/** @type {any} */ error) {
     if (error.message?.includes('expired') || error.authorize) {
       const handlerName = (error.authorize ?? options.handler).charAt(0).toUpperCase() + options.handler.slice(1);
-      return await authorize(handlerName, null);
+      throw await authorize(handlerName, null);
     }
     throw error;
   }
@@ -222,7 +222,7 @@ async function handler(options) {
  */
 async function getHandlerConfig(options) {
 
-  // console.log('\nhandler in getHandlerConfig():', options.handler);
+  // console.log('\noptions in getHandlerConfig():', options);
 
   const isGoogle = /drive|places|sheets|youtube/i.test(options.handler);
 
@@ -232,7 +232,7 @@ async function getHandlerConfig(options) {
     access_token = await getTokens((options.handler === 'spotify' && !options.oauth) ? 'spotifyAccessToken' : `${isGoogle ? 'google' : options.handler}Auth`);
     // console.log(`\naccess_token after getTokens() in getHandlerConfig(): ${access_token ? 'obtained' : 'not obtained'}`);
   } catch (error) {
-    console.error('Error in getTokens:', error);
+    console.log('Error in getTokens:', error);
     throw error;
   }
 
@@ -241,7 +241,7 @@ async function getHandlerConfig(options) {
       access_token.access_token = await refresh(!isGoogle ? options.handler : 'google', isGoogle ? 'drive' : undefined);
       console.log(`\naccess_token after refresh() in getHandlerConfig(): ${access_token.access_token ? 'obtained' : 'not obtained'}`);
     } catch (error) {
-      console.error('Error in refresh:', error);
+      console.log('Error in refresh:', error);
       throw error;
     }
   }
@@ -353,21 +353,13 @@ async function getHandlerConfig(options) {
     };
     break;
   case 'dropbox':
-    // (({ file, ...new_body } = body)).file
-    const { file, ...new_body } = options.body || {};
     config = {
       url: 'https://api.dropboxapi.com',
       contentUrl: 'https://content.dropboxapi.com',
       extraHeaders: options.dropbox_content ? {
-        'Dropbox-API-Arg': JSON.stringify(new_body)
+        'Dropbox-API-Arg': JSON.stringify(options.body)
       } : {},
-      auth: async () => {
-        // console.log('\nDropbox auth function called');
-        const token = access_token ?? await oauthToken('Dropbox', 'dropbox', options.scope);
-        // console.log('\nDropbox token:', token);
-        // console.log(`Dropbox token obtained: ${token ? 'Yes' : 'No'}`);
-        return `Bearer ${token}`;
-      }
+      auth: async () => `Bearer ${access_token ?? await oauthToken('Dropbox', 'dropbox', options.scope)}`
     };
     break;
   default:
@@ -409,29 +401,60 @@ function buildUrl(options, handlerConfig) {
 }
 
 /**
+ * @param {Headers | Record<string, string> | [string, string][] | undefined} headers
+ * @param {Headers} headersInstance
+ */
+function addHeaders(headers, headersInstance) {
+  if (headers) {
+    if (headers instanceof Headers)
+      headers.forEach((value, key) => headersInstance.set(key, value));
+    else
+      (Array.isArray(headers) ? headers : Object.entries(headers))
+        .forEach(([key, value]) => headersInstance.set(key, String(value)));
+  }
+}
+
+/**
  * @param {HandlerOptions} options
  * @param {HandlerConfig} handlerConfig
  * @returns {Promise<Headers|undefined>}
  */
-async function buildHeaders({ content_type, formdata, headers }, { auth = undefined, extraHeaders = {} }) {
+async function buildHeaders({ content_type, formdata, headers }, { auth = undefined, extraHeaders = undefined }) {
   const headersInstance = new Headers();
 
-  // Set base headers
   if (!formdata && !headers?.has('Content-Type'))
     headersInstance.set('Content-Type', content_type ?? 'application/json; charset=UTF-8');
 
   if (auth) {
     const authValue = await auth();
-    if (!authValue) return;
+    if (!authValue) return undefined;
     headersInstance.set('Authorization', authValue);
   }
 
-  for (const [key, value] of Object.entries(extraHeaders))
-    headersInstance.set(key, String(value));
+  addHeaders(extraHeaders, headersInstance);
+  addHeaders(headers, headersInstance);
 
-  if (headers)
-    for (const [key, value] of Object.entries(headers))
-      headersInstance.set(key, String(value));
+  /*
+  if (extraHeaders) {
+    if (extraHeaders instanceof Headers)
+      for (const [key, value] of extraHeaders.entries())
+        headersInstance.set(key, value);
+
+    else if (typeof extraHeaders === 'object')
+      for (const [key, value] of Object.entries(extraHeaders))
+        headersInstance.set(key, String(value));
+  }
+
+  if (headers) {
+    if (headers instanceof Headers)
+      for (const [key, value] of headers.entries())
+        headersInstance.set(key, value);
+
+    else if (typeof headers === 'object')
+      for (const [key, value] of Object.entries(headers))
+        headersInstance.set(key, String(value));
+  }
+  */
 
   return headersInstance;
 }
@@ -461,7 +484,7 @@ function buildBody({ body = undefined, formdata = undefined, content_type = unde
 async function handleError(error, options) {
   if (error.message?.includes('expired') || error.authorize) {
     const handlerName = (error.authorize ?? options.handler).charAt(0).toUpperCase() + options.handler.slice(1);
-    return await authorize(handlerName, null);
+    throw await authorize(handlerName, null);
   }
   throw error;
 }
@@ -783,7 +806,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
     },
     google: {
       url: 'https://accounts.google.com/o/oauth2/v2/auth',
-      scope: `https://www.googleapis.com/auth/${handler === 'sheets' ? 'drive' : handler}`
+      scope: defaultScope('google')
     }
   };
 
@@ -947,8 +970,8 @@ function defaultScope(service) {
   return {
     spotify: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload',
     twitter: 'tweet.read tweet.write tweet.moderate.write users.read follows.read follows.write offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write',
-    dropbox: 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
-    // google: `https://www.googleapis.com/auth/${google}`
+    dropbox: 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write',
+    google: 'https://www.googleapis.com/auth/drive.file%20https://www.googleapis.com/auth/drive%20https://www.googleapis.com/auth/spreadsheets%20https://www.googleapis.com/auth/drive.file'
     // others
   }[service];
 }

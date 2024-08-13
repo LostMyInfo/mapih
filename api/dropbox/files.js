@@ -13,7 +13,7 @@ module.exports = {
    * @summary
    * ### [Create A New File]{@link https://www.dropbox.com/developers/documentation/http/documentation#files-upload}
    * @example
-   * await api.dropbox.files.upload(`${username}/captcha/audio.ogg`, {
+   * await api.dropbox.files.upload(file, `${username}/captcha/audio.ogg`, {
    *   property_groups: [{
    *     template_id: user_id,
    *     fields: [{
@@ -44,9 +44,6 @@ module.exports = {
    */
   upload: async (file, path, options) => {
 
-    const formData = new FormData();
-    formData.append('file', file);
-
     return handler({
       method: 'POST',
       endpoint: '2/files/upload',
@@ -61,8 +58,9 @@ module.exports = {
         property_groups: options?.property_groups
       },
       handler: 'dropbox',
-      // content_type: 'stream',
-      formdata: formData,
+      dropbox_content: true,
+      content_type: 'application/octet-stream',
+      file,
       errorMessage: 'Failed to upload file'
     });
   },

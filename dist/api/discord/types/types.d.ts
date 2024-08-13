@@ -540,7 +540,20 @@ export type ActivityType = number;
  * | Embedded Application | 2  |
  */
 export type InviteTargetType = number;
+/**
+ * | Name | Value |
+ * |------|-------|
+ * | Guild  | 0  |
+ * | Group DM | 1  |
+ * | Friend | 2  |
+ */
+export type InviteType = number;
 export type Invite = {
+
+    /**
+     * - The type of invite
+     */
+    type: number;
     /**
      * - The invites code
      */
@@ -587,6 +600,11 @@ export type Invite = {
     guild_scheduled_event?: GuildScheduledEvent | undefined;
 };
 export type ExtendedInvite = {
+
+    /**
+     * - The type of invite
+     */
+    type: number;
     /**
      * - The invites code
      */

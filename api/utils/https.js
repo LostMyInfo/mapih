@@ -177,9 +177,9 @@ async function retry_request(url, options, params) {
       }
       return data;
     } catch (/** @type {any} */ error) {
-      if (error instanceof ResponseError) {
-        throw error;
-      } else if (response?.status !== 401 && response?.status !== 429) {
+      // if (error instanceof ResponseError) {
+      throw error;
+      /* } else if (response?.status !== 401 && response?.status !== 429) {
         console.log(`Error occurred in https: ${error.message}`);
         retries++;
         if (retries < maxRetries) {
@@ -189,6 +189,7 @@ async function retry_request(url, options, params) {
           throw error;
         }
       } else throw error;
+      */
     }
   }
 }
