@@ -220,10 +220,12 @@ const set = async (options, _value) => ensureCacheLoaded(async () => {
     key,
 
     /** @type {any} */
-    value, ttl,
+    value,
+    ttl,
 
     /** @type {Function|undefined} */
-    ttlCb, on_change;
+    ttlCb,
+    on_change;
   if (typeof options === 'string') {
     key = options;
     value = _value;
@@ -1340,7 +1342,7 @@ function addListenerSync(key, callback) {
  */
 function validateKeyVals(options) {
   if (typeof options !== 'object' || options === null || Array.isArray(options))
-    throw new Error('Parameters must be a non-null object.');
+    throw new Error('Parameters must be a non-null object or <string, any>.');
 
   if (('key' in options || 'value' in options) && !('key' in options && 'value' in options))
     throw new Error('If providing `key` or `value`, both `key` and `value` are required.');
