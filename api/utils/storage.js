@@ -174,6 +174,14 @@ const getManySync = (keys = []) => ensureCacheLoaded(() => {
 
 // //////////////////////// SET //////////////////////////
 /**
+ * @typedef {Object} _SetOptions
+ * @property {string} key
+ * @property {any} value
+ * @property {number} [ttl] - Amount of time in ms that this value will be stored
+ * @property {Function} [ttlCb] - A function to invoke upon expiration
+ * @property {boolean} [allow_overwrite] - Whether to allow this key's value to be overwritten
+ * @property {Function} [on_change] - A function to invoke when key is modified
+ *
  * @example
  * await api.utils.storage.set({
  *   key: 'password',
@@ -200,23 +208,31 @@ const getManySync = (keys = []) => ensureCacheLoaded(() => {
  *   value: 'newvalue',
  * }); //=> error
  *
- * @param {Object} options
- * @param {string} options.key
- * @param {*} options.value
- * @param {number} [options.ttl] - Amount of time in ms that this value will be stored
- * @param {Function} [options.ttlCb] - A function to invoke upon expiration
- * @param {boolean} [options.allow_overwrite] - Whether to allow this key's value to be overwritten
- * @param {Function} [options.on_change] - A function to invoke when key is modified
+ * @param {_SetOptions|string} options
+ * @param {any} [_value]
  * @returns
  */
-const set = async (options) => ensureCacheLoaded(async () => {
-  validate(options);
-  const { key, value, ttl, ttlCb, on_change } = options;
+const set = async (options, _value) => ensureCacheLoaded(async () => {
+  validate(typeof options === 'string' ? { key: options, value: _value } : options);
+  let
+
+    /** @type {string} */
+    key,
+
+    /** @type {any} */
+    value, ttl,
+
+    /** @type {Function|undefined} */
+    ttlCb, on_change;
+  if (typeof options === 'string') {
+    key = options;
+    value = _value;
+  } else ({ key, value, ttl, ttlCb, on_change } = options);
 
   // await saveHistory(key, value);
   if (on_change) await addListener(key, on_change);
   const entry = prepareSet({
-    ...options,
+    ... typeof options === 'string' ? { key: options } : options,
     value: value instanceof Set ? { type: 'Set', value: Array.from(value) } : value
   });
 
