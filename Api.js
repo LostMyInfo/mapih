@@ -3,81 +3,84 @@
 /**
  * @typedef {string|undefined} discord_token
  * @typedef {string|undefined} openai_token
- * @typedef {import('./dist/Api').twitter_token} twitter_token
- * @typedef {import('./dist/Api').spotify_token} spotify_token
- * @typedef {import('./dist/Api').slack_token} slack_token
- * @typedef {import('./dist/Api').google_token} google_token
- * @typedef {import('./dist/Api').dropbox_token} dropbox_token
- * @typedef {import('./dist/Api').box_token} box_token
- * @typedef {import('./dist/Api').imgur_token} imgur_token
- * @typedef {import('./dist/Api').paypal_token} paypal_token
+ * @typedef {string|undefined} anthropic_token
+ * @typedef {string|undefined} prompt_perfect_token
+ * @typedef {import('./dist/Api').twitter_token|undefined} twitter_token
+ * @typedef {import('./dist/Api').spotify_token|undefined} spotify_token
+ * @typedef {import('./dist/Api').slack_token|undefined} slack_token
+ * @typedef {import('./dist/Api').google_token|undefined} google_token
+ * @typedef {import('./dist/Api').dropbox_token|undefined} dropbox_token
+ * @typedef {import('./dist/Api').box_token|undefined} box_token
+ * @typedef {import('./dist/Api').imgur_token|undefined} imgur_token
+ * @typedef {import('./dist/Api').paypal_token|undefined} paypal_token
  */
 
-/**
- * @type {discord_token | spotify_token | slack_token | openai_token | twitter_token | imgur_token | dropbox_token | box_token | paypal_token | google_token}
- */
-let token;
 
 /**
  * @type {discord_token}
  */
-let discordToken = undefined;
+const discordToken = undefined;
 
 /**
  * @type {slack_token}
  */
-let slackToken = undefined;
+const slackToken = undefined;
 
 /**
  * @type {openai_token}
  */
-let openaiKey = undefined;
+const openaiKey = undefined;
 
 /**
  * @type {anthropic_token}
  */
-let anthropicKey = undefined;
+const anthropicKey = undefined;
 
 /**
  * @type {prompt_perfect_token}
  */
-let promptPerfectToken = undefined;
+const promptPerfectToken = undefined;
 
 /**
  * @type {google_token}
  */
-let googleToken = undefined;
+const googleToken = undefined;
 
 /**
  * @type {spotify_token}
  */
-let spotifyToken = undefined;
+const spotifyToken = undefined;
 
 /**
  * @type {imgur_token}
  */
-let imgurToken = undefined;
+const imgurToken = undefined;
 
 /**
  * @type {twitter_token}
  */
-let twitterToken = undefined;
+const twitterToken = undefined;
 
 /**
  * @type {dropbox_token}
  */
-let dropboxToken = undefined;
+const dropboxToken = undefined;
 
 /**
  * @type {box_token}
  */
-let boxToken = undefined;
+const boxToken = undefined;
 
 
 /**
  * @type {paypal_token}
  */
-let paypalToken = undefined;
+const paypalToken = undefined;
+
+/**
+ * @type {{[x: string]: any}}
+ */
+const tokens = {};
 
 module.exports = {
 
@@ -98,23 +101,54 @@ module.exports = {
    */
   initialize: function(options) {
 
-    // @ts-ignore
-    token = options[token];
-    if (options.discord) discordToken = options.discord;
-    if (options.slack) slackToken = options.slack;
-    if (options.openai) openaiKey = options.openai;
-    if (options.anthropic) anthropicKey = options.anthropic;
-    if (options.prompt_perfect) promptPerfectToken = options.prompt_perfect;
-    if (options.google) googleToken = options.google;
-    if (options.spotify) spotifyToken = options.spotify;
-    if (options.twitter) twitterToken = options.twitter;
-    if (options.imgur) imgurToken = options.imgur;
-    if (options.dropbox) dropboxToken = options.dropbox;
-    if (options.paypal) paypalToken = options.paypal;
-    if (options.box) boxToken = options.box;
+    if (typeof options !== 'object' || options === null)
+      throw new Error('Options must be an object');
+
+    Object.assign(tokens, options);
+
+    console.log('tokens:', tokens);
+
+    // if (options.discord) discordToken = options.discord;
+    // if (options.slack) slackToken = options.slack;
+    // if (options.openai) openaiKey = options.openai;
+    // if (options.anthropic) anthropicKey = options.anthropic;
+    // if (options.prompt_perfect) promptPerfectToken = options.prompt_perfect;
+    // if (options.google) googleToken = options.google;
+    // if (options.spotify) spotifyToken = options.spotify;
+    // if (options.twitter) twitterToken = options.twitter;
+    // if (options.imgur) imgurToken = options.imgur;
+    // if (options.dropbox) dropboxToken = options.dropbox;
+    // if (options.paypal) paypalToken = options.paypal;
+    // if (options.box) boxToken = options.box;
   },
 
-  get_token: () => token,
+  /**
+   * @param {'discord'|'slack'|'openai'|'anthropic'|'prompt_perfect'|'twitter'|'spotify'|'imgur'|'dropbox'|'box'|'paypal'|'google'} service
+   * @returns {discord_token|slack_token|openai_token|anthropic_token|prompt_perfect_token|twitter_token|spotify_token|imgur_token|dropbox_token|box_token|paypal_token|google_token}
+   */
+  _get_token: (service) => {
+    switch (service) {
+    case 'discord': return discordToken;
+    case 'slack': return slackToken;
+    case 'openai': return openaiKey;
+    case 'anthropic': return anthropicKey;
+    case 'prompt_perfect': return promptPerfectToken;
+    case 'google': return googleToken;
+    case 'spotify': return spotifyToken;
+    case 'twitter': return twitterToken;
+    case 'imgur': return imgurToken;
+    case 'dropbox': return dropboxToken;
+    case 'paypal': return paypalToken;
+    case 'box': return boxToken;
+    default: throw new Error(`Invalid service: ${service}`);
+    }
+  },
+
+  /**
+   * @param {string} service
+   * @returns {discord_token|slack_token|openai_token|anthropic_token|prompt_perfect_token|twitter_token|spotify_token|imgur_token|dropbox_token|box_token|paypal_token|google_token}
+   */
+  get_token: (service) => tokens[service],
 
   /**
    * @returns {discord_token}

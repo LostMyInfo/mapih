@@ -1395,7 +1395,7 @@ export type ForumThreadMessageParams = {
  */
 export type SortOrderType = number;
 export type PartialEmoji = {
-    id: Snowflake | null;
+    id?: Snowflake | undefined;
     name: string;
     animated?: boolean | undefined;
 };

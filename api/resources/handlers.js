@@ -7,9 +7,11 @@
  * @typedef {'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} Method
  */
 
-const { https } = require('../utils/https');
-const { ResponseError } = require('./Errors');
-const { writeFile, readFile } = require('fs/promises');
+const
+  { https } = require('../utils/https'),
+  { ResponseError } = require('./Errors'),
+  { writeFile, readFile, mkdir } = require('fs/promises'),
+  path = require('path');
 
 /**
  * @param {string} key
@@ -30,7 +32,8 @@ const find = (key, file) => file?.find((e) => e.key === key);
  * @private
  */
 async function attemptHandler(params, discord_params) {
-  // console.log('params in attemptHandler:', params);
+  console.log('token:', token('discord', 'discord'));
+
   const headers = new Headers({
     'Authorization': `Bot ${token('discord', 'discord')}`
   });
@@ -77,8 +80,12 @@ async function sendAttachment(params, path, method) {
         throw new Error('You must provide a \'filename\' property in the attachment object.');
 
       if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
+        console.log('attachment.file 1', attachment.file);
+
         const response = await fetch(attachment.file);
+        console.log('response', response);
         attachment.file = await response.blob();
+        console.log('attachment.file 2', attachment.file);
       } else if (!(attachment.file instanceof Blob) && !(attachment.file instanceof Buffer))
         throw new Error('Invalid file type provided. Must be a Blob, Buffer, or a valid media URL.');
 
@@ -238,7 +245,7 @@ async function getHandlerConfig(options) {
 
   if (typeof access_token !== 'string' && ((access_token?.expires && access_token?.expires <= Date.now()) || (!access_token?.access_token && access_token?.refresh_token))) {
     try {
-      access_token.access_token = await refresh(!isGoogle ? options.handler : 'google', isGoogle ? 'drive' : undefined);
+      access_token.access_token = await refresh(!isGoogle ? options.handler : 'google');
       console.log(`\naccess_token after refresh() in getHandlerConfig(): ${access_token.access_token ? 'obtained' : 'not obtained'}`);
     } catch (error) {
       console.log('Error in refresh:', error);
@@ -312,7 +319,7 @@ async function getHandlerConfig(options) {
   case 'drive':
     config = {
       url: 'https://www.googleapis.com/drive/v3',
-      auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler, ['drive'])}`
+      auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler)}`
     };
     break;
   case 'places':
@@ -325,7 +332,7 @@ async function getHandlerConfig(options) {
   case 'sheets':
     config = {
       url: 'https://sheets.googleapis.com/v4',
-      auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler, ['drive'])}`
+      auth: async () => `Bearer ${access_token ?? await oauthToken('Google', options.handler)}`
     };
     break;
   case 'box':
@@ -538,7 +545,7 @@ async function paypalAccessToken(refresh = false) {
 
   if (oldToken?.access_token) return oldToken.access_token;
 
-  const credentials = require('../../Api').get_paypal_token();
+  const credentials = require('../../Api').get_token('paypal');
   if (!credentials && !process.env.paypal_client_id && !process.env.paypal_secret_key)
     throw new Error('PayPal credentials not set');
 
@@ -577,7 +584,7 @@ async function spotifyAccessToken() {
   if (token) return token;
 
 
-  const credentials = require('../../Api').get_spotify_token();
+  const credentials = require('../../Api').get_token('spotify');
   if (!credentials) throw new Error(
     'Spotify credentials not set. Please initialize the library first.'
   );
@@ -618,50 +625,50 @@ function token(type, handler, variable) {
   const api = require('../../Api');
 
   /**
-   * @type {{ [tokenType: string]: { getToken: () => string|undefined, env: string, errorMessage: string}}}
+   * @type {{ [tokenType: string]: { getToken: () => string|undefined, env_var: string, errorMessage: string}}}
    */
   const tokenTypes = {
     discord: {
-      getToken: () => api.get_discord_token(),
-      env: 'token',
+      getToken: () => process.env['discord_token'] ?? api.get_token('discord'),
+      env_var: 'token',
       errorMessage: 'Discord Bot token not set. '
     },
     slack: {
-      getToken: () => api.get_slack_token()?.bot,
-      env: 'slack_bot_token',
+      getToken: () => api.get_token('slack')?.bot,
+      env_var: 'slack_bot_token',
       errorMessage: 'Slack token not set. '
     },
     imgur: {
-      getToken: () => api.get_imgur_token()?.client_id,
-      env: 'imgur_client_id',
+      getToken: () => api.get_token('imgur')?.client_id,
+      env_var: 'imgur_client_id',
       errorMessage: 'Imgur client_id not set. '
     },
     openai: {
-      getToken: () => api.get_openai_token(),
-      env: 'openai_api_key',
+      getToken: () => api.get_token('openai'),
+      env_var: 'openai_api_key',
       errorMessage: 'OpenAI API key not set. '
     },
     anthropic: {
-      getToken: () => api.get_anthropic_token(),
-      env: 'anthropic_api_key',
+      getToken: () => api.get_token('anthropic'),
+      env_var: 'anthropic_api_key',
       errorMessage: 'Anthropic API key not set. '
     },
     google: {
-      getToken: () => api.get_google_token()?.api_key,
-      env: 'google_api_key',
+      getToken: () => api.get_token('google')?.api_key,
+      env_var: 'google_api_key',
       errorMessage: 'Google API key not set. '
     },
     twitter: {
       getToken: () => {
-        const twitterToken = api.get_twitter_token();
+        const twitterToken = api.get_token('twitter');
         return variable && twitterToken ? twitterToken[variable] : undefined;
       },
-      env: 'twitter_' + variable,
+      env_var: 'twitter_' + variable,
       errorMessage: 'Twitter ' + variable + ' not set.'
     },
     promptPerfect: {
-      getToken: () => api.get_prompt_perfect_token(),
-      env: 'prompt_perfect_api_key',
+      getToken: () => api.get_token('prompt_perfect'),
+      env_var: 'prompt_perfect_api_key',
       errorMessage: 'Prompt Perfect API key not set'
     }
   };
@@ -670,8 +677,8 @@ function token(type, handler, variable) {
   if (!tokenConfig) throw new Error(`Unsupported token type: ${type}`);
 
   const
-    { getToken, errorMessage, env } = tokenConfig,
-    token = getToken() ?? process.env[env] ?? null;
+    { getToken, errorMessage, env_var } = tokenConfig,
+    token = getToken() ?? process.env[env_var] ?? null;
 
 
   // const token = (getToken && getToken()) || process.env[env] || null;
@@ -691,34 +698,39 @@ function token(type, handler, variable) {
  */
 async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
   // console.log(`oauthToken called with:\ntype: ${type}, handler: ${handler}, service: ${service}`);
-  if ((service !== handler) && (type === 'Google' && !/youtube|drive|places|sheets/i.test(handler))) return;
+  try {
+    if ((service !== handler) && (type === 'Google' && !/youtube|drive|places|sheets/i.test(handler))) return;
 
-  const token = await getTokens(`${service}Auth`);
+    const token = await getTokens(`${service}Auth`);
 
-  // console.log(type + ' token in oauthToken():', token);
+    // console.log(type + ' token in oauthToken():', token);
 
-  if (token) {
-    // console.log('token in oauthToken():', token);
-    if (token.expires <= Date.now())
-      token.access_token = await refresh(service, scope?.[0]);
-    if (token.access_token) return token.access_token;
-    if (scope?.length) {
-      const missingScopes = scope.filter((s) => !token.scope?.includes(s));
+    if (token) {
+      // console.log('token in oauthToken():', token);
+      if (token.expires <= Date.now())
+        token.access_token = await refresh(service);
+      if (token.access_token) return token.access_token;
+      if (scope?.length) {
+        const missingScopes = scope.filter((s) => !token.scope?.includes(s));
 
-      if (missingScopes.length)
-        throw new ResponseError(null, null, `${service}_error`, {
-          error: `Your app does not have the required scopes: \`${missingScopes.join(missingScopes.length > 1 ? ', ' : '')}\``
-        });
+        if (missingScopes.length)
+          throw new ResponseError(null, null, `${service}_error`, {
+            error: `Your app does not have the required scopes: \`${missingScopes.join(missingScopes.length > 1 ? ', ' : '')}\``
+          });
+      }
     }
+
+    const credentials = getCredentials(service);
+    // console.log('credentials from oauth()', credentials);
+    if (!credentials?.access_token && !credentials?.user && /* !process.env[`${service}_access_token`] && */ !process.env[`${service}_user_token`])
+      throw await authorize(type, null, handler);
+
+    // console.log('credentials?.access_token || credentials?.user || process.env[`${service}_access_token`] || process.env[`${service}_user_token`]:', credentials?.access_token || credentials?.user || process.env[`${service}_access_token`] || process.env[`${service}_user_token`]);
+    return credentials?.access_token || credentials?.user || process.env[`${service}_access_token`] || process.env[`${service}_user_token`];
+  } catch (error) {
+    console.log('Error in oauthToken():', error);
+    throw error;
   }
-
-  const credentials = getCredentials(service);
-  // console.log('credentials from oauth()', credentials);
-  if (!credentials?.access_token && !credentials?.user && /* !process.env[`${service}_access_token`] && */ !process.env[`${service}_user_token`])
-    throw await authorize(type, null, handler);
-
-  // console.log('credentials?.access_token || credentials?.user || process.env[`${service}_access_token`] || process.env[`${service}_user_token`]:', credentials?.access_token || credentials?.user || process.env[`${service}_access_token`] || process.env[`${service}_user_token`]);
-  return credentials?.access_token || credentials?.user || process.env[`${service}_access_token`] || process.env[`${service}_user_token`];
 }
 
 /**
@@ -726,9 +738,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
  * @returns {any}
  */
 function getCredentials(service) {
-  const
-    api = require('../../Api'),
-    getTokenFunction = api[`get_${service}_token`];
+  const getTokenFunction = require('../../Api').get_token(service);
 
   if (typeof getTokenFunction !== 'function')
     throw new Error(`No token function found for service: ${service}`);
@@ -771,99 +781,104 @@ function getQueryParams(service, { client_id, redirect_uri, team_id, scope, code
  * @param {string} [service]
  */
 async function authorize(type, params, handler, service = type.toLowerCase()) {
-  const
-    api = require('../../Api'),
-    { removeFalsyFromObject } = require('./functions'),
-    querystring = require('querystring');
+  try {
+    const
+      api = require('../../Api'),
+      { removeFalsyFromObject } = require('./functions'),
+      querystring = require('querystring');
 
-  // console.log('type:', type);
-  // console.log('params:', params);
-  // console.log('handler:', handler);
-  // console.log('service:', service);
-  /** @type {Record<string, { url: string, scope?: string}>} */
-  const configs = {
-    dropbox: {
-      url: 'https://dropbox.com/oauth2/authorize',
-      scope: defaultScope('dropbox') // 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
-    },
-    slack: {
-      url: 'https://slack.com/openid/connect/authorize',
-      scope: 'openid profile email'
-    },
-    spotify: {
-      url: 'https://accounts.spotify.com/authorize',
-      scope: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload'
-    },
-    imgur: {
-      url: 'https://api.imgur.com/oauth2/authorize'
-    },
-    twitter: {
-      url: 'https://twitter.com/i/oauth2/authorize',
-      scope: 'tweet.read tweet.write users.read offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write'
-    },
-    box: {
-      url: 'https://account.box.com/api/oauth2/authorize'
-    },
-    google: {
-      url: 'https://accounts.google.com/o/oauth2/v2/auth',
-      scope: defaultScope('google')
+    // console.log('type:', type);
+    // console.log('params:', params);
+    // console.log('handler:', handler);
+    // console.log('service:', service);
+    /** @type {Record<string, { url: string, scope?: string}>} */
+    const configs = {
+      dropbox: {
+        url: 'https://dropbox.com/oauth2/authorize',
+        scope: defaultScope('dropbox') // 'account_info.read account_info.write contacts.read contacts.write file_requests.read file_requests.write files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write'
+      },
+      slack: {
+        url: 'https://slack.com/openid/connect/authorize',
+        scope: 'openid profile email'
+      },
+      spotify: {
+        url: 'https://accounts.spotify.com/authorize',
+        scope: 'user-read-email user-read-private user-library-read user-library-modify user-top-read user-read-recently-played user-read-playback-position user-follow-read user-follow-modify playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing ugc-image-upload'
+      },
+      imgur: {
+        url: 'https://api.imgur.com/oauth2/authorize'
+      },
+      twitter: {
+        url: 'https://twitter.com/i/oauth2/authorize',
+        scope: 'tweet.read tweet.write users.read offline.access space.read mute.read mute.write like.read like.write list.read list.write block.read block.write bookmark.read bookmark.write'
+      },
+      box: {
+        url: 'https://account.box.com/api/oauth2/authorize'
+      },
+      google: {
+        url: 'https://accounts.google.com/o/oauth2/v2/auth',
+        scope: defaultScope('google')
+      }
+    };
+
+    const
+      credentials = getCredentials(service),
+      config = configs[service];
+    if (!config) throw new Error(`Unsupported service: ${type}`);
+
+    // if ((!credentials || !credentials.redirect_uri) && !process.env[`${service}_redirect_uri`])
+    // throw new Error(type + ' redirect_uri not set');
+
+    const
+      client_id = (credentials?.client_id || process.env[`${service}_client_id`])?.trim(),
+      redirect_uri = (credentials?.redirect_uri || process.env[`${service}_redirect_uri`])?.trim(),
+      scope = (credentials?.scope || process.env[`${service}_scope`] || configs[service].scope)?.trim() || defaultScope(service),
+      team_id = (credentials?.team_id || process.env[`${service}_team_id`])?.trim();
+
+    if (!redirect_uri) throw new Error(`${type} redirect_uri not set`);
+    const
+      code_verifier = getCodeVerifier(),
+      authString = `Please authorize your ${type} application`,
+      queryParams = getQueryParams(service, {
+        client_id,
+        redirect_uri,
+        team_id,
+        scope,
+        code_verifier
+      }),
+      url = `${config.url}?${querystring.stringify(removeFalsyFromObject(queryParams))}`;
+
+    /*
+      url = `${configs[service].url}?` + require('querystring').stringify(removeFalsyFromObject({
+        response_type: 'code',
+        client_id,
+        redirect_uri,
+        team_id,
+        scope,
+        token_access_type: service === 'dropbox' ? 'offline' : undefined,
+        access_type: service === 'google' ? 'offline' : undefined,
+        include_granted_scopes: service === 'google' ? true : undefined,
+        state: service === 'twitter' ? generateRandomString(32) : undefined,
+        code_challenge: service === 'twitter' ? getCodeChallengeFromVerifier(code_verifier) : undefined,
+        code_challenge_method: service === 'twitter' ? 'S256' : undefined
+      }));
+      */
+
+    if (service === 'twitter') {
+      const { code_verifier: verifier = undefined, ...value } = await getTokens('twitterAuth') || {};
+      await setTokens({ key: 'twitterAuth', value: { code_verifier, ...value } });
     }
-  };
 
-  const
-    credentials = getCredentials(service),
-    config = configs[service];
-  if (!config) throw new Error(`Unsupported service: ${type}`);
-
-  // if ((!credentials || !credentials.redirect_uri) && !process.env[`${service}_redirect_uri`])
-  // throw new Error(type + ' redirect_uri not set');
-
-  const
-    client_id = (credentials?.client_id || process.env[`${service}_client_id`])?.trim(),
-    redirect_uri = (credentials?.redirect_uri || process.env[`${service}_redirect_uri`])?.trim(),
-    scope = (credentials?.scope || process.env[`${service}_scope`] || configs[service].scope)?.trim() || defaultScope(service),
-    team_id = (credentials?.team_id || process.env[`${service}_team_id`])?.trim();
-
-  if (!redirect_uri) throw new Error(`${type} redirect_uri not set`);
-  const
-    code_verifier = getCodeVerifier(),
-    authString = `Please authorize your ${type} application`,
-    queryParams = getQueryParams(service, {
-      client_id,
-      redirect_uri,
-      team_id,
-      scope,
-      code_verifier
-    }),
-    url = `${config.url}?${querystring.stringify(removeFalsyFromObject(queryParams))}`;
-
-  /*
-    url = `${configs[service].url}?` + require('querystring').stringify(removeFalsyFromObject({
-      response_type: 'code',
-      client_id,
-      redirect_uri,
-      team_id,
-      scope,
-      token_access_type: service === 'dropbox' ? 'offline' : undefined,
-      access_type: service === 'google' ? 'offline' : undefined,
-      include_granted_scopes: service === 'google' ? true : undefined,
-      state: service === 'twitter' ? generateRandomString(32) : undefined,
-      code_challenge: service === 'twitter' ? getCodeChallengeFromVerifier(code_verifier) : undefined,
-      code_challenge_method: service === 'twitter' ? 'S256' : undefined
-    }));
-    */
-
-  if (service === 'twitter') {
-    const { code_verifier: verifier = undefined, ...value } = await getTokens('twitterAuth') || {};
-    await setTokens({ key: 'twitterAuth', value: { code_verifier, ...value } });
+    return params?.channel_id
+      ? await api.discord.channels.messages.create({
+        channel_id: params.channel_id,
+        content: `**[${authString}](${url})**`
+      })
+      : `\n${authString}:\n${url}`;
+  } catch (error) {
+    console.log('Error in authorize():', error);
+    throw error;
   }
-
-  return params?.channel_id
-    ? await api.discord.channels.messages.create({
-      channel_id: params.channel_id,
-      content: `**[${authString}](${url})**`
-    })
-    : `\n${authString}:\n${url}`;
 }
 
 /**
@@ -876,7 +891,7 @@ async function refresh(type, google) {
   // console.log(`refresh called with type: ${type}, google: ${google}`);
   const
     { removeFalsyFromObject } = require('./functions'),
-    credentials = require('../../Api')[`get_${type}_token`](),
+    credentials = require('../../Api').get_token(type),
     token = await getTokens(`${type}Auth`);
 
   /** @type {Record<string, { url: string, scope?: string}>} */
@@ -898,7 +913,7 @@ async function refresh(type, google) {
       box: { url: 'https://account.box.com/api/oauth2/token' },
       google: {
         url: 'https://oauth2.googleapis.com/token',
-        scope: `https://www.googleapis.com/auth/${google}`
+        scope: google ?? defaultScope('google')
       }
     },
     config = configs[type];
@@ -1063,27 +1078,29 @@ async function setTokens({ key, value }) {
   else tokens.push(entry);
 
   try {
-    await writeFile(process.cwd() + '/.tokens', JSON.stringify(tokens));
+    await writeFile(path.join(process.cwd(), '.mapih', '.tokens'), JSON.stringify(tokens));
+    // await writeFile(process.cwd() + '/.mapih/.tokens', JSON.stringify(tokens));
   } catch (e) {
     throw new Error('Unable to save token');
   }
 }
 
 /**
- * @param {Array<any>} tokens
  * @returns {Promise<Array<any>>}
  */
-async function loadTokens(tokens = []) {
+async function loadTokens() {
+  const TOKENS = path.join(process.cwd(), '.mapih', '.tokens');
   try {
-
-    // @ts-ignore
-    tokens = JSON.parse(await readFile(process.cwd() + '/.tokens'));
+    await mkdir(path.join(process.cwd(), '.mapih'), { recursive: true });
+    return JSON.parse(await readFile(TOKENS, 'utf-8'));
   } catch (/** @type {any} */ error) {
-    if (error.code === 'ENOENT')
-      await writeFile(process.cwd() + '/.tokens', JSON.stringify([]));
-    tokens = [];
+    if (error.code === 'ENOENT' || error instanceof SyntaxError) {
+      await writeFile(TOKENS, JSON.stringify([]));
+      return [];
+    }
+    console.log('Unexpected error loading tokens:', error);
+    return [];
   }
-  return tokens;
 }
 
 /**

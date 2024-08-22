@@ -705,7 +705,7 @@
 
 /**
  * @typedef {Object} PartialEmoji
- * @property {?Snowflake} id
+ * @property {?Snowflake} [id]
  * @property {string} name
  * @property {boolean} [animated=false]
  */

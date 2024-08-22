@@ -59,6 +59,12 @@ interface box_token {
   redirect_uri: string;
 }
 
+interface imgur_token {
+  client_id: string;
+  client_secret?: string;
+  access_token?: string;
+}
+
 export declare function initialize(options: {
   discord?: string;
   openai?: string;
