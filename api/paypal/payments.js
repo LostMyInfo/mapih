@@ -17,7 +17,7 @@ module.exports = {
    * @returns {Promise<string>}
    */
   access_token: async () => {
-    const credentials = require('../../Api').get_paypal_token();
+    const credentials = require('../../Api').get_token('paypal');
     if (!credentials && !process.env.paypal_client_id && !process.env.paypal_secret_key)
       throw new Error('PayPal credentials not set');
 

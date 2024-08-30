@@ -1,11 +1,16 @@
 // @ts-check
 
+const
+  { MySQLStorage, MySQLStorageError } = require('./api/utils/mysql'),
+  mysql = new MySQLStorage();
+
+
 /**
  * @typedef {string|undefined} discord_token
  * @typedef {string|undefined} openai_token
  * @typedef {string|undefined} anthropic_token
  * @typedef {string|undefined} prompt_perfect_token
- * @typedef {import('./dist/Api').twitter_token|undefined} twitter_token
+ * @typedef {import('./dist/Api').twitter_token} twitter_token
  * @typedef {import('./dist/Api').spotify_token|undefined} spotify_token
  * @typedef {import('./dist/Api').slack_token|undefined} slack_token
  * @typedef {import('./dist/Api').google_token|undefined} google_token
@@ -15,70 +20,24 @@
  * @typedef {import('./dist/Api').paypal_token|undefined} paypal_token
  */
 
-
 /**
- * @type {discord_token}
+ * @typedef {Object} Tokens
+ * @property {discord_token} [discord]
+ * @property {slack_token} [slack]
+ * @property {openai_token} [openai]
+ * @property {anthropic_token} [anthropic]
+ * @property {prompt_perfect_token} [prompt_perfect]
+ * @property {google_token} [google]
+ * @property {spotify_token} [spotify]
+ * @property {imgur_token} [imgur]
+ * @property {twitter_token} [twitter]
+ * @property {dropbox_token} [dropbox]
+ * @property {box_token} [box]
+ * @property {paypal_token} [paypal]
  */
-const discordToken = undefined;
 
 /**
- * @type {slack_token}
- */
-const slackToken = undefined;
-
-/**
- * @type {openai_token}
- */
-const openaiKey = undefined;
-
-/**
- * @type {anthropic_token}
- */
-const anthropicKey = undefined;
-
-/**
- * @type {prompt_perfect_token}
- */
-const promptPerfectToken = undefined;
-
-/**
- * @type {google_token}
- */
-const googleToken = undefined;
-
-/**
- * @type {spotify_token}
- */
-const spotifyToken = undefined;
-
-/**
- * @type {imgur_token}
- */
-const imgurToken = undefined;
-
-/**
- * @type {twitter_token}
- */
-const twitterToken = undefined;
-
-/**
- * @type {dropbox_token}
- */
-const dropboxToken = undefined;
-
-/**
- * @type {box_token}
- */
-const boxToken = undefined;
-
-
-/**
- * @type {paypal_token}
- */
-const paypalToken = undefined;
-
-/**
- * @type {{[x: string]: any}}
+ * @type {Tokens}
  */
 const tokens = {};
 
@@ -98,6 +57,7 @@ module.exports = {
    * @param {dropbox_token} [options.dropbox]
    * @param {box_token} [options.box]
    * @param {paypal_token} [options.paypal]
+   * @returns {void}
    */
   initialize: function(options) {
 
@@ -105,110 +65,13 @@ module.exports = {
       throw new Error('Options must be an object');
 
     Object.assign(tokens, options);
-
-    console.log('tokens:', tokens);
-
-    // if (options.discord) discordToken = options.discord;
-    // if (options.slack) slackToken = options.slack;
-    // if (options.openai) openaiKey = options.openai;
-    // if (options.anthropic) anthropicKey = options.anthropic;
-    // if (options.prompt_perfect) promptPerfectToken = options.prompt_perfect;
-    // if (options.google) googleToken = options.google;
-    // if (options.spotify) spotifyToken = options.spotify;
-    // if (options.twitter) twitterToken = options.twitter;
-    // if (options.imgur) imgurToken = options.imgur;
-    // if (options.dropbox) dropboxToken = options.dropbox;
-    // if (options.paypal) paypalToken = options.paypal;
-    // if (options.box) boxToken = options.box;
   },
 
   /**
-   * @param {'discord'|'slack'|'openai'|'anthropic'|'prompt_perfect'|'twitter'|'spotify'|'imgur'|'dropbox'|'box'|'paypal'|'google'} service
-   * @returns {discord_token|slack_token|openai_token|anthropic_token|prompt_perfect_token|twitter_token|spotify_token|imgur_token|dropbox_token|box_token|paypal_token|google_token}
-   */
-  _get_token: (service) => {
-    switch (service) {
-    case 'discord': return discordToken;
-    case 'slack': return slackToken;
-    case 'openai': return openaiKey;
-    case 'anthropic': return anthropicKey;
-    case 'prompt_perfect': return promptPerfectToken;
-    case 'google': return googleToken;
-    case 'spotify': return spotifyToken;
-    case 'twitter': return twitterToken;
-    case 'imgur': return imgurToken;
-    case 'dropbox': return dropboxToken;
-    case 'paypal': return paypalToken;
-    case 'box': return boxToken;
-    default: throw new Error(`Invalid service: ${service}`);
-    }
-  },
-
-  /**
-   * @param {string} service
-   * @returns {discord_token|slack_token|openai_token|anthropic_token|prompt_perfect_token|twitter_token|spotify_token|imgur_token|dropbox_token|box_token|paypal_token|google_token}
+   * @param {keyof Tokens | string} service
+   * @returns {Tokens[keyof Tokens]}
    */
   get_token: (service) => tokens[service],
-
-  /**
-   * @returns {discord_token}
-   */
-  get_discord_token: function() { return discordToken; },
-
-  /**
-   * @returns {slack_token}
-   */
-  get_slack_token: function() { return slackToken; },
-
-  /**
-   * @returns {openai_token}
-   */
-  get_openai_token: function() { return openaiKey; },
-
-  /**
-   * @returns {anthropic_token}
-   */
-  get_anthropic_token: function() { return anthropicKey; },
-
-  /**
-   * @returns {prompt_perfect_token}
-   */
-  get_prompt_perfect_token: function() { return promptPerfectToken; },
-
-  /**
-   * @returns {google_token}
-   */
-  get_google_token: function() { return googleToken; },
-
-  /**
-   * @returns {spotify_token}
-   */
-  get_spotify_token: function() { return spotifyToken; },
-
-  /**
-   * @returns {imgur_token}
-   */
-  get_imgur_token: function() { return imgurToken; },
-
-  /**
-   * @returns {dropbox_token}
-   */
-  get_dropbox_token: function() { return dropboxToken; },
-
-  /**
-   * @returns {box_token}
-   */
-  get_box_token: function() { return boxToken; },
-
-  /**
-   * @returns {twitter_token}
-   */
-  get_twitter_token: function() { return twitterToken; },
-
-  /**
-   * @returns {paypal_token}
-   */
-  get_paypal_token: function() { return paypalToken; },
 
   discord: {
     auditlog: require('./api/discord/auditlog'),
@@ -301,11 +164,17 @@ module.exports = {
 
   utils: {
     https: require('./api/utils/https').https,
-    storage: require('./api/utils/storage'),
+    storage: {
+      local: require('./api/utils/storage'),
+      mysql
+    },
     tokens: {
       set: require('./api/resources/handlers').setTokens,
       get: require('./api/resources/handlers').getTokens
-    },
-    sql: require('./api/utils/sql')
-  }
+    }
+    // sql: require('./api/utils/sql')
+  },
+
+  MySQLStorage,
+  MySQLStorageError
 };

@@ -1,4 +1,4 @@
-type BoxCollection = {
+export type BoxCollection = {
     total_count: number;
     limit: number;
     offset: number;
@@ -8,7 +8,7 @@ type BoxCollection = {
     }[];
     entries: BoxEntry[];
 };
-type BoxEntry = {
+export type BoxEntry = {
     id: number;
     etag: number;
     type: string;

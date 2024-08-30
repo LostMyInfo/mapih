@@ -32,7 +32,7 @@ const find = (key, file) => file?.find((e) => e.key === key);
  * @private
  */
 async function attemptHandler(params, discord_params) {
-  console.log('token:', token('discord', 'discord'));
+  // console.log('token:', token('discord', 'discord'));
 
   const headers = new Headers({
     'Authorization': `Bot ${token('discord', 'discord')}`
@@ -80,12 +80,12 @@ async function sendAttachment(params, path, method) {
         throw new Error('You must provide a \'filename\' property in the attachment object.');
 
       if (typeof attachment.file === 'string' && await isValidMedia(attachment.file)) {
-        console.log('attachment.file 1', attachment.file);
+        // console.log('attachment.file 1', attachment.file);
 
         const response = await fetch(attachment.file);
-        console.log('response', response);
+        // console.log('response', response);
         attachment.file = await response.blob();
-        console.log('attachment.file 2', attachment.file);
+        // console.log('attachment.file 2', attachment.file);
       } else if (!(attachment.file instanceof Blob) && !(attachment.file instanceof Buffer))
         throw new Error('Invalid file type provided. Must be a Blob, Buffer, or a valid media URL.');
 
@@ -246,7 +246,7 @@ async function getHandlerConfig(options) {
   if (typeof access_token !== 'string' && ((access_token?.expires && access_token?.expires <= Date.now()) || (!access_token?.access_token && access_token?.refresh_token))) {
     try {
       access_token.access_token = await refresh(!isGoogle ? options.handler : 'google');
-      console.log(`\naccess_token after refresh() in getHandlerConfig(): ${access_token.access_token ? 'obtained' : 'not obtained'}`);
+      // console.log(`\naccess_token after refresh() in getHandlerConfig(): ${access_token.access_token ? 'obtained' : 'not obtained'}`);
     } catch (error) {
       console.log('Error in refresh:', error);
       throw error;
@@ -693,10 +693,11 @@ function token(type, handler, variable) {
  * @param {'Slack' | 'Spotify' | 'Dropbox' | 'Box' | 'Google' | 'Imgur' | 'Twitter'} type
  * @param {string} handler
  * @param {string[]} [scope]
- * @param {string} [service]
+ * @param {'discord' | 'slack' | 'openai' | 'anthropic' | 'prompt_perfect' | 'twitter' | 'spotify' | 'imgur' | 'dropbox' | 'box' | 'paypal' | 'google' | string} [service]
  * @returns
  */
-async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
+async function oauthToken(type, handler, scope, service) {
+  service = service || type.toLowerCase();
   // console.log(`oauthToken called with:\ntype: ${type}, handler: ${handler}, service: ${service}`);
   try {
     if ((service !== handler) && (type === 'Google' && !/youtube|drive|places|sheets/i.test(handler))) return;
@@ -720,7 +721,7 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
       }
     }
 
-    const credentials = getCredentials(service);
+    const credentials = require('../../Api').get_token(service);
     // console.log('credentials from oauth()', credentials);
     if (!credentials?.access_token && !credentials?.user && /* !process.env[`${service}_access_token`] && */ !process.env[`${service}_user_token`])
       throw await authorize(type, null, handler);
@@ -731,18 +732,6 @@ async function oauthToken(type, handler, scope, service = type.toLowerCase()) {
     console.log('Error in oauthToken():', error);
     throw error;
   }
-}
-
-/**
- * @param {string} service
- * @returns {any}
- */
-function getCredentials(service) {
-  const getTokenFunction = require('../../Api').get_token(service);
-
-  if (typeof getTokenFunction !== 'function')
-    throw new Error(`No token function found for service: ${service}`);
-  return getTokenFunction();
 }
 
 /**
@@ -822,7 +811,7 @@ async function authorize(type, params, handler, service = type.toLowerCase()) {
     };
 
     const
-      credentials = getCredentials(service),
+      credentials = api.get_token(service),
       config = configs[service];
     if (!config) throw new Error(`Unsupported service: ${type}`);
 

@@ -1,3 +1,4 @@
+import type { BoxCollection } from './types/types';
 export function list(options?: {
     fields?: string[] | undefined;
     limit?: number | undefined;

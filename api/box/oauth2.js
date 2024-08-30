@@ -21,10 +21,10 @@ module.exports = {
   refresh: async () => await fresh('box'),
 
   refresh1: async () => {
-    
-    const credentials = require('../../Api').get_box_token();
+
+    const credentials = require('../../Api').get_token('box');
     const token = await storage.get('boxAuth');
-    
+
     const refresh = await https({
       method: 'post',
       url: 'https://account.box.com/api/oauth2/token',

@@ -224,7 +224,7 @@ function DiscordError(err) {
             errinfo[key1] = has(value1);
 
           if (isObj(value1))
-            for (const [key2, value2] of entries(value1))
+            for (const [key2, value2] of entries(value1)) {
               if (isObj(value2))
                 for (const [key3, value3] of entries(value2)) {
                   if (check(key3, value3))
@@ -233,23 +233,33 @@ function DiscordError(err) {
                   if (isObj(value3))
                     for (const [key4, value4] of entries(value3)) {
                       if (check(key4, value4))
-                        errinfo[`${key1}.${key2}[${key3}].${key4}`] = value4?.['_errors']?.[0]?.['message'];
+                        errinfo[`${key1}.${key2}[${key3}].${key4}`] = value4?.message ?? value4?.['_errors']?.[0]?.['message'];
 
                       if (isObj(value4))
                         for (const [key5, value5] of entries(value4)) {
                           if (check(key5, value5))
-                            errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}`] = value5?.['_errors']?.[0]?.['message'];
+                            errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}`] = value5?.message ?? value5?.['_errors']?.[0]?.['message'];
 
                           // deep components
                           if (isObj(value5))
-                            for (const [key6, value6] of entries(value5))
+                            for (const [key6, value6] of entries(value5)) {
+                              if (check(key6, value6))
+                                errinfo[`${key1}.${key2}[${key3}].${key4}[${key5}].${key6}`] = value6?.message ?? value6?.['_errors']?.[0]?.['message'];
                               if (isObj(value6))
-                                for (const [key7, value7] of entries(value6))
+                                for (const [key7, value7] of entries(value6)) {
                                   if (check(key7, value7))
-                                    errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}[${key6}].${key7}`] = value7?.['_errors']?.[0]?.['message'];
+                                    errinfo[`${key1}[${key2}].${key3}[${key4}].${key5}[${key6}].${key7}`] = value7?.message ?? value7?.['_errors']?.[0]?.['message'];
+
+                                  if (isObj(value7))
+                                    for (const [key8, value8] of entries(value7))
+                                      if (check(key8, value8))
+                                        errinfo[`${key1}.${key2}[${key3}].${key4}[${key5}].${key6}[${key8}]`] = value8?.message ?? value8?.['_errors']?.[0]?.['message'];
+                                }
+                            }
                         }
                     }
                 }
+            }
         }
     return errinfo;
   }

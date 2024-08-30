@@ -50,16 +50,45 @@
  */
 
 /**
- * @typedef {Object} AnthropicMessageCreateParams
- * @property {string} model - The model that will complete your prompt
- * @property {number} max_tokens - The maximum number of tokens to generate before stopping
- * @property {AnthropicMessageParam[]} messages - Input messages
- * @property {{user_id: ?string}} [metadata] - An object describing metadata about the request
- * @property {string[]} [stop_sequence] - Custom text sequences that will cause the model to stop generating
- * @property {boolean} [stream] - Whether to incrementally stream the response using server-sent events
- * @property {string} [system] - System prompt
- * @property {number} [temperature] - Amount of randomness injected into the response. Defaults to `1.0`.
- * @property {number} [top_k] - Only sample from the top K options for each subsequent token
- * @property {number} [top_p] - Use nucleus sampling
+ * @typedef {Object} AnthropicToolProperty
+ * @property {string} type - The type of the property
+ * @property {string} [description] - Optional description of the property
+ * @property {string[]} [enum] - Optional array of allowed enum values
+ * @property {AnthropicToolProperty} [items] - Optional property for array items
+ * @property {Object.<string, AnthropicToolProperty>} [properties] - Optional nested properties
+ * @property {string[]} [required] - Optional array of required property names
  */
 
+/**
+ * @template {Object.<string, AnthropicToolProperty>} [T=Object.<string, AnthropicToolProperty>]
+ * @typedef {Object} AnthropicToolInputSchema
+ * @property {T} properties - The properties of the input schema
+ * @property {string[]} [required] - Optional array of required property names
+ */
+
+/**
+ * @template {Object.<string, AnthropicToolProperty>} [T=Object.<string, AnthropicToolProperty>]
+ * @typedef {Object} AnthropicTool
+ * @property {string} name - The name of the tool
+ * @property {string} description - The description of the tool
+ * @property {AnthropicToolInputSchema<T>} input_schema - The input schema for the tool
+ * @property {?Object} [cache_control] - Optional cache control settings
+ * @property {string} [cache_control.type] - The type of cache control
+ */
+
+/**
+ * @typedef {Object} AnthropicToolChoice
+ * @property {"auto" | "none"} type - The type of tool choice
+ * @property {Object} [tool] - Optional specific tool configuration
+ * @property {string} [tool.name] - The name of the specific tool to use
+ */
+
+/**
+ * @typedef {Object} AnthropicToolChoiceFunction
+ * @property {"function"} type - Indicates that this is a function-type tool choice
+ * @property {string} name - The name of the function to call
+ */
+
+/**
+ * @typedef {AnthropicToolChoice | AnthropicToolChoiceFunction | "auto" | "none"} AnthropicToolChoiceOption
+ */

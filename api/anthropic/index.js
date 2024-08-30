@@ -13,13 +13,13 @@ module.exports = {
   /**
    * @namespace messages
    */
-  
+
   messages: {
 
     /**
      * @summary
      * ### [Create A Message]{@link https://docs.anthropic.com/claude/reference/messages_post}
-     * 
+     *
      * @example
      * await api.anthropic.messages.create({
      *   model: 'claude-3-opus-20240229',
@@ -31,7 +31,7 @@ module.exports = {
      *   max_tokens: 2048,
      *   temperature: 0.7
      * });
-     * 
+     *
      * @function create
      * @memberof module:anthropic.messages#
      * @param {Object} options
@@ -45,16 +45,18 @@ module.exports = {
      * @param {number} [options.top_p]
      * @param {number} [options.top_k]
      * @param {boolean} [options.stream]
+     * @param {AnthropicTool[]} [options.tools]
+     * @param {AnthropicToolChoiceOption} [options.tool_choice]
      * @returns {Promise<AnthropicMessage>}
      */
     create: async (options) =>
-    
+
       handler({
         method: 'POST',
         endpoint: 'messages',
         body: { ...options },
         handler: 'anthropic'
       })
-    
+
   }
 };

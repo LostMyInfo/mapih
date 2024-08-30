@@ -345,6 +345,37 @@ module.exports = {
 
   /**
    * @summary
+   * ### [Get Current User Voice State]{@link https://discord.com/developers/docs/resources/voice#get-current-user-voice-state}
+   * @function getCurrentUserVoiceState
+   * @memberof module:guilds#
+   * @param {Object} params
+   * @param {Snowflake} params.guild_id
+   * @returns {Promise<VoiceState>} Current user's [Voice State]{@link https://discord.com/developers/docs/resources/voice#voice-state-object} in the guild.
+   */
+  getCurrentUserVoiceState: async (params) =>
+    attemptHandler({
+      method: 'GET',
+      endpoint: `guilds/${params.guild_id}/voice-states/@me`
+    }), // End of Get Current User Voice State
+
+  /**
+   * @summary
+   * ### [Get User Voice State]{@link https://discord.com/developers/docs/resources/voice#get-user-voice-state}
+   * @function getUserVoiceState
+   * @memberof module:guilds#
+   * @param {Object} params
+   * @param {Snowflake} params.guild_id
+   * @param {Snowflake} params.user_id
+   * @returns {Promise<VoiceState>} Specified user's [Voice State]{@link https://discord.com/developers/docs/resources/voice#voice-state-object} in the guild.
+   */
+  getUserVoiceState: async (params) =>
+    attemptHandler({
+      method: 'GET',
+      endpoint: `guilds/${params.guild_id}/voice-states/${params.user_id}`
+    }), // End of Get User Voice State
+
+  /**
+   * @summary
    * ### [Get Guild Integrations]{@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
    * - This endpoint returns a maximum of 50 integrations.
    * - If a guild has more integrations, they cannot be accessed.
@@ -1115,7 +1146,7 @@ module.exports = {
 
     /**
      * @summary
-     * ### Retrieve a role by ID
+     * ### [Get Guild Roles]{@link https://discord.com/developers/docs/resources/guild#get-guild-role}
      * @example
      * await api.discord.guilds.roles.retrieve({
      *   role_id: '000000000',
@@ -1129,15 +1160,17 @@ module.exports = {
      * @returns {Promise<Role>} [Role]{@link https://discord.com/developers/docs/topics/permissions#role-object} object
      */
     retrieve: async (params) => {
-      const roles = await attemptHandler({
+      const role = await attemptHandler({
         method: 'GET',
-        endpoint: `guilds/${params.guild_id}/roles`
+        endpoint: `guilds/${params.guild_id}/roles/${params.role_id}`
       });
-      const targetRole = roles.find((/** @type {Role} */ x) => x.id === params.role_id);
-      if (!targetRole)
-        throw new Error('\nNo role found for the provided role_id\n');
-      return targetRole;
-    },
+
+      role.permission_names = [];
+      if (role.permissions > 0)
+        role.permission_names = parsePermissions(role.permissions);
+
+      return role;
+    }, // End of Get Guild Role
 
     /**
      * @summary

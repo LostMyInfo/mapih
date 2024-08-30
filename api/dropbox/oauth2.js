@@ -20,9 +20,9 @@ module.exports = {
   refresh: async () => await fresh('dropbox'),
 
   refresh1: async () => {
-    const credentials = require('../../Api').get_dropbox_token();
+    const credentials = require('../../Api').get_token('dropbox');
     const token = await storage.get('dropboxAuth');
-    
+
     const refresh = await https({
       method: 'post',
       url: 'https://api.dropboxapi.com/oauth2/token',
